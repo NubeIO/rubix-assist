@@ -1,10 +1,10 @@
 package router
 
 import (
+	"github.com/NubeIO/rubix-updater/controller"
+	"github.com/NubeIO/rubix-updater/pkg/logger"
+	"github.com/NubeIO/rubix-updater/pkg/middleware"
 	"github.com/gin-gonic/gin"
-	"github.com/yakuter/ugin/controller"
-	"github.com/yakuter/ugin/pkg/logger"
-	"github.com/yakuter/ugin/pkg/middleware"
 	"gorm.io/gorm"
 	"io"
 	"os"

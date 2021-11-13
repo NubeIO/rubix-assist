@@ -1,9 +1,9 @@
 package service
 
 import (
+	"github.com/NubeIO/rubix-updater/model"
+	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/gin-gonic/gin"
-	"github.com/yakuter/ugin/model"
-	"github.com/yakuter/ugin/pkg/logger"
 	"gorm.io/gorm"
 )
 

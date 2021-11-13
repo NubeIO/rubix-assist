@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"github.com/NubeIO/rubix-updater/pkg/config"
+	"github.com/NubeIO/rubix-updater/pkg/database"
+	"github.com/NubeIO/rubix-updater/pkg/logger"
+	"github.com/NubeIO/rubix-updater/pkg/router"
 	"github.com/spf13/viper"
-	"github.com/yakuter/ugin/pkg/config"
-	"github.com/yakuter/ugin/pkg/database"
-	"github.com/yakuter/ugin/pkg/logger"
-	"github.com/yakuter/ugin/pkg/router"
+
 )
 
 func main() {

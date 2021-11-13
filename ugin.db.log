@@ -1,0 +1,21 @@
+
+2021/11/13 16:33:19 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:32
+[0.017ms] [rows:-] SELECT count(*) FROM sqlite_master WHERE type='table' AND name="posts"
+
+2021/11/13 16:33:19 /home/aidan/code/go/nube/rubix-updater/pkg/database/database.go:63
+[8.724ms] [rows:0] CREATE TABLE `posts` (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` varchar(255),`description` text,PRIMARY KEY (`id`))
+
+2021/11/13 16:33:19 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:240
+[5.232ms] [rows:0] CREATE INDEX `idx_posts_deleted_at` ON `posts`(`deleted_at`)
+
+2021/11/13 16:33:19 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:32
+[0.018ms] [rows:-] SELECT count(*) FROM sqlite_master WHERE type='table' AND name="tags"
+
+2021/11/13 16:33:19 /home/aidan/code/go/nube/rubix-updater/pkg/database/database.go:63
+[5.335ms] [rows:0] CREATE TABLE `tags` (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`post_id` integer,`name` varchar(255),`description` text,PRIMARY KEY (`id`),CONSTRAINT `fk_posts_tags` FOREIGN KEY (`post_id`) REFERENCES `posts`(`id`))
+
+2021/11/13 16:33:19 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:240
+[5.426ms] [rows:0] CREATE INDEX `idx_tags_post_id` ON `tags`(`post_id`)
+
+2021/11/13 16:33:19 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:240
+[5.403ms] [rows:0] CREATE INDEX `idx_tags_deleted_at` ON `tags`(`deleted_at`)
