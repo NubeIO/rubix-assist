@@ -1,8 +1,9 @@
 package config
 
 import (
+	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/spf13/viper"
-	"github.com/yakuter/ugin/pkg/logger"
+
 )
 
 var Config *Configuration

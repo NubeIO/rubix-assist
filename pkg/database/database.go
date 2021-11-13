@@ -2,13 +2,13 @@ package database
 
 import (
 	"errors"
+	"github.com/NubeIO/rubix-updater/model"
 	"io"
 	"log"
 	"os"
 	"time"
 
 	"github.com/spf13/viper"
-	"github.com/yakuter/ugin/model"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
