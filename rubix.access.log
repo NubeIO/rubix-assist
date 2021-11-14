@@ -1,6 +1,20 @@
 [GIN-debug] GET    /posts/                   --> github.com/NubeIO/rubix-updater/controller.(*Controller).GetPosts-fm (4 handlers)
 [GIN-debug] Listening and serving HTTP on 127.0.0.1:8080
-[GIN] 2021/11/13 - 16:33:28 | 404 |       2.364µs |       127.0.0.1 | GET      "/http://192.168.15.102:1660/api/points"
-[GIN] 2021/11/13 - 16:33:28 | 404 |       3.046µs |       127.0.0.1 | GET      "/favicon.ico"
-[GIN-debug] redirecting request 301: /posts/ --> /posts/
-[GIN] 2021/11/13 - 16:33:36 | 200 |   502.40603ms |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:15 | 200 |       398.5µs |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:15 | 200 |     220.645µs |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:16 | 200 |       228.3µs |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:16 | 200 |     259.469µs |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:16 | 200 |     284.335µs |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:16 | 200 |     286.459µs |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:16 | 200 |     208.192µs |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:17 | 200 |     274.216µs |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:17 | 200 |     283.885µs |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:17 | 200 |     236.916µs |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:17 | 200 |     252.325µs |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:17 | 200 |     207.581µs |       127.0.0.1 | GET      "/posts/"
+[GIN] 2021/11/14 - 11:51:18 | 200 |     307.509µs |       127.0.0.1 | GET      "/posts/"
+[GIN-debug] GET    /hosts/                   --> github.com/NubeIO/rubix-updater/controller.(*Controller).GetPosts-fm (4 handlers)
+[GIN-debug] GET    /hosts/                   --> github.com/NubeIO/rubix-updater/controller.(*Controller).CreateHost-fm (4 handlers)
+[GIN-debug] GET    /hosts/                   --> github.com/NubeIO/rubix-updater/controller.(*Controller).GetPosts-fm (4 handlers)
+[GIN-debug] POST   /hosts/                   --> github.com/NubeIO/rubix-updater/controller.(*Controller).CreateHost-fm (4 handlers)
+[GIN-debug] Listening and serving HTTP on 127.0.0.1:8080
