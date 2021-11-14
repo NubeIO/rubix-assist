@@ -2,11 +2,12 @@ package database
 
 import (
 	"errors"
-	"github.com/NubeIO/rubix-updater/model"
 	"io"
 	"log"
 	"os"
 	"time"
+
+	"github.com/NubeIO/rubix-updater/model"
 
 	"github.com/spf13/viper"
 
@@ -77,7 +78,7 @@ func GetDBErr() error {
 }
 
 func getWriter() io.Writer {
-	file, err := os.OpenFile("ugin.db.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	file, err := os.OpenFile("rubix.db.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		return os.Stdout
 	} else {

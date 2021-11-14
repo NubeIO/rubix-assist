@@ -1,4 +1,7 @@
-
+backend/.idea/
+frontend/.idea/
+.idea/
+*idea/
 ../.idea/
 ### VisualStudioCode ###
 .vscode/*
