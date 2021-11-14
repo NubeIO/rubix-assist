@@ -3,7 +3,6 @@ package config
 import (
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/spf13/viper"
-
 )
 
 var Config *Configuration

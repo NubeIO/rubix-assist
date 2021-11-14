@@ -36,5 +36,13 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hosts.PATCH("/:id", api.UpdateHost)
 		hosts.DELETE("/:id", api.DeleteHost)
 	}
+	token := r.Group("/api/tokens")
+	{
+		token.GET("/", api.GetTokens)
+		token.POST("/", api.CreateToken)
+		token.GET("/:id", api.GetToken)
+		token.PATCH("/:id", api.UpdateToken)
+		token.DELETE("/:id", api.DeleteToken)
+	}
 	return r
 }
