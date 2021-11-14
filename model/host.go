@@ -1,10 +1,9 @@
 package model
 
-import "gorm.io/gorm"
-
 type Host struct {
-	gorm.Model
+	ID       uint   `json:"id" gorm:"primarykey"`
 	IP       string `json:"ip"`
-	Port     string `json:"port"`
+	Port     int    `json:"port"`
 	Username string `json:"username"`
+	Password string `json:"password"`
 }

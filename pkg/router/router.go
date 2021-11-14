@@ -28,10 +28,13 @@ func Setup(db *gorm.DB) *gin.Engine {
 	r.Use(middleware.CORS())
 	api := controller.Controller{DB: db}
 	// Non-protected routes
-	hosts := r.Group("/hosts")
+	hosts := r.Group("/api/hosts")
 	{
 		hosts.GET("/", api.GetPosts)
 		hosts.POST("/", api.CreateHost)
+		hosts.GET("/:id", api.GetHost)
+		hosts.PATCH("/:id", api.UpdateHost)
+		hosts.DELETE("/:id", api.DeleteHost)
 	}
 	return r
 }
