@@ -1,21 +1,66 @@
 
-2021/11/13 16:33:19 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:32
-[0.017ms] [rows:-] SELECT count(*) FROM sqlite_master WHERE type='table' AND name="posts"
+2021/11/14 11:51:14 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:32
+[0.017ms] [rows:-] SELECT count(*) FROM sqlite_master WHERE type='table' AND name="hosts"
 
-2021/11/13 16:33:19 /home/aidan/code/go/nube/rubix-updater/pkg/database/database.go:63
-[8.724ms] [rows:0] CREATE TABLE `posts` (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`name` varchar(255),`description` text,PRIMARY KEY (`id`))
+2021/11/14 11:51:14 /home/aidan/code/go/nube/rubix-updater/pkg/database/database.go:63
+[6.230ms] [rows:0] CREATE TABLE `hosts` (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`ip` text,`port` text,`username` text,PRIMARY KEY (`id`))
 
-2021/11/13 16:33:19 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:240
-[5.232ms] [rows:0] CREATE INDEX `idx_posts_deleted_at` ON `posts`(`deleted_at`)
+2021/11/14 11:51:14 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:240
+[7.778ms] [rows:0] CREATE INDEX `idx_hosts_deleted_at` ON `hosts`(`deleted_at`)
 
-2021/11/13 16:33:19 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:32
-[0.018ms] [rows:-] SELECT count(*) FROM sqlite_master WHERE type='table' AND name="tags"
+2021/11/14 11:51:15 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.171ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
 
-2021/11/13 16:33:19 /home/aidan/code/go/nube/rubix-updater/pkg/database/database.go:63
-[5.335ms] [rows:0] CREATE TABLE `tags` (`id` integer,`created_at` datetime,`updated_at` datetime,`deleted_at` datetime,`post_id` integer,`name` varchar(255),`description` text,PRIMARY KEY (`id`),CONSTRAINT `fk_posts_tags` FOREIGN KEY (`post_id`) REFERENCES `posts`(`id`))
+2021/11/14 11:51:15 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.117ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
 
-2021/11/13 16:33:19 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:240
-[5.426ms] [rows:0] CREATE INDEX `idx_tags_post_id` ON `tags`(`post_id`)
+2021/11/14 11:51:16 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.122ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
 
-2021/11/13 16:33:19 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:240
-[5.403ms] [rows:0] CREATE INDEX `idx_tags_deleted_at` ON `tags`(`deleted_at`)
+2021/11/14 11:51:16 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.139ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
+
+2021/11/14 11:51:16 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.140ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
+
+2021/11/14 11:51:16 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.154ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
+
+2021/11/14 11:51:16 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.109ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
+
+2021/11/14 11:51:17 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.148ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
+
+2021/11/14 11:51:17 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.132ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
+
+2021/11/14 11:51:17 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.119ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
+
+2021/11/14 11:51:17 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.134ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
+
+2021/11/14 11:51:17 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.109ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
+
+2021/11/14 11:51:18 /home/aidan/code/go/nube/rubix-updater/controller/host.go:29
+[0.135ms] [rows:0] SELECT * FROM `hosts` WHERE id = "id"  AND `hosts`.`deleted_at` IS NULL ORDER BY `hosts`.`id` LIMIT 1
+
+2021/11/14 11:56:01 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:32
+[0.017ms] [rows:-] SELECT count(*) FROM sqlite_master WHERE type='table' AND name="hosts"
+
+2021/11/14 11:56:01 /home/aidan/code/go/nube/rubix-updater/pkg/database/database.go:63
+[0.014ms] [rows:-] SELECT * FROM `hosts` LIMIT 1
+
+2021/11/14 11:56:01 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:257
+[0.013ms] [rows:-] SELECT count(*) FROM sqlite_master WHERE type = "index" AND tbl_name = "hosts" AND name = "idx_hosts_deleted_at"
+
+2021/11/14 11:56:10 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:32
+[0.018ms] [rows:-] SELECT count(*) FROM sqlite_master WHERE type='table' AND name="hosts"
+
+2021/11/14 11:56:10 /home/aidan/code/go/nube/rubix-updater/pkg/database/database.go:63
+[0.015ms] [rows:-] SELECT * FROM `hosts` LIMIT 1
+
+2021/11/14 11:56:10 /home/aidan/go/pkg/mod/gorm.io/driver/sqlite@v1.2.4/migrator.go:257
+[0.013ms] [rows:-] SELECT count(*) FROM sqlite_master WHERE type = "index" AND tbl_name = "hosts" AND name = "idx_hosts_deleted_at"

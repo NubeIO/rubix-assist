@@ -60,7 +60,7 @@ func Setup() error {
 	}
 
 	// Auto migrate project models
-	db.AutoMigrate(&model.Post{}, &model.Tag{})
+	db.AutoMigrate(&model.Host{})
 	DB = db
 
 	return nil
