@@ -1,5 +1,5 @@
 
-.idea/
+../.idea/
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json

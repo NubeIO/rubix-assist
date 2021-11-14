@@ -7,3 +7,8 @@ type Host struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
+
+type Token struct {
+	ID    uint   `json:"id" gorm:"primarykey"`
+	Token string `json:"token"`
+}
