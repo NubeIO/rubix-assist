@@ -37,19 +37,61 @@ func (base *Controller) GetPosts(c *gin.Context) {
 	//// Get your output as []byte.
 	//fmt.Println(string(out))
 
-
-	m := new(model.Host)
-	if err := base.DB.Where("id = ? ", "id").Preload("Tags").First(&m).Error; err != nil {
+	var m []model.Host
+	if err := base.DB.Find(&m).Error; err != nil {
 		logger.Errorf("GetPost error: %v", err)
 		c.JSON(200, err)
+	} else {
+		c.JSON(200, m)
 	}
-	c.JSON(200, m)
+
 }
+
+func (base *Controller) GetHost(c *gin.Context) {
+	m := new(model.Host)
+	id := c.Params.ByName("id")
+	if err := base.DB.Where("id = ? ", id).First(&m).Error; err != nil {
+		logger.Errorf("GetHost error: %v", err)
+		reposeHandler(m, err, c)
+	} else {
+		reposeHandler(m, nil, c)
+	}
+}
+
 func (base *Controller) CreateHost(c *gin.Context) {
 	m := new(model.Host)
 	err := c.ShouldBindJSON(&m)
-	if err :=  base.DB.Save(&m).Error; err != nil {
+	if err := base.DB.Create(&m).Error; err != nil {
 		logger.Errorf("CreateHost error: %v", err)
 	}
 	reposeHandler(m, err, c)
+}
+
+func getHostBody(ctx *gin.Context) (dto *model.Host, err error) {
+	err = ctx.ShouldBindJSON(&dto)
+	return dto, err
+}
+
+func (base *Controller) UpdateHost(c *gin.Context) {
+	m := new(model.Host)
+	id := c.Params.ByName("id")
+	body, _ := getHostBody(c)
+	query := base.DB.Where("id = ?", id).Find(&m)
+	query = base.DB.Model(&m).Updates(body)
+	if query.Error != nil {
+		reposeHandler(m, query.Error, c)
+	} else {
+		reposeHandler(m, nil, c)
+	}
+}
+
+func (base *Controller) DeleteHost(c *gin.Context) {
+	m := new(model.Host)
+	id := c.Params.ByName("id")
+	if err := base.DB.Where("id = ? ", id).Delete(&m).Error; err != nil {
+		logger.Errorf("GetHost error: %v", err)
+		reposeHandler(m, err, c)
+	} else {
+		reposeHandler(m, nil, c)
+	}
 }
