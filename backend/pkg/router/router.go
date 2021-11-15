@@ -3,11 +3,12 @@ package router
 import (
 	"github.com/NubeIO/rubix-updater/controller"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
-	"github.com/NubeIO/rubix-updater/pkg/middleware"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"io"
 	"os"
+	"time"
 )
 
 func Setup(db *gorm.DB) *gin.Engine {
@@ -23,9 +24,37 @@ func Setup(db *gorm.DB) *gin.Engine {
 	// Set default middlewares
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+	r.Use(cors.New(cors.Config{
+		//AllowOrigins:     []string{"https://foo.com"},
+		AllowMethods:     []string{"GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"},
+		AllowHeaders:    []string{
+		"X-FLOW-Key", "Authorization", "Content-Type", "Upgrade", "Origin",
+		"Connection", "Accept-Encoding", "Accept-Language", "Host",
+		},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowAllOrigins: true,
+		AllowBrowserExtensions: true,
+		//AllowOriginFunc: func(origin string) bool {
+		//	return origin == "https://github.com"
+		//},
+		MaxAge: 12 * time.Hour,
+	}))
+
+
+	//config := cors.DefaultConfig()
+	//config.AllowAllOrigins = true
+	//r.Use(cors.New(config))
+	//r.Use(cors.New(cors.Config{
+	//	AllowOrigins:     []string{"http://0.0.0.0"},
+	//	AllowMethods:     []string{"PUT", "PATCH", "POST", "GET"},
+	//	AllowHeaders:     []string{"Origin"},
+	//	ExposeHeaders:    []string{"Content-Length"},
+	//	AllowCredentials: true,
+	//}))
 
 	// Set custom middlewares
-	r.Use(middleware.CORS())
+	//r.Use(middleware.CORS())
 	api := controller.Controller{DB: db}
 	// Non-protected routes
 	hosts := r.Group("/api/hosts")
