@@ -1,26 +1,23 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'screen/homepage.dart';
 
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'API',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Homepage(),
+      home: HomePage(),
     );
   }
 }
+

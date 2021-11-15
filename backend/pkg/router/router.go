@@ -25,7 +25,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	r.Use(cors.New(cors.Config{
-		//AllowOrigins:     []string{"https://foo.com"},
 		AllowMethods:     []string{"GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"},
 		AllowHeaders:    []string{
 		"X-FLOW-Key", "Authorization", "Content-Type", "Upgrade", "Origin",
@@ -35,23 +34,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 		AllowCredentials: true,
 		AllowAllOrigins: true,
 		AllowBrowserExtensions: true,
-		//AllowOriginFunc: func(origin string) bool {
-		//	return origin == "https://github.com"
-		//},
 		MaxAge: 12 * time.Hour,
 	}))
 
-
-	//config := cors.DefaultConfig()
-	//config.AllowAllOrigins = true
-	//r.Use(cors.New(config))
-	//r.Use(cors.New(cors.Config{
-	//	AllowOrigins:     []string{"http://0.0.0.0"},
-	//	AllowMethods:     []string{"PUT", "PATCH", "POST", "GET"},
-	//	AllowHeaders:     []string{"Origin"},
-	//	ExposeHeaders:    []string{"Content-Length"},
-	//	AllowCredentials: true,
-	//}))
 
 	// Set custom middlewares
 	//r.Use(middleware.CORS())
