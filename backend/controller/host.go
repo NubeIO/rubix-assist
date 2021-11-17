@@ -4,6 +4,7 @@ import (
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/gin-gonic/gin"
+	//"github.com/melbahja/goph"
 )
 
 type Message struct {
@@ -11,20 +12,6 @@ type Message struct {
 }
 
 func (base *Controller) GetPosts(c *gin.Context) {
-
-	//client, err := goph.New("pi", "192.168.15.102", goph.Password("N00BRCRC"))
-	//defer client.Close()
-	//
-	//// Execute your command.
-	//out, err := client.Run("pwd")
-	//
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//// Get your output as []byte.
-	//fmt.Println(string(out))
-
 	var m []model.Host
 	if err := base.DB.Find(&m).Error; err != nil {
 		logger.Errorf("GetPost error: %v", err)
@@ -32,17 +19,24 @@ func (base *Controller) GetPosts(c *gin.Context) {
 	} else {
 		c.JSON(200, m)
 	}
+}
 
+func (base *Controller) GetHostDB(id string) (*model.Host, error) {
+	m := new(model.Host)
+	if err := base.DB.Where("id = ? ", id).First(&m).Error; err != nil {
+		logger.Errorf("GetHost error: %v", err)
+		return nil, err
+	}
+	return m, nil
 }
 
 func (base *Controller) GetHost(c *gin.Context) {
-	m := new(model.Host)
 	id := c.Params.ByName("id")
-	if err := base.DB.Where("id = ? ", id).First(&m).Error; err != nil {
-		logger.Errorf("GetHost error: %v", err)
-		reposeHandler(m, err, c)
+	d, err := base.GetHostDB(id)
+	if err != nil {
+		reposeHandler(d, err, c)
 	} else {
-		reposeHandler(m, nil, c)
+		reposeHandler(d, err, c)
 	}
 }
 

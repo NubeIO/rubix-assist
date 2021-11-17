@@ -44,9 +44,15 @@ class _DetailWidgetState extends State<DetailWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  ElevatedButton(
-                    child: Text("LogIn"),
-                    onPressed: () { print(111);},
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      print(1111);
+
+                      // setState(() {
+                      //   productList = apiService.getProduct();
+                      // });
+                    },
                   ),
                   SizedBox(width: 5),
                   DropdownButton(

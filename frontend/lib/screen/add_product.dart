@@ -19,7 +19,7 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add New Product'),
+        title: Text('Add New Device'),
       ),
       body: SingleChildScrollView(
         child: Form(

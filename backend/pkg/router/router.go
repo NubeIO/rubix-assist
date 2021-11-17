@@ -58,5 +58,39 @@ func Setup(db *gorm.DB) *gin.Engine {
 		token.PATCH("/:id", api.UpdateToken)
 		token.DELETE("/:id", api.DeleteToken)
 	}
+
+	apps := r.Group("/api/apps")
+	{
+		apps.GET("/:id", api.GetApps)
+		apps.POST("/download/:id", api.DownloadApp)
+		apps.GET("/state/:id", api.DownloadApp)
+		apps.DELETE("/state/:id", api.DownloadApp)
+		apps.POST("/install/:id", api.DownloadApp)
+
+		//token.POST("/", api.CreateToken)
+		//token.GET("/:id", api.GetToken)
+		//token.PATCH("/:id", api.UpdateToken)
+		//token.DELETE("/:id", api.DeleteToken)
+	}
+
+	git := r.Group("/api/git")
+	{
+		git.GET("/:id", api.GitGetRelease)
+	}
+
+	plugins := r.Group("/api/plugins")
+	{
+		plugins.POST("/upload/:id", api.UploadPlugins)
+		plugins.POST("/delete/:id", api.DeleteAllPlugins)
+	}
+	upload := r.Group("/api/upload")
+	{
+		upload.POST("/:id", api.UploadZip)
+		upload.POST("/unzip/:id", api.Unzip)
+		//token.POST("/", api.CreateToken)
+		//token.GET("/:id", api.GetToken)
+		//token.PATCH("/:id", api.UpdateToken)
+		//token.DELETE("/:id", api.DeleteToken)
+	}
 	return r
 }
