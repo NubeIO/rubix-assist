@@ -10,6 +10,7 @@ var Config *Configuration
 type Configuration struct {
 	Server   ServerConfiguration
 	Database DatabaseConfiguration
+	Path PathConfiguration
 }
 
 // Setup initialize configuration

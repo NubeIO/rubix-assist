@@ -13,3 +13,16 @@ server:
   accessTokenExpireDuration: 1 
   refreshTokenExpireDuration: 1
   limitCountPerRequest: 0
+
+rubixApps:
+  deviceType: "armv7"
+  owner: "NubeIO"
+  repo: "flow-framework"
+  tag: "latest"
+
+path:
+  local: "/home/aidan/Downloads"
+  data: "/data"
+  fromPath: "/home/aidan/Downloads"
+  toPath: "/data"
+  flowPlugin: "/data/flow-framework/data/plugins"

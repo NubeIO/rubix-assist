@@ -26,6 +26,7 @@ func main() {
 		host = h
 	}
 	logger.Infof("Server is starting at %s:%s", host, viper.GetString("server.port"))
-	fmt.Printf("Server is running at %s:%s Check logs for details", host, viper.GetString("server.port"))
+	fmt.Printf("server is running at %s:%s Check logs for details\n", host, viper.GetString("server.port"))
+	fmt.Println()
 	logger.Fatalf("%v", r.Run(host+":"+viper.GetString("server.port")))
 }

@@ -2,11 +2,13 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/melbahja/goph"
 	"gorm.io/gorm"
 )
 
 type Controller struct {
 	DB *gorm.DB
+	SSH *goph.Client
 }
 
 func reposeHandler(body interface{}, err error, ctx *gin.Context) {

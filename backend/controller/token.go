@@ -16,14 +16,22 @@ func (base *Controller) GetTokens(c *gin.Context) {
 	}
 }
 
-func (base *Controller) GetToken(c *gin.Context) {
+func (base *Controller) dbGetToken(id string) (*model.Token, error) {
 	m := new(model.Token)
-	id := c.Params.ByName("id")
 	if err := base.DB.Where("id = ? ", id).First(&m).Error; err != nil {
 		logger.Errorf("GetToken error: %v", err)
-		reposeHandler(m, err, c)
+		return m, err
+	}
+	return m, err
+}
+
+func (base *Controller) GetToken(c *gin.Context) {
+	id := c.Params.ByName("id")
+	token, err := base.dbGetToken(id)
+	if err != nil {
+		reposeHandler(token, err, c)
 	} else {
-		reposeHandler(m, nil, c)
+		reposeHandler(token, nil, c)
 	}
 }
 
