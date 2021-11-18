@@ -63,14 +63,11 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		apps.GET("/:id", api.GetApps)
 		apps.POST("/download/:id", api.DownloadApp)
-		apps.GET("/state/:id", api.DownloadApp)
-		apps.DELETE("/state/:id", api.DownloadApp)
-		apps.POST("/install/:id", api.DownloadApp)
+		apps.POST("/full_install/:id", api.FullInstall)
+		apps.POST("/install/:id", api.InstallApp)
+		apps.GET("/state/:id", api.GetDownloadSate)
+		apps.DELETE("/state/:id", api.DeleteDownloadSate)
 
-		//token.POST("/", api.CreateToken)
-		//token.GET("/:id", api.GetToken)
-		//token.PATCH("/:id", api.UpdateToken)
-		//token.DELETE("/:id", api.DeleteToken)
 	}
 
 	git := r.Group("/api/git")
@@ -80,6 +77,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	plugins := r.Group("/api/plugins")
 	{
+		plugins.POST("/update/:id", api.UpdatePlugins)
 		plugins.POST("/upload/:id", api.UploadPlugins)
 		plugins.POST("/delete/:id", api.DeleteAllPlugins)
 	}

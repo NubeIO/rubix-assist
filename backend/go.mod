@@ -3,25 +3,20 @@ module github.com/NubeIO/rubix-updater
 go 1.17
 
 require (
-	github.com/gin-gonic/gin v1.7.4
-	github.com/sirupsen/logrus v1.8.1
-	github.com/spf13/viper v1.9.0
-	gorm.io/driver/sqlite v1.2.4
-	gorm.io/gorm v1.22.2
-)
-
-require (
-	github.com/NubeDev/flow-framework v0.1.6
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.2
 	github.com/gin-contrib/cors v1.3.1
+	github.com/gin-gonic/gin v1.7.4
 	github.com/melbahja/goph v1.3.0
 	github.com/pkg/sftp v1.13.4
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-	golang.org/x/sys v0.0.0-20211031064116-611d5d643895
+	github.com/sirupsen/logrus v1.8.1
+	github.com/spf13/viper v1.9.0
+	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871
+	golang.org/x/sys v0.0.0-20211117180635-dee7805ff2e1
+	gorm.io/driver/sqlite v1.2.4
+	gorm.io/gorm v1.22.3
 )
 
 require (
-	github.com/NubeIO/null v4.0.1+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
@@ -38,7 +33,7 @@ require (
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/mattn/go-sqlite3 v1.14.9 // indirect
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -52,5 +47,4 @@ require (
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.63.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gorm.io/datatypes v1.0.1 // indirect
 )

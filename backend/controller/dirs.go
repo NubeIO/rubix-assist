@@ -16,6 +16,28 @@ func (base *Controller) clearDir(id, path string) (result bool, err error) {
 	return true, err
 }
 
+func (base *Controller) mkDir(id, dir string, sudo bool) (result bool, err error) {
+	c := base.newClient(id)
+	defer c.Close()
+	command := fmt.Sprintf("mkdir %s", dir)
+	_, err = c.Run(command)
+	if err != nil {
+		return false, err
+	}
+	return true, err
+}
+
+func (base *Controller) rmDir(id, dir string, sudo bool) (result bool, err error) {
+	c := base.newClient(id)
+	defer c.Close()
+	command := fmt.Sprintf("rm -r %s", dir)
+	_, err = c.Run(command)
+	if err != nil {
+		return false, err
+	}
+	return true, err
+}
+
 func (base *Controller) ClearDir(ctx *gin.Context) {
 	body := dirBody(ctx)
 	id := ctx.Params.ByName("id")
