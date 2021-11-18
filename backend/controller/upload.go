@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/melbahja/goph"
 	"github.com/pkg/sftp"
+	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
 	"net"
 	"time"
@@ -139,13 +140,13 @@ func (base *Controller) uploadZip(id string, body *Upload) error {
 		fmt.Println(fromPath)
 		fmt.Println(i, zip)
 
-		//fp := fmt.Sprintf("%s/%s", fromPath, zip)
+		fp := fmt.Sprintf("%s/%s", fromPath, zip)
 		tp := fmt.Sprintf("%s/%s", toPath, zip)
 
-		//err := c.Upload(fp, tp)
-		//if err != nil {
-		//	fmt.Println(2222, err)
-		//}
+		err := c.Upload(fp, tp)
+		if err != nil {
+			log.Println("UPLOAD ZIP ERROR", err)
+		}
 		command := fmt.Sprintf("sudo unzip %s -d %s", tp, unZipPath)
 		out, err := c.Run(command)
 		fmt.Println(command)

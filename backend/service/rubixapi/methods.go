@@ -3,9 +3,9 @@ package rubixapi
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/NubeDev/flow-framework/plugin/nube/protocals/rubix/rubixmodel"
-	"github.com/NubeDev/flow-framework/utils"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/rest"
+	"github.com/NubeIO/rubix-updater/service/rubixmodel"
+	"github.com/NubeIO/rubix-updater/utils"
 	"strings"
 )
 
@@ -145,14 +145,17 @@ func (a *RestClient) AppsLatestVersions(r Req) (*rubixmodel.AppsLatestVersions, 
 }
 
 //AppsDownload download an app or apps
-func (a *RestClient) AppsDownload(r Req) (*rubixmodel.AppsInstall, error) {
+func (a *RestClient) AppsDownload(r Req) (interface{}, error) {
 	r.URL = fmt.Sprintf("/api/app/download")
+	fmt.Println(r.Body)
 	r.Method = POST
 	request, err := Request(r)
 	if err != nil {
 		return nil, err
 	}
-	res := new(rubixmodel.AppsInstall)
+	fmt.Println(request.StatusCode)
+	fmt.Println(request.String())
+	var res interface{}
 	err = json.Unmarshal(request.Bytes(), &res)
 	if err != nil {
 		return nil, err
@@ -162,14 +165,14 @@ func (a *RestClient) AppsDownload(r Req) (*rubixmodel.AppsInstall, error) {
 
 
 //AppsInstall install an app or apps
-func (a *RestClient) AppsInstall(r Req) (*rubixmodel.AppsInstall, error) {
+func (a *RestClient) AppsInstall(r Req) (interface{}, error) {
 	r.URL = fmt.Sprintf("/api/app/install")
 	r.Method = POST
 	request, err := Request(r)
 	if err != nil {
 		return nil, err
 	}
-	res := new(rubixmodel.AppsInstall)
+	var res interface{}
 	err = json.Unmarshal(request.Bytes(), &res)
 	if err != nil {
 		return nil, err
@@ -178,7 +181,7 @@ func (a *RestClient) AppsInstall(r Req) (*rubixmodel.AppsInstall, error) {
 }
 
 func (a *RestClient) AppsDownloadState(r Req) (*rubixmodel.DownloadState, error) {
-	r.URL = fmt.Sprintf("/api/app/install")
+	r.URL = fmt.Sprintf("/api/app/download_state")
 	r.Method = GET
 	request, err := Request(r)
 	if err != nil {
