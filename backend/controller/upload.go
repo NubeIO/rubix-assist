@@ -71,9 +71,10 @@ func VerifyHost(host string, remote net.Addr, key ssh.PublicKey) error {
 	return goph.AddKnownHost(host, remote, key, "")
 }
 
-func (base *Controller) newClient(id string) (c *goph.Client) {
+func (base *Controller) newClient(id string) (c *goph.Client, err error) {
 	h, err := base.GetHostDB(id)
 	if err != nil {
+		return nil, err
 	} else {
 		var cli serverSettings
 		cli.Addr = h.IP
@@ -87,8 +88,9 @@ func (base *Controller) newClient(id string) (c *goph.Client) {
 			Auth:     goph.Password(cli.Password),
 			Callback: VerifyHost,
 		})
+		return c, err
 	}
-	return
+
 }
 
 func getSftp(client *goph.Client) *sftp.Client {
@@ -132,7 +134,7 @@ func (base *Controller) uploadZip(id string, body *Upload) error {
 	if body.UnZipPath == "" {
 		unZipPath = getConfig.Path.UnZipPath
 	}
-	c := base.newClient(id)
+	c, _ := base.newClient(id)
 	defer c.Close()
 
 	for i, zip := range body.Zips {
@@ -183,7 +185,7 @@ func (base *Controller) Unzip(ctx *gin.Context) {
 	if err != nil {
 		reposeHandler(d, err, ctx)
 	} else {
-		c := base.newClient(id)
+		c, _ := base.newClient(id)
 		defer c.Close()
 		for _, zip := range body.Zips {
 			tp := fmt.Sprintf("%s/%s", toPath, zip)

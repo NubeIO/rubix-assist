@@ -1,18 +1,23 @@
 package router
 
 import (
+	"fmt"
 	"github.com/NubeIO/rubix-updater/controller"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/olahol/melody.v1"
 	"gorm.io/gorm"
 	"io"
 	"os"
 	"time"
 )
 
+
+
 func Setup(db *gorm.DB) *gin.Engine {
 	r := gin.New()
+	var ws = melody.New()
 	// Write gin access log to file
 	f, err := os.OpenFile("rubix.access.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
@@ -37,14 +42,21 @@ func Setup(db *gorm.DB) *gin.Engine {
 		MaxAge: 12 * time.Hour,
 	}))
 
+	//web socket route
+	r.GET("/ws", func(c *gin.Context) {
+		ws.HandleRequest(c.Writer, c.Request)
+	})
 
-	// Set custom middlewares
+	ws.HandleMessage(func(s *melody.Session, msg []byte) {
+		fmt.Println(string(msg))
+		ws.Broadcast(msg)
+	})
+
 	//r.Use(middleware.CORS())
-	api := controller.Controller{DB: db}
-	// Non-protected routes
+	api := controller.Controller{DB: db, WS: ws}
 	hosts := r.Group("/api/hosts")
 	{
-		hosts.GET("/", api.GetPosts)
+		hosts.GET("/", api.GetHosts)
 		hosts.POST("/", api.CreateHost)
 		hosts.GET("/:id", api.GetHost)
 		hosts.PATCH("/:id", api.UpdateHost)
@@ -58,7 +70,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		token.PATCH("/:id", api.UpdateToken)
 		token.DELETE("/:id", api.DeleteToken)
 	}
-
 	apps := r.Group("/api/apps")
 	{
 		apps.GET("/:id", api.GetApps)
@@ -67,7 +78,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		apps.POST("/install/:id", api.InstallApp)
 		apps.GET("/state/:id", api.GetDownloadSate)
 		apps.DELETE("/state/:id", api.DeleteDownloadSate)
-
 	}
 
 	git := r.Group("/api/git")
@@ -77,7 +87,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	plugins := r.Group("/api/plugins")
 	{
-		plugins.POST("/update/:id", api.UpdatePlugins)
+		plugins.POST("/full_install/:id", api.UpdatePlugins)
 		plugins.POST("/upload/:id", api.UploadPlugins)
 		plugins.POST("/delete/:id", api.DeleteAllPlugins)
 	}

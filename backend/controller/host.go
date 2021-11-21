@@ -5,13 +5,14 @@ import (
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/gin-gonic/gin"
 	//"github.com/melbahja/goph"
+
 )
 
 type Message struct {
 	Message string `json:"message"`
 }
 
-func (base *Controller) GetPosts(c *gin.Context) {
+func (base *Controller) GetHosts(c *gin.Context) {
 	var m []model.Host
 	if err := base.DB.Find(&m).Error; err != nil {
 		logger.Errorf("GetPost error: %v", err)
@@ -19,6 +20,8 @@ func (base *Controller) GetPosts(c *gin.Context) {
 	} else {
 		c.JSON(200, m)
 	}
+
+
 }
 
 func (base *Controller) GetHostDB(id string) (*model.Host, error) {

@@ -6,7 +6,7 @@ import (
 )
 
 func (base *Controller) clearDir(id, path string) (result bool, err error) {
-	c := base.newClient(id)
+	c, _ := base.newClient(id)
 	defer c.Close()
 	command := fmt.Sprintf("sudo rm %s/*", path)
 	_, err = c.Run(command)
@@ -17,7 +17,7 @@ func (base *Controller) clearDir(id, path string) (result bool, err error) {
 }
 
 func (base *Controller) mkDir(id, dir string, sudo bool) (result bool, err error) {
-	c := base.newClient(id)
+	c, _ := base.newClient(id)
 	defer c.Close()
 	command := fmt.Sprintf("mkdir %s", dir)
 	_, err = c.Run(command)
@@ -28,7 +28,7 @@ func (base *Controller) mkDir(id, dir string, sudo bool) (result bool, err error
 }
 
 func (base *Controller) rmDir(id, dir string, sudo bool) (result bool, err error) {
-	c := base.newClient(id)
+	c, _ := base.newClient(id)
 	defer c.Close()
 	command := fmt.Sprintf("rm -r %s", dir)
 	_, err = c.Run(command)
