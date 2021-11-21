@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
@@ -10,10 +11,37 @@ type TUpdatePlugins struct {
 	MakeUploadDir string `json:"make_upload_dir_pass"`
 	UpLoadPlugins string `json:"upload_plugins_pass"`
 	CleanUp string `json:"clean_up_pass"`
-
 }
 
+type TMsg struct {
+	Topic string
+	Message string
+}
+
+
+func publishMSG(in TMsg) []byte {
+	jmsg := map[string]interface{}{
+		"topic":  in.Topic,
+		"msg":  in.Message,
+	}
+	b, err := json.Marshal(jmsg)
+	if err != nil {
+		panic(err)
+	}
+	return b
+}
+
+
+//UpdatePlugins full install of the plugins as in upload, unzip and restart flow framework
 func (base *Controller) UpdatePlugins(ctx *gin.Context) {
+	fmt.Println(1111)
+	var msg TMsg
+	msg.Topic = "my topic"
+	msg.Message = "my msg"
+	msg_ := publishMSG(msg)
+	fmt.Println(string(msg_))
+	base.WS.Broadcast(publishMSG(msg))
+	fmt.Println(1111)
 	body := uploadBody(ctx)
 	id := ctx.Params.ByName("id")
 	result := new(TUpdatePlugins)
@@ -22,6 +50,10 @@ func (base *Controller) UpdatePlugins(ctx *gin.Context) {
 	result.UpLoadPlugins = "pass"
 	result.CleanUp = "restarted service"
 	_, err := base.clearDir(id, "/data/flow-framework/data/plugins")
+
+	//msg := new(TMsg)
+
+
 	if err != nil {
 		fmt.Println("RemoveOldPlugins", err)
 		result.RemoveOldPlugins = "failed to remove existing OR there where no existing plugins installed"

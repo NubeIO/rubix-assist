@@ -6,12 +6,14 @@ require (
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.2
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
+	github.com/gorilla/websocket v1.4.2
 	github.com/melbahja/goph v1.3.0
 	github.com/pkg/sftp v1.13.4
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.9.0
 	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871
 	golang.org/x/sys v0.0.0-20211117180635-dee7805ff2e1
+	gopkg.in/olahol/melody.v1 v1.0.0-20170518105555-d52139073376
 	gorm.io/driver/sqlite v1.2.4
 	gorm.io/gorm v1.22.3
 )
@@ -30,7 +32,7 @@ require (
 	github.com/kr/fs v0.1.0 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
-	github.com/mattn/go-isatty v0.0.12 // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-sqlite3 v1.14.9 // indirect
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect

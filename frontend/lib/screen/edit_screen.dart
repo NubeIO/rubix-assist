@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/model/product.dart';
+import 'package:flutter/services.dart';
+import 'package:frontend/model/host.dart';
 import 'package:frontend/services/api.dart';
 
-
 class EditScreen extends StatefulWidget {
-  const EditScreen(this.product);
-  final Product product;
+  const EditScreen(this.host);
+  final Host host;
   @override
   _EditScreenState createState() => _EditScreenState();
 }
@@ -13,20 +13,23 @@ class EditScreen extends StatefulWidget {
 class _EditScreenState extends State<EditScreen> {
   final ApiService apiService = ApiService();
   final _formKey = GlobalKey<FormState>();
-  final _productNameController = TextEditingController();
+  final _hostNameController = TextEditingController();
+  final _hostIpController = TextEditingController();
   int? id;
+  int? port;
   @override
   void initState() {
-    // TODO: implement initState
-    _productNameController.text = widget.product.name!;
-    id = widget.product.id!;
+    _hostNameController.text = widget.host.name!;
+    _hostIpController.text = widget.host.ip!;
+    port =  widget.host.port;
+    id = widget.host.id!;
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.product.name}'),
+        title: Text('${widget.host.name}'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -38,21 +41,45 @@ class _EditScreenState extends State<EditScreen> {
                 TextFormField(
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.name,
-                  controller: _productNameController,
+                  controller: _hostNameController,
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter product name';
+                      return 'Please enter host name';
                     }
                     return null;
                   },
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25)
-                    ),
+                    icon: Icon(Icons.font_download),
+                    labelText: 'NAME *',
+                    hintText: 'What do people call you?',
                     hintStyle: TextStyle(color: Colors.grey),
-                    hintText: 'Input Product Name',
                     filled: true,
-
+                  ),
+                ),
+                TextFormField(
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.name,
+                  controller: _hostIpController,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.font_download),
+                    labelText: 'IP *',
+                    hintText: 'What do people call you?',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    filled: true,
+                  ),
+                ),
+                TextFormField(
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.name,
+                  initialValue: port.toString(),
+                  onSaved: (input) => port = int.parse(input!),
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.pin),
+                    labelText: 'PORT *',
+                    hintText: 'What do people call you?',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    filled: true,
                   ),
                 ),
                 SizedBox(height: 20,),
@@ -62,13 +89,10 @@ class _EditScreenState extends State<EditScreen> {
                       height: 50,
                       child: ElevatedButton(
                           onPressed: () {
-
                               upDateProduct();
                               setState(() {
-                                apiService.getProduct();
+                                apiService.getHost();
                               });
-
-                            // show();
                           Navigator.of(context).pop();
                           },
                           style: ElevatedButton.styleFrom(
@@ -86,12 +110,12 @@ class _EditScreenState extends State<EditScreen> {
     );
   }
   void clear(){
-    _productNameController.clear();
+    _hostNameController.clear();
   }
   void upDateProduct(){
     if(_formKey.currentState!.validate()){
       _formKey.currentState!.save();
-      apiService.updateProduct(id!,Product(name: _productNameController.text)
+      apiService.updateHost(id!,Host(name: _hostNameController.text, ip: _hostIpController.text, port: port)
       );
     }
   }

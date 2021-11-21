@@ -1,40 +1,41 @@
 import 'dart:convert';
 
-import 'package:frontend/model/product.dart';
+import 'package:frontend/model/host.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 
 class ApiService {
-  final String apiUrl = "http://0.0.0.0:8080/api/hosts";
-  Future<List<Product>> getProduct() async {
-    final res = await http.get(Uri.parse(apiUrl+"/"));
+  final String hostUrl = "http://0.0.0.0:8080/api/hosts";
+  final String pluginUrl = "http://0.0.0.0:8080/api/plugins";
+
+  Future<List<Host>> getHost() async {
+    final res = await http.get(Uri.parse(hostUrl+"/"));
     if (res.statusCode == 200) {
       List jsRespone = json.decode(res.body);
       print(jsRespone);
-      return jsRespone.map((e) => new Product.fromJson(e)).toList();
+      return jsRespone.map((e) => new Host.fromJson(e)).toList();
     } else {
-      throw Exception('Failed to load product') ;
+      throw Exception('Failed to load host') ;
     }
   }
 
-  Future<Product> getProductById(String id) async {
-    final response = await http.get(Uri.parse('$apiUrl/$id'));
+  Future<Host> getHostById(String id) async {
+    final response = await http.get(Uri.parse('$hostUrl/$id'));
 
     if (response.statusCode == 200) {
-      return Product.fromJson(json.decode(response.body));
+      return Host.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load a case');
     }
   }
 
-  Future<Product> createProduct(Product product) async {
+  Future<Host> createHost(Host host) async {
     Map data = {
-      'name': product.name
+      'name': host.name
     };
-
     final  response = await post(
-      Uri.parse(apiUrl+"/"),
+      Uri.parse(hostUrl+"/"),
       headers: <String, String>{
         'Content-Type':'application/json; charset=UTF-8',
         'Accept' : 'application/json'
@@ -42,36 +43,37 @@ class ApiService {
       body: jsonEncode(data),
     );
     if (response.statusCode == 201) {
-      return Product.fromJson(json.decode(response.body));
+      return Host.fromJson(json.decode(response.body));
     } else {
       throw Exception(response.statusCode);
     }
   }
 
-  Future<Product> updateProduct(int id, Product product) async {
+  Future<Host> updateHost(int id, Host host) async {
     Map data = {
-      'name': product.name
+      'name': host.name,
+      'ip': host.ip,
+      'port': host.port,
     };
-
+    print(data);
     final Response response = await patch(
-      Uri.parse('$apiUrl/$id'),
+      Uri.parse('$hostUrl/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(data),
     );
     if (response.statusCode == 200) {
-      return Product.fromJson(json.decode(response.body));
+      return Host.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to update a case');
     }
   }
-  Future  deleteProduct(String id) async {
-    final http.Response res = await delete(Uri.parse('$apiUrl/$id'),
+  Future deleteHost(String id) async {
+    final http.Response res = await delete(Uri.parse('$hostUrl/$id'),
       headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },);
-
     if (res.statusCode == 200) {
       return true;
     } else {
@@ -79,3 +81,4 @@ class ApiService {
     }
   }
 }
+

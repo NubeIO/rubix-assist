@@ -19,7 +19,7 @@ func (base *Controller) InstallBios(ctx *gin.Context) {
 	if err != nil {
 		reposeHandler(d, err, ctx)
 	} else {
-		c := base.newClient(id)
+		c, _ := base.newClient(id)
 		defer c.Close()
 
 		commands := []string{"sudo rm -r /data",

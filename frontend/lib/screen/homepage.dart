@@ -1,23 +1,23 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:frontend/model/product.dart';
+import 'package:frontend/model/host.dart';
 import 'package:frontend/services/api.dart';
-
-import 'add_product.dart';
+import 'add_host.dart';
 import 'detail_widget.dart';
+
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
   final ApiService apiService = ApiService();
-  late Future<List<Product>> productList;
-  late Future<Product> _product;
+  late Future<List<Host>> hostList;
+
+
   String? id = '';
 
   @override
@@ -25,10 +25,9 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     setState(() {
-      productList = apiService.getProduct();
+      hostList = apiService.getHost();
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,57 +44,51 @@ class _HomePageState extends State<HomePage> {
         child: Center(
           child: RefreshIndicator(
             onRefresh: refresh,
-            child: FutureBuilder<List<Product>>(
-                future: productList,
+            child: FutureBuilder<List<Host>>(
+                future: hostList,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    List<Product>? product = snapshot.data;
+                    List<Host>? host = snapshot.data;
                     return ListView.builder(
-                      itemCount: product!.length,
+                      itemCount: host!.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                           child: InkWell(
                             child: ListTile(
                               leading: Icon(Icons.auto_awesome_mosaic_outlined),
-                              title: Text('NAME ${product[index].name}'),
+                              title: Text('DEVICE: ${host[index].name}'),
                               subtitle: Text(
-                                '${product[index].name}',
+                                'IP: ${host[index].ip}',
                                 style: TextStyle(color: Colors.grey),
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                      onPressed: () {}, icon: Icon(Icons.edit)),
+                                      tooltip: 'Install Flow-Framework Plugins',
+                                      onPressed: () {}, icon: Icon(Icons.downloading)),
                                   IconButton(
+                                      tooltip: 'Update Bios',
+                                      onPressed: () {},
+                                      icon: Icon(Icons.restart_alt)),
+                                  IconButton(
+                                      tooltip: 'Delete Host',
                                       onPressed: () {
-                                        apiService.deleteProduct('${product[index].id}');
-                                           setState(() {
-                                             productList = apiService.getProduct();
-                                           });
+                                        apiService.deleteHost('${host[index].id}');
+                                        setState(() {
+                                          hostList = apiService.getHost();
+                                        });
                                       },
                                       icon: Icon(Icons.delete)),
-                                  IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.add_box)),
                                 ],
                               ),
-                              // trailing: IconButton(
-                              //   icon: Icon(Icons.delete),
-                              //   onPressed: (){
-                              //    apiService.deleteProduct('${product[index].id}');
-                              //    setState(() {
-                              //      productList = apiService.getProduct();
-                              //    });
-                              //   },
-                              // ),
                             ),
                             onTap: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        DetailWidget(product[index]),
+                                        DetailWidget(host[index]),
                                   ));
                             },
                           ),
@@ -116,13 +109,13 @@ class _HomePageState extends State<HomePage> {
   navigateToAddScreen(BuildContext context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddProduct()),
+      MaterialPageRoute(builder: (context) => AddHost()),
     );
   }
 
   Future<void> refresh() {
     setState(() {
-      productList = apiService.getProduct();
+      hostList = apiService.getHost();
     });
     return Future.delayed(Duration(seconds: 2));
   }
