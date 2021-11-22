@@ -15,14 +15,24 @@ class _EditScreenState extends State<EditScreen> {
   final _formKey = GlobalKey<FormState>();
   final _hostNameController = TextEditingController();
   final _hostIpController = TextEditingController();
+  final _hostUserController = TextEditingController();
+  final _hostPasswordController = TextEditingController();
+  final _hostRubixUsernameController = TextEditingController();
+  final _hostRubixPasswordController = TextEditingController();
   int? id;
   int? port;
+  int? rubixPort;
   @override
   void initState() {
     _hostNameController.text = widget.host.name!;
     _hostIpController.text = widget.host.ip!;
+    _hostUserController.text = widget.host.username!;
+    _hostPasswordController.text = widget.host.password!;
+    _hostRubixUsernameController.text = widget.host.rubixUsername!;
+    _hostRubixPasswordController.text = widget.host.rubixPassword!;
     port =  widget.host.port;
     id = widget.host.id!;
+    rubixPort = widget.host.rubixPort;
     super.initState();
   }
   @override
@@ -82,6 +92,70 @@ class _EditScreenState extends State<EditScreen> {
                     filled: true,
                   ),
                 ),
+                TextFormField(
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.name,
+                  controller: _hostUserController,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.font_download),
+                    labelText: 'USER *',
+                    hintText: 'What do people call you?',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    filled: true,
+                  ),
+                ),
+                TextFormField(
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.name,
+                  controller: _hostPasswordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.font_download),
+                    labelText: 'PASSWORD *',
+                    hintText: 'What do people call you?',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    filled: true,
+                  ),
+                ),
+                TextFormField(
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.name,
+                  initialValue: rubixPort.toString(),
+                  onSaved: (input) => rubixPort = int.parse(input!),
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.pin),
+                    labelText: 'RUBIX PORT *',
+                    hintText: 'What do people call you?',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    filled: true,
+                  ),
+                ),
+                TextFormField(
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.name,
+                  controller: _hostRubixUsernameController,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.font_download),
+                    labelText: 'RUBIX USERNAME *',
+                    hintText: 'What do people call you?',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    filled: true,
+                  ),
+                ),
+                TextFormField(
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.name,
+                  controller: _hostRubixPasswordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.font_download),
+                    labelText: 'RUBIX PASSWORD *',
+                    hintText: 'What do people call you?',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    filled: true,
+                  ),
+                ),
                 SizedBox(height: 20,),
                 Center(
                     child:  Container(
@@ -115,7 +189,7 @@ class _EditScreenState extends State<EditScreen> {
   void upDateProduct(){
     if(_formKey.currentState!.validate()){
       _formKey.currentState!.save();
-      apiService.updateHost(id!,Host(name: _hostNameController.text, ip: _hostIpController.text, port: port)
+      apiService.updateHost(id!,Host(name: _hostNameController.text, ip: _hostIpController.text, port: port, username: _hostUserController.text, password: _hostPasswordController.text, rubixPort: rubixPort, rubixUsername: _hostRubixUsernameController.text, rubixPassword: _hostRubixPasswordController.text)
       );
     }
   }

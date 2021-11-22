@@ -6,7 +6,6 @@ require (
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.2
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
-	github.com/gorilla/websocket v1.4.2
 	github.com/melbahja/goph v1.3.0
 	github.com/pkg/sftp v1.13.4
 	github.com/sirupsen/logrus v1.8.1
@@ -25,6 +24,7 @@ require (
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.2 // indirect

@@ -54,6 +54,11 @@ class ApiService {
       'name': host.name,
       'ip': host.ip,
       'port': host.port,
+      'username': host.username,
+      'password':host.password,
+      'rubix_port':host.rubixPort,
+      'rubix_username':host.rubixUsername,
+      'rubix_password':host.rubixPassword,
     };
     print(data);
     final Response response = await patch(
