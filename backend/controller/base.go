@@ -15,7 +15,7 @@ type Controller struct {
 
 func reposeHandler(body interface{}, err error, ctx *gin.Context) {
 	if err != nil {
-		if body == nil {
+		if err == nil {
 			ctx.JSON(404, Message{Message: "unknown error"})
 		} else {
 			ctx.JSON(404, Message{Message: err.Error()})

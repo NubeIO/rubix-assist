@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/services/ws.dart';
 import 'screen/homepage.dart';
 
 
 
 void main() async{
+  enableWS();
   runApp(MyApp());
+
 }
 
 

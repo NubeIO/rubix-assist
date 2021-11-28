@@ -14,7 +14,6 @@ Future<void> enableWS() async {
         (data) {
       print(data.toString());
       Eventbus.fire(data.toString());
-      print(22222);
     },
     onError: (error) => print(error),
   );

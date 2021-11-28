@@ -49,18 +49,19 @@ func (base *Controller) restGetToken(id string) (token string, err error) {
 
 func (base *Controller) restReqBuilder(id string) (r rubixapi.Req, restClient *rubixapi.RestClient, err error) {
 	host, err := base.GetHostDB(id)
-	h := fmt.Sprintf("http://%s:%d", host.IP, host.RubixPort)
+	ip := fmt.Sprintf("http://%s:%d", host.IP, host.RubixPort)
 	token, err := base.restGetToken(id)
 	if err != nil {
-		//return
+		fmt.Println("ERROR ON GET RUBIX TOKEN", err)
 	}
+	fmt.Println("RUBIX IP:", ip)
+	fmt.Println("RUBIX TOKEN:", token)
 	headers := make(http.Header)
 	headers.Add("Authorization", token)
-
 	var rb = rest.RequestBuilder{
 		Headers:        headers,
 		Timeout:        300000 * time.Millisecond,
-		BaseURL:        h,
+		BaseURL:        ip,
 		ContentType:    rest.JSON,
 		DisableCache:   false,
 		DisableTimeout: false,
@@ -90,6 +91,12 @@ func bodyAppsDownload(ctx *gin.Context) (dto *rubixmodel.AppsDownload, err error
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
 }
+
+func bodyInterface(ctx *gin.Context) (dto interface{}, err error) {
+	err = ctx.ShouldBindJSON(&dto)
+	return dto, err
+}
+
 
 func (base *Controller) DownloadApp(ctx *gin.Context) {
 	id := ctx.Params.ByName("id")

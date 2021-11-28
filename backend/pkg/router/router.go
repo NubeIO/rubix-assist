@@ -100,5 +100,20 @@ func Setup(db *gorm.DB) *gin.Engine {
 		//token.PATCH("/:id", api.UpdateToken)
 		//token.DELETE("/:id", api.DeleteToken)
 	}
+
+	proxyRubix := r.Group("/api/rubix/proxy")
+	{
+		proxyRubix.GET("/*id", api.FFPoints)
+		proxyRubix.PATCH("/*id", api.FFPoints)
+	}
+
+	flowFramework := r.Group("/api/ff")
+	{
+		flowFramework.GET("/localstorage_flow_network/:id", api.FFGetLocalStorage)
+		flowFramework.PATCH("/localstorage_flow_network/:id", api.FFUpdateLocalStorage)
+		flowFramework.GET("/points/proxy/*id", api.FFPoints)
+		flowFramework.PATCH("/points/proxy/*id", api.FFPoints)
+
+	}
 	return r
 }

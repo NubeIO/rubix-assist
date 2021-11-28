@@ -42,14 +42,18 @@ class _DetailWidgetState extends State<DetailWidget> {
   @override
   void initState() {
     Eventbus.on().listen((event) {
-      WsPayload user = WsPayload.fromJson(jsonDecode(event));
-      printInteger(user.topic);
+      WsPayload msg = WsPayload.fromJson(jsonDecode(event));
+      print(msg.msg);
+      print(event);
+      printInteger(msg.msg);
     });
     id = widget.host.id!;
     gitPluginList = apiGit.getPlugins(id.toString());
     gitPluginList.then((value) => {
       value.forEach((element) {
-        pluginNames.add(element.name);
+        if (element.name.contains("arm")) {
+          pluginNames.add(element.name);
+        }
       })
     });
 
@@ -82,9 +86,16 @@ class _DetailWidgetState extends State<DetailWidget> {
                     style: TextStyle(fontSize: 20, color: Colors.grey)),
                 Expanded(child: Divider(thickness: 1.5)),
               ]),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      apiGit.updatePlugins(id.toString(), selected);
+                    },
+                  ),
                   const Text(
                     '     Fetch Plugins (tick and un-tick)',
                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -106,6 +117,7 @@ class _DetailWidgetState extends State<DetailWidget> {
                 onChanged: (List<String> x) {
                   setState(()  {
                     selected = x;
+
                     print(selected);
                   });
                 },

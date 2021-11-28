@@ -7,18 +7,17 @@ class ApiPlugins {
   //Install plugins
   final String pluginUrl = "http://0.0.0.0:8080/api/plugins";
   final String gitUrl = "http://0.0.0.0:8080/api/git";
-  Future updatePlugins(String id) async {
-    print('$pluginUrl/full_install/$id');
+
+  Future updatePlugins(String id, List<String> plugins) async {
     Map data = {
       "from_path": "/home/aidan/Downloads",
       "to_path": "/home/pi/.tmp_uploads",
       "unzip_path": "/data/flow-framework/data/plugins",
       "unzip": true,
       "clear_dir": true,
-      "zips": [
-        "backup-0.1.6-9865a178.armv7.zip"
-      ]
+      "zips": plugins
     };
+    print(data);
     final Response response = await post(
       Uri.parse('$pluginUrl/full_install/$id'),
       headers: <String, String>{
@@ -26,6 +25,9 @@ class ApiPlugins {
       },
       body: jsonEncode(data),
     );
+    print(response.statusCode);
+    print('$pluginUrl/full_install/$id');
+    print(response.body);
     if (response.statusCode == 200) {
       return response.body;
     } else {
