@@ -4,79 +4,100 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
 type TUpdatePlugins struct {
 	RemoveOldPlugins string `json:"remove_old_plugins_pass"`
-	MakeUploadDir string `json:"make_upload_dir_pass"`
-	UpLoadPlugins string `json:"upload_plugins_pass"`
-	CleanUp string `json:"clean_up_pass"`
+	MakeUploadDir    string `json:"make_upload_dir_pass"`
+	UpLoadPlugins    string `json:"upload_plugins_pass"`
+	CleanUp          string `json:"clean_up_pass"`
+	RestartFF        string `json:"restart_flow_framework"`
 }
 
 type TMsg struct {
-	Topic string
+	Topic   string
 	Message string
+	IsError bool
 }
 
-
-func publishMSG(in TMsg) []byte {
+//publishMSG send websocket message
+func (base *Controller) publishMSG(in TMsg) []byte {
 	jmsg := map[string]interface{}{
-		"topic":  in.Topic,
-		"msg":  in.Message,
+		"topic":    in.Topic,
+		"msg":      in.Message,
+		"is_error": in.IsError,
 	}
 	b, err := json.Marshal(jmsg)
 	if err != nil {
 		panic(err)
 	}
+	if in.IsError {
+		log.Errorf("ERROR: publish websocket message: %v\n", in.Message)
+	} else {
+		log.Infof("INFO: publish websocket message: %v\n", in.Message)
+	}
+	base.WS.Broadcast(b)
 	return b
 }
 
-
 //UpdatePlugins full install of the plugins as in upload, unzip and restart flow framework
 func (base *Controller) UpdatePlugins(ctx *gin.Context) {
-	fmt.Println(1111)
 	var msg TMsg
-	msg.Topic = "my topic"
-	msg.Message = "my msg"
-	msg_ := publishMSG(msg)
-	fmt.Println(string(msg_))
-	base.WS.Broadcast(publishMSG(msg))
-	fmt.Println(1111)
+	msg.Topic = "plugins.update"
+	msg.Message = "start update of plugins"
+	base.publishMSG(msg)
 	body := uploadBody(ctx)
 	id := ctx.Params.ByName("id")
 	result := new(TUpdatePlugins)
-	result.RemoveOldPlugins = "pass"
-	result.MakeUploadDir = "pass"
-	result.UpLoadPlugins = "pass"
-	result.CleanUp = "restarted service"
+	result.RemoveOldPlugins = "PASS: removed old plugins"
+	result.MakeUploadDir = "PASS: made tmp upload dir"
+	result.UpLoadPlugins = "PASS: upload and unzip plugins"
+	result.CleanUp = "PASS: deleted tmp upload dir"
+	result.RestartFF = "PASS: deleted tmp upload dir"
 	_, err := base.clearDir(id, "/data/flow-framework/data/plugins")
-
-	//msg := new(TMsg)
-
-
 	if err != nil {
-		fmt.Println("RemoveOldPlugins", err)
-		result.RemoveOldPlugins = "failed to remove existing OR there where no existing plugins installed"
+		result.RemoveOldPlugins = "PASS or FAIL: failed to remove existing OR there where no existing plugins installed"
+		msg.Message = result.RemoveOldPlugins
+		base.publishMSG(msg)
+	} else {
+		msg.Message = result.RemoveOldPlugins
+		base.publishMSG(msg)
 	}
 	_, err = base.mkDir(id, body.ToPath, false)
 	if err != nil {
-		fmt.Println("MakeUploadDir", err)
-		result.MakeUploadDir = "failed to make OR new dir or was exiting"
+		result.MakeUploadDir = "FAIL: failed to make OR new dir or was exiting"
+		msg.Message = result.MakeUploadDir
+		base.publishMSG(msg)
+	} else {
+		msg.Message = result.MakeUploadDir
+		base.publishMSG(msg)
 	}
 	err = base.uploadZip(id, body)
 	if err != nil {
-	fmt.Println("UpLoadPlugins", err)
 		result.UpLoadPlugins = fmt.Sprint(err)
+		msg.Message = result.UpLoadPlugins
+		base.publishMSG(msg)
+	} else {
+		msg.Message = result.UpLoadPlugins
+		base.publishMSG(msg)
 	}
 	_, err = base.rmDir(id, body.ToPath, false)
 	if err != nil {
-		fmt.Println("CleanUp", err)
 		result.CleanUp = fmt.Sprint(err)
+		msg.Message = result.CleanUp
+		base.publishMSG(msg)
+	} else {
+		msg.Message = result.CleanUp
+		base.publishMSG(msg)
 	}
 	_, err = base.runCommand(id, "sudo systemctl restart nubeio-flow-framework.service", true)
 	if err != nil {
-		fmt.Println("SystemctlRestart", err)
-		result.CleanUp = "fail"
+		msg.Message = result.RestartFF
+		base.publishMSG(msg)
+	} else {
+		msg.Message = result.RestartFF
+		base.publishMSG(msg)
 	}
 	reposeHandler(result, err, ctx)
 }

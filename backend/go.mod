@@ -6,8 +6,10 @@ require (
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.2
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
+	github.com/go-resty/resty/v2 v2.7.0
 	github.com/melbahja/goph v1.3.0
 	github.com/pkg/sftp v1.13.4
+	github.com/sbinet/pstree v0.3.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.9.0
 	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871
@@ -45,6 +47,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
+	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
 	golang.org/x/text v0.3.6 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.63.2 // indirect

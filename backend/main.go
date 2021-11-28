@@ -7,7 +7,6 @@ import (
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/NubeIO/rubix-updater/pkg/router"
 	"github.com/spf13/viper"
-
 )
 
 

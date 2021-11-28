@@ -4,8 +4,6 @@ import (
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/gin-gonic/gin"
-	//"github.com/melbahja/goph"
-
 )
 
 type Message struct {
@@ -20,13 +18,24 @@ func (base *Controller) GetHosts(c *gin.Context) {
 	} else {
 		c.JSON(200, m)
 	}
-
-
+	var msg TMsg
+	msg.Topic = "plugins.update"
+	msg.Message = "start update of plugins"
+	base.publishMSG(msg)
 }
 
 func (base *Controller) GetHostDB(id string) (*model.Host, error) {
 	m := new(model.Host)
 	if err := base.DB.Where("id = ? ", id).First(&m).Error; err != nil {
+		logger.Errorf("GetHost error: %v", err)
+		return nil, err
+	}
+	return m, nil
+}
+
+func (base *Controller) GetHostByName(name string) (*model.Host, error) {
+	m := new(model.Host)
+	if err := base.DB.Where("name = ? ", name).First(&m).Error; err != nil {
 		logger.Errorf("GetHost error: %v", err)
 		return nil, err
 	}
@@ -45,16 +54,28 @@ func (base *Controller) GetHost(c *gin.Context) {
 
 func (base *Controller) CreateHost(c *gin.Context) {
 	m := new(model.Host)
-	err := c.ShouldBindJSON(&m)
+	err = c.ShouldBindJSON(&m)
 	if err := base.DB.Create(&m).Error; err != nil {
-		logger.Errorf("CreateHost error: %v", err)
+		reposeHandler(m, err, c)
+	} else {
+		reposeHandler(m, err, c)
 	}
-	reposeHandler(m, err, c)
+
 }
 
 func getHostBody(ctx *gin.Context) (dto *model.Host, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
+}
+
+func (base *Controller) DBUpdateHost(id uint, host *model.Host) (*model.Host, error)  {
+	m := new(model.Host)
+	query := base.DB.Where("id = ?", id).Find(&m).Updates(host)
+	if query.Error != nil {
+		return nil, query.Error
+	}else {
+		return host,  query.Error
+	}
 }
 
 func (base *Controller) UpdateHost(c *gin.Context) {

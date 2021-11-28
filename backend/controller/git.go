@@ -46,10 +46,13 @@ func git(token string)  {
 
 }
 func (base *Controller) GitGetRelease(ctx *gin.Context) {
+	fmt.Println(2222)
 	id := ctx.Params.ByName("id")
+	fmt.Println(2222)
 	getToken, err := base.dbGetToken(id)
+	fmt.Println(2222)
 	if err != nil {
-		return
+		//return
 	}
 	fmt.Println(2222, getToken.Token)
 	//git(token.Token)

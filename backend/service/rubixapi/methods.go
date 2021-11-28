@@ -52,9 +52,11 @@ func Request(req Req) (*rest.Response, error) {
 	if req.URL == "" {
 		req.URL = "/"
 	}
+	req.RequestBuilder.ContentType = rest.JSON
 	if req.Auth {
 		req.RequestBuilder.Headers.Add("Authorization", req.Token)
 	}
+	//
 	var resp *rest.Response
 	switch req.Method {
 	case GET:
@@ -279,6 +281,8 @@ func (a *RestClient) WiresPlat(r Req, update bool) (*rubixmodel.WiresPlat, error
 	return res, nil
 }
 
+
+
 func (a *RestClient) AnyRequest(r Req) (interface{}, error) {
 	request, err := Request(r)
 	if err != nil {
@@ -293,11 +297,18 @@ func (a *RestClient) AnyRequest(r Req) (interface{}, error) {
 }
 
 //AnyRequestWithBody is for post, put or patch
-func (a *RestClient) AnyRequestWithBody(r Req) (interface{}, error) {
+func (a *RestClient) AnyRequestWithBody(r Req, uuid string) (interface{}, error) {
+	r.URL = urlBuilder("api/points", true, uuid)
 	request, err := Request(r)
 	if err != nil {
 		return nil, err
 	}
+
+	r.RequestBuilder.Headers.Add("Content-Type", "application/json; charset=utf-8")
+	s, _ := json.MarshalIndent(r.Body, "", "\t")
+	fmt.Println("BODY")
+	fmt.Println(string(s))
+	fmt.Println(request.String())
 	var res interface{}
 	err = json.Unmarshal(request.Bytes(), &res)
 	if err != nil {
