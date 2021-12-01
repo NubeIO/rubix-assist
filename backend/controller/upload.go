@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/pkg/config"
 	"github.com/gin-gonic/gin"
 	"github.com/melbahja/goph"
@@ -34,8 +35,7 @@ type serverSettings struct {
 }
 
 type Git struct {
-	Token   string   `json:"token"`
-
+	Token string `json:"token"`
 }
 
 type Upload struct {
@@ -90,6 +90,23 @@ func (base *Controller) newClient(id string) (c *goph.Client, err error) {
 		})
 		return c, err
 	}
+
+}
+
+func (base *Controller) newRemoteClient(host model.Host) (c *goph.Client, err error) {
+	var cli serverSettings
+	cli.Addr = host.IP
+	cli.User = host.Username
+	cli.Password = host.Password
+	cli.Port = uint(host.Port)
+	c, err = goph.NewConn(&goph.Config{
+		User:     cli.User,
+		Addr:     cli.Addr,
+		Port:     cli.Port,
+		Auth:     goph.Password(cli.Password),
+		Callback: VerifyHost,
+	})
+	return c, err
 
 }
 

@@ -1,14 +1,39 @@
 package controller
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/NubeIO/rubix-updater/model"
+	"github.com/NubeIO/rubix-updater/utils/command"
+)
 
-func (base *Controller) runCommand(id, cmd string, sudo bool) (result bool, err error) {
-	c, _ := base.newClient(id)
-	defer c.Close()
-	command := fmt.Sprintf("%s", cmd)
-	_, err = c.Run(command)
-	if err != nil {
-		return false, err
+type commandOpts struct {
+	id string
+	cmd string
+	sudo, debug bool
+	host model.Host
+
+}
+
+func (base *Controller) runCommand(commandOpts commandOpts, remoteCommand bool) (out []byte, result bool, err error) {
+	if !remoteCommand {
+		fmt.Println("HOST:", commandOpts.host.IP, "COMMAND", commandOpts.cmd)
+		c, err := base.newRemoteClient(commandOpts.host)
+		if err != nil {
+			fmt.Println("REMOTE-COMMAND-ERROR", err)
+			return nil, false, err
+		}
+		defer c.Close()
+		out, err = c.Run(commandOpts.cmd)
+		if err != nil {
+			fmt.Println("REMOTE-COMMAND-ERROR", err)
+			return nil, false, err
+		}
+		return out, true, err
+	} else {
+		out, err := command.RunCMD(commandOpts.cmd, commandOpts.debug)
+		if err != nil {
+			return nil, false, err
+		}
+		return out, false, err
 	}
-	return true, err
 }

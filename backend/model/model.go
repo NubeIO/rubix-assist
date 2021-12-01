@@ -3,7 +3,7 @@ package model
 import "time"
 
 type Host struct {
-	ID                   uint      `json:"id" gorm:"primarykey"`
+	ID                   string    `json:"id" gorm:"primarykey"`
 	Name                 string    `json:"name"  gorm:"type:varchar(255);unique;not null"`
 	IP                   string    `json:"ip"`
 	Port                 int       `json:"port"`
@@ -14,6 +14,7 @@ type Host struct {
 	RubixPassword        string    `json:"rubix_password"`
 	RubixToken           string    `json:"-"`
 	RubixTokenLastUpdate time.Time `json:"-"`
+	IsLocalhost bool `json:"is_localhost"`
 }
 
 type Token struct {

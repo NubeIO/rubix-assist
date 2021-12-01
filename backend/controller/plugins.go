@@ -1,10 +1,8 @@
 package controller
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 )
 
 type TUpdatePlugins struct {
@@ -21,25 +19,7 @@ type TMsg struct {
 	IsError bool
 }
 
-//publishMSG send websocket message
-func (base *Controller) publishMSG(in TMsg) []byte {
-	jmsg := map[string]interface{}{
-		"topic":    in.Topic,
-		"msg":      in.Message,
-		"is_error": in.IsError,
-	}
-	b, err := json.Marshal(jmsg)
-	if err != nil {
-		panic(err)
-	}
-	if in.IsError {
-		log.Errorf("ERROR: publish websocket message: %v\n", in.Message)
-	} else {
-		log.Infof("INFO: publish websocket message: %v\n", in.Message)
-	}
-	base.WS.Broadcast(b)
-	return b
-}
+
 
 //UpdatePlugins full install of the plugins as in upload, unzip and restart flow framework
 func (base *Controller) UpdatePlugins(ctx *gin.Context) {
@@ -64,7 +44,7 @@ func (base *Controller) UpdatePlugins(ctx *gin.Context) {
 		msg.Message = result.RemoveOldPlugins
 		base.publishMSG(msg)
 	}
-	_, err = base.mkDir(id, body.ToPath, false)
+	//_, err = base.mkDir(id, body.ToPath, false)
 	if err != nil {
 		result.MakeUploadDir = "FAIL: failed to make OR new dir or was exiting"
 		msg.Message = result.MakeUploadDir
@@ -91,14 +71,14 @@ func (base *Controller) UpdatePlugins(ctx *gin.Context) {
 		msg.Message = result.CleanUp
 		base.publishMSG(msg)
 	}
-	_, err = base.runCommand(id, "sudo systemctl restart nubeio-flow-framework.service", true)
-	if err != nil {
-		msg.Message = result.RestartFF
-		base.publishMSG(msg)
-	} else {
-		msg.Message = result.RestartFF
-		base.publishMSG(msg)
-	}
+	//_, err = base.runCommand(id, "sudo systemctl restart nubeio-flow-framework.service", true)
+	//if err != nil {
+	//	msg.Message = result.RestartFF
+	//	base.publishMSG(msg)
+	//} else {
+	//	msg.Message = result.RestartFF
+	//	base.publishMSG(msg)
+	//}
 	reposeHandler(result, err, ctx)
 }
 
