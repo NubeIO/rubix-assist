@@ -72,8 +72,8 @@ type AppsLatestVersions struct {
 	FLOWFRAMEWORK     string `json:"FLOW_FRAMEWORK"`
 }
 
-//DownloadState state
-type DownloadState struct {
+//AppsDownloadState state
+type AppsDownloadState struct {
 	State    string `json:"state"`
 	Services []struct {
 		Service  string `json:"service"`

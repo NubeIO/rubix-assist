@@ -70,12 +70,12 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 	apps := r.Group("/api/apps")
 	{
-		//apps.GET("/", api.GetApps)
-		//apps.POST("/download", api.DownloadApp)
-		apps.POST(controller.AppsUrls.Install, api.AppsRequest)
-		//apps.POST("/install", api.InstallApp)
-		//apps.GET("/state", api.GetDownloadSate)
-		//apps.DELETE("/state", api.DeleteDownloadSate)
+		apps.POST("/full_install", api.AppsFullInstall)
+	}
+
+	ufw := r.Group("/api/ufw")
+	{
+		ufw.POST("/install", api.InstallUFW)
 	}
 
 	bios := r.Group("/api/bios")
