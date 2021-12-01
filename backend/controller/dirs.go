@@ -16,7 +16,7 @@ func (base *Controller) clearDir(id, path string) (result bool, err error) {
 	return true, err
 }
 
-func (base *Controller) mkDir(id, dir string, sudo bool) (result bool, err error) {
+func (base *Controller) mkDir2(id, dir string, sudo bool) (result bool, err error) {
 	c, _ := base.newClient(id)
 	defer c.Close()
 	command := fmt.Sprintf("mkdir %s", dir)

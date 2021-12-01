@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"errors"
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
+	"github.com/NubeIO/rubix-updater/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,24 +26,6 @@ func (base *Controller) GetHosts(c *gin.Context) {
 	base.publishMSG(msg)
 }
 
-func (base *Controller) GetHostDB(id string) (*model.Host, error) {
-	m := new(model.Host)
-	if err := base.DB.Where("id = ? ", id).First(&m).Error; err != nil {
-		logger.Errorf("GetHost error: %v", err)
-		return nil, err
-	}
-	return m, nil
-}
-
-func (base *Controller) GetHostByName(name string) (*model.Host, error) {
-	m := new(model.Host)
-	if err := base.DB.Where("name = ? ", name).First(&m).Error; err != nil {
-		logger.Errorf("GetHost error: %v", err)
-		return nil, err
-	}
-	return m, nil
-}
-
 func (base *Controller) GetHost(c *gin.Context) {
 	id := c.Params.ByName("id")
 	d, err := base.GetHostDB(id)
@@ -54,6 +38,7 @@ func (base *Controller) GetHost(c *gin.Context) {
 
 func (base *Controller) CreateHost(c *gin.Context) {
 	m := new(model.Host)
+	m.ID, _ = utils.MakeUUID()
 	err = c.ShouldBindJSON(&m)
 	if err := base.DB.Create(&m).Error; err != nil {
 		reposeHandler(m, err, c)
@@ -68,13 +53,13 @@ func getHostBody(ctx *gin.Context) (dto *model.Host, err error) {
 	return dto, err
 }
 
-func (base *Controller) DBUpdateHost(id uint, host *model.Host) (*model.Host, error)  {
+func (base *Controller) DBUpdateHost(id string, host *model.Host) (*model.Host, error) {
 	m := new(model.Host)
 	query := base.DB.Where("id = ?", id).Find(&m).Updates(host)
 	if query.Error != nil {
 		return nil, query.Error
-	}else {
-		return host,  query.Error
+	} else {
+		return host, query.Error
 	}
 }
 
@@ -99,5 +84,36 @@ func (base *Controller) DeleteHost(c *gin.Context) {
 		reposeHandler(m, err, c)
 	} else {
 		reposeHandler(m, nil, c)
+	}
+}
+
+//DB CALLS
+
+func (base *Controller) GetHostDB(id string) (*model.Host, error) {
+	m := new(model.Host)
+	if err := base.DB.Where("id = ? ", id).First(&m).Error; err != nil {
+		logger.Errorf("GetHost error: %v", err)
+		return nil, err
+	}
+	return m, nil
+}
+
+func (base *Controller) GetHostByName(id string, useID bool) (*model.Host, error) {
+	m := new(model.Host)
+	switch useID {
+	case true:
+		if err := base.DB.Where("id = ? ", id).First(&m).Error; err != nil {
+			logger.Errorf("GetHost error: %v", err)
+			return nil, err
+		}
+		return m, nil
+	case false:
+		if err := base.DB.Where("name = ? ", id).First(&m).Error; err != nil {
+			logger.Errorf("GetHost error: %v", err)
+			return nil, err
+		}
+		return m, nil
+	default:
+		return nil, errors.New("ERROR no valid id or name was provided in the request")
 	}
 }

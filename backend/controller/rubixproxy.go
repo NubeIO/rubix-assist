@@ -27,36 +27,27 @@ func getMethod(method string) (out string) {
 	return out
 }
 
-func resolveHeaderHostID(ctx *gin.Context) string {
-	return ctx.GetHeader("host_id")
+
+
+func (base *Controller) resolveHost(ctx *gin.Context) (host *model.Host, useID bool, err error) {
+	idName, useID := useHostNameOrID(ctx)
+	host, err = base.GetHostByName(idName, useID)
+	return host, useID, err
 }
 
-func resolveHeaderHostName(ctx *gin.Context) string {
-	return ctx.GetHeader("host_name")
-}
-
-func (base *Controller) resolveHost(ctx *gin.Context) (*model.Host, error) {
-	hostID := resolveHeaderHostID(ctx)
-	hostName := resolveHeaderHostName(ctx)
-	if hostID != "" {
-		host, err := base.GetHostDB(hostID)
-		return host, err
-	} else if hostName != "" {
-		host, err := base.GetHostByName(hostName)
-		return host, err
-	} else {
-		return nil, errors.New("ERROR: no hostID or hostName provided")
-	}
-}
-
-func urlProxyPath(u string) (clean string) {
+func urlProxyPath(u string, nonProxyReq bool) (clean string) {
 	_url := fmt.Sprintf("http://%s", u)
 	p, err := url.Parse(_url)
 	if err != nil {
 		return ""
 	}
-	parts := strings.SplitAfter(p.String(), "proxy")
-	fmt.Println(parts)
+	var parts []string
+	if nonProxyReq {
+		parts = strings.SplitAfter(p.String(), "api")
+	} else {
+		parts = strings.SplitAfter(p.String(), "proxy")
+	}
+
 	if len(parts) >= 1 {
 		return parts[1]
 	} else {
@@ -64,19 +55,12 @@ func urlProxyPath(u string) (clean string) {
 	}
 }
 
-func bodyAsJSON(ctx *gin.Context) (interface{}, error) {
-	var body interface{} //get the body and put it into an interface
-	err = ctx.ShouldBindJSON(&body)
-	if err != nil {
-		return nil, err
-	}
-	return body, err
-}
 
 type proxyOptions struct {
 	ctx *gin.Context
 	refreshToken bool
 	reqOpt rest.ReqOpt
+	NonProxyReq bool
 }
 
 type proxyReturn struct {
@@ -96,13 +80,13 @@ func tokenTimeDiffMin(t time.Time, timeDiff float64) bool {
 
 func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *rest.Service, options *rest.ReqOpt, rtn proxyReturn, err error) {
 	ctx := proxyOptions.ctx
-	host, err := base.resolveHost(ctx)
+	host, _, err := base.resolveHost(ctx)
 	if err != nil {
 		return nil, nil, rtn, err
 	}
 	method := getMethod(ctx.Request.Method)
 	rtn.Method = method
-	ru := urlProxyPath(ctx.Request.URL.String())
+	ru := urlProxyPath(ctx.Request.URL.String(), proxyOptions.NonProxyReq)
 	rtn.RequestURL = ru
 	body, err := bodyAsJSON(ctx)
 	rtn.Body = body
@@ -147,25 +131,21 @@ func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *rest.Servic
 			return nil, nil, rtn, errors.New("ERROR: failed to update host token in db")
 		}
 	}
-	fmt.Println(33333)
 	return s, options, rtn, nil
 }
 
 
-
-
-
-func (base *Controller) FFPoints(ctx *gin.Context) {
+func (base *Controller) RubixProxyRequest(ctx *gin.Context) {
 	po := proxyOptions{
 		ctx: ctx,
-		refreshToken: false,
+		refreshToken: true,
 	}
 	proxyReq, opt, rtn, err := base.buildProxyReq(po)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 	} else {
 		opt = &rest.ReqOpt{
-			Timeout:          2 * time.Second,
+			Timeout:          500 * time.Second,
 			RetryCount:       0,
 			RetryWaitTime:    0 * time.Second,
 			RetryMaxWaitTime: 0,
@@ -182,31 +162,5 @@ func (base *Controller) FFPoints(ctx *gin.Context) {
 			reposeHandler(json, err, ctx)
 		}
 	}
-
-
-
 }
 
-func (base *Controller) FFGetLocalStorage(ctx *gin.Context) {
-	id := ctx.Params.ByName("id")
-	r, restCli, err := base.restReqBuilder(id)
-	apps, err := restCli.LocalStorage(r, false, true)
-	if err != nil {
-		reposeHandler(apps, err, ctx)
-	} else {
-		reposeHandler(apps, err, ctx)
-	}
-}
-
-func (base *Controller) FFUpdateLocalStorage(ctx *gin.Context) {
-	id := ctx.Params.ByName("id")
-	r, restCli, err := base.restReqBuilder(id)
-	body, _ := bodyInterface(ctx)
-	r.Body = body
-	apps, err := restCli.LocalStorage(r, true, true)
-	if err != nil {
-		reposeHandler(apps, err, ctx)
-	} else {
-		reposeHandler(apps, err, ctx)
-	}
-}

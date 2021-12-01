@@ -13,8 +13,6 @@ import (
 	"time"
 )
 
-
-
 func Setup(db *gorm.DB) *gin.Engine {
 	r := gin.New()
 	var ws = melody.New()
@@ -30,16 +28,16 @@ func Setup(db *gorm.DB) *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	r.Use(cors.New(cors.Config{
-		AllowMethods:     []string{"GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"},
-		AllowHeaders:    []string{
-		"X-FLOW-Key", "Authorization", "Content-Type", "Upgrade", "Origin",
-		"Connection", "Accept-Encoding", "Accept-Language", "Host",
+		AllowMethods: []string{"GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"},
+		AllowHeaders: []string{
+			"X-FLOW-Key", "Authorization", "Content-Type", "Upgrade", "Origin",
+			"Connection", "Accept-Encoding", "Accept-Language", "Host",
 		},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		AllowAllOrigins: true,
+		ExposeHeaders:          []string{"Content-Length"},
+		AllowCredentials:       true,
+		AllowAllOrigins:        true,
 		AllowBrowserExtensions: true,
-		MaxAge: 12 * time.Hour,
+		MaxAge:                 12 * time.Hour,
 	}))
 
 	//web socket route
@@ -72,12 +70,17 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 	apps := r.Group("/api/apps")
 	{
-		apps.GET("/:id", api.GetApps)
-		apps.POST("/download/:id", api.DownloadApp)
-		apps.POST("/full_install/:id", api.FullInstall)
-		apps.POST("/install/:id", api.InstallApp)
-		apps.GET("/state/:id", api.GetDownloadSate)
-		apps.DELETE("/state/:id", api.DeleteDownloadSate)
+		//apps.GET("/", api.GetApps)
+		//apps.POST("/download", api.DownloadApp)
+		apps.POST(controller.AppsUrls.Install, api.AppsRequest)
+		//apps.POST("/install", api.InstallApp)
+		//apps.GET("/state", api.GetDownloadSate)
+		//apps.DELETE("/state", api.DeleteDownloadSate)
+	}
+
+	bios := r.Group("/api/bios")
+	{
+		bios.POST("/install", api.InstallBios)
 	}
 
 	git := r.Group("/api/git")
@@ -95,25 +98,15 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		upload.POST("/:id", api.UploadZip)
 		upload.POST("/unzip/:id", api.Unzip)
-		//token.POST("/", api.CreateToken)
-		//token.GET("/:id", api.GetToken)
-		//token.PATCH("/:id", api.UpdateToken)
-		//token.DELETE("/:id", api.DeleteToken)
 	}
 
 	proxyRubix := r.Group("/api/rubix/proxy")
 	{
-		proxyRubix.GET("/*id", api.FFPoints)
-		proxyRubix.PATCH("/*id", api.FFPoints)
-	}
-
-	flowFramework := r.Group("/api/ff")
-	{
-		flowFramework.GET("/localstorage_flow_network/:id", api.FFGetLocalStorage)
-		flowFramework.PATCH("/localstorage_flow_network/:id", api.FFUpdateLocalStorage)
-		flowFramework.GET("/points/proxy/*id", api.FFPoints)
-		flowFramework.PATCH("/points/proxy/*id", api.FFPoints)
-
+		proxyRubix.GET("/*proxy", api.RubixProxyRequest)
+		proxyRubix.POST("/*proxy", api.RubixProxyRequest)
+		proxyRubix.PUT("/*proxy", api.RubixProxyRequest)
+		proxyRubix.PATCH("/*proxy", api.RubixProxyRequest)
+		proxyRubix.DELETE("/*proxy", api.RubixProxyRequest)
 	}
 	return r
 }
