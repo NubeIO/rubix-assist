@@ -18,12 +18,7 @@ type TokenResponse struct {
 	Message     *string `json:"message,omitempty"`
 }
 
-func bodyAppsDownload(ctx *gin.Context) (dto *rubixmodel.AppsDownload, err error) {
-	err = ctx.ShouldBindJSON(&dto)
-	return dto, err
-}
-
-func bodyInterface(ctx *gin.Context) (dto interface{}, err error) {
+func bodyAppsDownload(ctx *gin.Context) (dto appsDownload, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
 }
@@ -31,19 +26,27 @@ func bodyInterface(ctx *gin.Context) (dto interface{}, err error) {
 var AppsUrls = struct {
 	Install  string
 	Download string
-	State string
+	State    string
 }{
-	Install:  "/install",
-	Download: "/download",
-	State: "/state",
-
+	Install:  "/api/app/install",
+	Download: "/api/app/download",
+	State:    "/api/app/download_state",
 }
 
-func (base *Controller) AppsRequest(ctx *gin.Context) {
+type appsDownload []apps
+
+type apps struct {
+	Service string `json:"service"`
+	Version string `json:"version"`
+}
+
+func (base *Controller) AppsFullInstall(ctx *gin.Context) {
+
+	body, err := bodyAppsDownload(ctx)
 	po := proxyOptions{
 		ctx:          ctx,
 		refreshToken: true,
-		NonProxyReq: true,
+		NonProxyReq:  true,
 	}
 	proxyReq, opt, rtn, err := base.buildProxyReq(po)
 	if err != nil {
@@ -51,150 +54,51 @@ func (base *Controller) AppsRequest(ctx *gin.Context) {
 		return
 	}
 	opt = &rest.ReqOpt{
-		Timeout:          2 * time.Second,
+		Timeout:          500 * time.Second,
 		RetryCount:       0,
 		RetryWaitTime:    0 * time.Second,
 		RetryMaxWaitTime: 0,
 		Headers:          map[string]interface{}{"Authorization": rtn.Token},
-		Json:             rtn.Body,
+		Json:             body,
 	}
 
-	apps := "/apps"
-
-	//downloaded := false
-	//downloadCount := 0
-	//
-	//installation := false
-	//installCount := 0
-
-	switch rtn.RequestURL {
-	case apps+AppsUrls.Install:
-		req := proxyReq.Do(rtn.Method, rtn.RequestURL, opt)
-		json, err := req.AsJson()
-		fmt.Println(req.Err)
-		fmt.Println(req.StatusCode)
-		if err != nil {
-			reposeHandler(nil, err, ctx)
-		} else {
-			reposeHandler(json, err, ctx)
-		}
-	case apps+AppsUrls.Download:
-		req := proxyReq.Do(rtn.Method, rtn.RequestURL, opt)
-		json, err := req.AsJson()
-		fmt.Println(req.Err)
-		fmt.Println(req.StatusCode)
-		if err != nil {
-			reposeHandler(nil, err, ctx)
-		} else {
-			reposeHandler(json, err, ctx)
-		}
-	}
-
-
-
-	req := proxyReq.Do(rtn.Method, rtn.RequestURL, opt)
-	json, err := req.AsJson()
-	fmt.Println(req.Err)
-	fmt.Println(req.StatusCode)
-	if err != nil {
-		reposeHandler(nil, err, ctx)
-	} else {
-		reposeHandler(json, err, ctx)
-	}
-
-}
-
-func download(c int) bool {
-	fmt.Println("downloading")
-	if c == 3 {
-		return true
-	} else {
-		return false
-	}
-}
-
-func install(c int) bool {
-	fmt.Println("install")
-	if c == 3 {
-		return true
-	} else {
-		return false
-	}
-}
-
-
-
-//FullInstall do a download and install
-func (base *Controller) fullInstall(ctx *gin.Context) {
-	//checkState
-	//start download and check state every 4 sec
-	//once state is downloaded then start install
-	//once download is completed the start install
-
-	downloaded := false
 	downloadCount := 0
+	//get state
+	getState := proxyReq.Do(rest.GET, AppsUrls.State, opt)
+	fmt.Println(getState.StatusCode)
+	fmt.Println(getState.AsString())
+	//delete state
+	deleteState := proxyReq.Do(rest.DELETE, AppsUrls.State, opt)
+	fmt.Println(deleteState.StatusCode)
+	fmt.Println(deleteState.AsString())
 
-	installation := false
-	installCount := 0
+	appDownload := proxyReq.Do(rest.POST, AppsUrls.Download, opt)
+	fmt.Println(appDownload.Err)
+	fmt.Println(appDownload.StatusCode)
+	fmt.Println(appDownload.AsString())
 
+	//
 	for {
-		downloaded = download(downloadCount)
+		req := proxyReq.Do(rest.GET, AppsUrls.State, opt)
+		state := new(rubixmodel.AppsDownloadState)
+		req.ToInterface(&state)
+		fmt.Println(req.Err)
+		fmt.Println(req.StatusCode)
+		fmt.Println(4444, state.State)
 		time.Sleep(4 * time.Second)
 		downloadCount++
 		fmt.Println("downloaded")
-		if downloaded {
+		if state.State == "DOWNLOADED" {
 			break
 		}
 	}
-	for {
-		installation = install(installCount)
-		time.Sleep(4 * time.Second)
-		fmt.Println("installation")
-		installCount++
-		if installation {
-			break
-		}
-	}
-	reposeHandler(222, err, ctx)
+	appInstall := proxyReq.Do(rest.POST, AppsUrls.Install, opt)
+	fmt.Println(appInstall.Err)
+	fmt.Println(appInstall.StatusCode)
+	fmt.Println(appInstall.AsString())
+
+	deleteState = proxyReq.Do(rest.DELETE, AppsUrls.State, opt)
+	fmt.Println(deleteState.StatusCode)
+	fmt.Println(deleteState.AsString())
 
 }
-
-//for ok := true; ok; ok = downloadState != 2 {
-//	//n, err := downloadState
-//	if downloadState < 1  {
-//		fmt.Println("invalid input")
-//		break
-//	}
-//	time.Sleep(2 * time.Second)
-//	switch downloadState {
-//	case 1:
-//		state, _ := restCli.AppsDownloadState(r)
-//
-//		fmt.Println("state", state)
-//
-//		if state.State == "DOWNLOADING" {
-//			//downloadState = 1
-//		} else if  state.State == "DOWNLOADED" {
-//			fmt.Println("cause 1")
-//			downloadState = 5
-//
-//		}  else if  state.State == "CLEARED" {
-//			fmt.Println("cause 1")
-//			//downloadState = 5
-//		}
-//	case 5:
-//		fmt.Println("case 5")
-//		restCli.AppsInstall(r)
-//		// Do nothing (we want to exit the loop)
-//		// In a real program this could be cleanup
-//	default:
-//		fmt.Println("not clear")
-//	}
-//}
-
-//if err != nil {
-//	reposeHandler(apps, err, ctx)
-//} else {
-//	reposeHandler(apps, err, ctx)
-//}
-//}
