@@ -14,14 +14,12 @@ type Description struct {
 	Max      int    `json:"max" default:"80"`
 }
 
-
 type Username struct {
 	Type     string `json:"type" default:"string"`
 	Required bool   `json:"required" default:"true"`
 	Min      int    `json:"min" default:"8"`
 	Max      int    `json:"max" default:"20"`
 }
-
 
 type Password struct {
 	Type     string `json:"type" default:"string"`
@@ -42,8 +40,8 @@ type Port struct {
 	Required bool   `json:"required" default:"true"`
 	Min      int    `json:"min" default:"3"`
 	Max      int    `json:"max" default:"20"`
+	ReadOnly bool   `json:"read_only"  default:"true"`
 }
-
 
 //type Network struct {
 //	Name        NameStruct        `json:"name"`
