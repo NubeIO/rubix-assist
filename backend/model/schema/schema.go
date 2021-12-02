@@ -18,6 +18,7 @@ type Host struct {
 	Methods     interface{} `json:"methods"`
 	Name        Name        `json:"name"`
 	Description Description `json:"description"`
+	Username    Password    `json:"username"`
 	Password    Password    `json:"password"`
 	IP          IP          `json:"ip"`
 	Port        Port        `json:"port"`

@@ -14,6 +14,15 @@ type Description struct {
 	Max      int    `json:"max" default:"80"`
 }
 
+
+type Username struct {
+	Type     string `json:"type" default:"string"`
+	Required bool   `json:"required" default:"true"`
+	Min      int    `json:"min" default:"8"`
+	Max      int    `json:"max" default:"20"`
+}
+
+
 type Password struct {
 	Type     string `json:"type" default:"string"`
 	Required bool   `json:"required" default:"true"`
