@@ -6,6 +6,12 @@ import (
 )
 
 func (base *Controller) InstallUFW(ctx *gin.Context) {
+
+
+	_uwf, _ := base.UWF.UFWLoadStatus(true)
+
+	fmt.Println(_uwf.PortsCurrentState)
+
 	host, useID, err := base.resolveHost(ctx)
 	debug := false
 	if err != nil {
@@ -53,6 +59,7 @@ func (base *Controller) InstallUFW2(ctx *gin.Context) {
 		reposeHandler(nil, err, ctx)
 		return
 	}
+
 	fmt.Println("install", install)
 	reposeHandler("install completed", err, ctx)
 }

@@ -9,42 +9,22 @@ import (
 )
 
 type UFW struct {
-	AddCommand            string
-	RemoveCommand         string
+
 	IPToPortsCurrentState map[string]map[string]bool
-	IPToPortsNewState     map[string]map[string]bool
+
 }
 
-func (ufw *UFW) Initiliaze(credentials map[string]string) error {
-	ufw.AddCommand = "ufw allow from {{ip}} proto {{protocol}} to any port {{port}}"
-	ufw.RemoveCommand = "ufw delete allow from {{ip}} proto {{protocol}} to any port {{port}}"
 
-	ufw.IPToPortsCurrentState = map[string]map[string]bool{}
-	ufw.IPToPortsNewState = map[string]map[string]bool{}
-
-	return nil
-}
-
-//func (ufw *UFW) AddPortForIP(ip, port string) {
-//	AddForIP(ip, port, &ufw.IPToPortsNewState)
-//}
-
-func (ufw *UFW) ParseToken(token string) string {
-	tokens := strings.Split(token, "=")
-	return strings.Replace(tokens[1], "\"", "", -1)
-}
 
 func (ufw *UFW) LoadCurrentPolicy() error {
 	ufw.IPToPortsCurrentState = map[string]map[string]bool{}
 
 	cmd := "sudo ufw status | grep ALLOW"
-	fmt.Println(222)
 	output, err := command.RunCMD(cmd, true)
 	fmt.Println(222, err)
 	fmt.Println(string(output))
 
 	if err != nil {
-	
 		return err
 	}
 

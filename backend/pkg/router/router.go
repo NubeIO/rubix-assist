@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/rubix-updater/controller"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
+	"github.com/NubeIO/rubix-updater/utils/ufw"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/olahol/melody.v1"
@@ -16,6 +17,7 @@ import (
 func Setup(db *gorm.DB) *gin.Engine {
 	r := gin.New()
 	var ws = melody.New()
+	 _ufw := new(ufw.UFW)
 	// Write gin access log to file
 	f, err := os.OpenFile("rubix.access.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
@@ -51,9 +53,10 @@ func Setup(db *gorm.DB) *gin.Engine {
 	})
 
 	//r.Use(middleware.CORS())
-	api := controller.Controller{DB: db, WS: ws}
+	api := controller.Controller{DB: db, WS: ws, UWF: _ufw}
 	hosts := r.Group("/api/hosts")
 	{
+		hosts.GET("/schema", api.HostsSchema)
 		hosts.GET("/", api.GetHosts)
 		hosts.POST("/", api.CreateHost)
 		hosts.GET("/:id", api.GetHost)
@@ -73,9 +76,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 		apps.POST("/full_install", api.AppsFullInstall)
 	}
 
-	ufw := r.Group("/api/ufw")
+	uf := r.Group("/api/ufw")
 	{
-		ufw.POST("/install", api.InstallUFW)
+		uf.POST("/install", api.InstallUFW)
 	}
 
 	bios := r.Group("/api/bios")

@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"github.com/NubeIO/rubix-updater/utils/git"
+	"github.com/NubeIO/rubix-updater/utils/ufw"
 	"github.com/gin-gonic/gin"
 	"github.com/melbahja/goph"
 	log "github.com/sirupsen/logrus"
@@ -14,6 +15,7 @@ type Controller struct {
 	DB  *gorm.DB
 	SSH *goph.Client
 	WS  *melody.Melody //web socket
+	UWF *ufw.UFW
 }
 
 //publishMSG send websocket message
