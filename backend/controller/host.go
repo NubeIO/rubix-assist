@@ -3,6 +3,7 @@ package controller
 import (
 	"errors"
 	"github.com/NubeIO/rubix-updater/model"
+	"github.com/NubeIO/rubix-updater/model/schema"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/NubeIO/rubix-updater/utils"
 	"github.com/gin-gonic/gin"
@@ -11,6 +12,11 @@ import (
 type Message struct {
 	Message string `json:"message"`
 }
+
+func (base *Controller) HostsSchema(ctx *gin.Context) {
+	reposeHandler(schema.GetHostSchema(), err, ctx)
+}
+
 
 func (base *Controller) GetHosts(c *gin.Context) {
 	var m []model.Host

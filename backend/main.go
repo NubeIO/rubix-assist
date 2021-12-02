@@ -12,6 +12,7 @@ import (
 
 
 func main() {
+	fmt.Println("try and start")
 	if err := config.Setup(); err != nil {
 		logger.Fatalf("config.Setup() error: %s", err)
 	}
