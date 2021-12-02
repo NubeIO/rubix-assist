@@ -24,7 +24,7 @@ func main() {
 	db := database.GetDB()
 	r := router.Setup(db)
 
-	host := "127.0.0.1"
+	host := "0.0.0.0"
 	if h := viper.GetString("server.host"); h != "" {
 		host = h
 	}
