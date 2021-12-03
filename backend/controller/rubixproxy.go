@@ -3,9 +3,10 @@ package controller
 import (
 	"errors"
 	"fmt"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nrest"
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/service/rubixmodel"
-	"github.com/NubeIO/rubix-updater/utils/rest"
+
 	"github.com/gin-gonic/gin"
 	"net/url"
 	"strings"
@@ -13,21 +14,19 @@ import (
 )
 
 func getMethod(method string) (out string) {
-	out = rest.GET
+	out = nrest.GET
 	switch method {
 	case "GET":
-		out = rest.GET
+		out = nrest.GET
 	case "PATCH":
-		out = rest.PATCH
+		out = nrest.PATCH
 	case "DELETE":
-		out = rest.DELETE
+		out = nrest.DELETE
 	case "POST":
-		out = rest.POST
+		out = nrest.POST
 	}
 	return out
 }
-
-
 
 func (base *Controller) resolveHost(ctx *gin.Context) (host *model.Host, useID bool, err error) {
 	idName, useID := useHostNameOrID(ctx)
@@ -55,17 +54,16 @@ func urlProxyPath(u string, nonProxyReq bool) (clean string) {
 	}
 }
 
-
 type proxyOptions struct {
-	ctx *gin.Context
+	ctx          *gin.Context
 	refreshToken bool
-	reqOpt rest.ReqOpt
-	NonProxyReq bool
+	reqOpt       nrest.ReqOpt
+	NonProxyReq  bool
 }
 
 type proxyReturn struct {
 	Token, Method, RequestURL string
-	Body interface{}
+	Body                      interface{}
 }
 
 func tokenTimeDiffMin(t time.Time, timeDiff float64) bool {
@@ -77,8 +75,7 @@ func tokenTimeDiffMin(t time.Time, timeDiff float64) bool {
 	}
 }
 
-
-func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *rest.Service, options *rest.ReqOpt, rtn proxyReturn, err error) {
+func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *nrest.Service, options *nrest.ReqOpt, rtn proxyReturn, err error) {
 	ctx := proxyOptions.ctx
 	host, _, err := base.resolveHost(ctx)
 	if err != nil {
@@ -94,21 +91,21 @@ func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *rest.Servic
 
 	fmt.Println("IP:", ip)
 
-	s = &rest.Service{
+	s = &nrest.Service{
 		BaseUri: ip,
 	}
 	token := host.RubixToken
 	fmt.Println("UPDATE HOST TOKEN:", "ID", host.ID, host.RubixToken)
 	fmt.Println("tokenTimeDiffMin", tokenTimeDiffMin(host.RubixTokenLastUpdate, 15))
 	if token == "" || proxyOptions.refreshToken || tokenTimeDiffMin(host.RubixTokenLastUpdate, 15) {
-		options = &rest.ReqOpt{
+		options = &nrest.ReqOpt{
 			Timeout:          2 * time.Second,
 			RetryCount:       2,
 			RetryWaitTime:    2 * time.Second,
 			RetryMaxWaitTime: 0,
 			Json:             map[string]interface{}{"username": host.RubixUsername, "password": host.RubixPassword},
 		}
-		req := s.Do(rest.POST, "/api/users/login", options)
+		req := s.Do(nrest.POST, "/api/users/login", options)
 		fmt.Println("REQ GET TOKEN:", req.AsString())
 		res := new(rubixmodel.TokenResponse)
 		err = req.ToInterface(&res)
@@ -134,17 +131,16 @@ func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *rest.Servic
 	return s, options, rtn, nil
 }
 
-
 func (base *Controller) RubixProxyRequest(ctx *gin.Context) {
 	po := proxyOptions{
-		ctx: ctx,
+		ctx:          ctx,
 		refreshToken: true,
 	}
 	proxyReq, opt, rtn, err := base.buildProxyReq(po)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 	} else {
-		opt = &rest.ReqOpt{
+		opt = &nrest.ReqOpt{
 			Timeout:          500 * time.Second,
 			RetryCount:       0,
 			RetryWaitTime:    0 * time.Second,
@@ -163,4 +159,3 @@ func (base *Controller) RubixProxyRequest(ctx *gin.Context) {
 		}
 	}
 }
-

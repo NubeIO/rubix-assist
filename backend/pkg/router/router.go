@@ -2,10 +2,10 @@ package router
 
 import (
 	"fmt"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/ufw"
 	"github.com/NubeIO/rubix-updater/controller"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/NubeIO/rubix-updater/service/auth"
-	"github.com/NubeIO/rubix-updater/utils/ufw"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"

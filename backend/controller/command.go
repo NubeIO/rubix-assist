@@ -2,16 +2,15 @@ package controller
 
 import (
 	"fmt"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/command"
 	"github.com/NubeIO/rubix-updater/model"
-	"github.com/NubeIO/rubix-updater/utils/command"
 )
 
 type commandOpts struct {
-	id string
-	cmd string
+	id          string
+	cmd         string
 	sudo, debug bool
-	host model.Host
-
+	host        model.Host
 }
 
 func (base *Controller) runCommand(commandOpts commandOpts, remoteCommand bool) (out []byte, result bool, err error) {

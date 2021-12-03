@@ -3,7 +3,7 @@ package github
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/NubeIO/rubix-updater/utils"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/arr"
 	"io"
 	"net/http"
 	"os"
@@ -22,14 +22,14 @@ type AssetsInfo struct {
 	Downloaded []Asset `json:"downloaded"`
 }
 
-func RetrieveAssets(owner, repo, tag, token, buildType string) (*utils.Array, error) {
+func RetrieveAssets(owner, repo, tag, token, buildType string) (*arr.Array, error) {
 	assetsInfo, err := GetAssetsInfo(owner, repo, tag, token)
 	if err != nil {
 		fmt.Println("error: main github.RetrieveAssets:", assetsInfo)
 		return nil, err
 	}
 
-	downloaded := utils.NewArray()
+	downloaded := arr.NewArray()
 	for _, asset := range assetsInfo.Assets {
 		fmt.Println(asset.Name)
 
@@ -49,7 +49,6 @@ func RetrieveAssets(owner, repo, tag, token, buildType string) (*utils.Array, er
 	}
 	return downloaded, err
 }
-
 
 func GetAssetsInfo(owner, repo, tag, token string) (*AssetsInfo, error) {
 	req, err := newRequest("GET", tagURL(owner, repo, tag), token)

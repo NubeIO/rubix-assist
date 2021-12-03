@@ -2,8 +2,9 @@ package controller
 
 import (
 	"fmt"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nrest"
 	"github.com/NubeIO/rubix-updater/service/rubixmodel"
-	"github.com/NubeIO/rubix-updater/utils/rest"
+
 	"github.com/gin-gonic/gin"
 	"time"
 )
@@ -53,7 +54,7 @@ func (base *Controller) AppsFullInstall(ctx *gin.Context) {
 		reposeHandler(nil, err, ctx)
 		return
 	}
-	opt = &rest.ReqOpt{
+	opt = &nrest.ReqOpt{
 		Timeout:          500 * time.Second,
 		RetryCount:       0,
 		RetryWaitTime:    0 * time.Second,
@@ -64,22 +65,22 @@ func (base *Controller) AppsFullInstall(ctx *gin.Context) {
 
 	downloadCount := 0
 	//get state
-	getState := proxyReq.Do(rest.GET, AppsUrls.State, opt)
+	getState := proxyReq.Do(nrest.GET, AppsUrls.State, opt)
 	fmt.Println(getState.StatusCode)
 	fmt.Println(getState.AsString())
 	//delete state
-	deleteState := proxyReq.Do(rest.DELETE, AppsUrls.State, opt)
+	deleteState := proxyReq.Do(nrest.DELETE, AppsUrls.State, opt)
 	fmt.Println(deleteState.StatusCode)
 	fmt.Println(deleteState.AsString())
 
-	appDownload := proxyReq.Do(rest.POST, AppsUrls.Download, opt)
+	appDownload := proxyReq.Do(nrest.POST, AppsUrls.Download, opt)
 	fmt.Println(appDownload.Err)
 	fmt.Println(appDownload.StatusCode)
 	fmt.Println(appDownload.AsString())
 
 	//
 	for {
-		req := proxyReq.Do(rest.GET, AppsUrls.State, opt)
+		req := proxyReq.Do(nrest.GET, AppsUrls.State, opt)
 		state := new(rubixmodel.AppsDownloadState)
 		req.ToInterface(&state)
 		fmt.Println(req.Err)
@@ -92,12 +93,12 @@ func (base *Controller) AppsFullInstall(ctx *gin.Context) {
 			break
 		}
 	}
-	appInstall := proxyReq.Do(rest.POST, AppsUrls.Install, opt)
+	appInstall := proxyReq.Do(nrest.POST, AppsUrls.Install, opt)
 	fmt.Println(appInstall.Err)
 	fmt.Println(appInstall.StatusCode)
 	fmt.Println(appInstall.AsString())
 
-	deleteState = proxyReq.Do(rest.DELETE, AppsUrls.State, opt)
+	deleteState = proxyReq.Do(nrest.DELETE, AppsUrls.State, opt)
 	fmt.Println(deleteState.StatusCode)
 	fmt.Println(deleteState.AsString())
 

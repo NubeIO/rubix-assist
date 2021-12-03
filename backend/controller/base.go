@@ -2,8 +2,8 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/NubeIO/rubix-updater/utils/git"
-	"github.com/NubeIO/rubix-updater/utils/ufw"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/git"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/ufw"
 	"github.com/gin-gonic/gin"
 	"github.com/melbahja/goph"
 	log "github.com/sirupsen/logrus"
@@ -46,7 +46,6 @@ func getGitBody(ctx *gin.Context) (dto *git.Git, err error) {
 	return dto, err
 }
 
-
 func bodyAsJSON(ctx *gin.Context) (interface{}, error) {
 	var body interface{} //get the body and put it into an interface
 	err = ctx.ShouldBindJSON(&body)
@@ -56,10 +55,9 @@ func bodyAsJSON(ctx *gin.Context) (interface{}, error) {
 	return body, err
 }
 
-
 func useHostNameOrID(ctx *gin.Context) (idName string, useID bool) {
-	hostID :=  resolveHeaderHostID(ctx)
-	hostName :=  resolveHeaderHostName(ctx)
+	hostID := resolveHeaderHostID(ctx)
+	hostName := resolveHeaderHostName(ctx)
 	if hostID != "" {
 		return hostID, true
 	} else if hostName != "" {
@@ -80,7 +78,6 @@ func resolveHeaderHostName(ctx *gin.Context) string {
 func resolveHeaderGitToken(ctx *gin.Context) string {
 	return ctx.GetHeader("git_token")
 }
-
 
 func reposeHandler(body interface{}, err error, ctx *gin.Context) {
 	if err != nil {
