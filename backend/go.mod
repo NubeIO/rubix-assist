@@ -2,6 +2,8 @@ module github.com/NubeIO/rubix-updater
 
 go 1.17
 
+replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nube/nubeio-rubix-lib-helpers-go
+
 require (
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.2
 	github.com/appleboy/gin-jwt/v2 v2.7.0

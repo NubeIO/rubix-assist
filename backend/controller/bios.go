@@ -2,7 +2,8 @@ package controller
 
 import (
 	"fmt"
-	"github.com/NubeIO/rubix-updater/utils/git"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/git"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,8 +21,8 @@ func (base *Controller) InstallBios(ctx *gin.Context) {
 		return
 	}
 	path := fmt.Sprintf("/home/%s/rubix-bios-install", host.Username)
-	opts := commandOpts {
-		cmd: path,
+	opts := commandOpts{
+		cmd:  path,
 		host: *host,
 	}
 	//MAKE DIR if not existing and also clear dir
@@ -41,11 +42,11 @@ func (base *Controller) InstallBios(ctx *gin.Context) {
 	if useID {
 		hostName = host.ID
 	}
-	opts = commandOpts {
-		id: hostName,
-		cmd: command,
+	opts = commandOpts{
+		id:    hostName,
+		cmd:   command,
 		debug: debug,
-		host: *host,
+		host:  *host,
 	}
 	//DOWNLOAD BUILD
 	fmt.Println("download", "try and download bios")
@@ -55,14 +56,14 @@ func (base *Controller) InstallBios(ctx *gin.Context) {
 		return
 	}
 	fmt.Println("download", download)
-	unzipCmd := "unzip -o " + g.DownloadPath +"/"+  g.FolderName +" -d "+ g.DownloadPath
+	unzipCmd := "unzip -o " + g.DownloadPath + "/" + g.FolderName + " -d " + g.DownloadPath
 	fmt.Println(unzipCmd)
 
-	opts = commandOpts {
-		id: hostName,
-		cmd: unzipCmd,
+	opts = commandOpts{
+		id:    hostName,
+		cmd:   unzipCmd,
 		debug: debug,
-		host: *host,
+		host:  *host,
 	}
 	//UNZIP BUILD
 	_, unzip, err := base.runCommand(opts, host.IsLocalhost)
@@ -72,11 +73,11 @@ func (base *Controller) InstallBios(ctx *gin.Context) {
 	}
 	fmt.Println("unzip", unzip)
 
-	opts = commandOpts {
-		id: hostName,
-		cmd: fmt.Sprintf("cd %s; sudo ./rubix-bios -p 1615 -g /data/rubix-bios -d data -c config -a apps --prod --install --auth --device-type %s --token %s", g.DownloadPath, g.Target, token),
+	opts = commandOpts{
+		id:    hostName,
+		cmd:   fmt.Sprintf("cd %s; sudo ./rubix-bios -p 1615 -g /data/rubix-bios -d data -c config -a apps --prod --install --auth --device-type %s --token %s", g.DownloadPath, g.Target, token),
 		debug: debug,
-		host: *host,
+		host:  *host,
 	}
 
 	//install BUILD
@@ -90,8 +91,6 @@ func (base *Controller) InstallBios(ctx *gin.Context) {
 	reposeHandler("[ass]", err, ctx)
 
 }
-
-
 
 //func (base *Controller) InstallBios(ctx *gin.Context) {
 //	getConfig := config.GetConfig()

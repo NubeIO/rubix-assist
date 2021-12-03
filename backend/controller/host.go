@@ -2,10 +2,10 @@ package controller
 
 import (
 	"errors"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/uuid"
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/model/schema"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
-	"github.com/NubeIO/rubix-updater/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +16,6 @@ type Message struct {
 func (base *Controller) HostsSchema(ctx *gin.Context) {
 	reposeHandler(schema.GetHostSchema(), err, ctx)
 }
-
 
 func (base *Controller) GetHosts(c *gin.Context) {
 	var m []model.Host
@@ -44,7 +43,7 @@ func (base *Controller) GetHost(c *gin.Context) {
 
 func (base *Controller) CreateHost(c *gin.Context) {
 	m := new(model.Host)
-	m.ID, _ = utils.MakeUUID()
+	m.ID, _ = uuid.MakeUUID()
 	err = c.ShouldBindJSON(&m)
 	if err := base.DB.Create(&m).Error; err != nil {
 		reposeHandler(m, err, c)
