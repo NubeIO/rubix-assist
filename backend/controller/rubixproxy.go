@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nrest"
 	"github.com/NubeIO/rubix-updater/model"
-	"github.com/NubeIO/rubix-updater/service/rubixmodel"
-
+	"github.com/NubeIO/rubix-updater/model/rubixmodel"
 	"github.com/gin-gonic/gin"
 	"net/url"
 	"strings"
@@ -30,7 +29,7 @@ func getMethod(method string) (out string) {
 
 func (base *Controller) resolveHost(ctx *gin.Context) (host *model.Host, useID bool, err error) {
 	idName, useID := useHostNameOrID(ctx)
-	host, err = base.GetHostByName(idName, useID)
+	host, err = base.DB.GetHostByName(idName, useID)
 	return host, useID, err
 }
 
@@ -122,7 +121,7 @@ func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *nrest.Servi
 		h.RubixToken = token
 		h.RubixTokenLastUpdate = time.Now()
 		fmt.Println("UPDATE HOST TOKEN:", "ID", host.ID, h.RubixTokenLastUpdate)
-		_, err := base.DBUpdateHost(host.ID, &h)
+		_, err := base.DB.UpdateHost(host.ID, &h)
 		if err != nil {
 			fmt.Println("ERROR: failed to update host token in db", err)
 			return nil, nil, rtn, errors.New("ERROR: failed to update host token in db")

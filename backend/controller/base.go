@@ -3,19 +3,20 @@ package controller
 import (
 	"encoding/json"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/git"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/ufw"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/system/ufw"
+	dbase "github.com/NubeIO/rubix-updater/database"
 	"github.com/gin-gonic/gin"
 	"github.com/melbahja/goph"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/olahol/melody.v1"
-	"gorm.io/gorm"
 )
 
 type Controller struct {
-	DB  *gorm.DB
+	//DB  *gorm.DB
 	SSH *goph.Client
 	WS  *melody.Melody //web socket
 	UWF *ufw.UFW
+	DB  *dbase.DB
 }
 
 //publishMSG send websocket message

@@ -2,7 +2,7 @@ package controller
 
 import (
 	"fmt"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/command"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/system/command"
 	"github.com/NubeIO/rubix-updater/model"
 )
 
