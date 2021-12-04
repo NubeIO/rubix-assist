@@ -2,73 +2,73 @@ package controller
 
 import (
 	"github.com/NubeIO/rubix-updater/model"
-	"github.com/NubeIO/rubix-updater/pkg/logger"
+	"github.com/NubeIO/rubix-updater/model/schema"
+
 	"github.com/gin-gonic/gin"
 )
-
-func (base *Controller) GetTokens(c *gin.Context) {
-	var m []model.Token
-	if err := base.DB.DB.Find(&m).Error; err != nil {
-		logger.Errorf("GetPost error: %v", err)
-		c.JSON(200, err)
-	} else {
-		c.JSON(200, m)
-	}
-}
-
-func (base *Controller) dbGetToken(id string) (*model.Token, error) {
-	m := new(model.Token)
-	if err := base.DB.DB.Where("id = ? ", id).First(&m).Error; err != nil {
-		logger.Errorf("GetToken error: %v", err)
-		return m, err
-	}
-	return m, err
-}
-
-func (base *Controller) GetToken(c *gin.Context) {
-	id := c.Params.ByName("id")
-	token, err := base.dbGetToken(id)
-	if err != nil {
-		reposeHandler(token, err, c)
-	} else {
-		reposeHandler(token, nil, c)
-	}
-}
-
-func (base *Controller) CreateToken(c *gin.Context) {
-	m := new(model.Token)
-	err := c.ShouldBindJSON(&m)
-	if err := base.DB.DB.Create(&m).Error; err != nil {
-		logger.Errorf("CreateToken error: %v", err)
-	}
-	reposeHandler(m, err, c)
-}
 
 func getTokenBody(ctx *gin.Context) (dto *model.Token, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
 }
 
-func (base *Controller) UpdateToken(c *gin.Context) {
-	m := new(model.Token)
-	id := c.Params.ByName("id")
-	body, _ := getTokenBody(c)
-	query := base.DB.DB.Where("id = ?", id).Find(&m)
-	query = base.DB.DB.Model(&m).Updates(body)
-	if query.Error != nil {
-		reposeHandler(m, query.Error, c)
-	} else {
-		reposeHandler(m, nil, c)
+func (base *Controller) TokenSchema(ctx *gin.Context) {
+	reposeHandler(schema.GetTokenSchema(), err, ctx)
+}
+
+func (base *Controller) GetToken(c *gin.Context) {
+	Token, err := base.DB.GetToken(c.Params.ByName("id"))
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
 	}
+	reposeHandler(Token, err, c)
+}
+
+func (base *Controller) GetTokens(c *gin.Context) {
+	t, err := base.DB.GetTokens()
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(t, err, c)
+}
+
+func (base *Controller) CreateToken(c *gin.Context) {
+	m := new(model.Token)
+	err = c.ShouldBindJSON(&m)
+	t, err := base.DB.CreateToken(m)
+	if err != nil {
+		reposeHandler(m, err, c)
+		return
+	}
+	reposeHandler(t, err, c)
+}
+
+func (base *Controller) UpdateToken(c *gin.Context) {
+	body, _ := getTokenBody(c)
+	t, err := base.DB.UpdateToken(c.Params.ByName("id"), body)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(t, err, c)
 }
 
 func (base *Controller) DeleteToken(c *gin.Context) {
-	m := new(model.Token)
-	id := c.Params.ByName("id")
-	if err := base.DB.DB.Where("id = ? ", id).Delete(&m).Error; err != nil {
-		logger.Errorf("DeleteToken error: %v", err)
-		reposeHandler(m, err, c)
+	q, err := base.DB.DeleteToken(c.Params.ByName("id"))
+	if err != nil {
+		reposeHandler(nil, err, c)
 	} else {
-		reposeHandler(m, nil, c)
+		reposeHandler(q, err, c)
 	}
+}
+
+func (base *Controller) DropTokens(c *gin.Context) {
+	t, err := base.DB.DropTokens()
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(t, err, c)
 }

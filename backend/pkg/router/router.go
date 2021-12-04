@@ -2,7 +2,6 @@ package router
 
 import (
 	"fmt"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/system/ufw"
 	"github.com/NubeIO/rubix-updater/controller"
 	dbase "github.com/NubeIO/rubix-updater/database"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
@@ -20,7 +19,6 @@ import (
 func Setup(db *gorm.DB) *gin.Engine {
 	r := gin.New()
 	var ws = melody.New()
-	_ufw := new(ufw.UFW)
 	// Write gin access log to file
 	f, err := os.OpenFile("rubix.access.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
@@ -50,7 +48,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	//GDB := dbase.DB{GORM: db}
 
-	api := controller.Controller{DB: GDB, WS: ws, UWF: _ufw}
+	api := controller.Controller{DB: GDB, WS: ws}
 	identityKey := "id"
 
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
@@ -97,6 +95,17 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hosts.DELETE("/drop", api.DropHosts)
 	}
 
+	users := admin.Group("/users")
+	users.Use(authMiddleware.MiddlewareFunc())
+	{
+		users.GET("/schema", api.UsersSchema)
+		users.GET("/", api.GetUsers)
+		users.GET("/:id", api.GetUser)
+		users.PATCH("/:id", api.UpdateUser)
+		users.DELETE("/:id", api.DeleteUser)
+		users.DELETE("/drop", api.DropUsers)
+	}
+
 	proxyRubix := r.Group("/api/rubix/proxy")
 	{
 		proxyRubix.GET("/*proxy", api.RubixProxyRequest)
@@ -117,6 +126,12 @@ func Setup(db *gorm.DB) *gin.Engine {
 	apps := r.Group("/api/apps")
 	{
 		apps.POST("/full_install", api.AppsFullInstall)
+	}
+
+	programs := r.Group("/api/programs")
+	{
+		programs.GET("/nodejs", api.NodeJsVersion)
+		programs.POST("/nodejs", api.NodeJsInstall)
 	}
 
 	uf := r.Group("/api/ufw")
