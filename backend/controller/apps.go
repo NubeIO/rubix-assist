@@ -3,8 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nrest"
-	"github.com/NubeIO/rubix-updater/service/rubixmodel"
-
+	"github.com/NubeIO/rubix-updater/model/rubixmodel"
 	"github.com/gin-gonic/gin"
 	"time"
 )

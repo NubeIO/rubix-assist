@@ -17,10 +17,9 @@ func (base *Controller) Login(c *gin.Context) (interface{}, error) {
 		return "", jwt.ErrMissingLoginValues
 	}
 	email := loginVals.Email
-	if result := base.DB.Where("email = ?", email).First(&user); result.Error != nil {
+	if result := base.DB.DB.Where("email = ?", email).First(&user); result.Error != nil {
 		return "", jwt.ErrFailedAuthentication
 	} else {
-		//res := result.Value.(*model.User)
 		if err := bcrypt.CompareHashAndPassword([]byte(user.Hash), []byte(loginVals.Password)); err != nil {
 			return "", jwt.ErrFailedAuthentication
 		}
@@ -49,14 +48,14 @@ func (base *Controller) AddUser(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if result := base.DB.Where("email = ?", newUser.Email).First(&user); result.Error != nil {
+	if result := base.DB.DB.Where("email = ?", newUser.Email).First(&user); result.Error != nil {
 		// TODO: Differentiate between server error and user user not found error
 		hash, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
 		if err != nil {
 			panic(err)
 		}
 		user = model.User{Username: newUser.Username, Email: newUser.Email, Hash: string(hash), UID: GenerateUID()}
-		if err := base.DB.Create(&user).Error; err != nil {
+		if err := base.DB.DB.Create(&user).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}

@@ -6,9 +6,7 @@ import (
 )
 
 func (base *Controller) InstallUFW(ctx *gin.Context) {
-
-
-	_uwf, _ := base.UWF.UFWLoadStatus(true)
+	_uwf, _ := base.UWF.UFWLoadProfile(true)
 
 	fmt.Println(_uwf.PortsCurrentState)
 
@@ -22,11 +20,11 @@ func (base *Controller) InstallUFW(ctx *gin.Context) {
 	if useID {
 		hostName = host.ID
 	}
-	opts := commandOpts {
-		id: hostName,
-		cmd: "sudo apt-get install ufw",
+	opts := commandOpts{
+		id:    hostName,
+		cmd:   "sudo apt-get install ufw",
 		debug: debug,
-		host: *host,
+		host:  *host,
 	}
 	_, install, err := base.runCommand(opts, host.IsLocalhost)
 	if err != nil {
@@ -48,11 +46,11 @@ func (base *Controller) InstallUFW2(ctx *gin.Context) {
 	if useID {
 		hostName = host.ID
 	}
-	opts := commandOpts {
-		id: hostName,
-		cmd: "sudo ufw ",
+	opts := commandOpts{
+		id:    hostName,
+		cmd:   "sudo ufw ",
 		debug: debug,
-		host: *host,
+		host:  *host,
 	}
 	_, install, err := base.runCommand(opts, host.IsLocalhost)
 	if err != nil {

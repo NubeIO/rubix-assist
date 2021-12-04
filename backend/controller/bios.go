@@ -3,7 +3,6 @@ package controller
 import (
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/git"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,6 +33,21 @@ func (base *Controller) InstallBios(ctx *gin.Context) {
 		return
 	}
 	fmt.Println("mk dir", "mk dir pass")
+
+	opts = commandOpts{
+		cmd:   "dpkg --print-architecture",
+		debug: debug,
+		host:  *host,
+	}
+
+	//install BUILD
+	getArch, _, err := base.runCommand(opts, host.IsLocalhost)
+	if err != nil {
+		reposeHandler(nil, err, ctx)
+		return
+	}
+	fmt.Println("ARCH", string(getArch))
+
 	g := body
 	g.Token = token
 	g.DownloadPath = path

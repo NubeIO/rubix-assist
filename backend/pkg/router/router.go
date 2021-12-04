@@ -2,8 +2,9 @@ package router
 
 import (
 	"fmt"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/ufw"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/system/ufw"
 	"github.com/NubeIO/rubix-updater/controller"
+	dbase "github.com/NubeIO/rubix-updater/database"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/NubeIO/rubix-updater/service/auth"
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -44,7 +45,12 @@ func Setup(db *gorm.DB) *gin.Engine {
 		MaxAge:                 12 * time.Hour,
 	}))
 
-	api := controller.Controller{DB: db, WS: ws, UWF: _ufw}
+	GDB := new(dbase.DB)
+	GDB.DB = db
+
+	//GDB := dbase.DB{GORM: db}
+
+	api := controller.Controller{DB: GDB, WS: ws, UWF: _ufw}
 	identityKey := "id"
 
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
@@ -88,6 +94,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hosts.GET("/:id", api.GetHost)
 		hosts.PATCH("/:id", api.UpdateHost)
 		hosts.DELETE("/:id", api.DeleteHost)
+		hosts.DELETE("/drop", api.DropHosts)
 	}
 
 	proxyRubix := r.Group("/api/rubix/proxy")
