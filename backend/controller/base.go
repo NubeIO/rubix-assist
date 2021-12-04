@@ -2,10 +2,13 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/git"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/system/ufw"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/ssh"
 	dbase "github.com/NubeIO/rubix-updater/database"
+	"github.com/NubeIO/rubix-updater/model"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/copier"
 	"github.com/melbahja/goph"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/olahol/melody.v1"
@@ -15,7 +18,6 @@ type Controller struct {
 	//DB  *gorm.DB
 	SSH *goph.Client
 	WS  *melody.Melody //web socket
-	UWF *ufw.UFW
 	DB  *dbase.DB
 }
 
@@ -89,5 +91,17 @@ func reposeHandler(body interface{}, err error, ctx *gin.Context) {
 		}
 	} else {
 		ctx.JSON(200, body)
+	}
+}
+
+//hostCopy copy same types from this host to the host needed for ssh.Host
+func hostCopy(host *model.Host) (ssh.Host, error) {
+	h := new(ssh.Host)
+	err = copier.Copy(&h, &host)
+	if err != nil {
+		fmt.Println(err)
+		return *h, err
+	} else {
+		return *h, err
 	}
 }

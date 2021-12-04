@@ -68,7 +68,7 @@ func (base *Controller) DeleteHost(c *gin.Context) {
 }
 
 func (base *Controller) DropHosts(c *gin.Context) {
-	host, err := base.DB.DropAllHosts()
+	host, err := base.DB.DropHosts()
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return

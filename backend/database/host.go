@@ -2,6 +2,7 @@ package dbase
 
 import (
 	"errors"
+	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/uuid"
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
@@ -18,6 +19,7 @@ func (d *DB) GetHosts() ([]model.Host, error) {
 
 func (d *DB) GetHostByName(id string, useID bool) (*model.Host, error) {
 	m := new(model.Host)
+	fmt.Println(id, useID)
 	switch useID {
 	case true:
 		if err := d.DB.Where("id = ? ", id).First(&m).Error; err != nil {
@@ -68,11 +70,11 @@ func (d *DB) DeleteHost(id string) (ok bool, err error) {
 	return true, nil
 }
 
-// DropAllHosts delete all.
-func (d *DB) DropAllHosts() (bool, error) {
-	var historyModel *model.Host
+// DropHosts delete all.
+func (d *DB) DropHosts() (bool, error) {
+	var m *model.Host
 	query := d.DB.Where("1 = 1")
-	query.Delete(&historyModel)
+	query.Delete(&m)
 	if query.Error != nil {
 		return false, query.Error
 	}
