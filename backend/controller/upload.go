@@ -72,7 +72,7 @@ func VerifyHost(host string, remote net.Addr, key ssh.PublicKey) error {
 }
 
 func (base *Controller) newClient(id string) (c *goph.Client, err error) {
-	h, err := base.GetHostDB(id)
+	h, err := base.DB.GetHostByName(id, true)
 	if err != nil {
 		return nil, err
 	} else {
@@ -198,7 +198,7 @@ func (base *Controller) Unzip(ctx *gin.Context) {
 		toPath = getConfig.Path.ToPath
 	}
 	id := ctx.Params.ByName("id")
-	d, err := base.GetHostDB(id)
+	d, err := base.DB.GetHostByName(id, true)
 	if err != nil {
 		reposeHandler(d, err, ctx)
 	} else {

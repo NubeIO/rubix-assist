@@ -1,11 +1,9 @@
 package controller
 
 import (
-	"github.com/NubeIO/rubix-updater/utils/git"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/git"
 	"github.com/gin-gonic/gin"
 )
-
-
 
 func (base *Controller) GitGetRelease(ctx *gin.Context) {
 	body, err := getGitBody(ctx)
@@ -22,11 +20,11 @@ func (base *Controller) GitGetRelease(ctx *gin.Context) {
 	if useID {
 		hostName = host.ID
 	}
-	opts := commandOpts {
-		id: hostName,
-		cmd: command,
+	opts := commandOpts{
+		id:    hostName,
+		cmd:   command,
 		debug: true,
-		host: *host,
+		host:  *host,
 	}
 	runCommand, _, err := base.runCommand(opts, g.IsLocalhost)
 	if err != nil {
@@ -35,6 +33,5 @@ func (base *Controller) GitGetRelease(ctx *gin.Context) {
 	}
 	res := g.ResultSplit(string(runCommand))
 	reposeHandler(res, err, ctx)
-
 
 }

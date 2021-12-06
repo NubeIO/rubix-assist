@@ -31,3 +31,19 @@ func GetHostSchema() *Host {
 	defaults.Set(s)
 	return s
 }
+
+func GetTokenSchema() *Host {
+	s := &Host{
+		Methods: MethodsAll,
+	}
+	defaults.Set(s)
+	return s
+}
+
+func GetUserSchema() *Host {
+	s := &Host{
+		Methods: MethodsAll,
+	}
+	defaults.Set(s)
+	return s
+}
