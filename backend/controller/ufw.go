@@ -12,7 +12,7 @@ func (base *Controller) InstallUFW(ctx *gin.Context) {
 		reposeHandler(nil, err, ctx)
 		return
 	}
-	h, err := hostCopy(host)
+	h, err := base.hostCopy(host)
 	u := ufw.UFW{
 		Host: h,
 	}

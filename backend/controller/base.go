@@ -95,7 +95,7 @@ func reposeHandler(body interface{}, err error, ctx *gin.Context) {
 }
 
 //hostCopy copy same types from this host to the host needed for ssh.Host
-func hostCopy(host *model.Host) (ssh.Host, error) {
+func (base *Controller) hostCopy(host *model.Host) (ssh.Host, error) {
 	h := new(ssh.Host)
 	err = copier.Copy(&h, &host)
 	if err != nil {
