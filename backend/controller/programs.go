@@ -11,7 +11,7 @@ func (base *Controller) NodeJsVersion(ctx *gin.Context) {
 		reposeHandler(nil, err, ctx)
 		return
 	}
-	h, err := hostCopy(host)
+	h, err := base.hostCopy(host)
 	u := admin.Admin{
 		Host: h,
 	}
@@ -29,7 +29,7 @@ func (base *Controller) NodeJsInstall(ctx *gin.Context) {
 		reposeHandler(nil, err, ctx)
 		return
 	}
-	h, err := hostCopy(host)
+	h, err := base.hostCopy(host)
 	u := admin.Admin{
 		Host: h,
 	}

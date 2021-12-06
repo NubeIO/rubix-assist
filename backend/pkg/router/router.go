@@ -93,6 +93,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hosts.PATCH("/:id", api.UpdateHost)
 		hosts.DELETE("/:id", api.DeleteHost)
 		hosts.DELETE("/drop", api.DropHosts)
+		hosts.POST("/ops", api.MassOperations)
 	}
 
 	users := admin.Group("/users")
