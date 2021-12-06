@@ -1,11 +1,8 @@
 package controller
 
 import (
-	"errors"
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/model/schema"
-	"github.com/NubeIO/rubix-updater/pkg/logger"
-	"github.com/NubeIO/rubix-updater/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,113 +10,68 @@ type Message struct {
 	Message string `json:"message"`
 }
 
-func (base *Controller) HostsSchema(ctx *gin.Context) {
-	reposeHandler(schema.GetHostSchema(), err, ctx)
-}
-
-
-func (base *Controller) GetHosts(c *gin.Context) {
-	var m []model.Host
-	if err := base.DB.Find(&m).Error; err != nil {
-		logger.Errorf("GetPost error: %v", err)
-		c.JSON(200, err)
-	} else {
-		c.JSON(200, m)
-	}
-	var msg TMsg
-	msg.Topic = "plugins.update"
-	msg.Message = "start update of plugins"
-	base.publishMSG(msg)
-}
-
-func (base *Controller) GetHost(c *gin.Context) {
-	id := c.Params.ByName("id")
-	d, err := base.GetHostDB(id)
-	if err != nil {
-		reposeHandler(d, err, c)
-	} else {
-		reposeHandler(d, err, c)
-	}
-}
-
-func (base *Controller) CreateHost(c *gin.Context) {
-	m := new(model.Host)
-	m.ID, _ = utils.MakeUUID()
-	err = c.ShouldBindJSON(&m)
-	if err := base.DB.Create(&m).Error; err != nil {
-		reposeHandler(m, err, c)
-	} else {
-		reposeHandler(m, err, c)
-	}
-
-}
-
 func getHostBody(ctx *gin.Context) (dto *model.Host, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
 }
 
-func (base *Controller) DBUpdateHost(id string, host *model.Host) (*model.Host, error) {
-	m := new(model.Host)
-	query := base.DB.Where("id = ?", id).Find(&m).Updates(host)
-	if query.Error != nil {
-		return nil, query.Error
-	} else {
-		return host, query.Error
+func (base *Controller) HostsSchema(ctx *gin.Context) {
+	reposeHandler(schema.GetHostSchema(), err, ctx)
+}
+
+func (base *Controller) GetHost(c *gin.Context) {
+	host, err := base.DB.GetHostByName(c.Params.ByName("id"), true)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
 	}
+	reposeHandler(host, err, c)
+}
+
+func (base *Controller) GetHosts(c *gin.Context) {
+	hosts, err := base.DB.GetHosts()
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(hosts, err, c)
+}
+
+func (base *Controller) CreateHost(c *gin.Context) {
+	m := new(model.Host)
+	err = c.ShouldBindJSON(&m)
+	host, err := base.DB.CreateHost(m)
+	if err != nil {
+		reposeHandler(m, err, c)
+		return
+	}
+	reposeHandler(host, err, c)
 }
 
 func (base *Controller) UpdateHost(c *gin.Context) {
-	m := new(model.Host)
-	id := c.Params.ByName("id")
 	body, _ := getHostBody(c)
-	query := base.DB.Where("id = ?", id).Find(&m)
-	query = base.DB.Model(&m).Updates(body)
-	if query.Error != nil {
-		reposeHandler(m, query.Error, c)
-	} else {
-		reposeHandler(m, nil, c)
+	host, err := base.DB.UpdateHost(c.Params.ByName("id"), body)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
 	}
+	reposeHandler(host, err, c)
 }
 
 func (base *Controller) DeleteHost(c *gin.Context) {
-	m := new(model.Host)
-	id := c.Params.ByName("id")
-	if err := base.DB.Where("id = ? ", id).Delete(&m).Error; err != nil {
-		logger.Errorf("GetHost error: %v", err)
-		reposeHandler(m, err, c)
+	q, err := base.DB.DeleteHost(c.Params.ByName("id"))
+	if err != nil {
+		reposeHandler(nil, err, c)
 	} else {
-		reposeHandler(m, nil, c)
+		reposeHandler(q, err, c)
 	}
 }
 
-//DB CALLS
-
-func (base *Controller) GetHostDB(id string) (*model.Host, error) {
-	m := new(model.Host)
-	if err := base.DB.Where("id = ? ", id).First(&m).Error; err != nil {
-		logger.Errorf("GetHost error: %v", err)
-		return nil, err
+func (base *Controller) DropHosts(c *gin.Context) {
+	host, err := base.DB.DropHosts()
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
 	}
-	return m, nil
-}
-
-func (base *Controller) GetHostByName(id string, useID bool) (*model.Host, error) {
-	m := new(model.Host)
-	switch useID {
-	case true:
-		if err := base.DB.Where("id = ? ", id).First(&m).Error; err != nil {
-			logger.Errorf("GetHost error: %v", err)
-			return nil, err
-		}
-		return m, nil
-	case false:
-		if err := base.DB.Where("name = ? ", id).First(&m).Error; err != nil {
-			logger.Errorf("GetHost error: %v", err)
-			return nil, err
-		}
-		return m, nil
-	default:
-		return nil, errors.New("ERROR no valid id or name was provided in the request")
-	}
+	reposeHandler(host, err, c)
 }

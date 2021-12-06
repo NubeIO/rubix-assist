@@ -3,8 +3,10 @@ package router
 import (
 	"fmt"
 	"github.com/NubeIO/rubix-updater/controller"
+	dbase "github.com/NubeIO/rubix-updater/database"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
-	"github.com/NubeIO/rubix-updater/utils/ufw"
+	"github.com/NubeIO/rubix-updater/service/auth"
+	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/olahol/melody.v1"
@@ -17,7 +19,6 @@ import (
 func Setup(db *gorm.DB) *gin.Engine {
 	r := gin.New()
 	var ws = melody.New()
-	 _ufw := new(ufw.UFW)
 	// Write gin access log to file
 	f, err := os.OpenFile("rubix.access.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
@@ -42,6 +43,32 @@ func Setup(db *gorm.DB) *gin.Engine {
 		MaxAge:                 12 * time.Hour,
 	}))
 
+	GDB := new(dbase.DB)
+	GDB.DB = db
+
+	//GDB := dbase.DB{GORM: db}
+
+	api := controller.Controller{DB: GDB, WS: ws}
+	identityKey := "id"
+
+	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
+		Realm:         "go-proxy-service",
+		Key:           []byte(os.Getenv("JWTSECRET")),
+		Timeout:       time.Hour * 1000,
+		MaxRefresh:    time.Hour,
+		IdentityKey:   identityKey,
+		PayloadFunc:   auth.MapClaims,
+		Authenticator: api.Login,
+		Unauthorized: func(c *gin.Context, code int, message string) {
+			c.JSON(code, gin.H{
+				"code":    code,
+				"message": message,
+			})
+		},
+		TokenLookup: "header: Authorization",
+		TimeFunc:    time.Now,
+	})
+
 	//web socket route
 	r.GET("/ws", func(c *gin.Context) {
 		ws.HandleRequest(c.Writer, c.Request)
@@ -52,9 +79,12 @@ func Setup(db *gorm.DB) *gin.Engine {
 		ws.Broadcast(msg)
 	})
 
-	//r.Use(middleware.CORS())
-	api := controller.Controller{DB: db, WS: ws, UWF: _ufw}
-	hosts := r.Group("/api/hosts")
+	r.POST("/api/register", api.AddUser)
+	r.POST("/api/login", authMiddleware.LoginHandler)
+
+	admin := r.Group("/api")
+	hosts := admin.Group("/hosts")
+	hosts.Use(authMiddleware.MiddlewareFunc())
 	{
 		hosts.GET("/schema", api.HostsSchema)
 		hosts.GET("/", api.GetHosts)
@@ -62,7 +92,30 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hosts.GET("/:id", api.GetHost)
 		hosts.PATCH("/:id", api.UpdateHost)
 		hosts.DELETE("/:id", api.DeleteHost)
+		hosts.DELETE("/drop", api.DropHosts)
+		hosts.POST("/ops", api.MassOperations)
 	}
+
+	users := admin.Group("/users")
+	users.Use(authMiddleware.MiddlewareFunc())
+	{
+		users.GET("/schema", api.UsersSchema)
+		users.GET("/", api.GetUsers)
+		users.GET("/:id", api.GetUser)
+		users.PATCH("/:id", api.UpdateUser)
+		users.DELETE("/:id", api.DeleteUser)
+		users.DELETE("/drop", api.DropUsers)
+	}
+
+	proxyRubix := r.Group("/api/rubix/proxy")
+	{
+		proxyRubix.GET("/*proxy", api.RubixProxyRequest)
+		proxyRubix.POST("/*proxy", api.RubixProxyRequest)
+		proxyRubix.PUT("/*proxy", api.RubixProxyRequest)
+		proxyRubix.PATCH("/*proxy", api.RubixProxyRequest)
+		proxyRubix.DELETE("/*proxy", api.RubixProxyRequest)
+	}
+
 	token := r.Group("/api/tokens")
 	{
 		token.GET("/", api.GetTokens)
@@ -74,6 +127,12 @@ func Setup(db *gorm.DB) *gin.Engine {
 	apps := r.Group("/api/apps")
 	{
 		apps.POST("/full_install", api.AppsFullInstall)
+	}
+
+	programs := r.Group("/api/programs")
+	{
+		programs.GET("/nodejs", api.NodeJsVersion)
+		programs.POST("/nodejs", api.NodeJsInstall)
 	}
 
 	uf := r.Group("/api/ufw")
@@ -103,13 +162,5 @@ func Setup(db *gorm.DB) *gin.Engine {
 		upload.POST("/unzip/:id", api.Unzip)
 	}
 
-	proxyRubix := r.Group("/api/rubix/proxy")
-	{
-		proxyRubix.GET("/*proxy", api.RubixProxyRequest)
-		proxyRubix.POST("/*proxy", api.RubixProxyRequest)
-		proxyRubix.PUT("/*proxy", api.RubixProxyRequest)
-		proxyRubix.PATCH("/*proxy", api.RubixProxyRequest)
-		proxyRubix.DELETE("/*proxy", api.RubixProxyRequest)
-	}
 	return r
 }

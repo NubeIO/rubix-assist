@@ -14,10 +14,10 @@ type Host struct {
 	RubixPassword        string    `json:"rubix_password"`
 	RubixToken           string    `json:"-"`
 	RubixTokenLastUpdate time.Time `json:"-"`
-	IsLocalhost bool `json:"is_localhost"`
+	IsLocalhost          bool      `json:"is_localhost"`
 }
 
 type Token struct {
-	ID    uint   `json:"id" gorm:"primarykey"`
+	ID    string `json:"id" gorm:"primarykey"`
 	Token string `json:"token"`
 }
