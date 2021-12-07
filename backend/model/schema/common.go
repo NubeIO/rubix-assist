@@ -22,25 +22,30 @@ type Username struct {
 }
 
 type Password struct {
-	Type     string `json:"type" default:"string"`
-	Required bool   `json:"required" default:"true"`
-	Min      int    `json:"min" default:"8"`
-	Max      int    `json:"max" default:"20"`
+	Type       string `json:"type" default:"string"`
+	Required   bool   `json:"required" default:"true"`
+	Min        int    `json:"min" default:"8"`
+	Max        int    `json:"max" default:"20"`
+	Validation string `json:"validation" default:"password"`
 }
 
 type IP struct {
-	Type     string `json:"type" default:"string"`
-	Required bool   `json:"required" default:"true"`
-	Min      int    `json:"min" default:"2"`
-	Max      int    `json:"max" default:"6"`
+	Type       string `json:"type" default:"string"`
+	Required   bool   `json:"required" default:"true"`
+	Min        int    `json:"min" default:"2"`
+	Max        int    `json:"max" default:"6"`
+	Default    string `json:"default" default:"0.0.0.0"`
+	Validation string `json:"validation" default:"url"`
 }
 
 type Port struct {
-	Type     string `json:"type" default:"string"`
-	Required bool   `json:"required" default:"true"`
-	Min      int    `json:"min" default:"3"`
-	Max      int    `json:"max" default:"20"`
-	ReadOnly bool   `json:"read_only"  default:"true"`
+	Type       string `json:"type" default:"int"`
+	Required   bool   `json:"required" default:"true"`
+	Min        int    `json:"min" default:"3"`
+	Max        int    `json:"max" default:"20"`
+	ReadOnly   bool   `json:"read_only"  default:"true"`
+	Default    int    `json:"default" default:"1616"`
+	Validation string `json:"validation" default:"port"`
 }
 
 //type Network struct {

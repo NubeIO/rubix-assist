@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/uuid"
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/model/schema"
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -17,7 +18,7 @@ func getUserBody(ctx *gin.Context) (dto *model.User, err error) {
 }
 
 func (base *Controller) UsersSchema(ctx *gin.Context) {
-	reposeHandler(schema.GetHostSchema(), err, ctx)
+	reposeHandler(schema.GetUserSchema(), err, ctx)
 }
 
 func (base *Controller) GetUser(c *gin.Context) {
@@ -111,6 +112,7 @@ func (base *Controller) AddUser(c *gin.Context) {
 			panic(err)
 		}
 		user = model.User{Username: newUser.Username, Email: newUser.Email, Hash: string(hash), UID: GenerateUID()}
+		user.ID, _ = uuid.MakeUUID()
 		if err := base.DB.DB.Create(&user).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return

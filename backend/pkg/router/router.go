@@ -79,9 +79,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		ws.Broadcast(msg)
 	})
 
-	r.POST("/api/register", api.AddUser)
-	r.POST("/api/login", authMiddleware.LoginHandler)
-
 	admin := r.Group("/api")
 	hosts := admin.Group("/hosts")
 	hosts.Use(authMiddleware.MiddlewareFunc())
@@ -95,6 +92,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hosts.DELETE("/drop", api.DropHosts)
 		hosts.POST("/ops", api.MassOperations)
 	}
+
+	r.POST("/api/users", api.AddUser)
+	r.POST("/api/users/login", authMiddleware.LoginHandler)
 
 	users := admin.Group("/users")
 	users.Use(authMiddleware.MiddlewareFunc())
