@@ -87,15 +87,10 @@ func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *nrest.Servi
 	body, err := bodyAsJSON(ctx)
 	rtn.Body = body
 	ip := fmt.Sprintf("http://%s:%d", host.IP, host.RubixPort)
-
-	fmt.Println("IP:", ip)
-
 	s = &nrest.Service{
 		BaseUri: ip,
 	}
 	token := host.RubixToken
-	fmt.Println("UPDATE HOST TOKEN:", "ID", host.ID, host.RubixToken)
-	fmt.Println("tokenTimeDiffMin", tokenTimeDiffMin(host.RubixTokenLastUpdate, 15))
 	if token == "" || proxyOptions.refreshToken || tokenTimeDiffMin(host.RubixTokenLastUpdate, 15) {
 		options = &nrest.ReqOpt{
 			Timeout:          2 * time.Second,
@@ -117,10 +112,8 @@ func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *nrest.Servi
 		token = res.AccessToken
 		rtn.Token = token
 		var h model.Host
-
 		h.RubixToken = token
 		h.RubixTokenLastUpdate = time.Now()
-		fmt.Println("UPDATE HOST TOKEN:", "ID", host.ID, h.RubixTokenLastUpdate)
 		_, err := base.DB.UpdateHost(host.ID, &h)
 		if err != nil {
 			fmt.Println("ERROR: failed to update host token in db", err)
@@ -147,14 +140,24 @@ func (base *Controller) RubixProxyRequest(ctx *gin.Context) {
 			Headers:          map[string]interface{}{"Authorization": rtn.Token},
 			Json:             rtn.Body,
 		}
-		req := proxyReq.Do(rtn.Method, rtn.RequestURL, opt)
-		json, err := req.AsJson()
+
+		_url := rtn.RequestURL
+		//get query parameters eg: ?thing=true
+		parts := strings.SplitAfter(rtn.RequestURL, "?")
+		if len(parts) >= 2 {
+			opt.SetQueryString = parts[1]
+			_url = strings.TrimRight(parts[0], "?")
+		}
+		req := proxyReq.Do(rtn.Method, _url, opt)
+		json, _ := req.AsJson()
+		fmt.Println(rtn.RequestURL)
 		fmt.Println(req.Err)
+		fmt.Println(req.AsString())
 		fmt.Println(req.StatusCode)
 		if err != nil {
-			reposeHandler(nil, err, ctx)
+			reposeHandler(nil, req.Err, ctx)
 		} else {
-			reposeHandler(json, err, ctx)
+			reposeHandler(json, nil, ctx)
 		}
 	}
 }
