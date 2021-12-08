@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"strings"
 )
 
 type User struct {
@@ -28,4 +29,7 @@ func main() {
 		FirstName: "B man",
 	}
 	reflect1(f)
+
+	parts := strings.SplitAfter("ff/api/plugins/enable/system?by_plugin_name=true&points=true", "?")
+	fmt.Println(parts)
 }
