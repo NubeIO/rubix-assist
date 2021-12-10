@@ -32,7 +32,7 @@ type StringNotRequired struct {
 
 type BoolRequired struct {
 	Type     string `json:"type" default:"boolean"`
-	Required bool   `json:"required" default:"true"`
+	Required bool   `json:"required" default:"false"`
 }
 
 type BoolNotRequired struct {
@@ -55,6 +55,7 @@ type Host struct {
 	Password      StringRequired    `json:"password"`
 	IP            IP                `json:"ip"`
 	Port          Port              `json:"port"`
+	HTTPS         BoolRequired      `json:"https"`
 	RubixUsername StringRequired    `json:"rubix_username"`
 	RubixPassword StringRequired    `json:"rubix_password"`
 	RubixPort     Port              `json:"rubix_port"`

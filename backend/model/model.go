@@ -7,6 +7,7 @@ type Host struct {
 	Name                 string    `json:"name"  gorm:"type:varchar(255);unique;not null"`
 	IP                   string    `json:"ip"`
 	Port                 int       `json:"port"`
+	HTTPS                *bool     `json:"https"`
 	Username             string    `json:"username"`
 	Password             string    `json:"password"`
 	RubixPort            int       `json:"rubix_port"`

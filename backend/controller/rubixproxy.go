@@ -3,10 +3,12 @@ package controller
 import (
 	"errors"
 	"fmt"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/bools"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nrest"
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/model/rubixmodel"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"net/url"
 	"strings"
 	"time"
@@ -45,7 +47,6 @@ func urlProxyPath(u string, nonProxyReq bool) (clean string) {
 	} else {
 		parts = strings.SplitAfter(p.String(), "proxy")
 	}
-
 	if len(parts) >= 1 {
 		return parts[1]
 	} else {
@@ -74,7 +75,7 @@ func tokenTimeDiffMin(t time.Time, timeDiff float64) bool {
 	}
 }
 
-func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *nrest.Service, options *nrest.ReqOpt, rtn proxyReturn, err error) {
+func (base *Controller) buildReq(proxyOptions proxyOptions) (s *nrest.Service, options *nrest.ReqOpt, rtn proxyReturn, err error) {
 	ctx := proxyOptions.ctx
 	host, _, err := base.resolveHost(ctx)
 	if err != nil {
@@ -86,7 +87,16 @@ func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *nrest.Servi
 	rtn.RequestURL = ru
 	body, err := bodyAsJSON(ctx)
 	rtn.Body = body
-	ip := fmt.Sprintf("http://%s:%d", host.IP, host.RubixPort)
+
+	http := "http"
+	if bools.IsTrue(host.HTTPS) {
+		http = "https"
+	}
+
+	ip := fmt.Sprintf("%s://%s:%d", http, host.IP, host.RubixPort)
+	if host.RubixPort == 0 {
+		ip = fmt.Sprintf("%s://%s", http, host.IP)
+	}
 	s = &nrest.Service{
 		BaseUri: ip,
 	}
@@ -100,7 +110,6 @@ func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *nrest.Servi
 			Json:             map[string]interface{}{"username": host.RubixUsername, "password": host.RubixPassword},
 		}
 		req := s.Do(nrest.POST, "/api/users/login", options)
-		fmt.Println("REQ GET TOKEN:", req.AsString())
 		res := new(rubixmodel.TokenResponse)
 		err = req.ToInterface(&res)
 		if err != nil {
@@ -116,7 +125,7 @@ func (base *Controller) buildProxyReq(proxyOptions proxyOptions) (s *nrest.Servi
 		h.RubixTokenLastUpdate = time.Now()
 		_, err := base.DB.UpdateHost(host.ID, &h)
 		if err != nil {
-			fmt.Println("ERROR: failed to update host token in db", err)
+			log.Println("ERROR: failed to update host token in db", err)
 			return nil, nil, rtn, errors.New("ERROR: failed to update host token in db")
 		}
 	}
@@ -128,7 +137,7 @@ func (base *Controller) RubixProxyRequest(ctx *gin.Context) {
 		ctx:          ctx,
 		refreshToken: true,
 	}
-	proxyReq, opt, rtn, err := base.buildProxyReq(po)
+	proxyReq, opt, rtn, err := base.buildReq(po)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 	} else {
@@ -150,10 +159,10 @@ func (base *Controller) RubixProxyRequest(ctx *gin.Context) {
 		}
 		req := proxyReq.Do(rtn.Method, _url, opt)
 		json, _ := req.AsJson()
-		fmt.Println(rtn.RequestURL)
-		fmt.Println(req.Err)
-		fmt.Println(req.AsString())
-		fmt.Println(req.StatusCode)
+		log.Println(rtn.RequestURL)
+		log.Println(req.Err)
+		log.Println(req.AsString())
+		log.Println(req.StatusCode)
 		if err != nil {
 			reposeHandler(nil, req.Err, ctx)
 		} else {

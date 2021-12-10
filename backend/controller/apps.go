@@ -41,14 +41,13 @@ type apps struct {
 }
 
 func (base *Controller) AppsFullInstall(ctx *gin.Context) {
-
 	body, err := bodyAppsDownload(ctx)
 	po := proxyOptions{
 		ctx:          ctx,
 		refreshToken: true,
 		NonProxyReq:  true,
 	}
-	proxyReq, opt, rtn, err := base.buildProxyReq(po)
+	proxyReq, opt, rtn, err := base.buildReq(po)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 		return
