@@ -6,13 +6,12 @@ import (
 	"github.com/NubeIO/rubix-updater/pkg/database"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/NubeIO/rubix-updater/pkg/router"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
-
-
 func main() {
-	fmt.Println("try and start")
+	log.Println("try and start rubix-updater")
 	if err := config.Setup(); err != nil {
 		logger.Fatalf("config.Setup() error: %s", err)
 	}
