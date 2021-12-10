@@ -83,7 +83,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	hosts := admin.Group("/hosts")
 	hosts.Use(authMiddleware.MiddlewareFunc())
 	{
-		hosts.GET("/schema", api.HostsSchema)
+		hosts.GET("/views/schema", api.HostsSchema)
 		hosts.GET("/", api.GetHosts)
 		hosts.POST("/", api.CreateHost)
 		hosts.GET("/:id", api.GetHost)
@@ -99,7 +99,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	users := admin.Group("/users")
 	users.Use(authMiddleware.MiddlewareFunc())
 	{
-		users.GET("/schema", api.UsersSchema)
+		users.GET("/views/schema", api.UsersSchema)
 		users.GET("/", api.GetUsers)
 		users.GET("/:id", api.GetUser)
 		users.PATCH("/:id", api.UpdateUser)
