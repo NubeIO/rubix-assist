@@ -16,7 +16,7 @@ func getHostBody(ctx *gin.Context) (dto *model.Host, err error) {
 }
 
 func (base *Controller) HostsSchema(ctx *gin.Context) {
-	reposeHandler(schema.GetHostSchema(), err, ctx)
+	reposeHandler(schema.GetHostSchema(), nil, ctx)
 }
 
 func (base *Controller) GetHost(c *gin.Context) {

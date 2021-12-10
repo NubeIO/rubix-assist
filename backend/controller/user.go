@@ -18,7 +18,7 @@ func getUserBody(ctx *gin.Context) (dto *model.User, err error) {
 }
 
 func (base *Controller) UsersSchema(ctx *gin.Context) {
-	reposeHandler(schema.GetUserSchema(), err, ctx)
+	reposeHandler(schema.GetUserSchema(), nil, ctx)
 }
 
 func (base *Controller) GetUser(c *gin.Context) {
