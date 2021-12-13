@@ -74,3 +74,11 @@ func (base *Controller) RubixHost(ctx *gin.Context) {
 func (base *Controller) RubixPlatSchema(ctx *gin.Context) {
 	reposeHandler(schema.GetRubixPlatSchema(), nil, ctx)
 }
+
+func (base *Controller) RubixDiscoverSchema(ctx *gin.Context) {
+	reposeHandler(schema.GetRubixDiscover(), nil, ctx)
+}
+
+func (base *Controller) RubixMasterSchema(ctx *gin.Context) {
+	reposeHandler(schema.GetRubixSlaves(), nil, ctx)
+}

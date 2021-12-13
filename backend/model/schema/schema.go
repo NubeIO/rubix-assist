@@ -35,6 +35,20 @@ var MethodsGetPut = struct {
 	PUT:    true,
 }
 
+var MethodsGetPostDelete = struct {
+	GET    bool `json:"get"`
+	POST   bool `json:"post"`
+	PATCH  bool `json:"patch"`
+	DELETE bool `json:"delete"`
+	PUT    bool `json:"put"`
+}{
+	GET:    true,
+	POST:   true,
+	PATCH:  false,
+	DELETE: true,
+	PUT:    false,
+}
+
 type T struct {
 	Type     string `json:"type"`
 	Required bool   `json:"required"`
@@ -88,7 +102,9 @@ func reflectBindings(f interface{}) cmap.ConcurrentMap {
 
 func GetHostSchema() interface{} {
 	f := &model.Host{}
-	sch := reflectBindings(f)
+	sch := cmap.New()
+	sch.Set("fields", reflectBindings(f))
+	sch.Set("METHODS", MethodsAll)
 	sch.Set("METHODS", MethodsAll)
 	sch.Set("HEADING", "Hosts")
 	sch.Set("SUB_HEADING", "A list of hosts")
@@ -98,7 +114,8 @@ func GetHostSchema() interface{} {
 
 func GetUserSchema() interface{} {
 	f := &model.User{}
-	sch := reflectBindings(f)
+	sch := cmap.New()
+	sch.Set("fields", reflectBindings(f))
 	sch.Set("METHODS", MethodsAll)
 	sch.Set("HEADING", "Users")
 	sch.Set("SUB_HEADING", "A list of users")
@@ -108,7 +125,8 @@ func GetUserSchema() interface{} {
 
 func GetRubixPlatSchema() interface{} {
 	f := &rubix.WiresPlat{}
-	sch := reflectBindings(f)
+	sch := cmap.New()
+	sch.Set("fields", reflectBindings(f))
 	sch.Set("METHODS", MethodsGetPut)
 	sch.Set("HEADING", "Rubix-Details")
 	sch.Set("SUB_HEADING", "site details")
@@ -118,15 +136,25 @@ func GetRubixPlatSchema() interface{} {
 
 func GetRubixDiscover() interface{} {
 	f := &rubix.Slaves{}
-	sch := reflectBindings(f)
-	sch.Set("methods", MethodsGetPut)
+	sch := cmap.New()
+	sch.Set("fields", reflectBindings(f))
+	sch.Set("METHODS", MethodsGetPut)
+	sch.Set("HEADING", "Rubix-Details")
+	sch.Set("SUB_HEADING", "site details")
+	sch.Set("HELP", "Update details as required")
+	sch.Set("API_HELP", "Update details as required")
 	return sch.Items()
 }
 
 func GetRubixSlaves() interface{} {
 	f := &rubix.Slaves{}
-	sch := reflectBindings(f)
-	sch.Set("methods", MethodsGetPut)
+	sch := cmap.New()
+	sch.Set("fields", reflectBindings(f))
+	sch.Set("METHODS", MethodsGetPostDelete)
+	sch.Set("HEADING", "Rubix-Details")
+	sch.Set("SUB_HEADING", "site details")
+	sch.Set("HELP", "Update details as required")
+	sch.Set("API_HELP", "ENDPoints GET: will return a list of slaves, ADD/POST: in the body pass in the global_uuid, DELETE: to delete use the global_uuid as a parameter in the url (api/slaves/global_uuid)")
 	return sch.Items()
 }
 
