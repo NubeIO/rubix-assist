@@ -106,6 +106,13 @@ func Setup(db *gorm.DB) *gin.Engine {
 		users.DELETE("/drop", api.DropUsers)
 	}
 
+	master := admin.Group("/master")
+	master.Use(authMiddleware.MiddlewareFunc())
+	{
+		master.GET("/discover/schema", api.RubixDiscoverSchema)
+		master.GET("/slaves/schema", api.RubixMasterSchema)
+	}
+
 	wiresPlat := admin.Group("/plat")
 	wiresPlat.Use(authMiddleware.MiddlewareFunc())
 	{
