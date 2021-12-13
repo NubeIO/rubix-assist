@@ -47,7 +47,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	GDB.DB = db
 
 	//GDB := dbase.DB{GORM: db}
-
 	api := controller.Controller{DB: GDB, WS: ws}
 	identityKey := "id"
 
@@ -105,6 +104,12 @@ func Setup(db *gorm.DB) *gin.Engine {
 		users.PATCH("/:id", api.UpdateUser)
 		users.DELETE("/:id", api.DeleteUser)
 		users.DELETE("/drop", api.DropUsers)
+	}
+
+	wiresPlat := admin.Group("/plat")
+	wiresPlat.Use(authMiddleware.MiddlewareFunc())
+	{
+		wiresPlat.GET("/schema", api.RubixPlatSchema)
 	}
 
 	proxyRubix := r.Group("/api/rubix/proxy")

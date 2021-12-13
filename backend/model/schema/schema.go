@@ -1,7 +1,10 @@
 package schema
 
 import (
-	"github.com/NubeIO/rubix-updater/model/schema/defaults"
+	"github.com/NubeIO/rubix-updater/model"
+	"github.com/NubeIO/rubix-updater/model/rubix"
+	cmap "github.com/orcaman/concurrent-map"
+	"reflect"
 )
 
 var MethodsAll = struct {
@@ -9,89 +12,118 @@ var MethodsAll = struct {
 	POST   bool `json:"post"`
 	PATCH  bool `json:"patch"`
 	DELETE bool `json:"delete"`
+	PUT    bool `json:"put"`
 }{
 	GET:    true,
 	POST:   true,
 	PATCH:  true,
 	DELETE: true,
+	PUT:    true,
 }
 
-type StringRequired struct {
-	Type     string `json:"type" default:"string"`
-	Required bool   `json:"required" default:"true"`
-	Min      int    `json:"min" default:"1"`
-	Max      int    `json:"max" default:"30"`
+var MethodsGetPut = struct {
+	GET    bool `json:"get"`
+	POST   bool `json:"post"`
+	PATCH  bool `json:"patch"`
+	DELETE bool `json:"delete"`
+	PUT    bool `json:"put"`
+}{
+	GET:    true,
+	POST:   false,
+	PATCH:  false,
+	DELETE: false,
+	PUT:    true,
 }
 
-type StringNotRequired struct {
-	Type     string `json:"type" default:"string"`
-	Required bool   `json:"required" default:"false"`
-	Min      int    `json:"min" default:"1"`
-	Max      int    `json:"max" default:"30"`
+type T struct {
+	Type     string `json:"type"`
+	Required bool   `json:"required"`
+	ReadOnly bool   `json:"read_only"`
+	Min      int    `json:"min,omitempty" default:"1"`
+	Max      int    `json:"max,omitempty" default:"20"`
+	Default  string `json:"default,omitempty"`
 }
 
-type BoolRequired struct {
-	Type     string `json:"type" default:"boolean"`
-	Required bool   `json:"required" default:"false"`
-}
+func reflectBindings(f interface{}) cmap.ConcurrentMap {
+	val := reflect.ValueOf(f).Elem()
+	var obj T
+	res := cmap.New()
+	for i := 0; i < val.NumField(); i++ {
+		//valueField := val.Field(i)
+		typeField := val.Type().Field(i)
+		tag := typeField.Tag
+		objType := typeField.Type.String()
+		if objType == "*bool" {
+			objType = "bool"
+		}
+		obj.Type = objType
+		obj.Required = false
+		obj.ReadOnly = false
+		obj.Default = ""
+		j := tag.Get("json")
+		req := tag.Get("required")
+		read := tag.Get("readonly")
+		defaults := tag.Get("default")
 
-type BoolNotRequired struct {
-	Type     string `json:"type" default:"boolean"`
-	Required bool   `json:"required" default:"false"`
-}
-
-type ID struct {
-	Type     string `json:"type" default:"string"`
-	Required bool   `json:"required" default:"false"`
-	ReadOnly bool   `json:"read_only" default:"true"`
-}
-
-type Host struct {
-	Methods       interface{}       `json:"methods"`
-	ID            ID                `json:"id"`
-	Name          StringRequired    `json:"name"`
-	Description   StringNotRequired `json:"description"`
-	Username      StringRequired    `json:"username"`
-	Password      StringRequired    `json:"password"`
-	IP            IP                `json:"ip"`
-	Port          Port              `json:"port"`
-	HTTPS         BoolRequired      `json:"https"`
-	RubixUsername StringRequired    `json:"rubix_username"`
-	RubixPassword StringRequired    `json:"rubix_password"`
-	RubixPort     Port              `json:"rubix_port"`
-}
-
-type User struct {
-	Methods   interface{}       `json:"methods"`
-	ID        ID                `json:"id"`
-	Name      StringRequired    `json:"name"`
-	Username  StringRequired    `json:"username"`
-	Password  StringRequired    `json:"password"`
-	Email     StringRequired    `json:"email"`
-	UserGroup StringNotRequired `json:"user_group"`
-	IsAdmin   BoolNotRequired   `json:"is_admin"`
-}
-
-func GetHostSchema() *Host {
-	s := &Host{
-		Methods: MethodsAll,
+		if req == "true" {
+			obj.Required = true
+		}
+		if read == "true" {
+			obj.ReadOnly = true
+		}
+		if j == "id" {
+			obj.ReadOnly = true
+		}
+		if len(defaults) > 0 {
+			obj.Default = defaults
+		}
+		if j != "methods" {
+			if j != "-" {
+				res.Set(j, obj)
+			}
+		}
 	}
-	defaults.Set(s)
-	return s
+	return res
 }
 
-func GetTokenSchema() *Host {
-	s := &Host{
-		Methods: MethodsAll,
-	}
-	defaults.Set(s)
-	return s
+func GetHostSchema() interface{} {
+	f := &model.Host{}
+	sch := reflectBindings(f)
+	sch.Set("methods", MethodsAll)
+	return sch.Items()
 }
 
-func GetUserSchema() *User {
-	s := &User{
-		Methods: MethodsAll,
-	}
-	defaults.Set(s)
-	return s
+func GetUserSchema() interface{} {
+	f := &model.User{}
+	sch := reflectBindings(f)
+	sch.Set("methods", MethodsAll)
+	return sch.Items()
+}
+
+func GetRubixPlatSchema() interface{} {
+	f := &rubix.WiresPlat{}
+	sch := reflectBindings(f)
+	sch.Set("methods", MethodsGetPut)
+	return sch.Items()
+}
+
+func GetRubixDiscover() interface{} {
+	f := &rubix.Slaves{}
+	sch := reflectBindings(f)
+	sch.Set("methods", MethodsGetPut)
+	return sch.Items()
+}
+
+func GetRubixSlaves() interface{} {
+	f := &rubix.Slaves{}
+	sch := reflectBindings(f)
+	sch.Set("methods", MethodsGetPut)
+	return sch.Items()
+}
+
+func GetTokenSchema() interface{} {
+	f := &model.User{}
+	sch := reflectBindings(f)
+	sch.Set("methods", MethodsAll)
+	return sch.Items()
 }

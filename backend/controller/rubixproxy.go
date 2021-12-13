@@ -6,7 +6,7 @@ import (
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/bools"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nrest"
 	"github.com/NubeIO/rubix-updater/model"
-	"github.com/NubeIO/rubix-updater/model/rubixmodel"
+	"github.com/NubeIO/rubix-updater/model/rubix"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"net/url"
@@ -25,6 +25,8 @@ func getMethod(method string) (out string) {
 		out = nrest.DELETE
 	case "POST":
 		out = nrest.POST
+	case "PUT":
+		out = nrest.PUT
 	}
 	return out
 }
@@ -110,7 +112,7 @@ func (base *Controller) buildReq(proxyOptions proxyOptions) (s *nrest.Service, o
 			Json:             map[string]interface{}{"username": host.RubixUsername, "password": host.RubixPassword},
 		}
 		req := s.Do(nrest.POST, "/api/users/login", options)
-		res := new(rubixmodel.TokenResponse)
+		res := new(rubix.TokenResponse)
 		err = req.ToInterface(&res)
 		if err != nil {
 			return nil, nil, rtn, err
@@ -158,6 +160,7 @@ func (base *Controller) RubixProxyRequest(ctx *gin.Context) {
 			_url = strings.TrimRight(parts[0], "?")
 		}
 		req := proxyReq.Do(rtn.Method, _url, opt)
+		fmt.Println(rtn.Method, _url, opt.Data)
 		json, _ := req.AsJson()
 		log.Println(rtn.RequestURL)
 		log.Println(req.Err)
