@@ -89,21 +89,30 @@ func reflectBindings(f interface{}) cmap.ConcurrentMap {
 func GetHostSchema() interface{} {
 	f := &model.Host{}
 	sch := reflectBindings(f)
-	sch.Set("methods", MethodsAll)
+	sch.Set("METHODS", MethodsAll)
+	sch.Set("HEADING", "Hosts")
+	sch.Set("SUB_HEADING", "A list of hosts")
+	sch.Set("HELP", "A host is an instance of the rubix system, Use the editor to add, remove, edit and delete any existing hosts")
 	return sch.Items()
 }
 
 func GetUserSchema() interface{} {
 	f := &model.User{}
 	sch := reflectBindings(f)
-	sch.Set("methods", MethodsAll)
+	sch.Set("METHODS", MethodsAll)
+	sch.Set("HEADING", "Users")
+	sch.Set("SUB_HEADING", "A list of users")
+	sch.Set("HELP", "Added and remove users")
 	return sch.Items()
 }
 
 func GetRubixPlatSchema() interface{} {
 	f := &rubix.WiresPlat{}
 	sch := reflectBindings(f)
-	sch.Set("methods", MethodsGetPut)
+	sch.Set("METHODS", MethodsGetPut)
+	sch.Set("HEADING", "Rubix-Details")
+	sch.Set("SUB_HEADING", "site details")
+	sch.Set("HELP", "Update details as required")
 	return sch.Items()
 }
 
