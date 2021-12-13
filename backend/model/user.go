@@ -5,9 +5,9 @@ type User struct {
 	Username  string `json:"username"`
 	IsAdmin   bool   `json:"is_admin"`
 	UserGroup bool   `json:"user_group"`
-	Hash      string `json:"-"`
 	Email     string `json:"email"`
-	UID       string `json:"uid"`
+	Hash      string `json:"-"`
+	UID       string `json:"-"`
 	Role      string `json:"-"`
 }
 

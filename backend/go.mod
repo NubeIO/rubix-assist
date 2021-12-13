@@ -11,6 +11,7 @@ require (
 	github.com/gin-gonic/gin v1.7.4
 	github.com/jinzhu/copier v0.3.4
 	github.com/melbahja/goph v1.3.0
+	github.com/orcaman/concurrent-map v0.0.0-20210501183033-44dafcb38ecc
 	github.com/pkg/sftp v1.13.4
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.9.0

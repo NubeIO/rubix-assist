@@ -1,4 +1,4 @@
-package rubixmodel
+package rubix
 
 type DiscoveredSlaves struct {
 	Slaves []Slaves `json:"slaves"`

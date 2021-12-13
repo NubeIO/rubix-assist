@@ -1,4 +1,4 @@
-package rubixmodel
+package rubix
 
 /*
 USER

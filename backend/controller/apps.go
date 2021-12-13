@@ -3,7 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nrest"
-	"github.com/NubeIO/rubix-updater/model/rubixmodel"
+	"github.com/NubeIO/rubix-updater/model/rubix"
 	"github.com/gin-gonic/gin"
 	"time"
 )
@@ -79,7 +79,7 @@ func (base *Controller) AppsFullInstall(ctx *gin.Context) {
 	//
 	for {
 		req := proxyReq.Do(nrest.GET, AppsUrls.State, opt)
-		state := new(rubixmodel.AppsDownloadState)
+		state := new(rubix.AppsDownloadState)
 		req.ToInterface(&state)
 		fmt.Println(req.Err)
 		fmt.Println(req.StatusCode)
