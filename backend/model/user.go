@@ -1,11 +1,12 @@
 package model
 
 type User struct {
-	ID        string `json:"id" gorm:"primary_key"`
-	Username  string `json:"username"`
-	IsAdmin   bool   `json:"is_admin"`
-	UserGroup bool   `json:"user_group"`
-	Email     string `json:"email"`
+	ID        string `json:"id" gorm:"primary_key" get:"true" delete:"true"`
+	Username  string `json:"username" get:"true" post:"true" patch:"true"`
+	IsAdmin   bool   `json:"is_admin" get:"true" post:"true" patch:"true"`
+	UserGroup bool   `json:"user_group" get:"true" post:"true" patch:"true"`
+	Email     string `json:"email" get:"true" post:"true" patch:"true"`
+	Password  string `json:"password" get:"false" post:"true" patch:"true"`
 	Hash      string `json:"-"`
 	UID       string `json:"-"`
 	Role      string `json:"-"`

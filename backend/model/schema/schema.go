@@ -49,18 +49,40 @@ var MethodsGetPostDelete = struct {
 	PUT:    false,
 }
 
+//var ActionsAddDelete = struct {
+//	VIEW bool `json:"view"`
+//	ADD    bool `json:"add"`
+//	EDIT    bool `json:"edit"`
+//	DELETE bool `json:"delete"`
+//}{
+//	VIEW:    true,
+//	ADD:    true,
+//	ADD:    true,
+//	DELETE: true,
+//}
+
+type Actions struct {
+	VIEW   string `json:"view"`
+	ADD    bool   `json:"add"`
+	EDIT   bool   `json:"edit"`
+	DELETE int    `json:"delete"`
+}
+
 type T struct {
 	Type     string `json:"type"`
 	Required bool   `json:"required"`
-	ReadOnly bool   `json:"read_only"`
 	Min      int    `json:"min,omitempty" default:"1"`
 	Max      int    `json:"max,omitempty" default:"20"`
 	Default  string `json:"default,omitempty"`
+	Get      bool   `json:"get"`
+	Post     bool   `json:"post"`
+	Patch    bool   `json:"patch"`
+	Put      bool   `json:"put"`
+	Delete   bool   `json:"delete"`
 }
 
 func reflectBindings(f interface{}) cmap.ConcurrentMap {
 	val := reflect.ValueOf(f).Elem()
-	var obj T
 	res := cmap.New()
 	for i := 0; i < val.NumField(); i++ {
 		//valueField := val.Field(i)
@@ -70,23 +92,37 @@ func reflectBindings(f interface{}) cmap.ConcurrentMap {
 		if objType == "*bool" {
 			objType = "bool"
 		}
+		var obj T
 		obj.Type = objType
-		obj.Required = false
-		obj.ReadOnly = false
 		obj.Default = ""
 		j := tag.Get("json")
 		req := tag.Get("required")
-		read := tag.Get("readonly")
 		defaults := tag.Get("default")
-
+		get := tag.Get("get")
+		post := tag.Get("post")
+		patch := tag.Get("patch")
+		put := tag.Get("put")
+		del := tag.Get("delete")
 		if req == "true" {
 			obj.Required = true
 		}
-		if read == "true" {
-			obj.ReadOnly = true
+		if get == "true" {
+			obj.Get = true
 		}
-		if j == "id" {
-			obj.ReadOnly = true
+		if post == "true" {
+			obj.Post = true
+		}
+		if patch == "true" {
+			obj.Patch = true
+		}
+		if put == "true" {
+			obj.Put = true
+		}
+		if del == "true" {
+			obj.Delete = true
+		}
+		if req == "true" {
+			obj.Required = true
 		}
 		if len(defaults) > 0 {
 			obj.Default = defaults
@@ -100,61 +136,68 @@ func reflectBindings(f interface{}) cmap.ConcurrentMap {
 	return res
 }
 
+const (
+	fields     = "fields"
+	methods    = "methods"
+	heading    = "heading"
+	subHeading = "sud_heading"
+	help       = "help"
+	apiHelp    = "api_help"
+)
+
 func GetHostSchema() interface{} {
 	f := &model.Host{}
 	sch := cmap.New()
-	sch.Set("fields", reflectBindings(f))
-	sch.Set("METHODS", MethodsAll)
-	sch.Set("METHODS", MethodsAll)
-	sch.Set("HEADING", "Hosts")
-	sch.Set("SUB_HEADING", "A list of hosts")
-	sch.Set("HELP", "A host is an instance of the rubix system, Use the editor to add, remove, edit and delete any existing hosts")
+	sch.Set(fields, reflectBindings(f))
+	sch.Set(methods, MethodsAll)
+	sch.Set(heading, "Hosts")
+	sch.Set(subHeading, "A list of hosts")
+	sch.Set(help, "A host is an instance of the rubix system, Use the editor to add, remove, edit and delete any existing hosts")
 	return sch.Items()
 }
 
 func GetUserSchema() interface{} {
 	f := &model.User{}
 	sch := cmap.New()
-	sch.Set("fields", reflectBindings(f))
-	sch.Set("METHODS", MethodsAll)
-	sch.Set("HEADING", "Users")
-	sch.Set("SUB_HEADING", "A list of users")
-	sch.Set("HELP", "Added and remove users")
+	sch.Set(fields, reflectBindings(f))
+	sch.Set(methods, MethodsAll)
+	sch.Set(heading, "Users")
+	sch.Set(subHeading, "A list of users")
+	sch.Set(help, "Added and remove users")
 	return sch.Items()
 }
 
 func GetRubixPlatSchema() interface{} {
 	f := &rubix.WiresPlat{}
 	sch := cmap.New()
-	sch.Set("fields", reflectBindings(f))
-	sch.Set("METHODS", MethodsGetPut)
-	sch.Set("HEADING", "Rubix-Details")
-	sch.Set("SUB_HEADING", "site details")
-	sch.Set("HELP", "Update details as required")
+	sch.Set(fields, reflectBindings(f))
+	sch.Set(methods, MethodsGetPut)
+	sch.Set(heading, "Rubix-Details")
+	sch.Set(subHeading, "site details")
+	sch.Set(help, "Update details as required")
 	return sch.Items()
 }
 
 func GetRubixDiscover() interface{} {
 	f := &rubix.Slaves{}
 	sch := cmap.New()
-	sch.Set("fields", reflectBindings(f))
-	sch.Set("METHODS", MethodsGetPut)
-	sch.Set("HEADING", "Rubix-Details")
-	sch.Set("SUB_HEADING", "site details")
-	sch.Set("HELP", "Update details as required")
-	sch.Set("API_HELP", "Update details as required")
+	sch.Set(fields, reflectBindings(f))
+	sch.Set(methods, MethodsGetPut)
+	sch.Set(heading, "Rubix-Details")
+	sch.Set(subHeading, "site details")
+	sch.Set(help, "Update details as required")
 	return sch.Items()
 }
 
 func GetRubixSlaves() interface{} {
 	f := &rubix.Slaves{}
 	sch := cmap.New()
-	sch.Set("fields", reflectBindings(f))
-	sch.Set("METHODS", MethodsGetPostDelete)
-	sch.Set("HEADING", "Rubix-Details")
-	sch.Set("SUB_HEADING", "site details")
-	sch.Set("HELP", "Update details as required")
-	sch.Set("API_HELP", "ENDPoints GET: will return a list of slaves, ADD/POST: in the body pass in the global_uuid, DELETE: to delete use the global_uuid as a parameter in the url (api/slaves/global_uuid)")
+	sch.Set(fields, reflectBindings(f))
+	sch.Set(methods, MethodsGetPostDelete)
+	sch.Set(heading, "Rubix-Details")
+	sch.Set(subHeading, "site details")
+	sch.Set(help, "Update details as required")
+	sch.Set(apiHelp, "ENDPoints GET: will return a list of slaves, ADD/POST: in the body pass in the global_uuid, DELETE: to delete use the global_uuid as a parameter in the url (api/slaves/global_uuid)")
 	return sch.Items()
 }
 
