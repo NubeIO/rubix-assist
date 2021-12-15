@@ -140,7 +140,7 @@ const (
 	fields     = "fields"
 	methods    = "methods"
 	heading    = "heading"
-	subHeading = "sud_heading"
+	subHeading = "sub_heading"
 	help       = "help"
 	apiHelp    = "api_help"
 )
