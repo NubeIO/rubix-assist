@@ -106,6 +106,13 @@ func Setup(db *gorm.DB) *gin.Engine {
 		users.DELETE("/drop", api.DropUsers)
 	}
 
+	ff := admin.Group("/ff")
+	ff.Use(authMiddleware.MiddlewareFunc())
+	{
+		ff.POST("/flow_networks", api.FFFlowNetworkWizard)
+		ff.POST("/networks", api.FFNetworkWizard)
+	}
+
 	master := admin.Group("/master")
 	master.Use(authMiddleware.MiddlewareFunc())
 	{
