@@ -2,10 +2,10 @@ module github.com/NubeIO/rubix-updater
 
 go 1.17
 
-replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nube/nubeio-rubix-lib-helpers-go
+//replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nube/nubeio-rubix-lib-helpers-go
 
 require (
-	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.2
+	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.4-0.20211220024322-502da069502d
 	github.com/appleboy/gin-jwt/v2 v2.7.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
