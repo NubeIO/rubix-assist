@@ -60,7 +60,7 @@ func (base *Controller) FFNetworkWizard(ctx *gin.Context) {
 	}
 
 	opt = &nrest.ReqOpt{
-		Timeout:          2 * time.Second,
+		Timeout:          6 * time.Second,
 		RetryCount:       0,
 		RetryWaitTime:    0 * time.Second,
 		RetryMaxWaitTime: 0,
@@ -117,7 +117,7 @@ func (base *Controller) FFFlowNetworkWizard(ctx *gin.Context) {
 	}
 
 	opt = &nrest.ReqOpt{
-		Timeout:          2 * time.Second,
+		Timeout:          4 * time.Second,
 		RetryCount:       0,
 		RetryWaitTime:    0 * time.Second,
 		RetryMaxWaitTime: 0,
@@ -148,7 +148,6 @@ func (base *Controller) FFFlowNetworkWizard(ctx *gin.Context) {
 		"flow_port":                 body.FlowPort,
 		"flow_username":             body.FlowUsername,
 		"flow_password":             body.FlowPassword,
-		"flow_token":                flowToken.String(),
 	}
 
 	opt.Json = b
@@ -157,6 +156,7 @@ func (base *Controller) FFFlowNetworkWizard(ctx *gin.Context) {
 	makeNetwork := proxyReq.Do(nrest.POST, FlowUrls.FlowNetworks, opt)
 	netUUID := gjson.Get(string(makeNetwork.Body), "uuid")
 	log.Println("netUUID ", netUUID)
+	log.Println("makeNetwork Err ", makeNetwork.Err)
 	log.Println("makeNetwork status ", makeNetwork.Status())
 	log.Println("makeNetwork body ", makeNetwork.AsString())
 
