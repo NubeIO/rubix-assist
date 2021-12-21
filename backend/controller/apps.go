@@ -66,6 +66,11 @@ func (base *Controller) AppsFullInstall(ctx *gin.Context) {
 	getState := proxyReq.Do(nrest.GET, AppsUrls.State, opt)
 	fmt.Println(getState.StatusCode)
 	fmt.Println(getState.AsString())
+
+	var msg TMsg
+	msg.Topic = "apps.install.state"
+	msg.Message = getState.AsString()
+	base.publishMSG(msg)
 	//delete state
 	deleteState := proxyReq.Do(nrest.DELETE, AppsUrls.State, opt)
 	fmt.Println(deleteState.StatusCode)
@@ -75,6 +80,10 @@ func (base *Controller) AppsFullInstall(ctx *gin.Context) {
 	fmt.Println(appDownload.Err)
 	fmt.Println(appDownload.StatusCode)
 	fmt.Println(appDownload.AsString())
+
+	msg.Topic = "apps.install.download"
+	msg.Message = "download completed"
+	base.publishMSG(msg)
 
 	//
 	for {
@@ -87,14 +96,23 @@ func (base *Controller) AppsFullInstall(ctx *gin.Context) {
 		time.Sleep(4 * time.Second)
 		downloadCount++
 		fmt.Println("downloaded")
+		msg.Topic = "apps.install.downloading"
+		msg.Message = state.State
+		base.publishMSG(msg)
 		if state.State == "DOWNLOADED" {
 			break
 		}
+		msg.Topic = "apps.install.downloaded"
+		msg.Message = "DOWNLOADED"
+		base.publishMSG(msg)
 	}
 	appInstall := proxyReq.Do(nrest.POST, AppsUrls.Install, opt)
 	fmt.Println(appInstall.Err)
 	fmt.Println(appInstall.StatusCode)
 	fmt.Println(appInstall.AsString())
+	msg.Topic = "apps.install.install"
+	msg.Message = appInstall.AsString()
+	base.publishMSG(msg)
 
 	deleteState = proxyReq.Do(nrest.DELETE, AppsUrls.State, opt)
 	fmt.Println(deleteState.StatusCode)
