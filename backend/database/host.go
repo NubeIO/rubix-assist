@@ -2,7 +2,7 @@ package dbase
 
 import (
 	"errors"
-	"fmt"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/bools"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/uuid"
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
@@ -19,7 +19,6 @@ func (d *DB) GetHosts() ([]model.Host, error) {
 
 func (d *DB) GetHostByName(id string, useID bool) (*model.Host, error) {
 	m := new(model.Host)
-	fmt.Println(id, useID)
 	switch useID {
 	case true:
 		if err := d.DB.Where("id = ? ", id).First(&m).Error; err != nil {
@@ -40,6 +39,9 @@ func (d *DB) GetHostByName(id string, useID bool) (*model.Host, error) {
 
 func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	host.ID, _ = uuid.MakeUUID()
+	if host.PingEnable == nil {
+		host.PingEnable = bools.NewFalse()
+	}
 	if err := d.DB.Create(&host).Error; err != nil {
 		return nil, err
 	} else {

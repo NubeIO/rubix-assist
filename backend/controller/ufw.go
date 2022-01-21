@@ -41,7 +41,7 @@ func (base *Controller) InstallUFW2(ctx *gin.Context) {
 		debug: debug,
 		host:  *host,
 	}
-	_, install, err := base.runCommand(opts, host.IsLocalhost)
+	_, install, err := base.runCommand(opts, *host.IsLocalhost)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 		return
