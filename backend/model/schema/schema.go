@@ -5,6 +5,7 @@ import (
 	"github.com/NubeIO/rubix-updater/model/rubix"
 	cmap "github.com/orcaman/concurrent-map"
 	"reflect"
+	"strings"
 )
 
 var MethodsAll = struct {
@@ -92,6 +93,12 @@ func reflectBindings(f interface{}) cmap.ConcurrentMap {
 		if objType == "*bool" {
 			objType = "bool"
 		}
+		if strings.Contains(objType, "[]*") {
+			objType = "array"
+		}
+		if objType == "time.Time" {
+			objType = "date"
+		}
 		var obj T
 		obj.Type = objType
 		obj.Default = ""
@@ -156,6 +163,17 @@ func GetHostSchema() interface{} {
 	return sch.Items()
 }
 
+func GetDeviceInfoSchema() interface{} {
+	f := &model.Host{}
+	sch := cmap.New()
+	sch.Set(fields, reflectBindings(f))
+	sch.Set(methods, MethodsAll)
+	sch.Set(heading, "Hosts")
+	sch.Set(subHeading, "A list of hosts")
+	sch.Set(help, "A host is an instance of the rubix system, Use the editor to add, remove, edit and delete any existing hosts")
+	return sch.Items()
+}
+
 func GetUserSchema() interface{} {
 	f := &model.User{}
 	sch := cmap.New()
@@ -164,6 +182,39 @@ func GetUserSchema() interface{} {
 	sch.Set(heading, "Users")
 	sch.Set(subHeading, "A list of users")
 	sch.Set(help, "Added and remove users")
+	return sch.Items()
+}
+
+func GetTeamSchema() interface{} {
+	f := &model.Team{}
+	sch := cmap.New()
+	sch.Set(fields, reflectBindings(f))
+	sch.Set(methods, MethodsAll)
+	sch.Set(heading, "Teams")
+	sch.Set(subHeading, "A list of teams")
+	sch.Set(help, "Added and remove teams")
+	return sch.Items()
+}
+
+func GetAlertSchema() interface{} {
+	f := &model.Alert{}
+	sch := cmap.New()
+	sch.Set(fields, reflectBindings(f))
+	sch.Set(methods, MethodsAll)
+	sch.Set(heading, "Alerts")
+	sch.Set(subHeading, "A list of Alerts")
+	sch.Set(help, "Added and remove Alerts")
+	return sch.Items()
+}
+
+func GetMessageSchema() interface{} {
+	f := &model.Message{}
+	sch := cmap.New()
+	sch.Set(fields, reflectBindings(f))
+	sch.Set(methods, MethodsAll)
+	sch.Set(heading, "Messages")
+	sch.Set(subHeading, "A list of Messages")
+	sch.Set(help, "Added and remove Messages")
 	return sch.Items()
 }
 

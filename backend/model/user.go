@@ -7,6 +7,7 @@ type User struct {
 	UserGroup bool   `json:"user_group" get:"true" post:"true" patch:"true"`
 	Email     string `json:"email" get:"true" post:"true" patch:"true"`
 	Password  string `json:"password" get:"false" post:"true" patch:"true"`
+	TeamID    string `json:"team" get:"true" post:"true" patch:"true" gorm:"TYPE:string REFERENCES teams;"`
 	Hash      string `json:"-"`
 	UID       string `json:"-"`
 	Role      string `json:"-"`
@@ -21,4 +22,9 @@ type NewUser struct {
 type LoginUser struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+type Team struct {
+	ID    string  `json:"id" gorm:"primary_key" get:"true" delete:"true"`
+	Users []*User `json:"users" gorm:"constraint"`
 }

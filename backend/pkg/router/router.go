@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/rubix-updater/controller"
 	dbase "github.com/NubeIO/rubix-updater/database"
+	dbhandler "github.com/NubeIO/rubix-updater/pkg/handler"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/NubeIO/rubix-updater/service/auth"
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -45,7 +46,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	GDB := new(dbase.DB)
 	GDB.DB = db
-
+	gg := new(dbhandler.Handler)
+	gg.DB = GDB
+	dbhandler.Init(gg)
 	//GDB := dbase.DB{GORM: db}
 	api := controller.Controller{DB: GDB, WS: ws}
 	identityKey := "id"
@@ -104,6 +107,42 @@ func Setup(db *gorm.DB) *gin.Engine {
 		users.PATCH("/:id", api.UpdateUser)
 		users.DELETE("/:id", api.DeleteUser)
 		users.DELETE("/drop", api.DropUsers)
+	}
+
+	teams := admin.Group("/teams")
+	teams.Use(authMiddleware.MiddlewareFunc())
+	{
+		teams.GET("/schema", api.TeamsSchema)
+		teams.GET("/", api.GetTeams)
+		teams.POST("/", api.CreateTeam)
+		teams.GET("/:id", api.GetTeam)
+		teams.PATCH("/:id", api.UpdateTeam)
+		teams.DELETE("/:id", api.DeleteTeam)
+		teams.DELETE("/drop", api.DropTeams)
+	}
+
+	alerts := admin.Group("/alerts")
+	alerts.Use(authMiddleware.MiddlewareFunc())
+	{
+		alerts.GET("/schema", api.AlertsSchema)
+		alerts.GET("/", api.GetAlerts)
+		alerts.POST("/", api.CreateAlert)
+		alerts.GET("/:id", api.GetAlert)
+		alerts.PATCH("/:id", api.UpdateAlert)
+		alerts.DELETE("/:id", api.DeleteAlert)
+		alerts.DELETE("/drop", api.DropAlerts)
+	}
+
+	messages := admin.Group("/messages")
+	messages.Use(authMiddleware.MiddlewareFunc())
+	{
+		messages.GET("/schema", api.MessagesSchema)
+		messages.GET("/", api.GetMessages)
+		messages.POST("/", api.CreateMessage)
+		messages.GET("/:id", api.GetMessage)
+		messages.PATCH("/:id", api.UpdateMessage)
+		messages.DELETE("/:id", api.DeleteMessage)
+		messages.DELETE("/drop", api.DropMessages)
 	}
 
 	ff := admin.Group("/ff")

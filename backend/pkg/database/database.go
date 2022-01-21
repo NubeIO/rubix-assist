@@ -61,7 +61,7 @@ func Setup() error {
 	}
 
 	// Auto migrate project models
-	db.AutoMigrate(&model.Host{}, &model.Token{}, &model.User{})
+	db.AutoMigrate(&model.Host{}, &model.Token{}, &model.User{}, &model.Team{}, &model.Alert{}, &model.Message{})
 	DB = db
 
 	return nil

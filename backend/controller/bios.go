@@ -43,6 +43,7 @@ func (base *Controller) InstallBios(ctx *gin.Context) {
 	g.Token = token
 	g.DownloadPath = path
 	_dirs.Host.CommandOpts.CMD = g.BuildCURL(git.CurlReleaseDownload)
+	log.Println("download ", _dirs.Host.CommandOpts.CMD)
 	//DOWNLOAD BUILD
 	log.Println("download ", "try and download bios")
 	_, download, err := _dirs.Host.RunCommand()
