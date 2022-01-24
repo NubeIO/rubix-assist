@@ -28,6 +28,7 @@ var CommonNaming = struct {
 	Team             string
 	Alert            string
 	Message          string
+	Host             string
 }{
 	NubeIO:           "Nube-IO",
 	Plugin:           "plugin",
@@ -56,6 +57,7 @@ var CommonNaming = struct {
 	Team:             "team",
 	Alert:            "alert",
 	Message:          "message",
+	Host:             "host,",
 }
 
 var ThingClass = struct {
@@ -116,7 +118,15 @@ var WriterActions = struct {
 	Delete: "delete",
 }
 
-var CommonFaultCode = struct {
+var CommonAlertTypes = struct {
+	HostPing    string
+	DeviceOffline string
+}{
+	HostPing:    "system_ping",
+	DeviceOffline: "device_offline",
+}
+
+var CommonAlertCode = struct {
 	ConfigError      string
 	SystemError      string
 	PluginNotEnabled string
@@ -130,7 +140,7 @@ var CommonFaultCode = struct {
 	Ok:               "ok",
 }
 
-var CommonFaultMessage = struct {
+var CommonAlertMessage = struct {
 	ConfigError      string
 	SystemError      string
 	PluginNotEnabled string

@@ -32,6 +32,7 @@ func MakeTopicUUID(attribute string) string {
 	wrc := "wrc" //writerClone
 	con := "con" //consumers
 	wri := "wri" //writer
+	hos := "hos" //host
 
 	fnc := "rfn" //flow network clone
 	plg := "plg" //plugin
@@ -44,6 +45,7 @@ func MakeTopicUUID(attribute string) string {
 
 	stl := "stl" //list of flow network gateway
 	alt := "alt" //alerts
+	msg := "msg" //alerts messages
 	cmd := "cmd" //command
 	rub := "rbx" //rubix uuid
 	rxg := "rxg" //rubix global uuid
@@ -96,6 +98,10 @@ func MakeTopicUUID(attribute string) string {
 		return fmt.Sprintf("%s%s%s", tem, divider, u)
 	case model.CommonNaming.Alert:
 		return fmt.Sprintf("%s%s%s", alt, divider, u)
+	case model.CommonNaming.Message:
+		return fmt.Sprintf("%s%s%s", msg, divider, u)
+	case model.CommonNaming.Host:
+		return fmt.Sprintf("%s%s%s", hos, divider, u)
 
 	}
 	return u

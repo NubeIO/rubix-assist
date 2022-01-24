@@ -16,7 +16,7 @@ func (base *Controller) AlertsSchema(ctx *gin.Context) {
 }
 
 func (base *Controller) GetAlert(c *gin.Context) {
-	team, err := base.DB.GetAlert(c.Params.ByName("id"))
+	team, err := base.DB.GetAlert(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -46,7 +46,7 @@ func (base *Controller) CreateAlert(c *gin.Context) {
 
 func (base *Controller) UpdateAlert(c *gin.Context) {
 	body, _ := getAlertBody(c)
-	team, err := base.DB.UpdateAlert(c.Params.ByName("id"), body)
+	team, err := base.DB.UpdateAlert(c.Params.ByName("uuid"), body)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -55,7 +55,7 @@ func (base *Controller) UpdateAlert(c *gin.Context) {
 }
 
 func (base *Controller) DeleteAlert(c *gin.Context) {
-	q, err := base.DB.DeleteAlert(c.Params.ByName("id"))
+	q, err := base.DB.DeleteAlert(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 	} else {

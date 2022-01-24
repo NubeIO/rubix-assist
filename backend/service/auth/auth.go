@@ -8,7 +8,7 @@ import (
 func MapClaims(data interface{}) jwt.MapClaims {
 	if v, ok := data.(*model.User); ok {
 		return jwt.MapClaims{
-			"id":   v.Email,
+			"uuid":   v.Email,
 			"role": v.Role,
 		}
 	}

@@ -33,10 +33,10 @@ func (base *Controller) InstallUFW2(ctx *gin.Context) {
 	}
 	hostName := host.Name
 	if useID {
-		hostName = host.ID
+		hostName = host.UUID
 	}
 	opts := commandOpts{
-		id:    hostName,
+		uuid:    hostName,
 		cmd:   "sudo ufw ",
 		debug: debug,
 		host:  *host,

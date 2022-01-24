@@ -6,9 +6,9 @@ import (
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 )
 
-func (d *DB) GetTeam(id string) (*model.Team, error) {
+func (d *DB) GetTeam(uuid string) (*model.Team, error) {
 	m := new(model.Team)
-	if err := d.DB.Where("id = ? ", id).First(&m).Error; err != nil {
+	if err := d.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
 		logger.Errorf("GetTeam error: %v", err)
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (d *DB) GetTeams() ([]model.Team, error) {
 }
 
 func (d *DB) CreateTeam(Team *model.Team) (*model.Team, error) {
-	Team.ID = config.MakeTopicUUID(model.CommonNaming.Team)
+	Team.UUID = config.MakeTopicUUID(model.CommonNaming.Team)
 	if err := d.DB.Create(&Team).Error; err != nil {
 		return nil, err
 	} else {
@@ -33,9 +33,9 @@ func (d *DB) CreateTeam(Team *model.Team) (*model.Team, error) {
 	}
 }
 
-func (d *DB) UpdateTeam(id string, Team *model.Team) (*model.Team, error) {
+func (d *DB) UpdateTeam(uuid string, Team *model.Team) (*model.Team, error) {
 	m := new(model.Team)
-	query := d.DB.Where("id = ?", id).Find(&m).Updates(Team)
+	query := d.DB.Where("uuid = ?", uuid).Find(&m).Updates(Team)
 	if query.Error != nil {
 		return nil, query.Error
 	} else {
@@ -43,9 +43,9 @@ func (d *DB) UpdateTeam(id string, Team *model.Team) (*model.Team, error) {
 	}
 }
 
-func (d *DB) DeleteTeam(id string) (ok bool, err error) {
+func (d *DB) DeleteTeam(uuid string) (ok bool, err error) {
 	m := new(model.Team)
-	query := d.DB.Where("id = ? ", id).Delete(&m)
+	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
 	if query.Error != nil {
 		return false, query.Error
 	}

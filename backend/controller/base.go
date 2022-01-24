@@ -71,7 +71,7 @@ func useHostNameOrID(ctx *gin.Context) (idName string, useID bool) {
 }
 
 func resolveHeaderHostID(ctx *gin.Context) string {
-	return ctx.GetHeader("host_id")
+	return ctx.GetHeader("host_uuid")
 }
 
 func resolveHeaderHostName(ctx *gin.Context) string {

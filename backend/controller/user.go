@@ -22,7 +22,7 @@ func (base *Controller) UsersSchema(ctx *gin.Context) {
 }
 
 func (base *Controller) GetUser(c *gin.Context) {
-	host, err := base.DB.GetUser(c.Params.ByName("id"))
+	host, err := base.DB.GetUser(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -41,7 +41,7 @@ func (base *Controller) GetUsers(c *gin.Context) {
 
 func (base *Controller) UpdateUser(c *gin.Context) {
 	body, _ := getUserBody(c)
-	host, err := base.DB.UpdateUser(c.Params.ByName("id"), body)
+	host, err := base.DB.UpdateUser(c.Params.ByName("uuid"), body)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -50,7 +50,7 @@ func (base *Controller) UpdateUser(c *gin.Context) {
 }
 
 func (base *Controller) DeleteUser(c *gin.Context) {
-	q, err := base.DB.DeleteUser(c.Params.ByName("id"))
+	q, err := base.DB.DeleteUser(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 	} else {
@@ -112,7 +112,7 @@ func (base *Controller) AddUser(c *gin.Context) {
 			panic(err)
 		}
 		user = model.User{Username: newUser.Username, Email: newUser.Email, Hash: string(hash), UID: GenerateUID()}
-		user.ID, _ = uuid.MakeUUID()
+		user.UUID, _ = uuid.MakeUUID()
 		if err := base.DB.DB.Create(&user).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return

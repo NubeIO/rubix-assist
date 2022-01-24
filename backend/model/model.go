@@ -1,6 +1,6 @@
 package model
 
 type Token struct {
-	ID    string `json:"id" gorm:"primarykey"`
+	UUID    string `json:"uuid" gorm:"primarykey"`
 	Token string `json:"token"`
 }

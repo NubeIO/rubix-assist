@@ -20,7 +20,7 @@ func (base *Controller) HostsSchema(ctx *gin.Context) {
 }
 
 func (base *Controller) GetHost(c *gin.Context) {
-	host, err := base.DB.GetHostByName(c.Params.ByName("id"), true)
+	host, err := base.DB.GetHostByName(c.Params.ByName("uuid"), true)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -50,7 +50,7 @@ func (base *Controller) CreateHost(c *gin.Context) {
 
 func (base *Controller) UpdateHost(c *gin.Context) {
 	body, _ := getHostBody(c)
-	host, err := base.DB.UpdateHost(c.Params.ByName("id"), body)
+	host, err := base.DB.UpdateHost(c.Params.ByName("uuid"), body)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -59,7 +59,7 @@ func (base *Controller) UpdateHost(c *gin.Context) {
 }
 
 func (base *Controller) DeleteHost(c *gin.Context) {
-	q, err := base.DB.DeleteHost(c.Params.ByName("id"))
+	q, err := base.DB.DeleteHost(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 	} else {

@@ -4,31 +4,47 @@ import (
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/bools"
 	utils "github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/ping"
+	"github.com/NubeIO/rubix-updater/model"
 	dbhandler "github.com/NubeIO/rubix-updater/pkg/handler"
 	"github.com/NubeIO/rubix-updater/pkg/jobs"
 	log "github.com/sirupsen/logrus"
 	"strconv"
+	"time"
 )
 
-func run() {
+var alertTpe = model.CommonAlertTypes.HostPing
 
+//createAlert make if not exist
+func createAlert(host *model.Host) {
 	d := dbhandler.GetDB()
+	alert, _ := d.GetAlertByType(host.UUID, alertTpe)
+	//make alert if not exist
+	if alert == nil {
+		var a model.Alert
+		a.HostUUID = host.UUID
+		a.AlertType = alertTpe
+		a.Date = time.Now().UTC()
+		alert, _ = d.CreateAlert(&a)
+	}
+	//add a message log to the alert
+	var msg model.Message
+	msg.AlertUUID = alert.UUID
+	msg.Date = time.Now().UTC()
+	_, _ = d.CreateMessage(&msg)
 
+}
+
+func run() {
+	d := dbhandler.GetDB()
 	hosts, _ := d.GetHosts()
-
 	for _, host := range hosts {
-		fmt.Println(host.Name)
 		if bools.IsTrue(host.PingEnable) {
-			_, err, ok := utils.PingPort(host.IP, strconv.Itoa(host.RubixPort), 5, false)
-			if err != nil {
-
-			}
+			_, _, ok := utils.PingPort(host.IP, strconv.Itoa(host.RubixPort), 5, false)
 			fmt.Println(host.Name, ok)
 			if !ok {
 				host.IsOffline = bools.NewTrue()
-				fmt.Println(host.OfflineCount)
 				host.OfflineCount = host.OfflineCount + 1
-				_, err := d.UpdateHost(host.ID, &host)
+				host, err := d.UpdateHost(host.UUID, &host)
 				if err != nil {
 					fmt.Println(err)
 					//return
@@ -37,6 +53,7 @@ func run() {
 				if res == 0 {
 					fmt.Println("SEND OFFLINE")
 				}
+				createAlert(host)
 
 			}
 
@@ -48,7 +65,6 @@ func run() {
 
 func TEST() {
 	j, ok := jobs.GetJobService()
-
 	if ok {
 		_, err := j.Every(30).Second().Do(run)
 		if err != nil {
