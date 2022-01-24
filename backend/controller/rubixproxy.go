@@ -125,7 +125,7 @@ func (base *Controller) buildReq(proxyOptions proxyOptions) (s *nrest.Service, o
 		var h model.Host
 		h.RubixToken = token
 		h.RubixTokenLastUpdate = time.Now()
-		_, err := base.DB.UpdateHost(host.ID, &h)
+		_, err := base.DB.UpdateHost(host.UUID, &h)
 		if err != nil {
 			log.Println("ERROR: failed to update host token in db", err)
 			return nil, nil, rtn, errors.New("ERROR: failed to update host token in db")

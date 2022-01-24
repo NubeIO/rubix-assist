@@ -5,7 +5,7 @@ go 1.17
 replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nube/nubeio-rubix-lib-helpers-go
 
 require (
-    github.com/NubeIO/nubeio-rubix-lib-helpers-go  v0.1.3
+	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.3
 	github.com/appleboy/gin-jwt/v2 v2.7.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
@@ -13,6 +13,7 @@ require (
 	github.com/jinzhu/copier v0.3.4
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/melbahja/goph v1.3.0
+	github.com/oleiade/reflections v1.0.1
 	github.com/orcaman/concurrent-map v0.0.0-20210501183033-44dafcb38ecc
 	github.com/pkg/sftp v1.13.4
 	github.com/sirupsen/logrus v1.8.1

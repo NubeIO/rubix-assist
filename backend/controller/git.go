@@ -18,10 +18,10 @@ func (base *Controller) GitGetRelease(ctx *gin.Context) {
 	command := g.BuildCURL(git.CurlReleasesLatest)
 	hostName := host.Name
 	if useID {
-		hostName = host.ID
+		hostName = host.UUID
 	}
 	opts := commandOpts{
-		id:    hostName,
+		uuid:    hostName,
 		cmd:   command,
 		debug: true,
 		host:  *host,

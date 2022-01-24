@@ -7,9 +7,9 @@ import (
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 )
 
-func (d *DB) GetJob(id string) (*model.Job, error) {
+func (d *DB) GetJob(uuid string) (*model.Job, error) {
 	m := new(model.Job)
-	if err := d.DB.Where("id = ? ", id).First(&m).Error; err != nil {
+	if err := d.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
 		logger.Errorf("GetHost error: %v", err)
 		return nil, err
 	}
@@ -35,9 +35,9 @@ func (d *DB) CreateJob(Job *model.Job) (*model.Job, error) {
 	}
 }
 
-func (d *DB) UpdateJob(id string, Job *model.Job) (*model.Job, error) {
+func (d *DB) UpdateJob(uuid string, Job *model.Job) (*model.Job, error) {
 	m := new(model.Job)
-	query := d.DB.Where("id = ?", id).Find(&m).Updates(Job)
+	query := d.DB.Where("uuid = ?", uuid).Find(&m).Updates(Job)
 	if query.Error != nil {
 		return nil, query.Error
 	} else {
@@ -45,9 +45,9 @@ func (d *DB) UpdateJob(id string, Job *model.Job) (*model.Job, error) {
 	}
 }
 
-func (d *DB) DeleteJob(id string) (ok bool, err error) {
+func (d *DB) DeleteJob(uuid string) (ok bool, err error) {
 	m := new(model.Job)
-	query := d.DB.Where("id = ? ", id).Delete(&m)
+	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
 	if query.Error != nil {
 		return false, query.Error
 	}

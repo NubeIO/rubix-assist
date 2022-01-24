@@ -1,14 +1,15 @@
 package dbase
 
 import (
+	"errors"
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/pkg/config"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 )
 
-func (d *DB) GetMessage(id string) (*model.Message, error) {
+func (d *DB) GetMessage(uuid string) (*model.Message, error) {
 	m := new(model.Message)
-	if err := d.DB.Where("id = ? ", id).First(&m).Error; err != nil {
+	if err := d.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
 		logger.Errorf("GetMessage error: %v", err)
 		return nil, err
 	}
@@ -24,28 +25,33 @@ func (d *DB) GetMessages() ([]model.Message, error) {
 	}
 }
 
-func (d *DB) CreateMessage(Message *model.Message) (*model.Message, error) {
-	Message.ID = config.MakeTopicUUID(model.CommonNaming.Message)
-	if err := d.DB.Create(&Message).Error; err != nil {
+func (d *DB) CreateMessage(message *model.Message) (*model.Message, error) {
+	alert, err := d.GetAlert(message.AlertUUID)
+	if err != nil {
+		return nil, errors.New("no alert found")
+	}
+	message.UUID = config.MakeTopicUUID(model.CommonNaming.Message)
+	message.AlertUUID = alert.UUID
+	if err := d.DB.Create(&message).Error; err != nil {
 		return nil, err
 	} else {
-		return Message, nil
+		return message, nil
 	}
 }
 
-func (d *DB) UpdateMessage(id string, Message *model.Message) (*model.Message, error) {
+func (d *DB) UpdateMessage(uuid string, message *model.Message) (*model.Message, error) {
 	m := new(model.Message)
-	query := d.DB.Where("id = ?", id).Find(&m).Updates(Message)
+	query := d.DB.Where("uuid = ?", uuid).Find(&m).Updates(message)
 	if query.Error != nil {
 		return nil, query.Error
 	} else {
-		return Message, query.Error
+		return message, query.Error
 	}
 }
 
-func (d *DB) DeleteMessage(id string) (ok bool, err error) {
+func (d *DB) DeleteMessage(uuid string) (ok bool, err error) {
 	m := new(model.Message)
-	query := d.DB.Where("id = ? ", id).Delete(&m)
+	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
 	if query.Error != nil {
 		return false, query.Error
 	}

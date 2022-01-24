@@ -17,7 +17,7 @@ func (base *Controller) TokenSchema(ctx *gin.Context) {
 }
 
 func (base *Controller) GetToken(c *gin.Context) {
-	Token, err := base.DB.GetToken(c.Params.ByName("id"))
+	Token, err := base.DB.GetToken(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -47,7 +47,7 @@ func (base *Controller) CreateToken(c *gin.Context) {
 
 func (base *Controller) UpdateToken(c *gin.Context) {
 	body, _ := getTokenBody(c)
-	t, err := base.DB.UpdateToken(c.Params.ByName("id"), body)
+	t, err := base.DB.UpdateToken(c.Params.ByName("uuid"), body)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -56,7 +56,7 @@ func (base *Controller) UpdateToken(c *gin.Context) {
 }
 
 func (base *Controller) DeleteToken(c *gin.Context) {
-	q, err := base.DB.DeleteToken(c.Params.ByName("id"))
+	q, err := base.DB.DeleteToken(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 	} else {

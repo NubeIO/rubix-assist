@@ -6,9 +6,9 @@ import (
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 )
 
-func (d *DB) GetUser(id string) (*model.User, error) {
+func (d *DB) GetUser(uuid string) (*model.User, error) {
 	m := new(model.User)
-	if err := d.DB.Where("id = ? ", id).First(&m).Error; err != nil {
+	if err := d.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
 		logger.Errorf("GetHost error: %v", err)
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (d *DB) GetUsers() ([]model.User, error) {
 }
 
 func (d *DB) CreateUser(User *model.User) (*model.User, error) {
-	User.ID, _ = uuid.MakeUUID()
+	User.UUID, _ = uuid.MakeUUID()
 	if err := d.DB.Create(&User).Error; err != nil {
 		return nil, err
 	} else {
@@ -33,9 +33,9 @@ func (d *DB) CreateUser(User *model.User) (*model.User, error) {
 	}
 }
 
-func (d *DB) UpdateUser(id string, User *model.User) (*model.User, error) {
+func (d *DB) UpdateUser(uuid string, User *model.User) (*model.User, error) {
 	m := new(model.User)
-	query := d.DB.Where("id = ?", id).Find(&m).Updates(User)
+	query := d.DB.Where("uuid = ?", uuid).Find(&m).Updates(User)
 	if query.Error != nil {
 		return nil, query.Error
 	} else {
@@ -43,9 +43,9 @@ func (d *DB) UpdateUser(id string, User *model.User) (*model.User, error) {
 	}
 }
 
-func (d *DB) DeleteUser(id string) (ok bool, err error) {
+func (d *DB) DeleteUser(uuid string) (ok bool, err error) {
 	m := new(model.User)
-	query := d.DB.Where("id = ? ", id).Delete(&m)
+	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
 	if query.Error != nil {
 		return false, query.Error
 	}

@@ -16,7 +16,7 @@ func (base *Controller) MessagesSchema(ctx *gin.Context) {
 }
 
 func (base *Controller) GetMessage(c *gin.Context) {
-	team, err := base.DB.GetMessage(c.Params.ByName("id"))
+	team, err := base.DB.GetMessage(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -46,7 +46,7 @@ func (base *Controller) CreateMessage(c *gin.Context) {
 
 func (base *Controller) UpdateMessage(c *gin.Context) {
 	body, _ := getMessageBody(c)
-	team, err := base.DB.UpdateMessage(c.Params.ByName("id"), body)
+	team, err := base.DB.UpdateMessage(c.Params.ByName("uuid"), body)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -55,7 +55,7 @@ func (base *Controller) UpdateMessage(c *gin.Context) {
 }
 
 func (base *Controller) DeleteMessage(c *gin.Context) {
-	q, err := base.DB.DeleteMessage(c.Params.ByName("id"))
+	q, err := base.DB.DeleteMessage(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 	} else {

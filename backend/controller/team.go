@@ -16,7 +16,7 @@ func (base *Controller) TeamsSchema(ctx *gin.Context) {
 }
 
 func (base *Controller) GetTeam(c *gin.Context) {
-	team, err := base.DB.GetTeam(c.Params.ByName("id"))
+	team, err := base.DB.GetTeam(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -46,7 +46,7 @@ func (base *Controller) CreateTeam(c *gin.Context) {
 
 func (base *Controller) UpdateTeam(c *gin.Context) {
 	body, _ := getTeamBody(c)
-	team, err := base.DB.UpdateTeam(c.Params.ByName("id"), body)
+	team, err := base.DB.UpdateTeam(c.Params.ByName("uuid"), body)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -55,7 +55,7 @@ func (base *Controller) UpdateTeam(c *gin.Context) {
 }
 
 func (base *Controller) DeleteTeam(c *gin.Context) {
-	q, err := base.DB.DeleteTeam(c.Params.ByName("id"))
+	q, err := base.DB.DeleteTeam(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 	} else {

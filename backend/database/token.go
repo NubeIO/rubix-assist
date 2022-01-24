@@ -6,9 +6,9 @@ import (
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 )
 
-func (d *DB) GetToken(id string) (*model.Token, error) {
+func (d *DB) GetToken(uuid string) (*model.Token, error) {
 	m := new(model.Token)
-	if err := d.DB.Where("id = ? ", id).First(&m).Error; err != nil {
+	if err := d.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
 		logger.Errorf("GetHost error: %v", err)
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (d *DB) GetTokens() ([]model.Token, error) {
 }
 
 func (d *DB) CreateToken(Token *model.Token) (*model.Token, error) {
-	Token.ID, _ = uuid.MakeUUID()
+	Token.UUID, _ = uuid.MakeUUID()
 	if err := d.DB.Create(&Token).Error; err != nil {
 		return nil, err
 	} else {
@@ -33,9 +33,9 @@ func (d *DB) CreateToken(Token *model.Token) (*model.Token, error) {
 	}
 }
 
-func (d *DB) UpdateToken(id string, Token *model.Token) (*model.Token, error) {
+func (d *DB) UpdateToken(uuid string, Token *model.Token) (*model.Token, error) {
 	m := new(model.Token)
-	query := d.DB.Where("id = ?", id).Find(&m).Updates(Token)
+	query := d.DB.Where("uuid = ?", uuid).Find(&m).Updates(Token)
 	if query.Error != nil {
 		return nil, query.Error
 	} else {
@@ -43,9 +43,9 @@ func (d *DB) UpdateToken(id string, Token *model.Token) (*model.Token, error) {
 	}
 }
 
-func (d *DB) DeleteToken(id string) (ok bool, err error) {
+func (d *DB) DeleteToken(uuid string) (ok bool, err error) {
 	m := new(model.Token)
-	query := d.DB.Where("id = ? ", id).Delete(&m)
+	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
 	if query.Error != nil {
 		return false, query.Error
 	}

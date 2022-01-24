@@ -51,7 +51,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	dbhandler.Init(gg)
 	//GDB := dbase.DB{GORM: db}
 	api := controller.Controller{DB: GDB, WS: ws}
-	identityKey := "id"
+	identityKey := "uuid"
 
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:         "go-proxy-service",
@@ -88,9 +88,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hosts.GET("/schema", api.HostsSchema)
 		hosts.GET("/", api.GetHosts)
 		hosts.POST("/", api.CreateHost)
-		hosts.GET("/:id", api.GetHost)
-		hosts.PATCH("/:id", api.UpdateHost)
-		hosts.DELETE("/:id", api.DeleteHost)
+		hosts.GET("/:uuid", api.GetHost)
+		hosts.PATCH("/:uuid", api.UpdateHost)
+		hosts.DELETE("/:uuid", api.DeleteHost)
 		hosts.DELETE("/drop", api.DropHosts)
 		hosts.POST("/ops", api.MassOperations)
 	}
@@ -103,9 +103,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		users.GET("/schema", api.UsersSchema)
 		users.GET("/", api.GetUsers)
-		users.GET("/:id", api.GetUser)
-		users.PATCH("/:id", api.UpdateUser)
-		users.DELETE("/:id", api.DeleteUser)
+		users.GET("/:uuid", api.GetUser)
+		users.PATCH("/:uuid", api.UpdateUser)
+		users.DELETE("/:uuid", api.DeleteUser)
 		users.DELETE("/drop", api.DropUsers)
 	}
 
@@ -115,9 +115,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 		teams.GET("/schema", api.TeamsSchema)
 		teams.GET("/", api.GetTeams)
 		teams.POST("/", api.CreateTeam)
-		teams.GET("/:id", api.GetTeam)
-		teams.PATCH("/:id", api.UpdateTeam)
-		teams.DELETE("/:id", api.DeleteTeam)
+		teams.GET("/:uuid", api.GetTeam)
+		teams.PATCH("/:uuid", api.UpdateTeam)
+		teams.DELETE("/:uuid", api.DeleteTeam)
 		teams.DELETE("/drop", api.DropTeams)
 	}
 
@@ -127,9 +127,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 		alerts.GET("/schema", api.AlertsSchema)
 		alerts.GET("/", api.GetAlerts)
 		alerts.POST("/", api.CreateAlert)
-		alerts.GET("/:id", api.GetAlert)
-		alerts.PATCH("/:id", api.UpdateAlert)
-		alerts.DELETE("/:id", api.DeleteAlert)
+		alerts.GET("/:uuid", api.GetAlert)
+		alerts.PATCH("/:uuid", api.UpdateAlert)
+		alerts.DELETE("/:uuid", api.DeleteAlert)
 		alerts.DELETE("/drop", api.DropAlerts)
 	}
 
@@ -139,9 +139,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 		messages.GET("/schema", api.MessagesSchema)
 		messages.GET("/", api.GetMessages)
 		messages.POST("/", api.CreateMessage)
-		messages.GET("/:id", api.GetMessage)
-		messages.PATCH("/:id", api.UpdateMessage)
-		messages.DELETE("/:id", api.DeleteMessage)
+		messages.GET("/:uuid", api.GetMessage)
+		messages.PATCH("/:uuid", api.UpdateMessage)
+		messages.DELETE("/:uuid", api.DeleteMessage)
 		messages.DELETE("/drop", api.DropMessages)
 	}
 
@@ -178,9 +178,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		token.GET("/", api.GetTokens)
 		token.POST("/", api.CreateToken)
-		token.GET("/:id", api.GetToken)
-		token.PATCH("/:id", api.UpdateToken)
-		token.DELETE("/:id", api.DeleteToken)
+		token.GET("/:uuid", api.GetToken)
+		token.PATCH("/:uuid", api.UpdateToken)
+		token.DELETE("/:uuid", api.DeleteToken)
 	}
 	apps := r.Group("/api/apps")
 	{
@@ -205,19 +205,19 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	git := r.Group("/api/git")
 	{
-		git.GET("/:id", api.GitGetRelease)
+		git.GET("/:uuid", api.GitGetRelease)
 	}
 
 	plugins := r.Group("/api/plugins")
 	{
-		plugins.POST("/full_install/:id", api.UpdatePlugins)
-		plugins.POST("/upload/:id", api.UploadPlugins)
-		plugins.POST("/delete/:id", api.DeleteAllPlugins)
+		plugins.POST("/full_install/:uuid", api.UpdatePlugins)
+		plugins.POST("/upload/:uuid", api.UploadPlugins)
+		plugins.POST("/delete/:uuid", api.DeleteAllPlugins)
 	}
 	upload := r.Group("/api/upload")
 	{
-		upload.POST("/:id", api.UploadZip)
-		upload.POST("/unzip/:id", api.Unzip)
+		upload.POST("/:uuid", api.UploadZip)
+		upload.POST("/unzip/:uuid", api.Unzip)
 	}
 
 	return r

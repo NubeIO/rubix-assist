@@ -91,14 +91,14 @@ func (base *Controller) UpdatePlugins(ctx *gin.Context) {
 	msg.Message = "start update of plugins"
 	base.publishMSG(msg)
 	body := uploadBody(ctx)
-	id := ctx.Params.ByName("id")
+	uuid := ctx.Params.ByName("uuid")
 	result := new(TUpdatePlugins)
 	result.RemoveOldPlugins = "PASS: removed old plugins"
 	result.MakeUploadDir = "PASS: made tmp upload dir"
 	result.UpLoadPlugins = "PASS: upload and unzip plugins"
 	result.CleanUp = "PASS: deleted tmp upload dir"
 	result.RestartFF = "PASS: deleted tmp upload dir"
-	_, err := base.clearDir(id, "/data/flow-framework/data/plugins")
+	_, err := base.clearDir(uuid, "/data/flow-framework/data/plugins")
 	if err != nil {
 		result.RemoveOldPlugins = "PASS or FAIL: failed to remove existing OR there where no existing plugins installed"
 		msg.Message = result.RemoveOldPlugins
@@ -107,7 +107,7 @@ func (base *Controller) UpdatePlugins(ctx *gin.Context) {
 		msg.Message = result.RemoveOldPlugins
 		base.publishMSG(msg)
 	}
-	//_, err = base.mkDir(id, body.ToPath, false)
+	//_, err = base.mkDir(uuid, body.ToPath, false)
 	if err != nil {
 		result.MakeUploadDir = "FAIL: failed to make OR new dir or was exiting"
 		msg.Message = result.MakeUploadDir
@@ -116,7 +116,7 @@ func (base *Controller) UpdatePlugins(ctx *gin.Context) {
 		msg.Message = result.MakeUploadDir
 		base.publishMSG(msg)
 	}
-	err = base.uploadZip(id, body)
+	err = base.uploadZip(uuid, body)
 	if err != nil {
 		result.UpLoadPlugins = fmt.Sprint(err)
 		msg.Message = result.UpLoadPlugins
@@ -125,7 +125,7 @@ func (base *Controller) UpdatePlugins(ctx *gin.Context) {
 		msg.Message = result.UpLoadPlugins
 		base.publishMSG(msg)
 	}
-	_, err = base.rmDir(id, body.ToPath, false)
+	_, err = base.rmDir(uuid, body.ToPath, false)
 	if err != nil {
 		result.CleanUp = fmt.Sprint(err)
 		msg.Message = result.CleanUp
@@ -134,7 +134,7 @@ func (base *Controller) UpdatePlugins(ctx *gin.Context) {
 		msg.Message = result.CleanUp
 		base.publishMSG(msg)
 	}
-	//_, err = base.runCommand(id, "sudo systemctl restart nubeio-flow-framework.service", true)
+	//_, err = base.runCommand(uuid, "sudo systemctl restart nubeio-flow-framework.service", true)
 	//if err != nil {
 	//	msg.Message = result.RestartFF
 	//	base.publishMSG(msg)
@@ -147,8 +147,8 @@ func (base *Controller) UpdatePlugins(ctx *gin.Context) {
 
 func (base *Controller) UploadPlugins(ctx *gin.Context) {
 	body := uploadBody(ctx)
-	id := ctx.Params.ByName("id")
-	err := base.uploadZip(id, body)
+	uuid := ctx.Params.ByName("uuid")
+	err := base.uploadZip(uuid, body)
 	if err != nil {
 		//return
 	}
@@ -156,8 +156,8 @@ func (base *Controller) UploadPlugins(ctx *gin.Context) {
 }
 
 func (base *Controller) DeleteAllPlugins(ctx *gin.Context) {
-	id := ctx.Params.ByName("id")
-	dir, err := base.clearDir(id, "/data/flow-framework/data/plugins")
+	uuid := ctx.Params.ByName("uuid")
+	dir, err := base.clearDir(uuid, "/data/flow-framework/data/plugins")
 	if err != nil {
 		reposeHandler(dir, err, ctx)
 	} else {

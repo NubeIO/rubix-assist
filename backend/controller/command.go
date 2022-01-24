@@ -7,7 +7,7 @@ import (
 )
 
 type commandOpts struct {
-	id          string
+	uuid          string
 	cmd         string
 	sudo, debug bool
 	host        model.Host
