@@ -210,9 +210,10 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	plugins := r.Group("/api/plugins")
 	{
-		plugins.POST("/full_install/:uuid", api.UpdatePlugins)
-		plugins.POST("/upload/:uuid", api.UploadPlugins)
-		plugins.POST("/delete/:uuid", api.DeleteAllPlugins)
+		plugins.POST("/full_install", api.PluginFullInstall)
+		plugins.POST("/upgrade", api.FlowFrameworkUpgrade)
+		//plugins.POST("/upload/:uuid", api.UploadPlugins)
+		//plugins.POST("/delete/:uuid", api.DeleteAllPlugins)
 	}
 	upload := r.Group("/api/upload")
 	{

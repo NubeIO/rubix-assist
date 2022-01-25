@@ -7,7 +7,6 @@ import (
 	"github.com/NubeIO/rubix-updater/pkg/jobs"
 	"github.com/NubeIO/rubix-updater/pkg/logger"
 	"github.com/NubeIO/rubix-updater/pkg/router"
-	"github.com/NubeIO/rubix-updater/service/ping"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -30,7 +29,7 @@ func main() {
 
 	db := database.GetDB()
 	r := router.Setup(db)
-	ping.TEST()
+	//ping.TEST()
 
 	host := "0.0.0.0"
 	if h := viper.GetString("server.host"); h != "" {
