@@ -164,6 +164,7 @@ const (
 	subHeading = "sub_heading"
 	help       = "help"
 	apiHelp    = "api_help"
+	view       = "view"
 )
 
 func GetHostSchema() interface{} {
@@ -174,6 +175,7 @@ func GetHostSchema() interface{} {
 	sch.Set(heading, "Hosts")
 	sch.Set(subHeading, "A list of hosts")
 	sch.Set(help, "A host is an instance of the rubix system, Use the editor to add, remove, edit and delete any existing hosts")
+	sch.Set(view, "table")
 	return sch.Items()
 }
 
