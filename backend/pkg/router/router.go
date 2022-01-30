@@ -145,6 +145,13 @@ func Setup(db *gorm.DB) *gin.Engine {
 		messages.DELETE("/drop", api.DropMessages)
 	}
 
+	tools := admin.Group("/tools")
+	tools.Use(authMiddleware.MiddlewareFunc())
+	{
+		tools.GET("/schema", api.MessagesSchema)
+		tools.POST("/edge/ip", api.EdgeSetIP)
+	}
+
 	ff := admin.Group("/ff")
 	ff.Use(authMiddleware.MiddlewareFunc())
 	{
@@ -211,6 +218,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	plugins := r.Group("/api/plugins")
 	{
 		plugins.POST("/full_install", api.PluginFullInstall)
+		plugins.POST("/full_uninstall", api.PluginFullUninstall)
 		plugins.POST("/upgrade", api.FlowFrameworkUpgrade)
 		//plugins.POST("/upload/:uuid", api.UploadPlugins)
 		//plugins.POST("/delete/:uuid", api.DeleteAllPlugins)

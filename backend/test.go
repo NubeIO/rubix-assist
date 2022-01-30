@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	netval "github.com/THREATINT/go-net"
+	"github.com/brotherpowers/ipsubnet"
 	"github.com/jordan-wright/email"
+	"github.com/mcnijman/go-emailaddress"
 )
 
 func main() {
@@ -19,16 +22,21 @@ func main() {
 	//if err != nil {
 	//	fmt.Println(err)
 	//}
+	ip := "192.168.112.999"
+	web := "nube-io.com.au"
+	sub := ipsubnet.SubnetCalculator(ip, 24)
+	fmt.Println(sub.GetIPAddress())
+	fmt.Println(sub.GetSubnetMask()) // 255.255.254.0
+	fmt.Println(netval.IsIPAddr(ip))
+	fmt.Println(netval.IsURL(web))
+	_email, err := emailaddress.Parse("1a-foobar.com")
+	if err != nil {
+		fmt.Println("invalid email")
+	} else {
+		fmt.Println(_email.LocalPart) // foo
+		fmt.Println(_email.Domain)    // bar.com
+		fmt.Println(_email)           // foo@bar.com
+		fmt.Println(_email.String())  // foo@bar.com
+	}
 
-	res := 22 % 20
-	fmt.Println(res)
-
-	res = 20 % 20
-	fmt.Println(res)
-
-	res = 200 % 10
-	fmt.Println(res)
-
-	res = 201 % 20
-	fmt.Println(res)
 }

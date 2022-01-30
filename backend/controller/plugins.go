@@ -2,11 +2,11 @@ package controller
 
 import (
 	"errors"
-	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nrest"
 	"github.com/NubeIO/rubix-updater/model/rubix"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
+	"reflect"
 	"time"
 )
 
@@ -60,22 +60,31 @@ type Plugins struct {
 	Website      string      `json:"website"`
 }
 
-func pluginsInstall(proxyReq *nrest.Service, opt *nrest.ReqOpt, ctx *gin.Context) {
+func pluginsInstall(proxyReq *nrest.Service, opt *nrest.ReqOpt) (response interface{}, err error) {
+
+	if reflect.ValueOf(opt.Json).IsValid() {
+		if reflect.ValueOf(opt.Json).Len() < 1 {
+			return "", errors.New("plugins body was empty")
+		}
+	} else {
+		return "", errors.New("invalid plugins body")
+	}
 
 	getState := proxyReq.Do(nrest.GET, PluginsUrls.State, opt)
 	if getState.StatusCode != 200 {
-		reposeHandler("", errors.New("error on plugin get state"), ctx)
-		return
+		return "", errors.New("error on get state")
 	}
 	deleteState := proxyReq.Do(nrest.DELETE, PluginsUrls.State, opt)
 	if deleteState.StatusCode != 200 {
-		reposeHandler("", errors.New("error on plugin delete state"), ctx)
-		return
+		return "", errors.New("error on delete state")
+
 	}
+	log.Info("try download plugins")
+
 	appDownload := proxyReq.Do(nrest.POST, PluginsUrls.Download, opt)
 	if appDownload.StatusCode != 200 {
-		reposeHandler("", errors.New("error on plugin download"), ctx)
-		return
+		log.Error("try download plugins failed")
+		return "", errors.New("error on download")
 	}
 	retryCount := 0
 	for {
@@ -84,101 +93,118 @@ func pluginsInstall(proxyReq *nrest.Service, opt *nrest.ReqOpt, ctx *gin.Context
 		state := new(rubix.AppsDownloadState)
 		req.ToInterface(&state)
 		time.Sleep(4 * time.Second)
-		log.Println("DOWNLOADING count", retryCount, "STATE", state.State, "CODE", req.StatusCode)
+		log.Println("DOWNLOADING PLUGINS count", retryCount, "STATE", state.State, "CODE", req.StatusCode)
 		if state.State == "DOWNLOADED" {
+			log.Info("DOWNLOADED PLUGINS")
 			break
 		}
 		if retryCount > 30 {
-			reposeHandler("", errors.New("error on plugin download: tried to download the plugin 30 times and failed"), ctx)
-			return
+			return "", errors.New("error on download: tried to download 30 times and failed")
 		}
 	}
+	log.Info("try install plugins")
 	appInstall := proxyReq.Do(nrest.POST, PluginsUrls.Install, opt)
 	if appInstall.StatusCode != 200 {
-		reposeHandler("", errors.New("error on plugin install plugin failed"), ctx)
-		return
+		log.Error("try install plugins failed")
+		return "", errors.New("error install failed")
 	}
+	log.Info("try delete state plugins")
 	deleteState = proxyReq.Do(nrest.DELETE, PluginsUrls.State, opt)
 	if deleteState.StatusCode != 200 {
-		reposeHandler("", errors.New("error on plugin delete state"), ctx)
-		return
+		log.Error("error on delete state")
+		return "", errors.New("error on delete state")
 	} else {
 		res, err := appInstall.AsJson()
 		if err != nil {
-			reposeHandler(res, err, ctx)
-			return
-		}
-		reposeHandler(res, nil, ctx)
-		return
-	}
+			return res, nil
 
+		}
+		return res, nil
+	}
 }
 
-func pluginsInstalled(proxyReq *nrest.Service, opt *nrest.ReqOpt, ctx *gin.Context) (installedPlugins []blankSlice) {
-	appInstall := proxyReq.Do(nrest.GET, PluginsUrls.GetPlugins, opt)
-	if appInstall.StatusCode != 200 {
-		reposeHandler("", errors.New("error on get installed plugins"), ctx)
-		return
+func pluginsInstalled(proxyReq *nrest.Service, opt *nrest.ReqOpt) (installedPlugins []blankSlice, nilPlugins bool, err error) {
+	req := proxyReq.Do(nrest.GET, PluginsUrls.GetPlugins, opt)
+	if req.StatusCode != 200 {
+		return nil, true, errors.New("error on http req to get installed plugins")
 	} else {
-		res, err := appInstall.AsJson()
-		if err != nil {
-			reposeHandler(res, err, ctx)
-			return
-		}
-
 		var data pluginsList
-		err = appInstall.ToInterface(&data)
+		err = req.ToInterface(&data)
 		if err != nil {
-			reposeHandler("", errors.New("error on get installed plugins"), ctx)
-			return
+			return nil, true, errors.New("error on body return from get plugins")
 		}
 		var plugins []blankSlice
 		for _, a := range data {
 			plugins = append(plugins, blankSlice{"plugin": a.Name})
 		}
-		return plugins
+		if len(plugins) == 0 {
+			nilPlugins = true
+		}
+		return plugins, nilPlugins, nil
 	}
 }
 
-func pluginsUninstall(proxyReq *nrest.Service, opt *nrest.ReqOpt, ctx *gin.Context, pluginArr []blankSlice) {
+func pluginsUninstall(proxyReq *nrest.Service, opt *nrest.ReqOpt, pluginArr []blankSlice) (response interface{}, err error) {
 	opt.Json = pluginArr
 	appInstall := proxyReq.Do(nrest.POST, PluginsUrls.UnInstall, opt)
-	fmt.Println(appInstall.StatusCode)
-	fmt.Println(appInstall.AsString())
 	if appInstall.StatusCode != 200 {
-		reposeHandler("", errors.New("error on get installed plugins"), ctx)
-		return
+		return nil, errors.New("error on http req to get uninstall plugins")
 	} else {
 		res, err := appInstall.AsJson()
 		if err != nil {
-			reposeHandler(res, err, ctx)
-			return
+			return nil, errors.New("error on http repose body uninstall plugins")
 		} else {
-			reposeHandler(res, err, ctx)
-			return
+			return res, nil
 		}
 	}
 }
 
-func restartApp(proxyReq *nrest.Service, opt *nrest.ReqOpt, ctx *gin.Context) {
+func restartApp(proxyReq *nrest.Service, opt *nrest.ReqOpt, apps []blankSlice) (ok bool, err error) {
+	opt.Json = apps
+	r := proxyReq.Do(nrest.POST, PluginsUrls.Apps, opt)
+	if r.StatusCode != 200 {
+		return false, errors.New("failed to restart flow-framework")
+	} else {
+		return true, nil
+	}
+}
 
+func (base *Controller) PluginFullUninstall(ctx *gin.Context) {
+	body, err := bodyAsJSON(ctx)
+	po := proxyOptions{
+		ctx:          ctx,
+		refreshToken: true,
+		NonProxyReq:  true,
+	}
+	proxyReq, opt, rtn, err := base.buildReq(po)
+	if err != nil {
+		reposeHandler(nil, err, ctx)
+		return
+	}
+	opt = &nrest.ReqOpt{
+		Timeout:          500 * time.Second,
+		RetryCount:       0,
+		RetryWaitTime:    0 * time.Second,
+		RetryMaxWaitTime: 0,
+		Headers:          map[string]interface{}{"Authorization": rtn.Token},
+		Json:             body,
+	}
+	//uninstall
+	r := proxyReq.Do(nrest.POST, PluginsUrls.UnInstall, opt)
+	if r.StatusCode != 200 {
+		reposeHandler(nil, errors.New("error on http req to get uninstall plugins"), ctx)
+	}
+	res, err := r.AsJson()
+	//restart FF to load the plugins
 	var apps []blankSlice
 	apps = append(apps, blankSlice{"service": "FLOW_FRAMEWORK", "action": "restart"})
-	opt.Json = apps
-	appInstall := proxyReq.Do(nrest.POST, PluginsUrls.Apps, opt)
-	if appInstall.StatusCode != 200 {
-		reposeHandler("", errors.New("error on get installed plugins"), ctx)
-		return
-	} else {
-		res, err := appInstall.AsJson()
-		if err != nil {
-			reposeHandler(res, err, ctx)
-			return
-		} else {
-			reposeHandler(res, err, ctx)
-			return
-		}
+	log.Info("try and re-start flow-framework")
+	_, err = restartApp(proxyReq, opt, apps)
+	if err != nil {
+		log.Errorln("try and re-start flow-framework failed")
+		reposeHandler(nil, err, ctx)
 	}
+	reposeHandler(res, err, ctx)
 }
 
 func (base *Controller) PluginFullInstall(ctx *gin.Context) {
@@ -201,15 +227,31 @@ func (base *Controller) PluginFullInstall(ctx *gin.Context) {
 		Headers:          map[string]interface{}{"Authorization": rtn.Token},
 		Json:             body,
 	}
-	installed := pluginsInstalled(proxyReq, opt, ctx)
-	fmt.Println(1111)
-	fmt.Println(installed)
-	fmt.Println(1111)
-	pluginsUninstall(proxyReq, opt, ctx, installed)
-	pluginsInstall(proxyReq, opt, ctx)
-	restartApp(proxyReq, opt, ctx)
-	fmt.Println(22222)
-	//
+	install, err := pluginsInstall(proxyReq, opt)
+	if err != nil {
+		reposeHandler(nil, err, ctx)
+		return
+	}
+	//restart FF to load the plugins
+	var apps []blankSlice
+	apps = append(apps, blankSlice{"service": "FLOW_FRAMEWORK", "action": "restart"})
+	log.Info("try and re-start flow-framework")
+	_, err = restartApp(proxyReq, opt, apps)
+	if err != nil {
+		log.Errorln("try and re-start flow-framework failed")
+		reposeHandler(nil, err, ctx)
+	}
+	reposeHandler(install, err, ctx)
+
+}
+
+type pluginsResponse struct {
+	GetInstalledPlugins           string `json:"get_installed_plugins"`
+	DeletePlugins                 string `json:"delete_plugins"`
+	ReInstallFlowFramework        string `json:"reinstall_flow_framework"`
+	ReInstallFlowFrameworkPlugins string `json:"reinstall_flow_framework_plugins"`
+	ReStartFlowFramework          string `json:"restart_flow_framework"`
+	Error                         string `json:"error"`
 }
 
 //FlowFrameworkUpgrade UPDATE FF
@@ -218,7 +260,8 @@ func (base *Controller) PluginFullInstall(ctx *gin.Context) {
 //install new version of FF
 //install existing plugins and enable as required
 func (base *Controller) FlowFrameworkUpgrade(ctx *gin.Context) {
-	body, err := bodyAsJSON(ctx)
+	httpRes := new(pluginsResponse)
+	body, err := bodyAppsDownload(ctx)
 	po := proxyOptions{
 		ctx:          ctx,
 		refreshToken: true,
@@ -226,7 +269,8 @@ func (base *Controller) FlowFrameworkUpgrade(ctx *gin.Context) {
 	}
 	proxyReq, opt, rtn, err := base.buildReq(po)
 	if err != nil {
-		reposeHandler(nil, err, ctx)
+		httpRes.Error = err.Error()
+		reposeHandler(nil, errors.New(httpRes.Error), ctx)
 		return
 	}
 	opt = &nrest.ReqOpt{
@@ -238,9 +282,50 @@ func (base *Controller) FlowFrameworkUpgrade(ctx *gin.Context) {
 		Json:             body,
 	}
 	//get installed plugins
-	pluginsInstalled(proxyReq, opt, ctx)
+	var uninstall interface{}
+	log.Info("try get installed plugins")
+	installed, nilPlugins, err := pluginsInstalled(proxyReq, opt)
+	httpRes.GetInstalledPlugins = "pass"
+	if !nilPlugins {
+		log.Info("try and uninstalled plugins")
+		uninstall, err = pluginsUninstall(proxyReq, opt, installed)
+		httpRes.DeletePlugins = "pass"
+		if err != nil {
+			httpRes.DeletePlugins = "error on uninstall plugins"
+			httpRes.GetInstalledPlugins = "error on uninstall plugins"
+		}
+	} else {
+		httpRes.GetInstalledPlugins = "no plugins where installed"
+		httpRes.DeletePlugins = "no plugins where installed"
+	}
+	//updateFF
+	log.Info("try and re-install flow-framework")
+	opt.Json = body
+	httpRes.ReInstallFlowFramework = "pass"
+	_, err = appsInstall(proxyReq, opt)
+	if err != nil {
+		httpRes.ReInstallFlowFramework = err.Error()
 
-	//pluginsInstall(proxyReq, opt, ctx)
+	}
+	//reinstall plugins
+	log.Info("try and re-install flow-framework PLUGINS", uninstall)
+	opt.Json = installed
+	_, err = pluginsInstall(proxyReq, opt)
+	httpRes.ReInstallFlowFrameworkPlugins = "pass"
+	if err != nil {
+		httpRes.ReInstallFlowFrameworkPlugins = err.Error()
+	}
+	//restart FF to load the plugins
+	var apps []blankSlice
+	apps = append(apps, blankSlice{"service": "FLOW_FRAMEWORK", "action": "restart"})
+	log.Info("try and re-start flow-framework")
+	_, err = restartApp(proxyReq, opt, apps)
+	httpRes.ReStartFlowFramework = "pass"
+	if err != nil {
+		log.Errorln("try and re-start flow-framework failed")
+		httpRes.ReStartFlowFramework = err.Error()
+	}
+	reposeHandler(httpRes, err, ctx)
 }
 
 //UpdatePlugins full install of the plugins as in upload, unzip and restart flow framework
