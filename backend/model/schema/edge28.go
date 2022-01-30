@@ -14,8 +14,9 @@ func GetEdge28IPSchema() interface{} {
 	sch := cmap.New()
 	sch.Set(fields, reflectBindings(f))
 	sch.Set(methods, MethodsPost)
-	sch.Set(heading, "Edge-28 Network Settings")
-	sch.Set(subHeading, "A list of Messages")
+	sch.Set(heading, "Edge-28")
+	sch.Set(subHeading, "Network Settings")
 	sch.Set(help, edgeHelp)
+	sch.Set(view, "form")
 	return sch.Items()
 }
