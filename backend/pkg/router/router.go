@@ -148,7 +148,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	tools := admin.Group("/tools")
 	tools.Use(authMiddleware.MiddlewareFunc())
 	{
-		tools.GET("/schema", api.MessagesSchema)
+		tools.GET("/edge/ip/schema", api.EdgeIPSchema)
 		tools.POST("/edge/ip", api.EdgeSetIP)
 	}
 
