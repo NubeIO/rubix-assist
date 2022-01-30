@@ -4,12 +4,17 @@ import (
 	"errors"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/edge28"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/system/admin"
+	"github.com/NubeIO/rubix-updater/model/schema"
 	"github.com/gin-gonic/gin"
 )
 
 func getEdgeIPBody(ctx *gin.Context) (dto edge28.EdgeNetworking, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
+}
+
+func (base *Controller) EdgeIPSchema(ctx *gin.Context) {
+	reposeHandler(schema.GetEdge28IPSchema(), nil, ctx)
 }
 
 func (base *Controller) EdgeSetIP(ctx *gin.Context) {

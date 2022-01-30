@@ -50,6 +50,20 @@ var MethodsGetPostDelete = struct {
 	PUT:    false,
 }
 
+var MethodsPost = struct {
+	GET    bool `json:"get"`
+	POST   bool `json:"post"`
+	PATCH  bool `json:"patch"`
+	DELETE bool `json:"delete"`
+	PUT    bool `json:"put"`
+}{
+	GET:    false,
+	POST:   true,
+	PATCH:  false,
+	DELETE: false,
+	PUT:    false,
+}
+
 //var ActionsAddDelete = struct {
 //	VIEW bool `json:"view"`
 //	ADD    bool `json:"add"`
