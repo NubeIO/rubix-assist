@@ -10,13 +10,14 @@ type EPEdgeIP struct {
 	IpDHCP string `json:"ip_dhcp"  name:"ip-dbcp"   help:"set the ip on the edge-28 to auto dhcp"  endpoint:"/tools/edge/ip/dhcp" post:"true" view:"form"`
 }
 
-type EPSystemTime struct {
-	NODEJS string `json:"nodejs"  name:"nodejs"  help:"get nodejs version" endpoint:"/tools/nodejs" get:"true" view:"form"`
+type EPSystem struct {
+	ArchType string `json:"arch_type"  name:"arch"  help:"get system architecture  version" endpoint:"/tools/arch" get:"true" view:"form"`
+	NODEJS   string `json:"nodejs"  name:"nodejs"  help:"get nodejs version" endpoint:"/tools/nodejs" get:"true" view:"form"`
 }
 
 func GetToolsEndPointsSchema() interface{} {
 	e1 := &EPEdgeIP{}
-	e2 := &EPSystemTime{}
+	e2 := &EPSystem{}
 	sch := cmap.New()
 	sch.Set("networking", reflectBindingsEndPoint(e1))
 	sch.Set("programs", reflectBindingsEndPoint(e2))
