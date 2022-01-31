@@ -30,7 +30,7 @@ func (base *Controller) EdgeSetIP(ctx *gin.Context) {
 	}
 	arch, _, err := _host.DetectArch()
 	if err != nil {
-		reposeHandler(nil, errors.New("error on check if host is a bbb"), ctx)
+		reposeHandler(nil, errors.New("error on check if host is a edge-28"), ctx)
 		return
 	}
 	if arch.IsBeagleBone {
