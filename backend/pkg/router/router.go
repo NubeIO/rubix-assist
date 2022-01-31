@@ -151,7 +151,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 		tools.GET("/endpoints", api.ToolsEndPoints)
 		tools.GET("/edge/ip/schema", api.EdgeIPSchema)
 		tools.POST("/edge/ip", api.EdgeSetIP)
-
+		tools.POST("/edge/ip/dhcp", api.EdgeSetIP)
+		tools.GET("/nodejs", api.NodeJsVersion)
 	}
 
 	ff := admin.Group("/ff")
