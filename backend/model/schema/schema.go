@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"fmt"
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/model/rubix"
 	cmap "github.com/orcaman/concurrent-map"
@@ -64,18 +65,6 @@ var MethodsPost = struct {
 	PUT:    false,
 }
 
-//var ActionsAddDelete = struct {
-//	VIEW bool `json:"view"`
-//	ADD    bool `json:"add"`
-//	EDIT    bool `json:"edit"`
-//	DELETE bool `json:"delete"`
-//}{
-//	VIEW:    true,
-//	ADD:    true,
-//	ADD:    true,
-//	DELETE: true,
-//}
-
 type Actions struct {
 	VIEW   string `json:"view"`
 	ADD    bool   `json:"add"`
@@ -124,6 +113,12 @@ func reflectBindings(f interface{}) cmap.ConcurrentMap {
 		patch := tag.Get("patch")
 		put := tag.Get("put")
 		del := tag.Get("delete")
+
+		name := tag.Get("name")
+		endpoint := tag.Get("endpoint")
+
+		fmt.Println(name, endpoint)
+
 		if req == "true" {
 			obj.Required = true
 		}
@@ -165,6 +160,7 @@ const (
 	help       = "help"
 	apiHelp    = "api_help"
 	view       = "view"
+	endpoints  = "endpoints"
 )
 
 func GetHostSchema() interface{} {
