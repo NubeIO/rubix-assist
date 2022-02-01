@@ -29,6 +29,7 @@ var FlowUrls = struct {
 	Points           string
 	Plat             string
 	MasterConnection string
+	ModbusPollPoint  string
 }{
 	FlowNetworks:     "/ff/api/flow_networks",
 	Streams:          "/ff/api/streams",
@@ -38,6 +39,7 @@ var FlowUrls = struct {
 	Points:           "/ff/api/points",
 	Plat:             "/api/wires/plat",
 	MasterConnection: "/ff/api/localstorage_flow_network",
+	ModbusPollPoint:  "/ff/api/plugins/api/modbus/modbus/point/operation",
 }
 
 // FFNetworkWizard wizard for adding a new network, device and points
