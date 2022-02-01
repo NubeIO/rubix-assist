@@ -68,28 +68,19 @@ func isUI(io string) bool {
 	}
 }
 
-func ioUOs(io string) (int, string) {
-	//	AOs   Values:  0: RAW,   1: 0-10VDC,   2: 0-12VDC,   3: Any (Virtual)
-	switch io {
-	case voltageDC:
-		return voltageDCNum, voltageDC
-	case voltage12dc:
-		return voltage12dcNum, voltage12dc
-	}
-	return 3, ""
-}
-
-func ioUIs(io string) (int, string) {
+func pointType(io string) int {
 	//UIs      Values:  0: RAW,   1: 0-10ADC,   2: 10k (resistance),   3: 10k (type 2 temp)  4: 20k,   5: 4-20MA,    6: Pulse Count,        7: DI
 	switch io {
 	case voltageDC:
-		return voltageDCNum, voltageDC
+		return voltageDCNum
+	case voltage12dc:
+		return voltage12dcNum
 	case dryContact:
-		return dryContactNum, dryContact
+		return dryContactNum
 	case temp:
-		return tempNum, temp
+		return tempNum
 	}
-	return 3, ""
+	return 3
 }
 
 func registers(io string) int {
@@ -136,6 +127,42 @@ type PointWriteBody struct {
 	} `json:"point_priority_array_write"`
 }
 
+type PointBuilder struct {
+	pointIONum      string //UI1
+	register        int    //201
+	pointName       string
+	pointType       int
+	pointTypeImport string
+}
+
+func cleanPoint(data []string) *PointBuilder {
+	pointIONum := 0 //UI1
+	pointName := 2  //AHU-1-SAT
+	_pointType := 5 //10K2 Thermistor
+	//AI = 1
+	pb := new(PointBuilder)
+	for k, v := range data {
+		if k == pointIONum {
+			pb.pointIONum = v
+			pb.register = registers(v)
+		}
+		if k == pointName {
+			pb.pointName = v
+		}
+		if k == _pointType {
+			pb.pointType = pointType(v)
+			pb.pointTypeImport = v
+		}
+	}
+	if isUO(pb.pointIONum) && pb.pointName != "" {
+		return pb
+	} else if isUI(pb.pointIONum) && pb.pointName != "" {
+		return pb
+	} else {
+		return nil
+	}
+}
+
 func main() {
 	//github.com/jordan-wright/email
 	e := email.NewEmail()
@@ -176,42 +203,45 @@ func main() {
 	}()
 	doImport := "G6"          //modbus 485 address
 	controllerAddress := "G5" //modbus 485 address
-	pointNumber := 0          //AI
-	pointType := 5            //0-10dc
+
+	//pointType := 5            //0-10dc
 	fmt.Println(doImport, controllerAddress)
 
 	for i, sheet := range f.GetSheetList() {
-
 		rows, err := f.GetRows(sheet)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		pt := ""
-		fmt.Println(pointNumber, pt)
-		if i <= 1 {
-			for _, row := range rows {
-				fmt.Println(row)
-				for i, _row := range row {
 
-					if i == pointType {
-						pt = _row
-					}
-					//if i == pointNumber {
-					//	if isUO(_row) {
-					//		num, name := ioUOs(pt)
-					//		config := fmt.Sprintf("type: %s config:[name:%s num: %d]", pt, name, num)
-					//		fmt.Println("pointNumber", _row, "UO-config", config, "address", registers(_row))
-					//	}
-					//	if isUI(_row) {
-					//		num, name := ioUIs(pt)
-					//		config := fmt.Sprintf("type: %s config:[name:%s num: %d]", pt, name, num)
-					//		fmt.Println("pointNumber", _row, "UO-config", config, "address", registers(_row))
-					//
-					//	}
-					//}
-				}
+		if i <= 0 {
+			//fmt.Println(sheet, rows)
+			for _, row := range rows {
+				//fmt.Println("SORT", indexOf("UI-1", row), row)
+				fmt.Println(cleanPoint(row))
+
+				//fmt.Println("SORT", sort.SearchStrings(row, "aidna")) // 0
+				//fmt.Println(len(row))
+				//for i, _row := range row {
+				//
+				//	if i == pointType {
+				//		pt = _row
+				//	}
+				//if i == pointNumber {
+				//	if isUO(_row) {
+				//		num, name := ioUOs(pt)
+				//		config := fmt.Sprintf("type: %s config:[name:%s num: %d]", pt, name, num)
+				//		fmt.Println("pointNumber", _row, "UO-config", config, "address", registers(_row))
+				//	}
+				//	if isUI(_row) {
+				//		num, name := ioUIs(pt)
+				//		config := fmt.Sprintf("type: %s config:[name:%s num: %d]", pt, name, num)
+				//		fmt.Println("pointNumber", _row, "UO-config", config, "address", registers(_row))
+				//
+				//	}
+				//}
 			}
+			//}
 		}
 	}
 }

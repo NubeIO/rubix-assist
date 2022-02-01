@@ -3,8 +3,10 @@ package controller
 import (
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nrest"
+	pprint "github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/print"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/types"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"github.com/xuri/excelize/v2"
 	"strings"
 	"time"
@@ -101,30 +103,6 @@ func isUI(io string) bool {
 	}
 }
 
-func ioUOs(io string) (int, string) {
-	//	AOs   Values:  0: RAW,   1: 0-10VDC,   2: 0-12VDC,   3: Any (Virtual)
-	switch io {
-	case voltageDC:
-		return voltageDCNum, voltageDC
-	case voltage12dc:
-		return voltage12dcNum, voltage12dc
-	}
-	return 3, ""
-}
-
-func ioUIs(io string) (int, string) {
-	//UIs      Values:  0: RAW,   1: 0-10ADC,   2: 10k (resistance),   3: 10k (type 2 temp)  4: 20k,   5: 4-20MA,    6: Pulse Count,        7: DI
-	switch io {
-	case voltageDC:
-		return voltageDCNum, voltageDC
-	case dryContact:
-		return dryContactNum, dryContact
-	case temp:
-		return tempNum, temp
-	}
-	return 3, ""
-}
-
 func registers(io string) int {
 	switch io {
 	case uI1:
@@ -177,6 +155,58 @@ type PointWriteBody struct {
 	} `json:"request_body"`
 }
 
+type PointBuilder struct {
+	pointIONum      string //UI1
+	register        int    //201
+	pointName       string
+	pointType       int //Values:  0: RAW,   1: 0-10VDC,   2: 0-12VDC,   3: Any (Virtual)
+	pointTypeImport string
+}
+
+func pointType(io string) int {
+	//	AOs   Values:  0: RAW,   1: 0-10VDC,   2: 0-12VDC,   3: Any (Virtual)
+	//UIs      Values:  0: RAW,   1: 0-10ADC,   2: 10k (resistance),   3: 10k (type 2 temp)  4: 20k,   5: 4-20MA,    6: Pulse Count,        7: DI
+	switch io {
+	case "0-10 vdc", "0-10vdc", "0-10v", "0-10dc", "0-10 dc":
+		return voltageDCNum
+	case voltage12dc:
+		return voltage12dcNum
+	case dryContact:
+		return dryContactNum
+	case temp, "10K Thermistor":
+		return tempNum
+	}
+	return 0
+}
+
+func cleanPoint(data []string) *PointBuilder {
+	pointIONum := 0 //UI1
+	pointName := 2  //AHU-1-SAT
+	_pointType := 5 //10K2 Thermistor
+	//AI = 1
+	pb := new(PointBuilder)
+	for k, v := range data {
+		if k == pointIONum {
+			pb.pointIONum = v
+			pb.register = registers(v)
+		}
+		if k == pointName {
+			pb.pointName = v
+		}
+		if k == _pointType {
+			pb.pointType = pointType(v)
+			pb.pointTypeImport = v
+		}
+	}
+	if isUO(pb.pointIONum) && pb.pointName != "" {
+		return pb
+	} else if isUI(pb.pointIONum) && pb.pointName != "" {
+		return pb
+	} else {
+		return nil
+	}
+}
+
 func (base *Controller) ModbusPoll(ctx *gin.Context) {
 	body, err := bodyModbusIOConfig(ctx)
 	po := proxyOptions{
@@ -198,8 +228,6 @@ func (base *Controller) ModbusPoll(ctx *gin.Context) {
 		Headers:          map[string]interface{}{"Authorization": rtn.Token},
 		Json:             body,
 	}
-	fmt.Println(opt.Headers)
-	fmt.Println(opt.Json)
 	getPlat := proxyReq.Do(nrest.POST, FlowUrls.ModbusPollPoint, opt)
 	d, _ := getPlat.AsJson()
 	reposeHandler(d, err, ctx)
@@ -242,79 +270,50 @@ func (base *Controller) ModbusIOConfig(ctx *gin.Context) {
 	}()
 	doImport := "G6"          //modbus 485 address
 	controllerAddress := "G5" //modbus 485 address
-	pointName := 6            //AHU-1-SAT
-	pointNumber := 0          //AI
-	pointType := 5            //0-10dc
-	fmt.Println(doImport, controllerAddress)
 	for i, sheet := range f.GetSheetList() {
 		rows, err := f.GetRows(sheet)
 		if err != nil {
 			reposeHandler(nil, err, ctx)
 			return
 		}
-		pt := ""
-		name := ""
-		if i <= 1 {
+		if i <= 11 && body.DeviceAddress != 0 {
 			for _, row := range rows {
-				for i, _row := range row {
-					if i == pointType {
-						pt = _row
-					}
-					if i == pointName {
-						name = _row
-					}
-					
-					fmt.Println("NAME", row)
-
-					body.DeviceAddress = types.ToInt(controllerAddress)
-					body.RequestBody.ObjectType = "write_uint_16"
-					fmt.Println(sheet, body.DeviceAddress)
-
-					if name != "" {
-						if i == pointNumber {
-							if isUO(_row) {
-								num, name := ioUOs(pt)
-								reg := registers(_row)
-								body.RequestBody.Addr = reg
-								config := fmt.Sprintf("type: %s config:[name:%s num: %d]  ObjectType: %s", pt, name, num, body.RequestBody.ObjectType)
-								fmt.Println("pointNumber", _row, "UO-config", config, "address", reg)
-								//fmt.Printf("%+v\n", body)
-								opt.Json = body
-								getPlat := proxyReq.Do(nrest.POST, FlowUrls.ModbusPollPoint, opt)
-								fmt.Println("----------")
-								fmt.Println(getPlat.Err)
-								fmt.Println(getPlat.StatusCode)
-								fmt.Println(getPlat.Status())
-								fmt.Println("++++++++++++")
-							}
-							if isUI(_row) {
-								num, name := ioUIs(pt)
-								reg := registers(_row)
-								body.RequestBody.Addr = reg
-								config := fmt.Sprintf("type: %s config:[name:%s num: %d]  ObjectType: %s", pt, name, num, body.RequestBody.ObjectType)
-								fmt.Println("pointNumber", _row, "UO-config", config, "address", reg)
-								//fmt.Printf("%+v\n", body)
-								opt.Json = body
-								getPlat := proxyReq.Do(nrest.POST, FlowUrls.ModbusPollPoint, opt)
-								fmt.Println("----------")
-								fmt.Println(getPlat.Err)
-								fmt.Println(getPlat.StatusCode)
-								fmt.Println(getPlat.Status())
-								fmt.Println("++++++++++++")
-							}
-						}
+				dImport, err := f.GetCellValue(sheet, doImport)
+				if err != nil {
+					reposeHandler(nil, err, ctx)
+					return
+				}
+				_dImport := string(dImport)
+				cAddress, err := f.GetCellValue(sheet, controllerAddress)
+				if err != nil {
+					reposeHandler(nil, err, ctx)
+					return
+				}
+				_cAddress := string(cAddress)
+				body.DeviceAddress = types.ToInt(_cAddress)
+				cp := cleanPoint(row)
+				if strings.Contains(_dImport, "yes") {
+					if cp != nil {
+						fmt.Println("IMPORT", _dImport, sheet)
+						log.Println(pprint.Print(cp))
+						body.RequestBody.ObjectType = "write_uint_16"
+						body.RequestBody.Addr = cp.register
+						body.RequestBody.WriteValue = float64(cp.pointType)
+						opt.Json = body
+						getPlat := proxyReq.Do(nrest.POST, FlowUrls.ModbusPollPoint, opt)
+						fmt.Println("----------", "DEVICE ADDRESS", body.DeviceAddress)
+						fmt.Println(getPlat.Err)
+						fmt.Println(getPlat.StatusCode)
+						fmt.Println(getPlat.Status())
+						fmt.Println("++++++++++++")
 					}
 				}
+
 			}
 		}
 	}
 
 	reposeHandler("end", err, ctx)
 	return
-
-	//siteName := gjson.Get(string(getPlat.Body), "site_name")
-	//log.Println("getPlat status ", getPlat.Status())
-	//log.Println("getPlat body ", getPlat.AsString())
-	//log.Println("siteName ", siteName.String())
 
 }
