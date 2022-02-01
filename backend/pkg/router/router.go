@@ -154,6 +154,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 		tools.POST("/edge/ip/dhcp", api.EdgeSetIP)
 		tools.GET("/arch", api.ToolsGetArch)
 		tools.GET("/nodejs", api.NodeJsVersion)
+		tools.POST("/modbus/config", api.ModbusIOConfig)
+		tools.POST("/modbus/poll", api.ModbusPoll)
 	}
 
 	ff := admin.Group("/ff")
