@@ -37,7 +37,8 @@ func (base *Controller) ToolsEndPoints(ctx *gin.Context) {
 	}
 	arch, _, err := _host.DetectArch()
 	if err != nil {
-		reposeHandler(nil, errors.New("error on check host"), ctx)
+		//reposeHandler(nil, errors.New("error on check host"), ctx)
+		reposeHandler(schema.GetToolsEndPointsSchema(), nil, ctx)
 		return
 	}
 	if arch.IsBeagleBone {
