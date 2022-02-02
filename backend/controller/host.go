@@ -1,12 +1,9 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/model/schema"
 	"github.com/gin-gonic/gin"
-	sh "github.com/helloyi/go-sshclient"
-	"github.com/melbahja/goph"
 )
 
 type Message struct {
@@ -33,41 +30,6 @@ func (base *Controller) GetHost(c *gin.Context) {
 
 func (base *Controller) GetHosts(c *gin.Context) {
 	hosts, err := base.DB.GetHosts()
-
-	fmt.Println("222222")
-	client1, err := sh.DialWithPasswd("120.151.62.75:2221", "debian", "N00BConnect")
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer client1.Close()
-
-	ccc, _ := client1.Cmd("pwd").Output()
-	fmt.Println(string(ccc))
-
-	fmt.Println("222222")
-	fmt.Println("222222")
-
-	cc, err := goph.DefaultKnownHosts()
-
-	if err != nil {
-		return
-	}
-
-	client2, err := goph.NewConn(&goph.Config{
-		User:     "debian",
-		Addr:     "120.151.62.75",
-		Port:     2221,
-		Auth:     goph.Password("N00BConnect"),
-		Callback: cc,
-	})
-	//client2, err := goph.New("debian", "120.151.62.75:2221", goph.Password("N00BConnect"))
-	if err != nil {
-		fmt.Println(err)
-	}
-	_cmd, err := client2.Command("pwd")
-	oo, _ := _cmd.Output()
-	fmt.Println(string(oo))
-
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
