@@ -75,12 +75,18 @@ func main() {
 
 	}
 
+	callback, err := goph.DefaultKnownHosts()
+
+	if err != nil {
+		return
+	}
+
 	client2, err := goph.NewConn(&goph.Config{
 		User:     "debian",
 		Addr:     "120.151.62.75",
 		Port:     2221,
 		Auth:     goph.Password("N00BConnect"),
-		Callback: VerifyHost,
+		Callback: callback,
 	})
 
 	//client2, err := goph.New("debian", "120.151.62.75:2221", goph.Password("N00BConnect"))
