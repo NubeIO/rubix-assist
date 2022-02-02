@@ -4,7 +4,6 @@ import (
 	"fmt"
 	netval "github.com/THREATINT/go-net"
 	"github.com/brotherpowers/ipsubnet"
-	sh "github.com/helloyi/go-sshclient"
 	"github.com/jordan-wright/email"
 	"github.com/mcnijman/go-emailaddress"
 	"github.com/melbahja/goph"
@@ -75,17 +74,6 @@ func main() {
 	} else {
 
 	}
-
-	client, err := sh.DialWithPasswd("120.151.62.75:2221", "debian", "N00BConnect")
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer client.Close()
-
-	ccc, _ := client.Cmd("pwd").Output()
-	fmt.Println(string(ccc))
-
-	fmt.Println("222222")
 
 	client2, err := goph.NewConn(&goph.Config{
 		User:     "debian",
