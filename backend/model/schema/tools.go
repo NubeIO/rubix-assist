@@ -11,15 +11,15 @@ type EPEdgeIP struct {
 }
 
 type EPSystem struct {
-	ArchType string `json:"arch_type"  name:"arch"  help:"get system architecture  version" endpoint:"/tools/arch" get:"true" view:"form"`
-	NODEJS   string `json:"nodejs"  name:"nodejs"  help:"get nodejs version" endpoint:"/tools/nodejs" get:"true" view:"form"`
+	ArchType string `json:"arch_type"  name:"arch"  help:"get system architecture  version" endpoint:"/api/users" get:"true" view:"table"`
+	NODEJS   string `json:"nodejs"  name:"nodejs"  help:"get nodejs version" endpoint:"/api/users" get:"true" view:"table"`
 }
 
 func GetToolsEndPointsSchema() interface{} {
-	e1 := &EPEdgeIP{}
+	//e1 := &EPEdgeIP{}
 	e2 := &EPSystem{}
 	sch := cmap.New()
-	sch.Set("networking", reflectBindingsEndPoint(e1))
+	//sch.Set("networking", reflectBindingsEndPoint(e1))
 	sch.Set("programs", reflectBindingsEndPoint(e2))
 	return sch.Items()
 }
