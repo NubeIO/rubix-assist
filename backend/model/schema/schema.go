@@ -1,7 +1,6 @@
 package schema
 
 import (
-	"fmt"
 	"github.com/NubeIO/rubix-updater/model"
 	"github.com/NubeIO/rubix-updater/model/rubix"
 	cmap "github.com/orcaman/concurrent-map"
@@ -73,16 +72,20 @@ type Actions struct {
 }
 
 type T struct {
-	Type     string `json:"type"`
-	Required bool   `json:"required"`
-	Min      int    `json:"min,omitempty" default:"1"`
-	Max      int    `json:"max,omitempty" default:"20"`
-	Default  string `json:"default,omitempty"`
-	Get      bool   `json:"get"`
-	Post     bool   `json:"post"`
-	Patch    bool   `json:"patch"`
-	Put      bool   `json:"put"`
-	Delete   bool   `json:"delete"`
+	Type       string `json:"type"`
+	Required   bool   `json:"required"`
+	Min        int    `json:"min,omitempty" default:"1"`
+	Max        int    `json:"max,omitempty" default:"20"`
+	Default    string `json:"default,omitempty"`
+	Get        bool   `json:"get"`
+	Post       bool   `json:"post"`
+	Patch      bool   `json:"patch"`
+	Put        bool   `json:"put"`
+	Delete     bool   `json:"delete"`
+	Display    string `json:"display"`
+	Endpoint   string `json:"endpoint"`
+	RequireKey string `json:"require_key"`
+	PostKey    string `json:"post_key"`
 }
 
 func reflectBindings(f interface{}) cmap.ConcurrentMap {
@@ -114,10 +117,10 @@ func reflectBindings(f interface{}) cmap.ConcurrentMap {
 		put := tag.Get("put")
 		del := tag.Get("delete")
 
-		name := tag.Get("name")
-		endpoint := tag.Get("endpoint")
-
-		fmt.Println(name, endpoint)
+		obj.Display = tag.Get("display")
+		obj.Endpoint = tag.Get("endpoint")
+		obj.RequireKey = tag.Get("require_key")
+		obj.PostKey = tag.Get("post_key")
 
 		if req == "true" {
 			obj.Required = true
