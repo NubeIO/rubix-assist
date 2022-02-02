@@ -86,6 +86,7 @@ type T struct {
 	Endpoint   string `json:"endpoint"`
 	RequireKey string `json:"require_key"`
 	PostKey    string `json:"post_key"`
+	FieldType  string `json:"field_type"`
 }
 
 func reflectBindings(f interface{}) cmap.ConcurrentMap {
@@ -121,6 +122,7 @@ func reflectBindings(f interface{}) cmap.ConcurrentMap {
 		obj.Endpoint = tag.Get("endpoint")
 		obj.RequireKey = tag.Get("require_key")
 		obj.PostKey = tag.Get("post_key")
+		obj.FieldType = tag.Get("field_type")
 
 		if req == "true" {
 			obj.Required = true
