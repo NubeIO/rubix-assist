@@ -11,8 +11,8 @@ type EPEdgeIP struct {
 }
 
 type EPSystem struct {
-	ArchType string `json:"arch_type"  name:"arch"  help:"get system architecture  version" endpoint:"/api/users" get:"true" view:"table"`
-	NODEJS   string `json:"nodejs"  name:"nodejs"  help:"get nodejs version" endpoint:"/api/users" get:"true" view:"table"`
+	ArchType string `json:"arch_type"  name:"arch"  help:"get system architecture  version" endpoint:"/users" get:"true" view:"table"`
+	NODEJS   string `json:"nodejs"  name:"nodejs"  help:"get nodejs version" endpoint:"/hosts" get:"true" view:"table"`
 }
 
 func GetToolsEndPointsSchema() interface{} {

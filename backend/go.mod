@@ -12,6 +12,7 @@ require (
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-co-op/gocron v1.11.0
+	github.com/helloyi/go-sshclient v1.1.0
 	github.com/jinzhu/copier v0.3.4
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/mcnijman/go-emailaddress v1.1.0
