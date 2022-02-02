@@ -47,7 +47,7 @@ func (base *Controller) GetHosts(c *gin.Context) {
 	fmt.Println("222222")
 	fmt.Println("222222")
 
-	callback, err := goph.DefaultKnownHosts()
+	cc, err := goph.DefaultKnownHosts()
 
 	if err != nil {
 		return
@@ -58,14 +58,15 @@ func (base *Controller) GetHosts(c *gin.Context) {
 		Addr:     "120.151.62.75",
 		Port:     2221,
 		Auth:     goph.Password("N00BConnect"),
-		Callback: callback,
+		Callback: cc,
 	})
 	//client2, err := goph.New("debian", "120.151.62.75:2221", goph.Password("N00BConnect"))
 	if err != nil {
-		reposeHandler(nil, err, c)
+		fmt.Println(err)
 	}
-	cmd, err := client2.Command("pwd")
-	fmt.Println(cmd.String())
+	_cmd, err := client2.Command("pwd")
+	oo, _ := _cmd.Output()
+	fmt.Println(string(oo))
 
 	if err != nil {
 		reposeHandler(nil, err, c)
