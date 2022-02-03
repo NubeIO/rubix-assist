@@ -11,7 +11,7 @@ type EPEdgeIP struct {
 }
 
 type EPSystem struct {
-	ArchType string `json:"arch_type"  name:"arch"  help:"get system architecture  version" endpoint:"/tools/arch" get:"true" view:"table"`
+	ArchType string `json:"arch_type"  name:"arch"  help:"get system architecture  version" endpoint:"/tools/arch" get:"true" view:"form"`
 	NODEJS   string `json:"nodejs"  name:"nodejs"  help:"get nodejs version" endpoint:"/tools/nodejs" get:"true" view:"form"`
 }
 
