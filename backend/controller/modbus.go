@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nrest"
 	pprint "github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/print"
@@ -8,12 +9,13 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/xuri/excelize/v2"
+	"mime/multipart"
 	"strings"
 	"time"
 )
 
 func bodyModbusIOConfig(ctx *gin.Context) (dto PointWriteBody, err error) {
-	err = ctx.ShouldBindJSON(&dto)
+	err = ctx.ShouldBind(&dto)
 	return dto, err
 }
 
@@ -134,10 +136,11 @@ func registers(io string) int {
 }
 
 type PointWriteBody struct {
-	XLSFile       string `json:"xls_file"`
-	ReturnArray   bool   `json:"return_array"`
-	IsSerial      bool   `json:"is_serial"`
-	DeviceAddress int    `json:"device_address"`
+	File          *multipart.FileHeader `form:"file"`
+	XLSFile       string                `json:"xls_file"`
+	ReturnArray   bool                  `json:"return_array"`
+	IsSerial      bool                  `json:"is_serial"`
+	DeviceAddress int                   `json:"device_address"`
 	Client        struct {
 		SerialPort        string `json:"serial_port"`
 		BaudRate          int    `json:"baud_rate"`
@@ -235,7 +238,7 @@ func (base *Controller) ModbusPoll(ctx *gin.Context) {
 }
 
 func (base *Controller) ModbusIOConfig(ctx *gin.Context) {
-	body, err := bodyModbusIOConfig(ctx)
+	_file, err := bodyModbusIOConfig(ctx)
 	po := proxyOptions{
 		ctx:          ctx,
 		refreshToken: true,
@@ -247,6 +250,13 @@ func (base *Controller) ModbusIOConfig(ctx *gin.Context) {
 		return
 	}
 
+	_body := ctx.PostForm("json")
+	var body PointWriteBody
+	err = json.Unmarshal([]byte(_body), &body)
+	if err != nil {
+		reposeHandler(nil, err, ctx)
+	}
+
 	opt = &nrest.ReqOpt{
 		Timeout:          100 * time.Second,
 		RetryCount:       0,
@@ -255,8 +265,12 @@ func (base *Controller) ModbusIOConfig(ctx *gin.Context) {
 		Headers:          map[string]interface{}{"Authorization": rtn.Token},
 		Json:             body,
 	}
-
-	f, err := excelize.OpenFile(body.XLSFile)
+	getFile, err := _file.File.Open()
+	if err != nil {
+		reposeHandler(nil, err, ctx)
+		return
+	}
+	f, err := excelize.OpenReader(getFile)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 		return
@@ -276,7 +290,7 @@ func (base *Controller) ModbusIOConfig(ctx *gin.Context) {
 			reposeHandler(nil, err, ctx)
 			return
 		}
-		if i <= 11 && body.DeviceAddress != 0 {
+		if i > -1 {
 			for _, row := range rows {
 				dImport, err := f.GetCellValue(sheet, doImport)
 				if err != nil {
@@ -292,27 +306,26 @@ func (base *Controller) ModbusIOConfig(ctx *gin.Context) {
 				_cAddress := string(cAddress)
 				body.DeviceAddress = types.ToInt(_cAddress)
 				cp := cleanPoint(row)
-				if strings.Contains(_dImport, "yes") {
+				if _dImport == "yes" {
 					if cp != nil {
-						fmt.Println("IMPORT", _dImport, sheet)
-						log.Println(pprint.Print(cp))
+						fmt.Println("----------", "DEVICE ADDRESS", body.DeviceAddress, "sheet", sheet)
 						body.RequestBody.ObjectType = "write_uint_16"
 						body.RequestBody.Addr = cp.register
 						body.RequestBody.WriteValue = float64(cp.pointType)
 						opt.Json = body
+						log.Println(pprint.Print(cp))
 						getPlat := proxyReq.Do(nrest.POST, FlowUrls.ModbusPollPoint, opt)
-						fmt.Println("----------", "DEVICE ADDRESS", body.DeviceAddress)
+						fmt.Println("+++++++response+++++")
 						fmt.Println(getPlat.Err)
 						fmt.Println(getPlat.StatusCode)
 						fmt.Println(getPlat.Status())
+						fmt.Println(getPlat.AsString())
 						fmt.Println("++++++++++++")
 					}
 				}
-
 			}
 		}
 	}
-
 	reposeHandler("end", err, ctx)
 	return
 
