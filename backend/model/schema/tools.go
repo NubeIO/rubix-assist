@@ -6,7 +6,7 @@ import (
 )
 
 type EPEdgeIP struct {
-	ArchType string `json:"alerts"  name:"alerts" help:"get alerts" endpoint:"/alerts" get:"true"  get:"true" post:"true" post:"patch" view:"table"`
+	ArchType string `json:"alerts"  name:"alerts" help:"get alerts" endpoint:"/alerts" get:"true"  view:"table"`
 	//IP     string `json:"ip"   name:"ip-settings"  help:"set the ip on the edge-28 to a fixed ip address"  endpoint:"/tools/edge/ip" post:"true" view:"form"`
 	//IpDHCP string `json:"ip_dhcp"  name:"ip-dbcp"   help:"set the ip on the edge-28 to auto dhcp"  endpoint:"/tools/edge/ip/dhcp" post:"true" view:"form"`
 }
