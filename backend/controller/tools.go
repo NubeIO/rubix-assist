@@ -26,24 +26,26 @@ func (base *Controller) ToolsGetArch(ctx *gin.Context) {
 }
 
 func (base *Controller) ToolsEndPoints(ctx *gin.Context) {
-	host, _, err := base.resolveHost(ctx)
-	if err != nil {
-		reposeHandler(nil, err, ctx)
-		return
-	}
-	h, err := base.hostCopy(host)
-	_host := admin.Admin{
-		Host: h,
-	}
-	arch, _, err := _host.DetectArch()
-	if err != nil {
-		//reposeHandler(nil, errors.New("error on check host"), ctx)
-		reposeHandler(schema.GetToolsEndPointsSchema(), nil, ctx)
-		return
-	}
-	if arch.IsBeagleBone {
-		reposeHandler(schema.GetToolsEndPointsSchema(), nil, ctx)
-	} else {
-		reposeHandler(schema.GetToolsEndPointsSchema(), nil, ctx)
-	}
+	reposeHandler(schema.GetToolsEndPointsSchema(), nil, ctx)
+	return
+	//host, _, err := base.resolveHost(ctx)
+	//if err != nil {
+	//	reposeHandler(nil, err, ctx)
+	//	return
+	//}
+	//h, err := base.hostCopy(host)
+	//_host := admin.Admin{
+	//	Host: h,
+	//}
+	//arch, _, err := _host.DetectArch()
+	//if err != nil {
+	//	//reposeHandler(nil, errors.New("error on check host"), ctx)
+	//	reposeHandler(schema.GetToolsEndPointsSchema(), nil, ctx)
+	//	return
+	//}
+	//if arch.IsBeagleBone {
+	//	reposeHandler(schema.GetToolsEndPointsSchema(), nil, ctx)
+	//} else {
+	//	reposeHandler(schema.GetToolsEndPointsSchema(), nil, ctx)
+	//}
 }

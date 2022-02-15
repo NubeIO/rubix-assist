@@ -4,8 +4,8 @@ import "time"
 
 type Alert struct {
 	UUID      string     `json:"uuid" gorm:"primarykey"  get:"true" post:"true" patch:"true" delete:"true"`
-	From      string     `json:"from" get:"true"`
-	HostUUID  string     `json:"host_uuid" get:"true" post:"true" patch:"true"  endpoint:"/api/hosts" require_key:"uuid" post_key:"host_uuid" display:"[name, IP]" field_type:"select"`
+	From      string     `json:"from" get:"true"` //
+	HostUUID  string     `json:"host_uuid" get:"true" post:"true" patch:"true"  endpoint:"/api/hosts" require_key:"uuid" post_key:"host_uuid" display:"[\"name\",\"IP\"]" field_type:"select"`
 	Host      string     `json:"host" get:"true"`
 	AlertType string     `json:"alert_type" get:"true"`
 	Count     uint       `json:"count" get:"true"`

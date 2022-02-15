@@ -66,7 +66,7 @@ func run() {
 func TEST() {
 	j, ok := jobs.GetJobService()
 	if ok {
-		_, err := j.Every(30).Second().Do(run)
+		_, err := j.Every(120).Second().Do(run)
 		if err != nil {
 			log.Infof("system-plugin-schedule: error on create job %v\n", err)
 		}
