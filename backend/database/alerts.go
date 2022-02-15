@@ -11,7 +11,7 @@ import (
 
 func (d *DB) GetAlert(uuid string) (*model.Alert, error) {
 	m := new(model.Alert)
-	if err := d.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
+	if err := d.DB.Where("uuid = ? ", uuid).Preload("Messages").First(&m).Error; err != nil {
 		logger.Errorf("GetAlert error: %v", err)
 		return nil, err
 	}

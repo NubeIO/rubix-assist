@@ -4,49 +4,9 @@ import (
 	"fmt"
 	netval "github.com/THREATINT/go-net"
 	"github.com/brotherpowers/ipsubnet"
-	sh "github.com/helloyi/go-sshclient"
 	"github.com/jordan-wright/email"
 	"github.com/mcnijman/go-emailaddress"
-	"github.com/melbahja/goph"
-	"golang.org/x/crypto/ssh"
-	"net"
 )
-
-func VerifyHost(host string, remote net.Addr, key ssh.PublicKey) error {
-
-	//
-	// If you want to connect to new hosts.
-	// here your should check new connections public keys
-	// if the key not trusted you shuld return an error
-	//
-
-	// hostFound: is host in known hosts file.
-	// err: error if key not in known hosts file OR host in known hosts file but key changed!
-	hostFound, err := goph.CheckKnownHost(host, remote, key, "")
-
-	// Host in known hosts but key mismatch!
-	// Maybe because of MAN IN THE MIDDLE ATTACK!
-	if hostFound && err != nil {
-
-		return err
-	}
-
-	// handshake because public key already exists.
-	if hostFound && err == nil {
-
-		return nil
-	}
-
-	//// Ask user to check if he trust the host public key.
-	//if askIsHostTrusted(host, key) == false {
-	//
-	//	// Make sure to return error on non trusted keys.
-	//	return errors.New("you typed no, aborted!")
-	//}
-
-	// Add the new host to known hosts file.
-	return goph.AddKnownHost(host, remote, key, "")
-}
 
 func main() {
 	//github.com/jordan-wright/email
@@ -76,29 +36,4 @@ func main() {
 
 	}
 
-	client, err := sh.DialWithPasswd("120.151.62.75:2221", "debian", "N00BConnect")
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer client.Close()
-
-	ccc, _ := client.Cmd("pwd").Output()
-	fmt.Println(string(ccc))
-
-	fmt.Println("222222")
-
-	client2, err := goph.NewConn(&goph.Config{
-		User:     "debian",
-		Addr:     "120.151.62.75",
-		Port:     2221,
-		Auth:     goph.Password("N00BConnect"),
-		Callback: VerifyHost,
-	})
-
-	//client2, err := goph.New("debian", "120.151.62.75:2221", goph.Password("N00BConnect"))
-	if err != nil {
-		fmt.Println(err)
-	}
-	cmd, err := client2.Command("pwd")
-	fmt.Println(cmd.String())
 }
