@@ -36,4 +36,23 @@ func main() {
 
 	}
 
+	//
+	//data["Date_1"] = map[string]map[string]string{}
+	//data["Date_1"] = make(map[string]map[string]string, 0)
+	//data["Date_1"] = make(map[string]map[string]string, 0)
+	//
+	//data["Date_1"]["Sistem_A"] = map[string]string{}
+	//data["Date_1"]["Sistem_A"] = make(map[string]string, 0)
+	//data["Date_1"]["Sistem_A"] = make(map[string]string, 0)
+	//
+	//data["Date_1"]["Sistem_A"]["command_1"] = "white"
+	//data["Date_1"]["Sistem_A"]["command_2"] = "blue"
+	//data["Date_1"]["Sistem_A"]["command_3"] = "red"
+	//
+	//data["Date_2"] = make(map[string]map[string]string)
+	//data["Date_2"]["Sistem_A"] = make(map[string]string)
+	//data["Date_2"]["Sistem_A"]["command_5"] = "violet"
+	//
+	//fmt.Println("data: ", data)
+
 }

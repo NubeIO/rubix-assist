@@ -26,25 +26,38 @@ type EPSystem struct {
 
 func GetToolsEndPointsSchema() interface{} {
 	e1 := &AlertsTools{}
-	s := make(map[string][]interface{})
-	s["schema"] = append(s["schema"], GetAlertSchema())
-	s2 := make(map[string][]interface{})
-	s2["endpoint"] = append(s2["endpoint"], reflectBindingsEndPoint(e1))
-
-	name1 := map[string]string{
-		"name": "alert 1",
+	o := map[string]map[string]interface{}{
+		"alerts": {
+			"name":     "alerts",
+			"schema":   GetAlertSchema(),
+			"endpoint": reflectBindingsEndPoint(e1),
+		},
+		"alerts2": {
+			"name":     "alerts two",
+			"schema":   GetAlertSchema(),
+			"endpoint": reflectBindingsEndPoint(e1),
+		},
 	}
 
-	name2 := map[string]string{
-		"name": "alert 2",
-	}
+	//o := map[string]map[string]interface{}{
+	//	"alerts": {
+	//		"name":     "alerts",
+	//		"schema":   GetAlertSchema(),
+	//		"endpoint": reflectBindingsEndPoint(e1),
+	//		"child": map[string]interface{}{
+	//			"name":     "name 1",
+	//			"schema":   GetAlertSchema(),
+	//			"endpoint": reflectBindingsEndPoint(e1),
+	//		},
+	//	},
+	//	"alerts2": {
+	//		"name":     "alerts two",
+	//		"schema":   GetAlertSchema(),
+	//		"endpoint": reflectBindingsEndPoint(e1),
+	//	},
+	//}
 
-	out := map[string][]interface{}{
-		"alerts":  {name1, s, s2},
-		"alerts2": {name2, s, s2},
-	}
-
-	return out
+	return o
 }
 
 type EndPointType struct {
