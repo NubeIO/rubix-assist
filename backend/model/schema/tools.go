@@ -15,7 +15,7 @@ type AlertsTools struct {
 
 type MessagesTools struct {
 	EndPoint  string `json:"messages"  name:"messages" help:"get messages" endpoint:"/alerts" get:"true"  view:"table"`
-	TableLink string `json:"table_link"  name:"messages" help:"get alerts by alert_uuid" get:"true" field:"alert_uuid" endpoint:"/alerts/:uuid" link_type:"by_uuid" link_flied:"uuid" schema:"alerts/schema"  view:"table"`
+	TableLink string `json:"table_link"  name:"messages" help:"get alerts by alert_uuid" get:"true" field:"alert_uuid" endpoint:"/alerts/:uuid" link_type:"by_uuid" link_flied:"uuid" schema:"alerts/schema"  view:"form"`
 	//Schema   interface{} `json:"schema"`
 	//IP     string `json:"ip"   name:"ip-settings"  help:"set the ip on the edge-28 to a fixed ip address"  endpoint:"/tools/edge/ip" post:"true" view:"form"`
 	//IpDHCP string `json:"ip_dhcp"  name:"ip-dbcp"   help:"set the ip on the edge-28 to auto dhcp"  endpoint:"/tools/edge/ip/dhcp" post:"true" view:"form"`
@@ -61,7 +61,7 @@ func GetToolsEndPointsSchema() interface{} {
 					"endpoint": reflectBindingsEndPoint(e2),
 					"child": map[string]interface{}{
 						"alerts": map[string]interface{}{
-							"name":     "my alerts again",
+							"name":     "get one alert",
 							"schema":   GetAlertSchema(),
 							"endpoint": reflectBindingsEndPoint(e1),
 						},
