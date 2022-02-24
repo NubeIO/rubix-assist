@@ -7,7 +7,7 @@ import (
 
 type AlertsTools struct {
 	EndPoint  string `json:"alerts"  name:"alerts" help:"get alerts" endpoint:"/alerts" get:"true"  view:"table"`
-	TableLink string `json:"table_link"  name:"messages" help:"get messages by alert id" get:"true" field:"name" endpoint:"/alerts/:uuid" link_type:"by_uuid" link_flied:"uuid" schema:"messages/schema"  view:"table"`
+	TableLink string `json:"table_link"  name:"messages" help:"get messages by alert id" get:"true" field:"uuid" endpoint:"/alerts/:uuid" link_type:"by_uuid" link_flied:"uuid" schema:"messages/schema"  view:"table"`
 	//Schema   interface{} `json:"schema"`
 	//IP     string `json:"ip"   name:"ip-settings"  help:"set the ip on the edge-28 to a fixed ip address"  endpoint:"/tools/edge/ip" post:"true" view:"form"`
 	//IpDHCP string `json:"ip_dhcp"  name:"ip-dbcp"   help:"set the ip on the edge-28 to auto dhcp"  endpoint:"/tools/edge/ip/dhcp" post:"true" view:"form"`
