@@ -2,17 +2,16 @@ module github.com/NubeIO/rubix-updater
 
 go 1.17
 
-replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nube/nubeio-rubix-lib-helpers-go
+//replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nube/nubeio-rubix-lib-helpers-go
 
 require (
-	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.3
+	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.6
 	github.com/THREATINT/go-net v1.2.10
 	github.com/appleboy/gin-jwt/v2 v2.7.0
 	github.com/brotherpowers/ipsubnet v0.0.0-20170914094241-30bc98f0a5b1
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-co-op/gocron v1.11.0
-	github.com/helloyi/go-sshclient v1.1.0
 	github.com/jinzhu/copier v0.3.4
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/mcnijman/go-emailaddress v1.1.0
@@ -44,6 +43,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/helloyi/go-sshclient v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.2 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
