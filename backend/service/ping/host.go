@@ -54,11 +54,8 @@ func run() {
 					fmt.Println("SEND OFFLINE")
 				}
 				createAlert(host)
-
 			}
-
 		}
-
 	}
 
 }
@@ -71,5 +68,4 @@ func TEST() {
 			log.Infof("system-plugin-schedule: error on create job %v\n", err)
 		}
 	}
-
 }

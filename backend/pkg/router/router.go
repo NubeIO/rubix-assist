@@ -214,6 +214,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 	bios := r.Group("/api/bios")
 	{
 		bios.POST("/install", api.InstallBios)
+		bios.GET("/update_check", api.RubixServiceCheck)
+		bios.PUT("/upgrade_and_check", api.RubixServiceUpdate)
 	}
 
 	git := r.Group("/api/git")
