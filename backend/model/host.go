@@ -13,6 +13,7 @@ type Host struct {
 	RubixPort            int       `json:"rubix_port" required:"true" default:"1660" get:"true" post:"true" patch:"true"`
 	RubixUsername        string    `json:"rubix_username" required:"true" default:"admin" get:"true" post:"true" patch:"true"`
 	RubixPassword        string    `json:"rubix_password" required:"true" post:"true" patch:"true"`
+	BiosPort             int       `json:"bios_port" required:"true" default:"1660" get:"true" post:"true" patch:"true"`
 	IsLocalhost          *bool     `json:"is_localhost" get:"true" post:"true" patch:"true"`
 	PingEnable           *bool     `json:"ping_enable" get:"true" post:"true" patch:"false"`
 	PingFrequency        int       `json:"ping_frequency" get:"true" post:"true" patch:"false"`
@@ -20,4 +21,5 @@ type Host struct {
 	OfflineCount         uint      `json:"offline_count" get:"true" post:"false" patch:"false"`
 	RubixToken           string    `json:"-"`
 	RubixTokenLastUpdate time.Time `json:"-"`
+	BiosToken            string    `json:"-"`
 }
