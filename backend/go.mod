@@ -2,10 +2,10 @@ module github.com/NubeIO/rubix-updater
 
 go 1.17
 
-replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nube/nubeio-rubix-lib-helpers-go
+//replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nube/nubeio-rubix-lib-helpers-go
 
 require (
-	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.6
+	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.8
 	github.com/THREATINT/go-net v1.2.10
 	github.com/appleboy/gin-jwt/v2 v2.7.0
 	github.com/brotherpowers/ipsubnet v0.0.0-20170914094241-30bc98f0a5b1
