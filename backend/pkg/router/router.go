@@ -208,7 +208,10 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	uf := r.Group("/api/ufw")
 	{
-		uf.POST("/install", api.InstallUFW)
+		uf.POST("/install", api.UFWInstall)
+		uf.POST("/ports/open", api.UFWAddPort)
+		uf.POST("/enable", api.UFWEnable)
+		uf.POST("/disable", api.UFWDisable)
 	}
 
 	bios := r.Group("/api/bios")
