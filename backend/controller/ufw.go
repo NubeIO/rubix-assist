@@ -1,12 +1,11 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/system/ufw"
 	"github.com/gin-gonic/gin"
 )
 
-func (base *Controller) InstallUFW(ctx *gin.Context) {
+func (base *Controller) UFWInstall(ctx *gin.Context) {
 	host, _, err := base.resolveHost(ctx)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
@@ -22,31 +21,62 @@ func (base *Controller) InstallUFW(ctx *gin.Context) {
 		return
 	}
 	reposeHandler(out, err, ctx)
+	return
 }
 
-func (base *Controller) InstallUFW2(ctx *gin.Context) {
-	host, useID, err := base.resolveHost(ctx)
-	debug := false
+func (base *Controller) UFWEnable(ctx *gin.Context) {
+	host, _, err := base.resolveHost(ctx)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 		return
 	}
-	hostName := host.Name
-	if useID {
-		hostName = host.UUID
+	h, err := base.hostCopy(host)
+	u := ufw.UFW{
+		Host: h,
 	}
-	opts := commandOpts{
-		uuid:    hostName,
-		cmd:   "sudo ufw ",
-		debug: debug,
-		host:  *host,
-	}
-	_, install, err := base.runCommand(opts, *host.IsLocalhost)
+	out, err := u.UWFEnable()
 	if err != nil {
-		reposeHandler(nil, err, ctx)
+		reposeHandler(out, err, ctx)
 		return
 	}
+	reposeHandler(out, err, ctx)
+	return
+}
 
-	fmt.Println("install", install)
-	reposeHandler("install completed", err, ctx)
+func (base *Controller) UFWDisable(ctx *gin.Context) {
+	host, _, err := base.resolveHost(ctx)
+	if err != nil {
+		reposeHandler(nil, err, ctx)
+		return
+	}
+	h, err := base.hostCopy(host)
+	u := ufw.UFW{
+		Host: h,
+	}
+	out, err := u.UWFDisable()
+	if err != nil {
+		reposeHandler(out, err, ctx)
+		return
+	}
+	reposeHandler(out, err, ctx)
+	return
+}
+
+func (base *Controller) UFWAddPort(ctx *gin.Context) {
+	host, _, err := base.resolveHost(ctx)
+	if err != nil {
+		reposeHandler(nil, err, ctx)
+		return
+	}
+	h, err := base.hostCopy(host)
+	u := ufw.UFW{
+		Host: h,
+	}
+	out, err := u.UWFDefaultPorts()
+	if err != nil {
+		reposeHandler(out, err, ctx)
+		return
+	}
+	reposeHandler(out, err, ctx)
+	return
 }

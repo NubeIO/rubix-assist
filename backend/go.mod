@@ -2,7 +2,7 @@ module github.com/NubeIO/rubix-updater
 
 go 1.17
 
-//replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nube/nubeio-rubix-lib-helpers-go
+replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nube/nubeio-rubix-lib-helpers-go
 
 require (
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.1.6
