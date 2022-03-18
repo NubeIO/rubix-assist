@@ -1,1 +1,1 @@
-# rubix-updater
+# rubix-assist
