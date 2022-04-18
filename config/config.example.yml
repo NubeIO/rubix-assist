@@ -1,0 +1,27 @@
+database:
+  driver: "sqlite"
+  dbname: "data"
+  username: "user"
+  password: "password"
+  host: "localhost"
+  port: "5432"
+  logmode: true
+
+server:
+  listenaddr: "0.0.0.0"
+  secret: "mySecretKey"
+  accesstokenexpireduration: 1
+  refreshtokenexpireduration: 1
+  limitcountperrequest: 0
+
+rubixapps:
+  devicetype: "armv7"
+  owner: "NubeIO"
+  repo: "flow-framework"
+  tag: "latest"
+
+path:
+  local: "/home/aidan/Downloads"
+  frompath: "/home/aidan/Downloads"
+  topath: "/data"
+  flowplugin: "/data/flow-framework/data/plugins"
