@@ -3,10 +3,10 @@ package ping
 import (
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/bools"
-	utils "github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/ping"
-	"github.com/NubeIO/rubix-assist/model"
-	dbhandler "github.com/NubeIO/rubix-assist/pkg/handler"
-	"github.com/NubeIO/rubix-assist/pkg/jobs"
+	linixpingport "github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/networking/linuxpingport"
+	"github.com/NubeIO/rubix-updater/model"
+	dbhandler "github.com/NubeIO/rubix-updater/pkg/handler"
+	"github.com/NubeIO/rubix-updater/pkg/jobs"
 	log "github.com/sirupsen/logrus"
 	"strconv"
 	"time"
@@ -39,7 +39,7 @@ func run() {
 	hosts, _ := d.GetHosts()
 	for _, host := range hosts {
 		if bools.IsTrue(host.PingEnable) {
-			_, _, ok := utils.PingPort(host.IP, strconv.Itoa(host.RubixPort), 5, false)
+			_, _, ok := linixpingport.PingPort(host.IP, strconv.Itoa(host.RubixPort), 5, false)
 			fmt.Println(host.Name, ok)
 			if !ok {
 				host.IsOffline = bools.NewTrue()

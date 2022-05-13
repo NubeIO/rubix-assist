@@ -2,8 +2,8 @@ package controller
 
 import (
 	"errors"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/system/admin"
-	"github.com/NubeIO/rubix-assist/model/schema"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/remote/v1/remote"
+	"github.com/NubeIO/rubix-updater/model/schema"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,7 +14,7 @@ func (base *Controller) ToolsGetArch(ctx *gin.Context) {
 		return
 	}
 	h, err := base.hostCopy(host)
-	_host := admin.Admin{
+	_host := remote.Admin{
 		Host: h,
 	}
 	arch, _, err := _host.DetectArch()

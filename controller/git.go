@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/git"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/utilities/git"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,7 +21,7 @@ func (base *Controller) GitGetRelease(ctx *gin.Context) {
 		hostName = host.UUID
 	}
 	opts := commandOpts{
-		uuid:    hostName,
+		uuid:  hostName,
 		cmd:   command,
 		debug: true,
 		host:  *host,

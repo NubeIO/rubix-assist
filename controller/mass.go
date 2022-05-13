@@ -28,6 +28,6 @@ func (base *Controller) MassOperations(c *gin.Context) {
 	for i, a := range body.Hosts {
 		fmt.Println(i, a)
 	}
-	base.RubixProxyRequest(c)
+	//base.RubixProxyRequest(c)
 
 }
