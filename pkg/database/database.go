@@ -3,15 +3,15 @@ package database
 import (
 	"errors"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/pkg/config"
+	"github.com/mitchellh/go-homedir"
 	"io"
 	"log"
 	"os"
-	"path"
-	"path/filepath"
 	"time"
 
 	"github.com/NubeIO/rubix-assist/model"
+
+	"github.com/spf13/viper"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -19,10 +19,9 @@ import (
 )
 
 var (
-	DB       *gorm.DB
-	err      error
-	DBErr    error
-	mkdirAll = os.MkdirAll
+	DB    *gorm.DB
+	err   error
+	DBErr error
 )
 
 type Database struct {
@@ -31,15 +30,22 @@ type Database struct {
 
 // Setup opens a database and saves the reference to `Database` struct.
 func Setup() error {
-	conf := config.GetConfig()
-	connection := path.Join(path.Join(conf.GetAbsDataDir(), fmt.Sprintf("%s.db", conf.Database.Dbname)))
-	createDirectoryIfSqlite(conf.Database.Driver, connection)
 	var db = DB
 
+	driver := viper.GetString("database.driver")
+	logmode := viper.GetBool("database.logmode")
+
 	loglevel := logger.Silent
-	if conf.Database.LogMode {
+	if logmode {
 		loglevel = logger.Info
 	}
+
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	dbName := fmt.Sprintf("%s/%s/rubix_updater.db", home, "/.updater")
 
 	newDBLogger := logger.New(
 		log.New(getWriter(), "\r\n", log.LstdFlags), // io writer
@@ -50,16 +56,13 @@ func Setup() error {
 			Colorful:                  false,       // Disable color
 		},
 	)
+	if driver == "" {
+		driver = "sqlite"
+	}
 
-	switch conf.Database.Driver {
+	switch driver {
 	case "sqlite":
-		_connection := fmt.Sprintf("%s?_foreign_keys=on", connection)
-		db, err = gorm.Open(sqlite.Open(_connection), &gorm.Config{
-			Logger: newDBLogger,
-			NowFunc: func() time.Time {
-				return time.Now().UTC()
-			},
-		})
+		db, err = gorm.Open(sqlite.Open(dbName), &gorm.Config{Logger: newDBLogger})
 	default:
 		return errors.New("unsupported database driver")
 	}
@@ -70,15 +73,18 @@ func Setup() error {
 	}
 
 	// Auto migrate project models
-	if err := db.AutoMigrate(&model.Host{},
+	err = db.AutoMigrate(
+		&model.Host{},
 		&model.Token{},
 		&model.User{},
 		&model.Team{},
 		&model.Alert{},
-		&model.Message{}); err != nil {
+		&model.Message{})
+	if err != nil {
 		return err
 	}
 	DB = db
+
 	return nil
 }
 
@@ -93,21 +99,10 @@ func GetDBErr() error {
 }
 
 func getWriter() io.Writer {
-	conf := config.GetConfig()
-	file, err := os.OpenFile(fmt.Sprintf("%s/rubix.db.log", conf.GetAbsDataDir()), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	file, err := os.OpenFile("rubix.db.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		return os.Stdout
 	} else {
 		return file
-	}
-}
-
-func createDirectoryIfSqlite(driver, connection string) {
-	if driver == "sqlite" {
-		if _, err := os.Stat(filepath.Dir(connection)); os.IsNotExist(err) {
-			if err := mkdirAll(filepath.Dir(connection), 0777); err != nil {
-				panic(err)
-			}
-		}
 	}
 }

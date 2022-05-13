@@ -28,7 +28,6 @@ func Execute() {
 
 func init() {
 	//cobra.OnInitialize(initConfig)
-
 	RootCmd.PersistentFlags().StringVarP(&modbusIp, "modbus-ip", "", "192.168.15.93", "host ip")
 	RootCmd.PersistentFlags().IntVarP(&modbusPort, "modbus-port", "", 502, "Port")
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

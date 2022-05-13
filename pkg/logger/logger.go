@@ -3,7 +3,6 @@ package logger
 import (
 	"bytes"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/pkg/config"
 	"io"
 	"os"
 	"runtime"
@@ -15,16 +14,21 @@ import (
 
 var logger = logrus.New()
 
-func Setup() {
-	logger.Out = getWriter()
-	logger.Level = logrus.InfoLevel
-	logger.Formatter = &formatter{}
-
-	logger.SetReportCaller(true)
+func Init() {
+	//logger = logrus.New()
+	//logger.Out = getWriter()
+	//logger.Level = logrus.InfoLevel
+	//logger.Formatter = &formatter{}
+	//
+	//logger.SetReportCaller(true)
 }
 
 func SetLogLevel(level logrus.Level) {
 	logger.Level = level
+}
+
+func SetLogFormatter(formatter logrus.Formatter) {
+	logger.Formatter = formatter
 }
 
 type Fields logrus.Fields
@@ -37,11 +41,31 @@ func Debugf(format string, args ...interface{}) {
 	}
 }
 
+// Info logs a message at level Info on the standard logger.
+func Info(args ...interface{}) {
+	if logger.Level >= logrus.InfoLevel {
+		entry := logger.WithFields(logrus.Fields{})
+		entry.Data["file"] = fileInfo(2)
+		entry.Info(args...)
+	}
+}
+
+// InfoLn logs a message at level Info on the standard logger.
+func InfoLn(args ...interface{}) {
+	if logger.Level >= logrus.InfoLevel {
+		entry := logger.WithFields(logrus.Fields{})
+		entry.Data["file"] = fileInfo(2)
+		entry.Infoln(args...)
+		//logrus.Info(args)
+	}
+}
+
 // Infof logs a message at level Info on the standard logger.
 func Infof(format string, args ...interface{}) {
 	if logger.Level >= logrus.InfoLevel {
 		entry := logger.WithFields(logrus.Fields{})
 		entry.Infof(format, args...)
+		//logrus.Info(args)
 	}
 }
 
@@ -70,8 +94,7 @@ func Fatalf(format string, args ...interface{}) {
 }
 
 func getWriter() io.Writer {
-	conf := config.GetConfig()
-	file, err := os.OpenFile(fmt.Sprintf("%s/rubix.log", conf.GetAbsDataDir()), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	file, err := os.OpenFile("rubix.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		logger.Errorf("Failed to open log file: %v", err)
 		return os.Stdout
@@ -83,6 +106,20 @@ func getWriter() io.Writer {
 // Formatter implements logrus.Formatter interface.
 type formatter struct {
 	prefix string
+}
+
+func fileInfo(skip int) string {
+	_, file, line, ok := runtime.Caller(skip)
+	if !ok {
+		file = "<???>"
+		line = 1
+	} else {
+		slash := strings.LastIndex(file, "/")
+		if slash >= 0 {
+			file = file[slash+1:]
+		}
+	}
+	return fmt.Sprintf("%s:%d", file, line)
 }
 
 // Format building log message.

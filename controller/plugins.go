@@ -4,7 +4,7 @@ package controller
 //import (
 //	"errors"
 //	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nrest"
-//	"github.com/NubeIO/rubix-updater/model/rubix"
+//	"github.com/NubeIO/rubix-assist/model/rubix"
 //	"github.com/gin-gonic/gin"
 //	log "github.com/sirupsen/logrus"
 //	"reflect"
