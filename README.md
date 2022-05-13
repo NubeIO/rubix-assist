@@ -1,4 +1,4 @@
-# getting started
+
 # getting started
 rename the `config-example.yml` file to `config.yml`
 
