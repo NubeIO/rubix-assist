@@ -38,6 +38,10 @@ func (d *DB) GetHostByName(uuid string, useID bool) (*model.Host, error) {
 }
 
 func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
+	if host.Name == "" {
+		host.Name = "RC"
+	}
+
 	host.UUID = config.MakeTopicUUID(model.CommonNaming.Host)
 	if host.PingEnable == nil {
 		host.PingEnable = bools.NewFalse()

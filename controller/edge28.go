@@ -2,13 +2,13 @@ package controller
 
 import (
 	"errors"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/edge28"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/system/admin"
-	"github.com/NubeIO/rubix-assist/model/schema"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nube/edge28/edgeip"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/remote/v1/remote"
+	"github.com/NubeIO/rubix-updater/model/schema"
 	"github.com/gin-gonic/gin"
 )
 
-func getEdgeIPBody(ctx *gin.Context) (dto edge28.EdgeNetworking, err error) {
+func getEdgeIPBody(ctx *gin.Context) (dto edgeip.EdgeNetworking, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
 }
@@ -25,7 +25,7 @@ func (base *Controller) EdgeSetIP(ctx *gin.Context) {
 		return
 	}
 	h, err := base.hostCopy(host)
-	_host := admin.Admin{
+	_host := remote.Admin{
 		Host: h,
 	}
 	arch, _, err := _host.DetectArch()
@@ -34,7 +34,7 @@ func (base *Controller) EdgeSetIP(ctx *gin.Context) {
 		return
 	}
 	if arch.IsBeagleBone {
-		ok, _ := edge28.SetIP(body)
+		ok, _ := edgeip.SetIP(body)
 		if !ok {
 			reposeHandler(nil, errors.New("error on trying to update the networking"), ctx)
 			return

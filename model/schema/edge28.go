@@ -1,7 +1,7 @@
 package schema
 
 import (
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/edge28"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nube/edge28/edgeip"
 	cmap "github.com/orcaman/concurrent-map"
 )
 
@@ -10,7 +10,7 @@ var edgeHelp = `line 1
  line 3`
 
 func GetEdge28IPSchema() interface{} {
-	f := &edge28.EdgeNetworking{}
+	f := &edgeip.EdgeNetworking{}
 	sch := cmap.New()
 	sch.Set(fields, reflectBindings(f))
 	sch.Set(methods, MethodsPost)

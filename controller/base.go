@@ -1,47 +1,54 @@
 package controller
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/git"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/ssh"
-	dbase "github.com/NubeIO/rubix-assist/database"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/networking/ssh"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/utilities/git"
+	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
+
+	dbase "github.com/NubeIO/rubix-updater/database"
+	"github.com/NubeIO/rubix-updater/model"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"github.com/melbahja/goph"
-	log "github.com/sirupsen/logrus"
 	"gopkg.in/olahol/melody.v1"
 )
 
 type Controller struct {
 	//DB  *gorm.DB
-	SSH *goph.Client
-	WS  *melody.Melody //web socket
-	DB  *dbase.DB
+	SSH  *goph.Client
+	WS   *melody.Melody //web socket
+	DB   *dbase.DB
+	Rest *rest.Service
 }
 
-//publishMSG send websocket message
-func (base *Controller) publishMSG(in TMsg) ([]byte, error) {
-	jmsg := map[string]interface{}{
-		"topic":    in.Topic,
-		"msg":      in.Message,
-		"is_error": in.IsError,
-	}
-	b, err := json.Marshal(jmsg)
-	if err != nil {
-		//panic(err)
-	}
-	if in.IsError {
-		log.Errorf("ERROR: publish websocket message: %v\n", in.Message)
-	} else {
-		log.Infof("INFO: publish websocket message: %v\n", in.Message)
-	}
-	err = base.WS.Broadcast(b)
-	if err != nil {
-		return nil, err
-	}
-	return b, nil
+////publishMSG send websocket message
+//func (base *Controller) publishMSG(in TMsg) ([]byte, error) {
+//	jmsg := map[string]interface{}{
+//		"topic":    in.Topic,
+//		"msg":      in.Message,
+//		"is_error": in.IsError,
+//	}
+//	b, err := json.Marshal(jmsg)
+//	if err != nil {
+//		//panic(err)
+//	}
+//	if in.IsError {
+//		log.Errorf("ERROR: publish websocket message: %v\n", in.Message)
+//	} else {
+//		log.Infof("INFO: publish websocket message: %v\n", in.Message)
+//	}
+//	err = base.WS.Broadcast(b)
+//	if err != nil {
+//		return nil, err
+//	}
+//	return b, nil
+//}
+
+func (base *Controller) resolveHost(ctx *gin.Context) (host *model.Host, useID bool, err error) {
+	idName, useID := useHostNameOrID(ctx)
+	host, err = base.DB.GetHostByName(idName, useID)
+	return host, useID, err
 }
 
 func getGitBody(ctx *gin.Context) (dto *git.Git, err error) {
