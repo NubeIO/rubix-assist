@@ -6,8 +6,8 @@ import (
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/utilities/git"
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
 
-	dbase "github.com/NubeIO/rubix-updater/database"
-	"github.com/NubeIO/rubix-updater/model"
+	dbase "github.com/NubeIO/rubix-assist/database"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"github.com/melbahja/goph"

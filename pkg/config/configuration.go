@@ -1,55 +1,51 @@
 package config
 
 import (
-	"flag"
-	"github.com/NubeDev/configor"
-	"path"
+	"fmt"
+	"github.com/NubeIO/rubix-assist/pkg/helpers/homedir"
+	"github.com/NubeIO/rubix-assist/pkg/logger"
+	"github.com/spf13/viper"
 )
 
-var config *Configuration
+var Config *Configuration
 
 type Configuration struct {
 	Server   ServerConfiguration
 	Database DatabaseConfiguration
 	Path     PathConfiguration
-	Prod     bool `default:"false"`
 }
 
 // Setup initialize configuration
-func Setup() *Configuration {
-	config = new(Configuration)
-	config = config.Parse()
-	err := configor.New(&configor.Config{EnvironmentPrefix: "ASSIST"}).Load(config, path.Join(config.GetAbsConfigDir(), "config.yml"))
+func Setup() error {
+	var configuration *Configuration
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+
+	home, err := homedir.Dir()
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
-	return config
-}
+	fmt.Println(home)
+	viper.AddConfigPath(home + "/.updater")
 
-func (conf *Configuration) Parse() *Configuration {
-	port := flag.String("p", "8080", "Port")
-	globalDir := flag.String("g", "./", "Global Directory")
-	dataDir := flag.String("d", "data", "Data Directory")
-	configDir := flag.String("c", "config", "Config Directory")
-	prod := flag.Bool("prod", false, "Deployment Mode")
-	flag.Parse()
-	conf.Server.Port = *port
-	conf.Path.GlobalDir = *globalDir
-	conf.Path.DataDir = *dataDir
-	conf.Path.ConfigDir = *configDir
-	conf.Prod = *prod
-	return conf
-}
+	if err := viper.ReadInConfig(); err != nil {
+		logger.Errorf("Error reading config file, %s", err)
+		fmt.Println(err)
+		return err
+	}
 
-func (conf *Configuration) GetAbsDataDir() string {
-	return path.Join(conf.Path.GlobalDir, conf.Path.DataDir)
-}
-
-func (conf *Configuration) GetAbsConfigDir() string {
-	return path.Join(conf.Path.GlobalDir, conf.Path.ConfigDir)
+	err = viper.Unmarshal(&configuration)
+	if err != nil {
+		logger.Errorf("Unable to decode into struct, %v", err)
+		fmt.Println(err)
+		return err
+	}
+	Config = configuration
+	return nil
 }
 
 // GetConfig helps you to get configuration data
 func GetConfig() *Configuration {
-	return config
+	return Config
 }

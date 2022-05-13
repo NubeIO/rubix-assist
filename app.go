@@ -8,22 +8,23 @@ import (
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/pkg/router"
 	"github.com/NubeIO/rubix-assist/service/ping"
-	log "github.com/sirupsen/logrus"
-	"os"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 func setup() {
-	log.Println("try and start rubix-assist")
-	conf := config.Setup()
-	if err := os.MkdirAll(conf.GetAbsDataDir(), 0755); err != nil {
-		panic(err)
+	logger.Init()
+	logger.SetLogLevel(logrus.InfoLevel)
+	logger.InfoLn("try and start rubix-updater")
+	if err := config.Setup(); err != nil {
+		logger.Fatalf("config.Setup() error: %s", err)
 	}
-	logger.Setup()
 	if err := database.Setup(); err != nil {
 		logger.Fatalf("database.Setup() error: %s", err)
 	}
 	j := new(jobs.Jobs)
 	j.InitCron()
+
 }
 
 func main() {
@@ -32,8 +33,12 @@ func main() {
 	r := router.Setup(db)
 	ping.TEST()
 
-	conf := config.GetConfig()
-	logger.Infof("Server is starting at %s:%s", conf.Server.ListenAddr, conf.Server.Port)
-	fmt.Printf("server is running at %s:%s Check logs for details\n", conf.Server.ListenAddr, conf.Server.Port)
-	logger.Fatalf("%v", r.Run(conf.Server.ListenAddr+":"+conf.Server.Port))
+	host := "0.0.0.0"
+	if h := viper.GetString("server.host"); h != "" {
+		host = h
+	}
+	logger.Infof("Server is starting at %s:%s", host, viper.GetString("server.port"))
+	fmt.Printf("server is running at %s:%s Check logs for details\n", host, viper.GetString("server.port"))
+	fmt.Println()
+	logger.Fatalf("%v", r.Run(host+":"+viper.GetString("server.port")))
 }

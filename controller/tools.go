@@ -3,7 +3,7 @@ package controller
 import (
 	"errors"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/remote/v1/remote"
-	"github.com/NubeIO/rubix-updater/model/schema"
+	"github.com/NubeIO/rubix-assist/model/schema"
 	"github.com/gin-gonic/gin"
 )
 

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/NubeIO/rubix-assist/controller"
 	dbase "github.com/NubeIO/rubix-assist/database"
-	"github.com/NubeIO/rubix-assist/pkg/config"
 	dbhandler "github.com/NubeIO/rubix-assist/pkg/handler"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/service/auth"
@@ -20,10 +19,9 @@ import (
 
 func Setup(db *gorm.DB) *gin.Engine {
 	r := gin.New()
-	var ws = melody.New()
+	var ws = melody.New() //TODO maybe remove
 	// Write gin access log to file
-	conf := config.GetConfig()
-	f, err := os.OpenFile(fmt.Sprintf("%s/rubix.access.log", conf.GetAbsDataDir()), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	f, err := os.OpenFile("rubix.access.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		logger.Errorf("Failed to create access log file: %v", err)
 	} else {
@@ -45,14 +43,14 @@ func Setup(db *gorm.DB) *gin.Engine {
 		AllowBrowserExtensions: true,
 		MaxAge:                 12 * time.Hour,
 	}))
-
-	GDB := new(dbase.DB)
-	GDB.DB = db
-	gg := new(dbhandler.Handler)
-	gg.DB = GDB
-	dbhandler.Init(gg)
-	//GDB := dbase.DB{GORM: db}
-	api := controller.Controller{DB: GDB, WS: ws}
+	appDB := &dbase.DB{
+		DB: db,
+	}
+	dbHandler := &dbhandler.Handler{
+		DB: appDB,
+	}
+	dbhandler.Init(dbHandler)
+	api := controller.Controller{DB: appDB, WS: ws}
 	identityKey := "uuid"
 
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{

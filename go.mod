@@ -1,4 +1,4 @@
-module github.com/NubeIO/rubix-updater
+module github.com/NubeIO/rubix-assist
 
 go 1.17
 

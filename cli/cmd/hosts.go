@@ -2,13 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	dbase "github.com/NubeIO/rubix-updater/database"
-	"github.com/NubeIO/rubix-updater/model"
-	"github.com/NubeIO/rubix-updater/pkg/config"
-	"github.com/NubeIO/rubix-updater/pkg/database"
-	dbhandler "github.com/NubeIO/rubix-updater/pkg/handler"
+	dbase "github.com/NubeIO/rubix-assist/database"
+	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/pkg/config"
+	"github.com/NubeIO/rubix-assist/pkg/database"
 	log "github.com/sirupsen/logrus"
-
 	"github.com/spf13/cobra"
 )
 
@@ -26,8 +24,6 @@ var readCmd = &cobra.Command{
 	Run: read,
 }
 
-var DB *dbase.DB
-
 func read(cmd *cobra.Command, args []string) {
 
 	if err := config.Setup(); err != nil {
@@ -36,21 +32,20 @@ func read(cmd *cobra.Command, args []string) {
 	if err := database.Setup(); err != nil {
 		log.Errorln("database.Setup() error: %s", err)
 	}
-	db := database.GetDB()
-	GDB := new(dbase.DB)
-	GDB.DB = db
-	gg := new(dbhandler.Handler)
-	gg.DB = GDB
+	gormDB := database.GetDB()
+	appDB := &dbase.DB{
+		DB: gormDB,
+	}
 
 	if hostsGet {
-		hosts, err := gg.DB.GetHosts()
+		hosts, err := appDB.GetHosts()
 		fmt.Println(err)
 		for i, h := range hosts {
 			fmt.Println(i, h.IP)
 		}
 	}
 	if hostAdd {
-		host, err := gg.DB.CreateHost(&model.Host{})
+		host, err := appDB.CreateHost(&model.Host{})
 		fmt.Println(err)
 		fmt.Println("NEW HOST", host.UUID)
 
