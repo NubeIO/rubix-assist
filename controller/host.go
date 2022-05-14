@@ -42,7 +42,7 @@ func (base *Controller) CreateHost(c *gin.Context) {
 	err = c.ShouldBindJSON(&m)
 	host, err := base.DB.CreateHost(m)
 	if err != nil {
-		reposeHandler(m, err, c)
+		reposeHandler(nil, err, c)
 		return
 	}
 	reposeHandler(host, err, c)

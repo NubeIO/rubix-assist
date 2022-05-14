@@ -6,20 +6,20 @@ replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nub
 
 replace github.com/NubeIO/nubeio-rubix-lib-rest-go => /home/aidan/code/go/nube/nubeio-rubix-lib-rest-go
 
+replace github.com/NubeDev/bacnet => /home/aidan/code/go/nube/bacnet
+
 //replace github.com/NubeIO/nubeio-rubix-lib-models-go => /home/aidan/code/go/nube/nubeio-rubix-lib-models-go
 
 require (
+	github.com/NubeDev/bacnet v0.0.1
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.6
 	github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.6
-	github.com/THREATINT/go-net v1.2.10
 	github.com/appleboy/gin-jwt/v2 v2.7.0
-	github.com/brotherpowers/ipsubnet v0.0.0-20170914094241-30bc98f0a5b1
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-co-op/gocron v1.11.0
+	github.com/grid-x/modbus v0.0.0-20220419073012-0daecbb3900f
 	github.com/jinzhu/copier v0.3.4
-	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
-	github.com/mcnijman/go-emailaddress v1.1.0
 	github.com/melbahja/goph v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/oleiade/reflections v1.0.1
@@ -47,7 +47,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.1.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/helloyi/go-sshclient v1.1.0 // indirect
+	github.com/helloyi/go-sshclient v1.1.0
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -82,6 +82,9 @@ require (
 )
 
 require (
+	github.com/THREATINT/go-net v1.2.10 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/grid-x/serial v0.0.0-20191104121038-e24bc9bf6f08 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/mcnijman/go-emailaddress v1.1.0 // indirect
 )

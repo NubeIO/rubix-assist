@@ -33,10 +33,10 @@ func Setup() error {
 	var db = DB
 
 	driver := viper.GetString("database.driver")
-	logmode := viper.GetBool("database.logmode")
+	logMode := viper.GetBool("database.logmode")
 
 	loglevel := logger.Silent
-	if logmode {
+	if logMode {
 		loglevel = logger.Info
 	}
 

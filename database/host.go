@@ -2,7 +2,7 @@ package dbase
 
 import (
 	"errors"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/bools"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
@@ -17,17 +17,17 @@ func (d *DB) GetHosts() ([]model.Host, error) {
 	}
 }
 
-func (d *DB) GetHostByName(uuid string, useID bool) (*model.Host, error) {
+func (d *DB) GetHostByName(name string, isUUID bool) (*model.Host, error) {
 	m := new(model.Host)
-	switch useID {
+	switch isUUID {
 	case true:
-		if err := d.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
+		if err := d.DB.Where("uuid = ? ", name).First(&m).Error; err != nil {
 			logger.Errorf("GetHost error: %v", err)
 			return nil, err
 		}
 		return m, nil
 	case false:
-		if err := d.DB.Where("name = ? ", uuid).First(&m).Error; err != nil {
+		if err := d.DB.Where("name = ? ", name).First(&m).Error; err != nil {
 			logger.Errorf("GetHost error: %v", err)
 			return nil, err
 		}
@@ -41,15 +41,43 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if host.Name == "" {
 		host.Name = "RC"
 	}
-
+	existingHost, _ := d.GetHostByName(host.Name, false)
+	if existingHost != nil {
+		return nil, errors.New("a host with this name exists")
+	}
 	host.UUID = config.MakeTopicUUID(model.CommonNaming.Host)
 	if host.PingEnable == nil {
-		host.PingEnable = bools.NewFalse()
+		host.PingEnable = nils.NewFalse()
+	}
+	if host.IsLocalhost == nil {
+		host.IsLocalhost = nils.NewFalse()
+	}
+	if host.HTTPS == nil {
+		host.HTTPS = nils.NewFalse()
+	}
+	if host.Port == 0 {
+		host.Port = 22
+	}
+	if host.RubixPort == 0 {
+		host.RubixPort = 1616
+	}
+	if host.BiosPort == 0 {
+		host.BiosPort = 1617
 	}
 	if err := d.DB.Create(&host).Error; err != nil {
 		return nil, err
 	} else {
 		return host, nil
+	}
+}
+
+func (d *DB) UpdateHostByName(name string, host *model.Host) (*model.Host, error) {
+	m := new(model.Host)
+	query := d.DB.Where("name = ?", name).Find(&m).Updates(host)
+	if query.Error != nil {
+		return nil, query.Error
+	} else {
+		return m, query.Error
 	}
 }
 

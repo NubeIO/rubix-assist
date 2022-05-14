@@ -38,7 +38,7 @@ func (base *Controller) CreateTeam(c *gin.Context) {
 	err = c.ShouldBindJSON(&m)
 	team, err := base.DB.CreateTeam(m)
 	if err != nil {
-		reposeHandler(m, err, c)
+		reposeHandler(nil, err, c)
 		return
 	}
 	reposeHandler(team, err, c)
