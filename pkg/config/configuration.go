@@ -26,7 +26,6 @@ func Setup() error {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(home)
 	viper.AddConfigPath(home + "/.updater")
 
 	if err := viper.ReadInConfig(); err != nil {
