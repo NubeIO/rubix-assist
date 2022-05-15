@@ -4,21 +4,19 @@ go 1.17
 
 replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nube/nubeio-rubix-lib-helpers-go
 
-replace github.com/NubeIO/nubeio-rubix-lib-rest-go => /home/aidan/code/go/nube/nubeio-rubix-lib-rest-go
-
-replace github.com/NubeDev/bacnet => /home/aidan/code/go/nube/bacnet
-
+//replace github.com/NubeIO/nubeio-rubix-lib-rest-go => /home/aidan/code/go/nube/nubeio-rubix-lib-rest-go
+//replace github.com/NubeDev/bacnet => /home/aidan/code/go/nube/bacnet
 //replace github.com/NubeIO/nubeio-rubix-lib-models-go => /home/aidan/code/go/nube/nubeio-rubix-lib-models-go
 
 require (
-	github.com/NubeDev/bacnet v0.0.1
-	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.6
-	github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.6
+	github.com/NubeDev/bacnet v0.0.2
+	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7
+	github.com/NubeIO/nubeio-rubix-lib-modbus-go v0.0.0-20220514224355-53afcfd9e83f
+	github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.8
 	github.com/appleboy/gin-jwt/v2 v2.7.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-co-op/gocron v1.11.0
-	github.com/grid-x/modbus v0.0.0-20220419073012-0daecbb3900f
 	github.com/jinzhu/copier v0.3.4
 	github.com/melbahja/goph v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0
@@ -82,9 +80,14 @@ require (
 )
 
 require (
+	github.com/NubeIO/nubeio-rubix-lib-models-go v1.2.1 // indirect
 	github.com/THREATINT/go-net v1.2.10 // indirect
+	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/grid-x/modbus v0.0.0-20220419073012-0daecbb3900f // indirect
 	github.com/grid-x/serial v0.0.0-20191104121038-e24bc9bf6f08 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/mcnijman/go-emailaddress v1.1.0 // indirect
+	gorm.io/datatypes v1.0.6 // indirect
+	gorm.io/driver/mysql v1.3.2 // indirect
 )
