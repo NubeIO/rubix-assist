@@ -19,7 +19,6 @@ func (h *Host) RunCommand() (res *command.Response) {
 	var err error
 	cmd := h.CMD
 	res = &command.Response{}
-	fmt.Println(nils.BoolIsNil(h.Host.IsLocalhost))
 	if nils.BoolIsNil(h.Host.IsLocalhost) {
 		res = command.Run(cmd)
 		cmdOut := res.Out

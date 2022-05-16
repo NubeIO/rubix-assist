@@ -15,6 +15,8 @@ var (
 	rubixPort     int
 	rubixUsername string
 	rubixPassword string
+
+	iface string
 )
 
 // RootCmd represents the base command when called without any subcommands
@@ -33,9 +35,10 @@ func Execute() {
 
 func init() {
 
-	RootCmd.PersistentFlags().StringVarP(&hostName, "name", "", "RC", "host name (default RC)")
+	RootCmd.PersistentFlags().StringVarP(&hostName, "host", "", "RC", "host name (default RC)")
 	RootCmd.PersistentFlags().StringVarP(&hostIP, "ip", "", "192.168.15.10", "host ip (default 192.168.15.10)")
 	RootCmd.PersistentFlags().IntVarP(&hostPort, "port", "", 22, "SSH Port")
+	RootCmd.PersistentFlags().StringVarP(&iface, "iface", "", "", "pc or host network interface example: eth0")
 	RootCmd.PersistentFlags().StringVarP(&hostUsername, "host-user", "", "pi", "host/linux username (default pi)")
 	RootCmd.PersistentFlags().StringVarP(&hostPassword, "host-pass", "", "N00BRCRC", "host/linux password")
 	RootCmd.PersistentFlags().IntVarP(&rubixPort, "rubix-port", "", 1616, "rubix port (default 1616)")

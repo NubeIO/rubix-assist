@@ -10,6 +10,7 @@ replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nub
 
 require (
 	github.com/NubeDev/bacnet v0.0.2
+	github.com/NubeIO/lib-systemctl-go v0.0.0-20220516045621-5850c1327ed8
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7
 	github.com/NubeIO/nubeio-rubix-lib-modbus-go v0.0.0-20220514224355-53afcfd9e83f
 	github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.8

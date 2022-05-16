@@ -37,6 +37,16 @@ delete all hosts
 go run main.go hosts --drop=true
 ````
 
+## flow network
+
+### ip scan
+
+look for all devices on a local network with ports like 1616, 1313, 502, 22
+
+````
+go run main.go flow --scan=true --ip-range=192.168.15.1-12
+````
+
 ## modbus
 
 ### example
@@ -67,6 +77,16 @@ https://github.com/NubeDev/bacnet#examples
 
 ````
 (cd rubixio && go run main.go read --ip=192.168.15.10 --port=5001)
+````
+
+### docs
+
+## bacnet
+
+### example
+
+````
+(cd bacnet && go run main.go whois --interface=wlp3s0)
 ````
 
 ### docs
