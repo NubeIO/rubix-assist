@@ -61,8 +61,11 @@ github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3
 github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY/8hQs=
 github.com/NubeDev/bacnet v0.0.2 h1:xgYsuapc26T/B1kZAoRJ4y+k/GqoEa+yMEBw7KfaQqE=
 github.com/NubeDev/bacnet v0.0.2/go.mod h1:AOqL/zjOflwwyL7VepIqDW9I55z+nDPge1ZN1CnXa2I=
-github.com/NubeIO/lib-systemctl-go v0.0.0-20220516045621-5850c1327ed8 h1:ZcClrIPjuVJcIwGXiKEzW/5qWO11Zxu5Irc7R6d7ERs=
-github.com/NubeIO/lib-systemctl-go v0.0.0-20220516045621-5850c1327ed8/go.mod h1:QjGuQupfENF8Aix+4Lvh6rC8sAWsGueG6Z6QpXfGnzk=
+github.com/NubeIO/lib-systemctl-go v0.0.1 h1:s/JiGaxWIit8wcZM9EC6JSzOiCH/dChVxFvmSsFQ/94=
+github.com/NubeIO/lib-systemctl-go v0.0.1/go.mod h1:QjGuQupfENF8Aix+4Lvh6rC8sAWsGueG6Z6QpXfGnzk=
+github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.6/go.mod h1:iDKguImeSi6yhQlBKynEnOIKPOM6E9hPuxq2CnFHbpg=
+github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7 h1:QKgcOjDkVujyAXWK+OysVFnQKzpZx335vGPG95UNXuI=
+github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7/go.mod h1:oLI6n9wuko0KIEzrLc8saOquiQvtMUUBrUjXf0TLDVQ=
 github.com/NubeIO/nubeio-rubix-lib-modbus-go v0.0.0-20220514224355-53afcfd9e83f h1:jxghae1jRaErG29YQD/+OUccXGzIvThb4Yeio3iLxNE=
 github.com/NubeIO/nubeio-rubix-lib-modbus-go v0.0.0-20220514224355-53afcfd9e83f/go.mod h1:WxkvaNISd9E/mNe8+aykNKj1KWVpZQ0FPwYal744/E4=
 github.com/NubeIO/nubeio-rubix-lib-models-go v1.0.4/go.mod h1:A1BPuc3UpE1EF3ugdf+8QIIKTT8s3eK+pfUcheJX2JM=
