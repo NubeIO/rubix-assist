@@ -81,12 +81,13 @@ https://github.com/NubeDev/bacnet#examples
 
 ### docs
 
-## bacnet
+## systemctl
 
 ### example
 
+`this will run as sudo`
 ````
-(cd bacnet && go run main.go whois --interface=wlp3s0)
+(cd systemctl && go build ctl.go && sudo  ./ctl service --status=true --service=myservice)
 ````
 
 ### docs
