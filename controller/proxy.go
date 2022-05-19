@@ -25,7 +25,7 @@ func proxyPath(u string) (ok bool, path, proxyPath string) {
 	return
 }
 
-func (base *Controller) RubixProxyRequest(ctx *gin.Context) {
+func (inst *Controller) RubixProxyRequest(ctx *gin.Context) {
 
 	method := getMethod(ctx.Request.Method)
 	ok, path, rubixProxy := proxyPath(ctx.Request.URL.String())
@@ -38,7 +38,7 @@ func (base *Controller) RubixProxyRequest(ctx *gin.Context) {
 		fmt.Println("proxy err", err)
 	}
 
-	host, b, err := base.resolveHost(ctx)
+	host, b, err := inst.resolveHost(ctx)
 	if err != nil {
 		return
 	}
@@ -58,13 +58,13 @@ func (base *Controller) RubixProxyRequest(ctx *gin.Context) {
 	nubeProxy.RubixProxyPath = rubixProxy
 	restService.NubeProxy = nubeProxy
 
-	base.Rest = restService
+	inst.Rest = restService
 	req := restService.
 		SetMethod(method).
 		SetPath(path).
 		SetBody(body).
 		DoRequest()
-	response := base.Rest.RestResponse(req, nil)
+	response := inst.Rest.RestResponse(req, nil)
 	if response.GetError() != nil {
 		reposeHandler(nil, response.GetError(), ctx)
 	} else {

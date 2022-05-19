@@ -9,6 +9,17 @@ these docs are for using the linux or windows command line
 cd cmd
 ```
 
+## apps
+
+install a rubix app
+
+- download from asset from GitHub
+- generate the systemd file
+- install as a linux service
+
+```
+go build main.go && sudo ./main apps --owner=NubeIO  --repo=rubix-bios --dest=/data --target=rubix-bios-app  --arch=amd64 --tag=v1.5.2 --token=<token>
+
 ## main app
 
 ### hosts
@@ -16,7 +27,9 @@ cd cmd
 add a new a host
 
 ````
+
 go run main.go hosts --new=true --name=test --ip=192.178.12.1
+
 ````
 
 update a host ip (will up by the host name)

@@ -71,8 +71,8 @@ func VerifyHost(host string, remote net.Addr, key ssh.PublicKey) error {
 	return goph.AddKnownHost(host, remote, key, "")
 }
 
-func (base *Controller) newClient(uuid string) (c *goph.Client, err error) {
-	h, err := base.DB.GetHostByName(uuid, true)
+func (inst *Controller) newClient(uuid string) (c *goph.Client, err error) {
+	h, err := inst.DB.GetHostByName(uuid, true)
 	if err != nil {
 		return nil, err
 	} else {
@@ -93,7 +93,7 @@ func (base *Controller) newClient(uuid string) (c *goph.Client, err error) {
 
 }
 
-func (base *Controller) newRemoteClient(host model.Host) (c *goph.Client, err error) {
+func (inst *Controller) newRemoteClient(host model.Host) (c *goph.Client, err error) {
 	var cli serverSettings
 	cli.Addr = host.IP
 	cli.User = host.Username
@@ -136,7 +136,7 @@ func dirBody(ctx *gin.Context) (dto *Dir) {
 	return dto
 }
 
-func (base *Controller) uploadZip(uuid string, body *Upload) error {
+func (inst *Controller) uploadZip(uuid string, body *Upload) error {
 	getConfig := config.GetConfig()
 	fromPath := body.FromPath
 	toPath := body.ToPath
@@ -151,7 +151,7 @@ func (base *Controller) uploadZip(uuid string, body *Upload) error {
 	if body.UnZipPath == "" {
 		unZipPath = getConfig.Path.UnZipPath
 	}
-	c, _ := base.newClient(uuid)
+	c, _ := inst.newClient(uuid)
 	defer c.Close()
 
 	for i, zip := range body.Zips {
@@ -178,10 +178,10 @@ func (base *Controller) uploadZip(uuid string, body *Upload) error {
 	return nil
 }
 
-func (base *Controller) UploadZip(ctx *gin.Context) {
+func (inst *Controller) UploadZip(ctx *gin.Context) {
 	body := uploadBody(ctx)
 	uuid := ctx.Params.ByName("uuid")
-	err := base.uploadZip(uuid, body)
+	err := inst.uploadZip(uuid, body)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 	} else {
@@ -190,7 +190,7 @@ func (base *Controller) UploadZip(ctx *gin.Context) {
 
 }
 
-func (base *Controller) Unzip(ctx *gin.Context) {
+func (inst *Controller) Unzip(ctx *gin.Context) {
 	getConfig := config.GetConfig()
 	body := uploadBody(ctx)
 	toPath := body.ToPath
@@ -198,11 +198,11 @@ func (base *Controller) Unzip(ctx *gin.Context) {
 		toPath = getConfig.Path.ToPath
 	}
 	uuid := ctx.Params.ByName("uuid")
-	d, err := base.DB.GetHostByName(uuid, true)
+	d, err := inst.DB.GetHostByName(uuid, true)
 	if err != nil {
 		reposeHandler(d, err, ctx)
 	} else {
-		c, _ := base.newClient(uuid)
+		c, _ := inst.newClient(uuid)
 		defer c.Close()
 		for _, zip := range body.Zips {
 			tp := fmt.Sprintf("%s/%s", toPath, zip)

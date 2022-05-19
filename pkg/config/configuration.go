@@ -31,15 +31,18 @@ func Setup() error {
 	if err := viper.ReadInConfig(); err != nil {
 		logger.Errorf("Error reading config file, %s", err)
 		fmt.Println(err)
-		return err
+		//return err
 	}
 
 	err = viper.Unmarshal(&configuration)
 	if err != nil {
 		logger.Errorf("Unable to decode into struct, %v", err)
 		fmt.Println(err)
-		return err
 	}
+	viper.SetDefault("server.port", "8080")
+	viper.SetDefault("database.driver", "sqlite")
+	viper.SetDefault("database.name", "/tmp/updater.db")
+
 	Config = configuration
 	return nil
 }

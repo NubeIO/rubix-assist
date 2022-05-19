@@ -13,10 +13,10 @@ type commandOpts struct {
 	host        model.Host
 }
 
-func (base *Controller) runCommand(commandOpts commandOpts, remoteCommand bool) (out []byte, result bool, err error) {
+func (inst *Controller) runCommand(commandOpts commandOpts, remoteCommand bool) (out []byte, result bool, err error) {
 	if !remoteCommand {
 		fmt.Println("HOST:", commandOpts.host.IP, "COMMAND", commandOpts.cmd)
-		c, err := base.newRemoteClient(commandOpts.host)
+		c, err := inst.newRemoteClient(commandOpts.host)
 		if err != nil {
 			fmt.Println("REMOTE-COMMAND-ERROR", err)
 			return nil, false, err

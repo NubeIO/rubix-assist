@@ -19,7 +19,7 @@ import (
 
 func Setup(db *gorm.DB) *gin.Engine {
 	r := gin.New()
-	var ws = melody.New() //TODO maybe remove
+	var ws = melody.New()
 	// Write gin access log to file
 	f, err := os.OpenFile("rubix.access.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
@@ -73,7 +73,11 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	//web socket route
 	r.GET("/ws", func(c *gin.Context) {
-		ws.HandleRequest(c.Writer, c.Request)
+		err := ws.HandleRequest(c.Writer, c.Request)
+		fmt.Println(err)
+		//if err != nil {
+		//	return
+		//}
 	})
 
 	ws.HandleMessage(func(s *melody.Session, msg []byte) {
