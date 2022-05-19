@@ -9,7 +9,7 @@ type Scan struct {
 	Debug     bool
 }
 
-func (s *Scan) Scan() (hosts *portscanner.Hosts) {
+func (s *Scan) Scan() (hosts portscanner.Hosts) {
 	ip := s.IP
 	if ip == "" {
 		ip = "192.168.15.1-254"

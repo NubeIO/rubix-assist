@@ -119,10 +119,10 @@ var WriterActions = struct {
 }
 
 var CommonAlertTypes = struct {
-	HostPing    string
+	HostPing      string
 	DeviceOffline string
 }{
-	HostPing:    "system_ping",
+	HostPing:      "system_ping",
 	DeviceOffline: "device_offline",
 }
 

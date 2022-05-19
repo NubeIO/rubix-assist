@@ -1,7 +1,7 @@
 package model
 
 type User struct {
-	UUID        string `json:"uuid" gorm:"primary_key" get:"true" delete:"true"`
+	UUID      string `json:"uuid" gorm:"primary_key" get:"true" delete:"true"`
 	Username  string `json:"username" get:"true" post:"true" patch:"true"`
 	IsAdmin   bool   `json:"is_admin" get:"true" post:"true" patch:"true"`
 	UserGroup bool   `json:"user_group" get:"true" post:"true" patch:"true"`
@@ -25,6 +25,6 @@ type LoginUser struct {
 }
 
 type Team struct {
-	UUID    string  `json:"uuid" gorm:"primary_key" get:"true" delete:"true"`
+	UUID  string  `json:"uuid" gorm:"primary_key" get:"true" delete:"true"`
 	Users []*User `json:"users" gorm:"constraint"`
 }
