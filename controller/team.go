@@ -11,12 +11,12 @@ func getTeamBody(ctx *gin.Context) (dto *model.Team, err error) {
 	return dto, err
 }
 
-func (base *Controller) TeamsSchema(ctx *gin.Context) {
+func (inst *Controller) TeamsSchema(ctx *gin.Context) {
 	reposeHandler(schema.GetTeamSchema(), nil, ctx)
 }
 
-func (base *Controller) GetTeam(c *gin.Context) {
-	team, err := base.DB.GetTeam(c.Params.ByName("uuid"))
+func (inst *Controller) GetTeam(c *gin.Context) {
+	team, err := inst.DB.GetTeam(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -24,8 +24,8 @@ func (base *Controller) GetTeam(c *gin.Context) {
 	reposeHandler(team, err, c)
 }
 
-func (base *Controller) GetTeams(c *gin.Context) {
-	teams, err := base.DB.GetTeams()
+func (inst *Controller) GetTeams(c *gin.Context) {
+	teams, err := inst.DB.GetTeams()
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -33,10 +33,10 @@ func (base *Controller) GetTeams(c *gin.Context) {
 	reposeHandler(teams, err, c)
 }
 
-func (base *Controller) CreateTeam(c *gin.Context) {
+func (inst *Controller) CreateTeam(c *gin.Context) {
 	m := new(model.Team)
 	err = c.ShouldBindJSON(&m)
-	team, err := base.DB.CreateTeam(m)
+	team, err := inst.DB.CreateTeam(m)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -44,9 +44,9 @@ func (base *Controller) CreateTeam(c *gin.Context) {
 	reposeHandler(team, err, c)
 }
 
-func (base *Controller) UpdateTeam(c *gin.Context) {
+func (inst *Controller) UpdateTeam(c *gin.Context) {
 	body, _ := getTeamBody(c)
-	team, err := base.DB.UpdateTeam(c.Params.ByName("uuid"), body)
+	team, err := inst.DB.UpdateTeam(c.Params.ByName("uuid"), body)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -54,8 +54,8 @@ func (base *Controller) UpdateTeam(c *gin.Context) {
 	reposeHandler(team, err, c)
 }
 
-func (base *Controller) DeleteTeam(c *gin.Context) {
-	q, err := base.DB.DeleteTeam(c.Params.ByName("uuid"))
+func (inst *Controller) DeleteTeam(c *gin.Context) {
+	q, err := inst.DB.DeleteTeam(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 	} else {
@@ -63,8 +63,8 @@ func (base *Controller) DeleteTeam(c *gin.Context) {
 	}
 }
 
-func (base *Controller) DropTeams(c *gin.Context) {
-	team, err := base.DB.DropTeams()
+func (inst *Controller) DropTeams(c *gin.Context) {
+	team, err := inst.DB.DropTeams()
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return

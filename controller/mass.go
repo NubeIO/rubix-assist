@@ -14,7 +14,7 @@ func getOperationsBody(ctx *gin.Context) (dto *Operations, err error) {
 	return dto, err
 }
 
-func (base *Controller) MassOperations(c *gin.Context) {
+func (inst *Controller) MassOperations(c *gin.Context) {
 	body, _ := getOperationsBody(c)
 	//bb := new(Operations)
 	var bb []string

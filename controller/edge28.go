@@ -13,18 +13,18 @@ func getEdgeIPBody(ctx *gin.Context) (dto edgeip.EdgeNetworking, err error) {
 	return dto, err
 }
 
-func (base *Controller) EdgeIPSchema(ctx *gin.Context) {
+func (inst *Controller) EdgeIPSchema(ctx *gin.Context) {
 	reposeHandler(schema.GetEdge28IPSchema(), nil, ctx)
 }
 
-func (base *Controller) EdgeSetIP(ctx *gin.Context) {
+func (inst *Controller) EdgeSetIP(ctx *gin.Context) {
 	body, err := getEdgeIPBody(ctx)
-	host, _, err := base.resolveHost(ctx)
+	host, _, err := inst.resolveHost(ctx)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 		return
 	}
-	h, err := base.hostCopy(host)
+	h, err := inst.hostCopy(host)
 	_host := remote.Admin{
 		Host: h,
 	}

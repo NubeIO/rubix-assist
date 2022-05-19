@@ -2,8 +2,6 @@ package database
 
 import (
 	"errors"
-	"fmt"
-	"github.com/mitchellh/go-homedir"
 	"io"
 	"log"
 	"os"
@@ -31,7 +29,7 @@ type Database struct {
 // Setup opens a database and saves the reference to `Database` struct.
 func Setup() error {
 	var db = DB
-
+	dbName := viper.GetString("database.name")
 	driver := viper.GetString("database.driver")
 	logMode := viper.GetBool("database.logmode")
 
@@ -40,12 +38,12 @@ func Setup() error {
 		loglevel = logger.Info
 	}
 
-	home, err := homedir.Dir()
-	if err != nil {
-		fmt.Println(err)
-	}
+	//home, err := homedir.Dir()
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
 
-	dbName := fmt.Sprintf("%s/%s/rubix_updater.db", home, "/.updater")
+	//dbName := fmt.Sprintf("%s/%s/rubix_updater.db", home, "/.updater")
 
 	newDBLogger := logger.New(
 		log.New(getWriter(), "\r\n", log.LstdFlags), // io writer

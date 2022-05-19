@@ -17,31 +17,37 @@ func getUserBody(ctx *gin.Context) (dto *model.User, err error) {
 	return dto, err
 }
 
-func (base *Controller) UsersSchema(ctx *gin.Context) {
+func (inst *Controller) UsersSchema(ctx *gin.Context) {
 	reposeHandler(schema.GetUserSchema(), nil, ctx)
 }
 
-func (base *Controller) GetUser(c *gin.Context) {
-	host, err := base.DB.GetUser(c.Params.ByName("uuid"))
+func (inst *Controller) GetUser(c *gin.Context) {
+	host, err := inst.DB.GetUser(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
 	}
+
 	reposeHandler(host, err, c)
 }
 
-func (base *Controller) GetUsers(c *gin.Context) {
-	hosts, err := base.DB.GetUsers()
+func (inst *Controller) GetUsers(c *gin.Context) {
+	hosts, err := inst.DB.GetUsers()
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
 	}
+	inst.publishMSG(&WsMsg{Topic: "hey", Message: hosts})
+	if err != nil {
+		return
+	}
+
 	reposeHandler(hosts, err, c)
 }
 
-func (base *Controller) UpdateUser(c *gin.Context) {
+func (inst *Controller) UpdateUser(c *gin.Context) {
 	body, _ := getUserBody(c)
-	host, err := base.DB.UpdateUser(c.Params.ByName("uuid"), body)
+	host, err := inst.DB.UpdateUser(c.Params.ByName("uuid"), body)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -49,8 +55,8 @@ func (base *Controller) UpdateUser(c *gin.Context) {
 	reposeHandler(host, err, c)
 }
 
-func (base *Controller) DeleteUser(c *gin.Context) {
-	q, err := base.DB.DeleteUser(c.Params.ByName("uuid"))
+func (inst *Controller) DeleteUser(c *gin.Context) {
+	q, err := inst.DB.DeleteUser(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 	} else {
@@ -58,8 +64,8 @@ func (base *Controller) DeleteUser(c *gin.Context) {
 	}
 }
 
-func (base *Controller) DropUsers(c *gin.Context) {
-	host, err := base.DB.DropUsers()
+func (inst *Controller) DropUsers(c *gin.Context) {
+	host, err := inst.DB.DropUsers()
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -67,14 +73,14 @@ func (base *Controller) DropUsers(c *gin.Context) {
 	reposeHandler(host, err, c)
 }
 
-func (base *Controller) Login(c *gin.Context) (interface{}, error) {
+func (inst *Controller) Login(c *gin.Context) (interface{}, error) {
 	var loginVals model.LoginUser
 	var user model.User
 	if err := c.ShouldBindJSON(&loginVals); err != nil {
 		return "", jwt.ErrMissingLoginValues
 	}
 	email := loginVals.Email
-	if result := base.DB.DB.Where("email = ?", email).First(&user); result.Error != nil {
+	if result := inst.DB.DB.Where("email = ?", email).First(&user); result.Error != nil {
 		return "", jwt.ErrFailedAuthentication
 	} else {
 		if err := bcrypt.CompareHashAndPassword([]byte(user.Hash), []byte(loginVals.Password)); err != nil {
@@ -88,7 +94,7 @@ const charset string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 const length int = 8
 
 func GenerateUID() string {
-	var seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+	var seededRand = rand.New(rand.NewSource(time.Now().UnixNano()))
 	b := make([]byte, length)
 	for i := range b {
 		b[i] = charset[seededRand.Intn(len(charset))]
@@ -96,7 +102,7 @@ func GenerateUID() string {
 	return string(b)
 }
 
-func (base *Controller) AddUser(c *gin.Context) {
+func (inst *Controller) AddUser(c *gin.Context) {
 	var user model.User
 	var newUser model.NewUser
 
@@ -105,7 +111,7 @@ func (base *Controller) AddUser(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if result := base.DB.DB.Where("email = ?", newUser.Email).First(&user); result.Error != nil {
+	if result := inst.DB.DB.Where("email = ?", newUser.Email).First(&user); result.Error != nil {
 		// TODO: Differentiate between server error and user user not found error
 		hash, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
 		if err != nil {
@@ -113,7 +119,7 @@ func (base *Controller) AddUser(c *gin.Context) {
 		}
 		user = model.User{Username: newUser.Username, Email: newUser.Email, Hash: string(hash), UID: GenerateUID()}
 		user.UUID, _ = uuid.MakeUUID()
-		if err := base.DB.DB.Create(&user).Error; err != nil {
+		if err := inst.DB.DB.Create(&user).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}

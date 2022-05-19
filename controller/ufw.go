@@ -5,13 +5,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (base *Controller) UFWInstall(ctx *gin.Context) {
-	host, _, err := base.resolveHost(ctx)
+func (inst *Controller) UFWInstall(ctx *gin.Context) {
+	host, _, err := inst.resolveHost(ctx)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 		return
 	}
-	h, err := base.hostCopy(host)
+	h, err := inst.hostCopy(host)
 	u := ufw.UFW{
 		Host: h,
 	}
@@ -24,13 +24,13 @@ func (base *Controller) UFWInstall(ctx *gin.Context) {
 	return
 }
 
-func (base *Controller) UFWEnable(ctx *gin.Context) {
-	host, _, err := base.resolveHost(ctx)
+func (inst *Controller) UFWEnable(ctx *gin.Context) {
+	host, _, err := inst.resolveHost(ctx)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 		return
 	}
-	h, err := base.hostCopy(host)
+	h, err := inst.hostCopy(host)
 	u := ufw.UFW{
 		Host: h,
 	}
@@ -43,13 +43,13 @@ func (base *Controller) UFWEnable(ctx *gin.Context) {
 	return
 }
 
-func (base *Controller) UFWDisable(ctx *gin.Context) {
-	host, _, err := base.resolveHost(ctx)
+func (inst *Controller) UFWDisable(ctx *gin.Context) {
+	host, _, err := inst.resolveHost(ctx)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 		return
 	}
-	h, err := base.hostCopy(host)
+	h, err := inst.hostCopy(host)
 	u := ufw.UFW{
 		Host: h,
 	}
@@ -62,13 +62,13 @@ func (base *Controller) UFWDisable(ctx *gin.Context) {
 	return
 }
 
-func (base *Controller) UFWAddPort(ctx *gin.Context) {
-	host, _, err := base.resolveHost(ctx)
+func (inst *Controller) UFWAddPort(ctx *gin.Context) {
+	host, _, err := inst.resolveHost(ctx)
 	if err != nil {
 		reposeHandler(nil, err, ctx)
 		return
 	}
-	h, err := base.hostCopy(host)
+	h, err := inst.hostCopy(host)
 	u := ufw.UFW{
 		Host: h,
 	}

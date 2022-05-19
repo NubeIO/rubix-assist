@@ -27,7 +27,7 @@ func runApps(cmd *cobra.Command, args []string) {
 
 	install := installer.New(inst)
 
-	downloadInstall := install.DownloadInstall()
+	downloadInstall := install.Download()
 	pprint.PrintJOSN(downloadInstall)
 	pprint.Print(downloadInstall)
 

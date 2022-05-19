@@ -15,12 +15,12 @@ func getHostBody(ctx *gin.Context) (dto *model.Host, err error) {
 	return dto, err
 }
 
-func (base *Controller) HostsSchema(ctx *gin.Context) {
+func (inst *Controller) HostsSchema(ctx *gin.Context) {
 	reposeHandler(schema.GetHostSchema(), nil, ctx)
 }
 
-func (base *Controller) GetHost(c *gin.Context) {
-	host, err := base.DB.GetHostByName(c.Params.ByName("uuid"), true)
+func (inst *Controller) GetHost(c *gin.Context) {
+	host, err := inst.DB.GetHostByName(c.Params.ByName("uuid"), true)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -28,8 +28,8 @@ func (base *Controller) GetHost(c *gin.Context) {
 	reposeHandler(host, err, c)
 }
 
-func (base *Controller) GetHosts(c *gin.Context) {
-	hosts, err := base.DB.GetHosts()
+func (inst *Controller) GetHosts(c *gin.Context) {
+	hosts, err := inst.DB.GetHosts()
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -37,10 +37,10 @@ func (base *Controller) GetHosts(c *gin.Context) {
 	reposeHandler(hosts, err, c)
 }
 
-func (base *Controller) CreateHost(c *gin.Context) {
+func (inst *Controller) CreateHost(c *gin.Context) {
 	m := new(model.Host)
 	err = c.ShouldBindJSON(&m)
-	host, err := base.DB.CreateHost(m)
+	host, err := inst.DB.CreateHost(m)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -48,9 +48,9 @@ func (base *Controller) CreateHost(c *gin.Context) {
 	reposeHandler(host, err, c)
 }
 
-func (base *Controller) UpdateHost(c *gin.Context) {
+func (inst *Controller) UpdateHost(c *gin.Context) {
 	body, _ := getHostBody(c)
-	host, err := base.DB.UpdateHost(c.Params.ByName("uuid"), body)
+	host, err := inst.DB.UpdateHost(c.Params.ByName("uuid"), body)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -58,8 +58,8 @@ func (base *Controller) UpdateHost(c *gin.Context) {
 	reposeHandler(host, err, c)
 }
 
-func (base *Controller) DeleteHost(c *gin.Context) {
-	q, err := base.DB.DeleteHost(c.Params.ByName("uuid"))
+func (inst *Controller) DeleteHost(c *gin.Context) {
+	q, err := inst.DB.DeleteHost(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 	} else {
@@ -67,8 +67,8 @@ func (base *Controller) DeleteHost(c *gin.Context) {
 	}
 }
 
-func (base *Controller) DropHosts(c *gin.Context) {
-	host, err := base.DB.DropHosts()
+func (inst *Controller) DropHosts(c *gin.Context) {
+	host, err := inst.DB.DropHosts()
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return

@@ -1,10 +1,12 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/networking/ssh"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/utilities/git"
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
+	"github.com/NubeIO/rubix-assist/service/installer"
+	log "github.com/sirupsen/logrus"
 
 	dbase "github.com/NubeIO/rubix-assist/database"
 	"github.com/NubeIO/rubix-assist/model"
@@ -22,36 +24,42 @@ type Controller struct {
 	Rest *rest.Service
 }
 
-////publishMSG send websocket message
-//func (base *Controller) publishMSG(in TMsg) ([]byte, error) {
-//	jmsg := map[string]interface{}{
-//		"topic":    in.Topic,
-//		"msg":      in.Message,
-//		"is_error": in.IsError,
-//	}
-//	b, err := json.Marshal(jmsg)
-//	if err != nil {
-//		//panic(err)
-//	}
-//	if in.IsError {
-//		log.Errorf("ERROR: publish websocket message: %v\n", in.Message)
-//	} else {
-//		log.Infof("INFO: publish websocket message: %v\n", in.Message)
-//	}
-//	err = base.WS.Broadcast(b)
-//	if err != nil {
-//		return nil, err
-//	}
-//	return b, nil
-//}
+type WsMsg struct {
+	Topic   string      `json:"topic"`
+	Message interface{} `json:"message"`
+	IsError bool        `json:"is_error"`
+}
 
-func (base *Controller) resolveHost(ctx *gin.Context) (host *model.Host, useID bool, err error) {
+////publishMSG send websocket message
+func (inst *Controller) publishMSG(in *WsMsg) ([]byte, error) {
+	msg := map[string]interface{}{
+		"topic":    in.Topic,
+		"msg":      in.Message,
+		"is_error": in.IsError,
+	}
+	b, err := json.Marshal(msg)
+	if err != nil {
+		//panic(err)
+	}
+	if in.IsError {
+		log.Errorf("ERROR: publish websocket topic: %v\n", in.Topic)
+	} else {
+		log.Infof("INFO: publish websocket topic: %v\n", in.Topic)
+	}
+	err = inst.WS.Broadcast(b)
+	if err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func (inst *Controller) resolveHost(ctx *gin.Context) (host *model.Host, useID bool, err error) {
 	idName, useID := useHostNameOrID(ctx)
-	host, err = base.DB.GetHostByName(idName, useID)
+	host, err = inst.DB.GetHostByName(idName, useID)
 	return host, useID, err
 }
 
-func getGitBody(ctx *gin.Context) (dto *git.Git, err error) {
+func getAppsInstallBody(ctx *gin.Context) (dto *installer.Installer, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
 }
@@ -89,6 +97,23 @@ func resolveHeaderGitToken(ctx *gin.Context) string {
 	return ctx.GetHeader("git_token")
 }
 
+func reposeWithCode(code int, body interface{}, err error, ctx *gin.Context) {
+	if err != nil {
+		if err == nil {
+			ctx.JSON(code, Message{Message: "unknown error"})
+		} else {
+			if body != nil {
+				ctx.JSON(code, body)
+			} else {
+				ctx.JSON(code, Message{Message: err.Error()})
+			}
+
+		}
+	} else {
+		ctx.JSON(code, body)
+	}
+}
+
 func reposeHandler(body interface{}, err error, ctx *gin.Context) {
 	if err != nil {
 		if err == nil {
@@ -107,7 +132,7 @@ func reposeHandler(body interface{}, err error, ctx *gin.Context) {
 }
 
 //hostCopy copy same types from this host to the host needed for ssh.Host
-func (base *Controller) hostCopy(host *model.Host) (ssh.Host, error) {
+func (inst *Controller) hostCopy(host *model.Host) (ssh.Host, error) {
 	h := new(ssh.Host)
 	err = copier.Copy(&h, &host)
 	if err != nil {

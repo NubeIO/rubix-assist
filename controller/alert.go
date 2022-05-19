@@ -11,12 +11,12 @@ func getAlertBody(ctx *gin.Context) (dto *model.Alert, err error) {
 	return dto, err
 }
 
-func (base *Controller) AlertsSchema(ctx *gin.Context) {
+func (inst *Controller) AlertsSchema(ctx *gin.Context) {
 	reposeHandler(schema.GetAlertSchema(), nil, ctx)
 }
 
-func (base *Controller) GetAlert(c *gin.Context) {
-	team, err := base.DB.GetAlert(c.Params.ByName("uuid"))
+func (inst *Controller) GetAlert(c *gin.Context) {
+	team, err := inst.DB.GetAlert(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -24,8 +24,8 @@ func (base *Controller) GetAlert(c *gin.Context) {
 	reposeHandler(team, err, c)
 }
 
-func (base *Controller) GetAlerts(c *gin.Context) {
-	teams, err := base.DB.GetAlerts()
+func (inst *Controller) GetAlerts(c *gin.Context) {
+	teams, err := inst.DB.GetAlerts()
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -33,10 +33,10 @@ func (base *Controller) GetAlerts(c *gin.Context) {
 	reposeHandler(teams, err, c)
 }
 
-func (base *Controller) CreateAlert(c *gin.Context) {
+func (inst *Controller) CreateAlert(c *gin.Context) {
 	m := new(model.Alert)
 	err = c.ShouldBindJSON(&m)
-	team, err := base.DB.CreateAlert(m)
+	team, err := inst.DB.CreateAlert(m)
 	if err != nil {
 		reposeHandler(m, err, c)
 		return
@@ -44,9 +44,9 @@ func (base *Controller) CreateAlert(c *gin.Context) {
 	reposeHandler(team, err, c)
 }
 
-func (base *Controller) UpdateAlert(c *gin.Context) {
+func (inst *Controller) UpdateAlert(c *gin.Context) {
 	body, _ := getAlertBody(c)
-	team, err := base.DB.UpdateAlert(c.Params.ByName("uuid"), body)
+	team, err := inst.DB.UpdateAlert(c.Params.ByName("uuid"), body)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -54,8 +54,8 @@ func (base *Controller) UpdateAlert(c *gin.Context) {
 	reposeHandler(team, err, c)
 }
 
-func (base *Controller) DeleteAlert(c *gin.Context) {
-	q, err := base.DB.DeleteAlert(c.Params.ByName("uuid"))
+func (inst *Controller) DeleteAlert(c *gin.Context) {
+	q, err := inst.DB.DeleteAlert(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 	} else {
@@ -63,8 +63,8 @@ func (base *Controller) DeleteAlert(c *gin.Context) {
 	}
 }
 
-func (base *Controller) DropAlerts(c *gin.Context) {
-	team, err := base.DB.DropAlerts()
+func (inst *Controller) DropAlerts(c *gin.Context) {
+	team, err := inst.DB.DropAlerts()
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return

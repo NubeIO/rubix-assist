@@ -10,6 +10,7 @@ import (
 	"github.com/NubeIO/rubix-assist/service/ping"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"log"
 )
 
 func setup() {
@@ -39,6 +40,5 @@ func main() {
 	}
 	logger.Infof("Server is starting at %s:%s", host, viper.GetString("server.port"))
 	fmt.Printf("server is running at %s:%s Check logs for details\n", host, viper.GetString("server.port"))
-	fmt.Println()
-	logger.Fatalf("%v", r.Run(host+":"+viper.GetString("server.port")))
+	log.Fatalf("%v", r.Run(host+":"+viper.GetString("server.port")))
 }

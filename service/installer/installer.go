@@ -11,17 +11,7 @@ import (
 	"time"
 )
 
-type Installer struct {
-	Token     string
-	Owner     string
-	Repo      string
-	Asset     string
-	Arch      string
-	Tag       string
-	DestPath  string
-	Target    string
-	gitClient *git.Client
-}
+var err error
 
 func New(inst *Installer) *Installer {
 	opts := &git.AssetOptions{
@@ -33,30 +23,49 @@ func New(inst *Installer) *Installer {
 		Target:   inst.Target,
 	}
 	ctx := context.Background()
-	fmt.Println(11111)
 	inst.gitClient = git.NewClient(inst.Token, opts, ctx)
-	fmt.Println(11111)
 	return inst
 }
 
-type InstallResp struct {
-	GitResp     *git.DownloadResponse `json:"git_resp"`
-	GitError    error                 `json:"git_error"`
-	BuilderErr  error                 `json:"builder_err"`
-	InstallResp *ctl.InstallResp      `json:"install_resp"`
+type RespDownload struct {
+	GitResp  *git.DownloadResponse `json:"git_resp"`
+	GitError string                `json:"git_error"`
 }
 
-func (inst *Installer) DownloadInstall() *InstallResp {
-	ret := &InstallResp{}
-	fmt.Println(11111)
+type RespBuilder struct {
+	BuilderErr string `json:"builder_err"`
+}
+
+type RespInstall struct {
+	InstallResp *ctl.InstallResp `json:"install_resp"`
+}
+
+type Installer struct {
+	Token     string                  `json:"token"`
+	Owner     string                  `json:"owner"`
+	Repo      string                  `json:"repo"`
+	Arch      string                  `json:"arch"`
+	Tag       string                  `json:"tag"`
+	DestPath  string                  `json:"dest_path"`
+	Target    string                  `json:"target"`
+	Service   *builder.SystemDBuilder `json:"service"`
+	gitClient *git.Client
+}
+
+func (inst *Installer) Download() (*RespDownload, error) {
+	ret := &RespDownload{}
 	//download and unzip to /data
 	resp, err := inst.gitClient.DownloadInstall()
 	ret.GitResp = resp
 	if err != nil {
-		ret.GitError = err
-		return ret
+		ret.GitError = err.Error()
+		return ret, err
 	}
+	return ret, nil
+}
 
+func (inst *Installer) Build() (*RespBuilder, error) {
+	ret := &RespBuilder{}
 	newService := "nubeio-rubix-bios"
 	description := "BIOS comes with default OS, non-upgradable"
 	user := "root"
@@ -78,19 +87,27 @@ func (inst *Installer) DownloadInstall() *InstallResp {
 
 	err = bld.Build()
 	if err != nil {
-		ret.BuilderErr = err
+		ret.BuilderErr = err.Error()
+		return ret, err
 	}
+	return ret, nil
+}
 
-	path := "/tmp/nubeio-rubix-bios.service"
+//Install a new linux service
+//	- service: the service name (eg: rubix-bios)
+//	- path: the service file path and name (eg: "/tmp/rubix-bios.service")
+func (inst *Installer) Install(service, path string) (*RespInstall, error) {
+	ret := &RespInstall{}
+	//path := "/tmp/nubeio-rubix-bios.service"
 
 	timeOut := 30
-	service := ctl.New(newService, path)
+	ser := ctl.New(service, path)
 	opts := systemctl.Options{Timeout: timeOut}
 	installOpts := ctl.InstallOpts{
 		Options: opts,
 	}
-	service.InstallOpts = installOpts
-	installResp := service.Install()
+	ser.InstallOpts = installOpts
+	installResp := ser.Install()
 	ret.InstallResp = installResp
 	fmt.Println("full install error", err)
 	if err != nil {
@@ -99,18 +116,10 @@ func (inst *Installer) DownloadInstall() *InstallResp {
 
 	time.Sleep(8 * time.Second)
 
-	status, err := systemctl.Status(newService, systemctl.Options{})
+	status, err := systemctl.Status(service, systemctl.Options{})
 	if err != nil {
-		log.Errorf("service found: %s: %v", newService, err)
+		log.Errorf("service found: %s: %v", service, err)
 	}
 	fmt.Println(status)
-
-	//res, err := service.Remove()
-	//fmt.Println("full install error", err)
-	//if err != nil {
-	//	fmt.Println("full install error", err)
-	//}
-	//pprint.PrintJOSN(res)
-
-	return ret
+	return ret, nil
 }
