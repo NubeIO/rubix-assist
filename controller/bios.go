@@ -29,28 +29,32 @@ func (inst *Controller) InstallBios(ctx *gin.Context) {
 		body.Token = token
 		newInstall := installer.New(body)
 		resp := &InstallResp{}
-		download, err := newInstall.Download()
 
+		//DOWNLOAD
+		download, err := newInstall.Download()
 		resp.RespDownload = download
 		inst.publishMSG(&WsMsg{Topic: "app-download", Message: resp})
 		if err != nil {
 			reposeWithCode(404, resp, nil, ctx)
 			return
 		}
+		//Build service file
 		build, err := newInstall.Build()
-		if err != nil {
-			reposeWithCode(404, resp, nil, ctx)
-			return
-		}
 		resp.RespBuilder = build
 		inst.publishMSG(&WsMsg{Topic: "app-build", Message: resp})
-		install, err := newInstall.Install("rubix-bios", "/tmp/nubeio-rubix-bios.service")
 		if err != nil {
 			reposeWithCode(404, resp, nil, ctx)
 			return
 		}
+		//Install
+		install, err := newInstall.Install("nubeio-rubix-bios", "/data/nubeio-rubix-bios.service")
 		resp.RespInstall = install
 		inst.publishMSG(&WsMsg{Topic: "app-install", Message: resp})
+		fmt.Println(err, "Install")
+		if err != nil {
+			reposeWithCode(404, resp, nil, ctx)
+			return
+		}
 
 		reposeHandler(resp, nil, ctx)
 		return
@@ -60,5 +64,4 @@ func (inst *Controller) InstallBios(ctx *gin.Context) {
 		return
 	}
 
-	return
 }

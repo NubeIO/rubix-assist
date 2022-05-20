@@ -6,6 +6,7 @@ import (
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/service/remote/command"
 	sh "github.com/helloyi/go-sshclient"
+	"strings"
 )
 
 type Host struct {
@@ -41,14 +42,14 @@ func (h *Host) RunCommand() (res *command.Response) {
 		if len(cmd.Commands) <= 0 {
 			return res
 		}
-
 		out, err := c.Cmd(cmd.Commands[0]).Output()
 		if err != nil {
 			res.Err = err
 			return res
 		}
+		outAsString := strings.TrimRight(string(out), "\n")
 		res.Ok = true
-		res.Out = string(out)
+		res.Out = outAsString
 		return res
 	}
 }

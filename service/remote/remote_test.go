@@ -25,15 +25,15 @@ func TestRemoteConnection(t *testing.T) {
 	host := &Admin{
 		SSH: &ssh.Host{
 			Host: &model.Host{
-				IP:       "123.209.234.118",
-				Port:     2022,
-				Username: "pi",
-				Password: "N00BRCRC",
+				IP:       "192.168.15.103",
+				Port:     22,
+				Username: "debian",
+				Password: "N00B2828",
 			},
 		},
 	}
 	run := New(host)
-	out := run.Uptime()
-	fmt.Println(out)
+	out, err := run.EdgeSetIP(&EdgeNetworking{IPAddress: "192.168.15.103", SubnetMask: "255.255.255.0", Gateway: "192.168.15.1"})
+	fmt.Println(out, err)
 
 }

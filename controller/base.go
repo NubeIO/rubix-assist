@@ -3,9 +3,10 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/networking/ssh"
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
 	"github.com/NubeIO/rubix-assist/service/installer"
+	"github.com/NubeIO/rubix-assist/service/remote"
+	"github.com/NubeIO/rubix-assist/service/remote/ssh"
 	log "github.com/sirupsen/logrus"
 
 	dbase "github.com/NubeIO/rubix-assist/database"
@@ -57,6 +58,24 @@ func (inst *Controller) resolveHost(ctx *gin.Context) (host *model.Host, useID b
 	idName, useID := useHostNameOrID(ctx)
 	host, err = inst.DB.GetHostByName(idName, useID)
 	return host, useID, err
+}
+
+func (inst *Controller) getHost(ctx *gin.Context) (host *model.Host, session *remote.Admin, err error) {
+	idName, useID := useHostNameOrID(ctx)
+	host, err = inst.DB.GetHostByName(idName, useID)
+
+	rs := &remote.Admin{
+		SSH: &ssh.Host{
+			Host: &model.Host{
+				IP:       host.IP,
+				Port:     host.Port,
+				Username: host.Username,
+				Password: host.Password,
+			},
+		},
+	}
+	session = remote.New(rs)
+	return host, session, err
 }
 
 func getAppsInstallBody(ctx *gin.Context) (dto *installer.Installer, err error) {
