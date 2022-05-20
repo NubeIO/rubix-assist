@@ -2,9 +2,12 @@ package database
 
 import (
 	"errors"
+	"fmt"
+	"github.com/NubeIO/rubix-assist/pkg/helpers/homedir"
 	"io"
 	"log"
 	"os"
+	"os/user"
 	"time"
 
 	"github.com/NubeIO/rubix-assist/model"
@@ -37,13 +40,14 @@ func Setup() error {
 	if logMode {
 		loglevel = logger.Info
 	}
-
-	//home, err := homedir.Dir()
-	//if err != nil {
-	//	fmt.Println(err)
-	//}
-
-	//dbName := fmt.Sprintf("%s/%s/rubix_updater.db", home, "/.updater")
+	currentUser, err := user.Current()
+	if currentUser.Username != "root" {
+		home, err := homedir.Dir()
+		if err != nil {
+			fmt.Println(err)
+		}
+		dbName = fmt.Sprintf("%s/%s/rubix_updater.db", home, "/.updater")
+	}
 
 	newDBLogger := logger.New(
 		log.New(getWriter(), "\r\n", log.LstdFlags), // io writer

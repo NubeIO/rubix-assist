@@ -28,8 +28,8 @@ func New(inst *Installer) *Installer {
 }
 
 type RespDownload struct {
-	GitResp  *git.DownloadResponse `json:"git_resp"`
-	GitError string                `json:"git_error"`
+	AssetName string `json:"asset_name"`
+	GitError  string `json:"git_error"`
 }
 
 type RespBuilder struct {
@@ -55,12 +55,12 @@ type Installer struct {
 func (inst *Installer) Download() (*RespDownload, error) {
 	ret := &RespDownload{}
 	//download and unzip to /data
-	resp, err := inst.gitClient.DownloadInstall()
-	ret.GitResp = resp
+	resp, err := inst.gitClient.DownloadOnly()
 	if err != nil {
 		ret.GitError = err.Error()
 		return ret, err
 	}
+	ret.AssetName = resp.ReleaseAsset.GetName()
 	return ret, nil
 }
 
@@ -81,7 +81,7 @@ func (inst *Installer) Build() (*RespBuilder, error) {
 		WriteFile: builder.WriteFile{
 			Write:    true,
 			FileName: newService,
-			Path:     "/tmp",
+			Path:     "/data",
 		},
 	}
 
