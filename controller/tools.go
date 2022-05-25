@@ -1,28 +1,26 @@
 package controller
 
 import (
-	"errors"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/remote/v1/remote"
 	"github.com/NubeIO/rubix-assist/model/schema"
 	"github.com/gin-gonic/gin"
 )
 
 func (inst *Controller) ToolsGetArch(ctx *gin.Context) {
-	host, _, err := inst.resolveHost(ctx)
-	if err != nil {
-		reposeHandler(nil, err, ctx)
-		return
-	}
-	h, err := inst.hostCopy(host)
-	_host := remote.Admin{
-		Host: h,
-	}
-	arch, _, err := _host.DetectArch()
-	if err != nil {
-		reposeHandler(nil, errors.New("error on check host"), ctx)
-		return
-	}
-	reposeHandler(arch, nil, ctx)
+	//host, _, err := inst.resolveHost(ctx)
+	//if err != nil {
+	//	reposeHandler(nil, err, ctx)
+	//	return
+	//}
+	//h, err := inst.hostCopy(host)
+	//_host := remote.Admin{
+	//	Host: h,
+	//}
+	//arch, _, err := _host.DetectArch()
+	//if err != nil {
+	//	reposeHandler(nil, errors.New("error on check host"), ctx)
+	//	return
+	//}
+	reposeHandler(nil, nil, ctx)
 }
 
 func (inst *Controller) ToolsEndPoints(ctx *gin.Context) {
