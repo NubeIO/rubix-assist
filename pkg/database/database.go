@@ -3,20 +3,17 @@ package database
 import (
 	"errors"
 	"fmt"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/helpers/homedir"
+	"github.com/spf13/viper"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"io"
 	"log"
 	"os"
 	"os/user"
 	"time"
-
-	"github.com/NubeIO/rubix-assist/model"
-
-	"github.com/spf13/viper"
-
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 var (
@@ -76,6 +73,7 @@ func Setup() error {
 
 	// Auto migrate project models
 	err = db.AutoMigrate(
+		&model.Network{},
 		&model.Host{},
 		&model.Token{},
 		&model.User{},

@@ -86,6 +86,18 @@ func Setup(db *gorm.DB) *gin.Engine {
 	})
 
 	admin := r.Group("/api")
+
+	hostNetworks := admin.Group("/networks")
+	//hosts.Use(authMiddleware.MiddlewareFunc())
+	{
+		hostNetworks.GET("/", api.GetHostNetworks)
+		hostNetworks.POST("/", api.CreateHostNetwork)
+		hostNetworks.GET("/:uuid", api.GetHostNetwork)
+		hostNetworks.PATCH("/:uuid", api.UpdateHostNetwork)
+		hostNetworks.DELETE("/:uuid", api.DeleteHostNetwork)
+		hostNetworks.DELETE("/drop", api.DropHostNetworks)
+	}
+
 	hosts := admin.Group("/hosts")
 	//hosts.Use(authMiddleware.MiddlewareFunc())
 	{
