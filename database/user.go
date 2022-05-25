@@ -15,8 +15,8 @@ func (d *DB) GetUser(uuid string) (*model.User, error) {
 	return m, nil
 }
 
-func (d *DB) GetUsers() ([]model.User, error) {
-	var m []model.User
+func (d *DB) GetUsers() ([]*model.User, error) {
+	var m []*model.User
 	if err := d.DB.Find(&m).Error; err != nil {
 		return nil, err
 	} else {

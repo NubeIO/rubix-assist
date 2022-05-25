@@ -16,8 +16,8 @@ func (d *DB) GetJob(uuid string) (*model.Job, error) {
 	return m, nil
 }
 
-func (d *DB) GetJobs() ([]model.Job, error) {
-	var m []model.Job
+func (d *DB) GetJobs() ([]*model.Job, error) {
+	var m []*model.Job
 	if err := d.DB.Find(&m).Error; err != nil {
 		return nil, err
 	} else {

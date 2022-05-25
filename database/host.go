@@ -8,8 +8,8 @@ import (
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 )
 
-func (d *DB) GetHosts() ([]model.Host, error) {
-	var m []model.Host
+func (d *DB) GetHosts() ([]*model.Host, error) {
+	var m []*model.Host
 	if err := d.DB.Find(&m).Error; err != nil {
 		return nil, err
 	} else {
