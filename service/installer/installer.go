@@ -37,7 +37,7 @@ type RespBuilder struct {
 }
 
 type RespInstall struct {
-	InstallResp *ctl.InstallResp `json:"install_resp"`
+	//InstallResp *ctl.InstallResp `json:"install_resp"`
 }
 
 type Installer struct {
@@ -107,8 +107,7 @@ func (inst *Installer) Install(service, path string) (*RespInstall, error) {
 		Options: opts,
 	}
 	ser.InstallOpts = installOpts
-	installResp := ser.Install()
-	ret.InstallResp = installResp
+	err = ser.Install()
 	fmt.Println("full install error", err)
 	if err != nil {
 		fmt.Println("full install error", err)

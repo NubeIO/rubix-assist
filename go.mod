@@ -6,14 +6,14 @@ go 1.17
 //replace github.com/NubeIO/nubeio-rubix-lib-rest-go => /home/aidan/code/go/nube/nubeio-rubix-lib-rest-go
 //replace github.com/NubeDev/bacnet => /home/aidan/code/go/nube/bacnet
 //replace github.com/NubeIO/nubeio-rubix-lib-models-go => /home/aidan/code/go/nube/nubeio-rubix-lib-models-go
-replace github.com/NubeIO/git => /home/aidan/code/go/nube/lib/git
-
-replace github.com/NubeIO/lib-systemctl-go => /home/aidan/code/go/nube/lib/lib-systemctl-go
+//replace github.com/NubeIO/git => /home/aidan/code/go/nube/lib/git
+//replace github.com/NubeIO/rubix-assist-model => /home/aidan/code/go/nube/lib/rubix-assist-model
+//replace github.com/NubeIO/lib-systemctl-go => /home/aidan/code/go/nube/lib/lib-systemctl-go
 
 require (
 	github.com/NubeDev/bacnet v0.0.2
-	github.com/NubeIO/git v0.0.0-20220519050433-e1f531512759
-	github.com/NubeIO/lib-systemctl-go v0.0.1
+	github.com/NubeIO/git v0.0.2
+	github.com/NubeIO/lib-systemctl-go v0.0.2
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7
 	github.com/NubeIO/nubeio-rubix-lib-modbus-go v0.0.0-20220514224355-53afcfd9e83f
 	github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.8
@@ -23,9 +23,8 @@ require (
 	github.com/go-co-op/gocron v1.11.0
 	github.com/jinzhu/copier v0.3.4
 	github.com/melbahja/goph v1.3.0
-	github.com/mitchellh/go-homedir v1.1.0
 	github.com/oleiade/reflections v1.0.1
-	github.com/orcaman/concurrent-map v0.0.0-20210501183033-44dafcb38ecc
+	github.com/orcaman/concurrent-map v1.0.0 // indirect
 	github.com/pkg/sftp v1.13.4
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.4.0
@@ -82,6 +81,8 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
+
+require github.com/NubeIO/rubix-assist-model v0.0.1
 
 require (
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.2.1 // indirect

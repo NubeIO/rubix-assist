@@ -2,11 +2,12 @@ package ssh
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist-model/model"
 	"github.com/NubeIO/rubix-assist/service/remote/command"
 	sh "github.com/helloyi/go-sshclient"
-	"strings"
 )
 
 type Host struct {

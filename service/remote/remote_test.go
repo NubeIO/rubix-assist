@@ -2,10 +2,11 @@ package remote
 
 import (
 	"fmt"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
-	"github.com/NubeIO/rubix-assist/model"
-	"github.com/NubeIO/rubix-assist/service/remote/ssh"
 	"testing"
+
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
+	"github.com/NubeIO/rubix-assist-model/model"
+	"github.com/NubeIO/rubix-assist/service/remote/ssh"
 )
 
 func TestLocalConnection(t *testing.T) {

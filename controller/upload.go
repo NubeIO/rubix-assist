@@ -2,15 +2,16 @@ package controller
 
 import (
 	"fmt"
-	"github.com/NubeIO/rubix-assist/model"
+	"net"
+	"time"
+
+	"github.com/NubeIO/rubix-assist-model/model"
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/gin-gonic/gin"
 	"github.com/melbahja/goph"
 	"github.com/pkg/sftp"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh"
-	"net"
-	"time"
 )
 
 var (

@@ -2,14 +2,15 @@ package ping
 
 import (
 	"fmt"
+	"strconv"
+	"time"
+
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/bools"
 	linixpingport "github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/networking/linuxpingport"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist-model/model"
 	dbhandler "github.com/NubeIO/rubix-assist/pkg/handler"
 	"github.com/NubeIO/rubix-assist/pkg/jobs"
 	log "github.com/sirupsen/logrus"
-	"strconv"
-	"time"
 )
 
 var alertTpe = model.CommonAlertTypes.HostPing
