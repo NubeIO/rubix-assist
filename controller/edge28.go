@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nube/edge28/edgeip"
-	"github.com/NubeIO/rubix-assist/model/schema"
+	"github.com/NubeIO/rubix-assist-model/model/schema"
 	"github.com/gin-gonic/gin"
 )
 

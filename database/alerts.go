@@ -3,7 +3,8 @@ package dbase
 import (
 	"errors"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/model"
+
+	"github.com/NubeIO/rubix-assist-model/model"
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/oleiade/reflections"

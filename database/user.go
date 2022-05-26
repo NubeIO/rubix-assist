@@ -2,7 +2,7 @@ package dbase
 
 import (
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/uuid"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist-model/model"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 )
 

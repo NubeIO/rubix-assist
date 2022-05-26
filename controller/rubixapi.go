@@ -3,8 +3,8 @@ package controller
 //import (
 //	"fmt"
 //	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nrest"
-//	"github.com/NubeIO/rubix-assist/model/rubix"
-//	"github.com/NubeIO/rubix-assist/model/schema"
+//	"github.com/NubeIO/rubix-assist-model/model/rubix"
+//	"github.com/NubeIO/rubix-assist-model/model/schema"
 //	"github.com/gin-gonic/gin"
 //	"time"
 //)

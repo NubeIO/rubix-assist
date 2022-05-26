@@ -3,14 +3,15 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
 	"github.com/NubeIO/rubix-assist/service/installer"
 	"github.com/NubeIO/rubix-assist/service/remote"
 	"github.com/NubeIO/rubix-assist/service/remote/ssh"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/NubeIO/rubix-assist-model/model"
 	dbase "github.com/NubeIO/rubix-assist/database"
-	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"github.com/melbahja/goph"
