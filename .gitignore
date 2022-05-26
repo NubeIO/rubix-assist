@@ -18,7 +18,7 @@ frontend/.idea/
 *.dylib
 *.log
 *.db
-*app
+
 *main
 # Test binary, built with `go test -c`
 *.test
