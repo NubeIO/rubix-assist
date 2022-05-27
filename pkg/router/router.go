@@ -164,14 +164,11 @@ func Setup(db *gorm.DB) *gin.Engine {
 	tools := admin.Group("/tools")
 	tools.Use(authMiddleware.MiddlewareFunc())
 	{
-		tools.GET("/endpoints", api.ToolsEndPoints)
+
 		tools.GET("/edge/ip/schema", api.EdgeIPSchema)
 		tools.POST("/edge/ip", api.EdgeSetIP)
 		tools.POST("/edge/ip/dhcp", api.EdgeSetIP)
-		tools.GET("/arch", api.ToolsGetArch)
-		//tools.GET("/nodejs", api.NodeJsVersion)
-		//tools.POST("/modbus/config", api.ModbusIOConfig)
-		//tools.POST("/modbus/poll", api.ModbusPoll)
+
 	}
 
 	//ff := admin.Group("/ff")
@@ -211,24 +208,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		token.PATCH("/:uuid", api.UpdateToken)
 		token.DELETE("/:uuid", api.DeleteToken)
 	}
-	//apps := r.Group("/api/apps")
-	//{
-	//	apps.POST("/full_install", api.AppsFullInstall)
-	//}
-
-	//programs := r.Group("/api/programs")
-	//{
-	//	programs.GET("/nodejs", api.NodeJsVersion)
-	//	programs.POST("/nodejs", api.NodeJsInstall)
-	//}
-
-	uf := r.Group("/api/ufw")
-	{
-		uf.POST("/install", api.UFWInstall)
-		uf.POST("/ports/open", api.UFWAddPort)
-		uf.POST("/enable", api.UFWEnable)
-		uf.POST("/disable", api.UFWDisable)
-	}
 
 	bios := r.Group("/api/bios")
 	{
@@ -240,20 +219,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	git := r.Group("/api/git")
 	{
 		git.GET("/:uuid", api.GitGetRelease)
-	}
-
-	//plugins := r.Group("/api/plugins")
-	{
-		//plugins.POST("/full_install", api.PluginFullInstall)
-		//plugins.POST("/full_uninstall", api.PluginFullUninstall)
-		//plugins.POST("/upgrade", api.FlowFrameworkUpgrade)
-		//plugins.POST("/upload/:uuid", api.UploadPlugins)
-		//plugins.POST("/delete/:uuid", api.DeleteAllPlugins)
-	}
-	upload := r.Group("/api/upload")
-	{
-		upload.POST("/:uuid", api.UploadZip)
-		upload.POST("/unzip/:uuid", api.Unzip)
 	}
 
 	return r
