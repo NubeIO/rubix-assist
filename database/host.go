@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
 	"github.com/NubeIO/rubix-assist-model/model"
+	"gorm.io/gorm"
 
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
@@ -93,17 +94,29 @@ func (d *DB) UpdateHost(uuid string, host *model.Host) (*model.Host, error) {
 	}
 }
 
-func (d *DB) DeleteHost(uuid string) (ok bool, err error) {
-	var m *model.Network
+func (d *DB) DeleteHost(uuid string) (*DeleteMessage, error) {
+	var m *model.Host
 	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
+	return deleteResponse(query)
+}
+
+type DeleteMessage struct {
+	Message string `json:"message"`
+}
+
+func deleteResponse(query *gorm.DB) (*DeleteMessage, error) {
+	msg := &DeleteMessage{
+		Message: "delete failed",
+	}
 	if query.Error != nil {
-		return false, query.Error
+		return msg, query.Error
 	}
 	r := query.RowsAffected
 	if r == 0 {
-		return false, nil
+		return msg, errors.New("not found")
 	}
-	return true, nil
+	msg.Message = "deleted ok"
+	return msg, nil
 }
 
 // DropHosts delete all.

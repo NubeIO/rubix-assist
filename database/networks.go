@@ -73,17 +73,10 @@ func (d *DB) UpdateHostNetwork(uuid string, host *model.Network) (*model.Network
 	}
 }
 
-func (d *DB) DeleteHostNetwork(uuid string) (ok bool, err error) {
+func (d *DB) DeleteHostNetwork(uuid string) (*DeleteMessage, error) {
 	var m *model.Network
 	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
-	if query.Error != nil {
-		return false, query.Error
-	}
-	r := query.RowsAffected
-	if r == 0 {
-		return false, nil
-	}
-	return true, nil
+	return deleteResponse(query)
 }
 
 // DropHostNetworks delete all.

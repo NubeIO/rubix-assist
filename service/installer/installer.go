@@ -37,7 +37,7 @@ type RespBuilder struct {
 }
 
 type RespInstall struct {
-	//InstallResp *ctl.InstallResp `json:"install_resp"`
+	InstallResp *ctl.InstallResp `json:"install_resp"`
 }
 
 type Installer struct {
@@ -99,7 +99,6 @@ func (inst *Installer) Build() (*RespBuilder, error) {
 func (inst *Installer) Install(service, path string) (*RespInstall, error) {
 	ret := &RespInstall{}
 	//path := "/tmp/nubeio-rubix-bios.service"
-
 	timeOut := 30
 	ser := ctl.New(service, path)
 	opts := systemctl.Options{Timeout: timeOut}
@@ -107,7 +106,7 @@ func (inst *Installer) Install(service, path string) (*RespInstall, error) {
 		Options: opts,
 	}
 	ser.InstallOpts = installOpts
-	err = ser.Install()
+	ret.InstallResp = ser.Install()
 	fmt.Println("full install error", err)
 	if err != nil {
 		fmt.Println("full install error", err)

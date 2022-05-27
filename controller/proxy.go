@@ -8,6 +8,22 @@ import (
 	"strings"
 )
 
+func getMethod(method string) (out string) {
+	out = rest.GET
+	switch method {
+	case "GET":
+		out = rest.GET
+	case "PATCH":
+		out = rest.PATCH
+	case "DELETE":
+		out = rest.DELETE
+	case "POST":
+		out = rest.POST
+	case "PUT":
+		out = rest.PUT
+	}
+	return out
+}
 func proxyPath(u string) (ok bool, path, proxyPath string) {
 	p, err := url.Parse(fmt.Sprintf("http://%s", u))
 	if err != nil {

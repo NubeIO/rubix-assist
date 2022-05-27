@@ -32,6 +32,8 @@ type WsMsg struct {
 	IsError bool        `json:"is_error"`
 }
 
+var err error
+
 ////publishMSG send websocket message
 func (inst *Controller) publishMSG(in *WsMsg) ([]byte, error) {
 	msg := map[string]interface{}{
@@ -134,6 +136,13 @@ func reposeWithCode(code int, body interface{}, err error, ctx *gin.Context) {
 	}
 }
 
+type Response struct {
+	StatusCode   int         `json:"status_code"`
+	ErrorMessage string      `json:"error_message"`
+	Message      string      `json:"message"`
+	Data         interface{} `json:"data"`
+}
+
 func reposeHandler(body interface{}, err error, ctx *gin.Context) {
 	if err != nil {
 		if err == nil {
@@ -144,10 +153,26 @@ func reposeHandler(body interface{}, err error, ctx *gin.Context) {
 			} else {
 				ctx.JSON(404, Message{Message: err.Error()})
 			}
-
 		}
 	} else {
 		ctx.JSON(200, body)
+	}
+}
+
+func reposeMessage(code int, body interface{}, err error, ctx *gin.Context) {
+	if err != nil {
+		if err == nil {
+			ctx.JSON(code, Message{Message: "unknown error"})
+		} else {
+			if body != nil {
+				ctx.JSON(code, body)
+			} else {
+				ctx.JSON(code, Message{Message: err.Error()})
+			}
+
+		}
+	} else {
+		ctx.JSON(code, body)
 	}
 }
 

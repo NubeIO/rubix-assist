@@ -13,7 +13,7 @@ go 1.17
 require (
 	github.com/NubeDev/bacnet v0.0.2
 	github.com/NubeIO/git v0.0.2
-	github.com/NubeIO/lib-systemctl-go v0.0.2
+	github.com/NubeIO/lib-systemctl-go v0.0.3
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7
 	github.com/NubeIO/nubeio-rubix-lib-modbus-go v0.0.0-20220514224355-53afcfd9e83f
 	github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.8
@@ -25,7 +25,7 @@ require (
 	github.com/melbahja/goph v1.3.0
 	github.com/oleiade/reflections v1.0.1
 	github.com/orcaman/concurrent-map v1.0.0 // indirect
-	github.com/pkg/sftp v1.13.4
+	github.com/pkg/sftp v1.13.4 // indirect
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.11.0

@@ -28,7 +28,6 @@ func (inst *Controller) GetUser(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-
 	reposeHandler(host, err, c)
 }
 
