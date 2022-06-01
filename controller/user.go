@@ -1,16 +1,15 @@
 package controller
 
 import (
-	"math/rand"
-	"net/http"
-	"time"
-
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/uuid"
+	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/rubix-assist-model/model"
 	"github.com/NubeIO/rubix-assist-model/model/schema"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"math/rand"
+	"net/http"
+	"time"
 )
 
 func getUserBody(ctx *gin.Context) (dto *model.User, err error) {
@@ -118,7 +117,7 @@ func (inst *Controller) AddUser(c *gin.Context) {
 			panic(err)
 		}
 		user = model.User{Username: newUser.Username, Email: newUser.Email, Hash: string(hash), UID: GenerateUID()}
-		user.UUID, _ = uuid.MakeUUID()
+		user.UUID = uuid.ShortUUID("alt")
 		if err := inst.DB.DB.Create(&user).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return

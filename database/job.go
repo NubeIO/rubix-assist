@@ -1,9 +1,8 @@
 package dbase
 
 import (
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/uuid"
+	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/rubix-assist-model/model"
-	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 )
 
@@ -26,8 +25,8 @@ func (d *DB) GetJobs() ([]*model.Job, error) {
 }
 
 func (d *DB) CreateJob(Job *model.Job) (*model.Job, error) {
-	Job.UUID, _ = uuid.MakeUUID()
-	Job.UUID = config.MakeTopicUUID(model.CommonNaming.Job)
+
+	Job.UUID = uuid.ShortUUID(model.CommonNaming.Job)
 	if err := d.DB.Create(&Job).Error; err != nil {
 		return nil, err
 	} else {

@@ -2,9 +2,9 @@ package dbase
 
 import (
 	"errors"
+	"github.com/NubeIO/lib-uuid/uuid"
 
 	"github.com/NubeIO/rubix-assist-model/model"
-	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 )
 
@@ -31,7 +31,7 @@ func (d *DB) CreateMessage(message *model.Message) (*model.Message, error) {
 	if err != nil {
 		return nil, errors.New("no alert found")
 	}
-	message.UUID = config.MakeTopicUUID(model.CommonNaming.Message)
+	message.UUID = uuid.ShortUUID(model.CommonNaming.Message)
 	message.AlertUUID = alert.UUID
 	if err := d.DB.Create(&message).Error; err != nil {
 		return nil, err

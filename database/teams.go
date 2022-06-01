@@ -1,8 +1,8 @@
 package dbase
 
 import (
+	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/rubix-assist-model/model"
-	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 )
 
@@ -24,12 +24,12 @@ func (d *DB) GetTeams() ([]model.Team, error) {
 	}
 }
 
-func (d *DB) CreateTeam(Team *model.Team) (*model.Team, error) {
-	Team.UUID = config.MakeTopicUUID(model.CommonNaming.Team)
-	if err := d.DB.Create(&Team).Error; err != nil {
+func (d *DB) CreateTeam(body *model.Team) (*model.Team, error) {
+	body.UUID = uuid.ShortUUID("tea")
+	if err := d.DB.Create(&body).Error; err != nil {
 		return nil, err
 	} else {
-		return Team, nil
+		return body, nil
 	}
 }
 

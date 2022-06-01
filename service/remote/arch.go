@@ -21,8 +21,8 @@ type Arch struct {
 //DetectArch can detect hardware type is in ARM or AMD and also if hardware is for example a Raspberry PI
 func (inst *Admin) DetectArch() (res *command.Response, arch *Arch) {
 	arch = &Arch{}
-	cmd := "tr '\\0' '\\n' </proc/device-tree/model;arch &&  dpkg --print-architecture"
-	inst.SSH.CMD.Commands = command.Builder(cmd)
+	cmd := "tr '\\0' '\\n' </proc/device-tree/model;arch"
+	inst.SSH.CMD.Commands = command.Builder("tr", "'\\0'", "'\\n'", "</proc/device-tree/model;arch")
 	res = inst.SSH.RunCommand()
 	cmdOut := res.Out
 	err := res.Err

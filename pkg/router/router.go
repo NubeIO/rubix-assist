@@ -87,6 +87,17 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	admin := r.Group("/api")
 
+	locations := admin.Group("/locations")
+	//hosts.Use(authMiddleware.MiddlewareFunc())
+	{
+		locations.GET("/", api.GetLocations)
+		locations.POST("/", api.CreateLocation)
+		locations.GET("/:uuid", api.GetLocation)
+		locations.PATCH("/:uuid", api.CreateLocation)
+		locations.DELETE("/:uuid", api.DeleteLocation)
+		locations.DELETE("/drop", api.DropLocations)
+	}
+
 	hostNetworks := admin.Group("/networks")
 	//hosts.Use(authMiddleware.MiddlewareFunc())
 	{
@@ -170,26 +181,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		tools.POST("/edge/ip/dhcp", api.EdgeSetIP)
 
 	}
-
-	//ff := admin.Group("/ff")
-	//ff.Use(authMiddleware.MiddlewareFunc())
-	//{
-	//	ff.POST("/flow_networks", api.FFFlowNetworkWizard)
-	//	ff.POST("/networks", api.FFNetworkWizard)
-	//}
-
-	//master := admin.Group("/master")
-	//master.Use(authMiddleware.MiddlewareFunc())
-	//{
-	//	master.GET("/discover/schema", api.RubixDiscoverSchema)
-	//	master.GET("/slaves/schema", api.RubixMasterSchema)
-	//}
-
-	//wiresPlat := admin.Group("/plat")
-	//wiresPlat.Use(authMiddleware.MiddlewareFunc())
-	//{
-	//	wiresPlat.GET("/schema", api.RubixPlatSchema)
-	//}
 
 	proxyRubix := r.Group("/api/rubix/proxy")
 	{

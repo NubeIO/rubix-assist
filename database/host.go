@@ -2,11 +2,11 @@ package dbase
 
 import (
 	"errors"
+	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
 	"github.com/NubeIO/rubix-assist-model/model"
 	"gorm.io/gorm"
 
-	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 )
 
@@ -41,14 +41,14 @@ func (d *DB) GetHostByName(name string, isUUID bool) (*model.Host, error) {
 
 func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if host.Name == "" {
-		host.Name = "RC"
+		host.Name = uuid.ShortUUID("host")
 	}
 
 	existingHost, _ := d.GetHostByName(host.Name, false)
 	if existingHost != nil {
 		return nil, errors.New("a host with this name exists")
 	}
-	host.UUID = config.MakeTopicUUID(model.CommonNaming.Host)
+	host.UUID = uuid.ShortUUID("hos")
 	if host.PingEnable == nil {
 		host.PingEnable = nils.NewFalse()
 	}
