@@ -173,12 +173,13 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	tools := admin.Group("/tools")
-	tools.Use(authMiddleware.MiddlewareFunc())
+	//tools.Use(authMiddleware.MiddlewareFunc())
 	{
 
 		tools.GET("/edge/ip/schema", api.EdgeIPSchema)
 		tools.POST("/edge/ip", api.EdgeSetIP)
 		tools.POST("/edge/ip/dhcp", api.EdgeSetIP)
+		tools.POST("/zip", api.ZipUpload)
 
 	}
 
