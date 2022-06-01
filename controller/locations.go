@@ -5,6 +5,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func (inst *Controller) GetLocationSchema(ctx *gin.Context) {
+	mod := model.GetLocationSchema()
+	reposeHandler(mod, nil, ctx)
+}
+
 func getLocationBody(ctx *gin.Context) (dto *model.Location, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err

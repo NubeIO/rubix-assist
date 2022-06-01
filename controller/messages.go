@@ -2,7 +2,6 @@ package controller
 
 import (
 	"github.com/NubeIO/rubix-assist-model/model"
-	"github.com/NubeIO/rubix-assist-model/model/schema"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +11,7 @@ func getMessageBody(ctx *gin.Context) (dto *model.Message, err error) {
 }
 
 func (inst *Controller) MessagesSchema(ctx *gin.Context) {
-	reposeHandler(schema.GetMessageSchema(), nil, ctx)
+	//reposeHandler(schema.GetMessageSchema(), nil, ctx)
 }
 
 func (inst *Controller) GetMessage(c *gin.Context) {

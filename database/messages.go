@@ -31,7 +31,7 @@ func (d *DB) CreateMessage(message *model.Message) (*model.Message, error) {
 	if err != nil {
 		return nil, errors.New("no alert found")
 	}
-	message.UUID = uuid.ShortUUID(model.CommonNaming.Message)
+	message.UUID = uuid.ShortUUID("msg")
 	message.AlertUUID = alert.UUID
 	if err := d.DB.Create(&message).Error; err != nil {
 		return nil, err

@@ -90,6 +90,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	locations := admin.Group("/locations")
 	//hosts.Use(authMiddleware.MiddlewareFunc())
 	{
+		locations.GET("/schema", api.GetLocationSchema)
 		locations.GET("/", api.GetLocations)
 		locations.POST("/", api.CreateLocation)
 		locations.GET("/:uuid", api.GetLocation)
@@ -101,6 +102,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	hostNetworks := admin.Group("/networks")
 	//hosts.Use(authMiddleware.MiddlewareFunc())
 	{
+		hostNetworks.GET("/schema", api.GetNetworkSchema)
 		hostNetworks.GET("/", api.GetHostNetworks)
 		hostNetworks.POST("/", api.CreateHostNetwork)
 		hostNetworks.GET("/:uuid", api.GetHostNetwork)
@@ -112,7 +114,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	hosts := admin.Group("/hosts")
 	//hosts.Use(authMiddleware.MiddlewareFunc())
 	{
-		hosts.GET("/schema", api.HostsSchema)
+		hosts.GET("/schema", api.GetHostSchema)
 		hosts.GET("/", api.GetHosts)
 		hosts.POST("/", api.CreateHost)
 		hosts.GET("/:uuid", api.GetHost)

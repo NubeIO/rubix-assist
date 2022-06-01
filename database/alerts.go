@@ -55,7 +55,7 @@ func (d *DB) CreateAlert(alert *model.Alert) (*model.Alert, error) {
 	if err != nil {
 		return nil, errors.New("no valid host found")
 	}
-	items, err := reflections.Items(model.CommonAlertTypes)
+	items, err := reflections.Items("a")
 	typeExist := false
 	for _, a := range items {
 		if alert.AlertType == a {

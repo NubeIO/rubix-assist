@@ -43,7 +43,6 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if host.Name == "" {
 		host.Name = uuid.ShortUUID("host")
 	}
-
 	existingHost, _ := d.GetHostByName(host.Name, false)
 	if existingHost != nil {
 		return nil, errors.New("a host with this name exists")
@@ -62,10 +61,7 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 		host.Port = 22
 	}
 	if host.RubixPort == 0 {
-		host.RubixPort = 1616
-	}
-	if host.BiosPort == 0 {
-		host.BiosPort = 1617
+		host.RubixPort = 1660
 	}
 	if err := d.DB.Create(&host).Error; err != nil {
 		return nil, err

@@ -2,7 +2,6 @@ package controller
 
 import (
 	"github.com/NubeIO/rubix-assist-model/model"
-	"github.com/NubeIO/rubix-assist-model/model/schema"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +11,6 @@ func getTeamBody(ctx *gin.Context) (dto *model.Team, err error) {
 }
 
 func (inst *Controller) TeamsSchema(ctx *gin.Context) {
-	reposeHandler(schema.GetTeamSchema(), nil, ctx)
 }
 
 func (inst *Controller) GetTeam(c *gin.Context) {
