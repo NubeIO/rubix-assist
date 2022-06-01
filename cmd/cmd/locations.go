@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/NubeIO/rubix-assist-model/model"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"github.com/spf13/cobra"
@@ -17,14 +16,13 @@ var appsCmd = &cobra.Command{
 func runApps(cmd *cobra.Command, args []string) {
 	db := initDB()
 	loc := &model.Location{
-		Name: "",
+		Name: flgLocation.name,
 	}
 
 	location, err := db.CreateLocation(loc)
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(location)
 
 	network := &model.Network{
 		Name:         "",
@@ -34,18 +32,21 @@ func runApps(cmd *cobra.Command, args []string) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(network)
 	host := &model.Host{
 		Name:        "",
 		NetworkUUID: network.UUID,
 	}
 
 	host, err = db.CreateHost(host)
-	fmt.Println(err, 999)
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(host)
+
+	locations, err := db.GetLocations()
+	if err != nil {
+		return
+	}
+	pprint.PrintJOSN(locations)
 
 }
 

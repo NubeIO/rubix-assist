@@ -1,7 +1,8 @@
 package flow
 
 import (
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/networking/portscanner"
+	"fmt"
+	"github.com/NubeIO/lib-networking/scanner"
 )
 
 type Scan struct {
@@ -9,18 +10,22 @@ type Scan struct {
 	Debug     bool
 }
 
-func (s *Scan) Scan() (hosts portscanner.Hosts) {
-	ip := s.IP
+func (s *Scan) Scan(ip string, count int, interfaceName string) {
+
 	if ip == "" {
 		ip = "192.168.15.1-254"
 	}
+	if count == 0 {
+		count = 254
+	}
+	ports := []string{"22", "1414", "1883", "1660", "502", "80", "1313"}
 
-	ports := []string{"22", "1313", "1414", "1616", "1615", "502", "1883"}
+	address, err := scanner.New().ResoleAddress("", count, interfaceName)
+	if err != nil {
+		fmt.Println("err msg", err)
+		return
+	}
+	scanner.New().IPScanner(address, ports, true)
 
-	// IP sequence is defined by a '-' between first and last IP address .
-	ipsSequence := []string{ip}
-
-	// result returns a map with open ports for each IP address.
-	hosts = portscanner.IPScanner(ipsSequence, ports, s.Debug)
 	return
 }

@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
-	"github.com/NubeIO/rubix-assist/service/installer"
+
 	"github.com/NubeIO/rubix-assist/service/remote"
 	"github.com/NubeIO/rubix-assist/service/remote/ssh"
 	log "github.com/sirupsen/logrus"
@@ -79,11 +79,6 @@ func (inst *Controller) getHost(ctx *gin.Context) (host *model.Host, session *re
 	}
 	session = remote.New(rs)
 	return host, session, err
-}
-
-func getAppsInstallBody(ctx *gin.Context) (dto *installer.Installer, err error) {
-	err = ctx.ShouldBindJSON(&dto)
-	return dto, err
 }
 
 func bodyAsJSON(ctx *gin.Context) (interface{}, error) {

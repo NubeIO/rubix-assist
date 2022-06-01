@@ -6,8 +6,9 @@ import (
 )
 
 var (
-	flowScan bool
-	ipRange  string
+	flowScan      bool
+	ip            string
+	interfaceName string
 )
 
 var flowCmd = &cobra.Command{
@@ -19,8 +20,8 @@ var flowCmd = &cobra.Command{
 
 func runFlow(cmd *cobra.Command, args []string) {
 	if flowScan {
-		scan := &flow.Scan{IP: ipRange, Iface: iface, Debug: true}
-		scan.Scan()
+		scan := &flow.Scan{}
+		scan.Scan(ip, 254, interfaceName)
 	}
 
 }
@@ -28,6 +29,7 @@ func runFlow(cmd *cobra.Command, args []string) {
 func init() {
 	RootCmd.AddCommand(flowCmd)
 	flowCmd.Flags().BoolVarP(&flowScan, "scan", "", false, "do a network scan for iot devices")
-	flowCmd.Flags().StringVarP(&ipRange, "ip-range", "", "192.168.15.1-254", "scan range ip example is 192.168.15.1-10 would scan the 10 ips")
+	flowCmd.Flags().StringVarP(&ip, "ip", "", "192.168.15.1", "scan range ip example is 192.168.15.1-10 would scan the 10 ips")
+	flowCmd.Flags().StringVarP(&interfaceName, "interface", "", "", "host interface")
 
 }
