@@ -2,7 +2,6 @@ package controller
 
 import (
 	"github.com/NubeIO/rubix-assist-model/model"
-	"github.com/NubeIO/rubix-assist-model/model/schema"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,8 +14,9 @@ func getHostBody(ctx *gin.Context) (dto *model.Host, err error) {
 	return dto, err
 }
 
-func (inst *Controller) HostsSchema(ctx *gin.Context) {
-	reposeHandler(schema.GetHostSchema(), nil, ctx)
+func (inst *Controller) GetHostSchema(ctx *gin.Context) {
+	mod := model.GetHostSchema()
+	reposeHandler(mod, nil, ctx)
 }
 
 func (inst *Controller) GetHost(c *gin.Context) {

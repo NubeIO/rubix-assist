@@ -2,7 +2,6 @@ package controller
 
 import (
 	"github.com/NubeIO/rubix-assist-model/model"
-	"github.com/NubeIO/rubix-assist-model/model/schema"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +11,6 @@ func getAlertBody(ctx *gin.Context) (dto *model.Alert, err error) {
 }
 
 func (inst *Controller) AlertsSchema(ctx *gin.Context) {
-	reposeHandler(schema.GetAlertSchema(), nil, ctx)
 }
 
 func (inst *Controller) GetAlert(c *gin.Context) {

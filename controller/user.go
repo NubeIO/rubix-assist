@@ -3,7 +3,6 @@ package controller
 import (
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/rubix-assist-model/model"
-	"github.com/NubeIO/rubix-assist-model/model/schema"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -18,7 +17,7 @@ func getUserBody(ctx *gin.Context) (dto *model.User, err error) {
 }
 
 func (inst *Controller) UsersSchema(ctx *gin.Context) {
-	reposeHandler(schema.GetUserSchema(), nil, ctx)
+	//reposeHandler(schema.GetUserSchema(), nil, ctx)
 }
 
 func (inst *Controller) GetUser(c *gin.Context) {

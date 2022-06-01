@@ -26,7 +26,7 @@ func (d *DB) GetJobs() ([]*model.Job, error) {
 
 func (d *DB) CreateJob(Job *model.Job) (*model.Job, error) {
 
-	Job.UUID = uuid.ShortUUID(model.CommonNaming.Job)
+	Job.UUID = uuid.ShortUUID("job")
 	if err := d.DB.Create(&Job).Error; err != nil {
 		return nil, err
 	} else {

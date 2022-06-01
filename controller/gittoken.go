@@ -2,8 +2,6 @@ package controller
 
 import (
 	"github.com/NubeIO/rubix-assist-model/model"
-	"github.com/NubeIO/rubix-assist-model/model/schema"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +11,6 @@ func getTokenBody(ctx *gin.Context) (dto *model.Token, err error) {
 }
 
 func (inst *Controller) TokenSchema(ctx *gin.Context) {
-	reposeHandler(schema.GetTokenSchema(), err, ctx)
 }
 
 func (inst *Controller) GetToken(c *gin.Context) {
