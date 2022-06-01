@@ -3,9 +3,9 @@ package dbase
 import (
 	"errors"
 	"fmt"
+	"github.com/NubeIO/lib-uuid/uuid"
 
 	"github.com/NubeIO/rubix-assist-model/model"
-	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/oleiade/reflections"
 )
@@ -65,7 +65,7 @@ func (d *DB) CreateAlert(alert *model.Alert) (*model.Alert, error) {
 	if !typeExist {
 		return nil, errors.New("incorrect AlertType provided")
 	}
-	alert.UUID = config.MakeTopicUUID(model.CommonNaming.Alert)
+	alert.UUID = uuid.ShortUUID("alt")
 	alert.HostUUID = host.UUID
 	if err := d.DB.Create(&alert).Error; err != nil {
 		return nil, err

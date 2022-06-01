@@ -7,7 +7,8 @@ go 1.17
 //replace github.com/NubeDev/bacnet => /home/aidan/code/go/nube/bacnet
 //replace github.com/NubeIO/nubeio-rubix-lib-models-go => /home/aidan/code/go/nube/nubeio-rubix-lib-models-go
 //replace github.com/NubeIO/git => /home/aidan/code/go/nube/lib/git
-//replace github.com/NubeIO/rubix-assist-model => /home/aidan/code/go/nube/lib/rubix-assist-model
+replace github.com/NubeIO/rubix-assist-model => /home/aidan/code/go/nube/lib/rubix-assist-model
+
 //replace github.com/NubeIO/lib-systemctl-go => /home/aidan/code/go/nube/lib/lib-systemctl-go
 
 require (
@@ -85,6 +86,7 @@ require (
 require github.com/NubeIO/rubix-assist-model v0.0.1
 
 require (
+	github.com/NubeIO/lib-uuid v0.0.1 // indirect
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.2.1 // indirect
 	github.com/THREATINT/go-net v1.2.10 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect

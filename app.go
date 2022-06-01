@@ -17,7 +17,7 @@ func setup() {
 	logger.SetLogLevel(logrus.InfoLevel)
 	logger.InfoLn("try and start rubix-updater")
 	if err := config.Setup(); err != nil {
-		logger.Fatalf("config.Setup() error: %s", err)
+		logger.Errorf("config.Setup() error: %s", err)
 	}
 	if err := database.Setup(); err != nil {
 		logger.Fatalf("database.Setup() error: %s", err)

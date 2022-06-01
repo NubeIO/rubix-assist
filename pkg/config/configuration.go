@@ -26,12 +26,11 @@ func Setup() error {
 	if err != nil {
 		fmt.Println(err)
 	}
-	viper.AddConfigPath(home + "/.updater")
+	viper.AddConfigPath(home + "/rubix-assist")
 
 	if err := viper.ReadInConfig(); err != nil {
 		logger.Errorf("Error reading config file, %s", err)
 		fmt.Println(err)
-		//return err
 	}
 
 	err = viper.Unmarshal(&configuration)
@@ -41,7 +40,7 @@ func Setup() error {
 	}
 	viper.SetDefault("server.port", "8080")
 	viper.SetDefault("database.driver", "sqlite")
-	viper.SetDefault("database.name", "/tmp/updater.db")
+	viper.SetDefault("database.name", "updater.db")
 
 	Config = configuration
 	return nil

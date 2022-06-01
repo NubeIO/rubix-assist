@@ -3,18 +3,14 @@ package database
 import (
 	"errors"
 	"fmt"
-	"io"
-	"log"
-	"os"
-	"os/user"
-	"time"
-
 	"github.com/NubeIO/rubix-assist-model/model"
 	"github.com/NubeIO/rubix-assist/pkg/helpers/homedir"
 	"github.com/spf13/viper"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
+	"io"
+	"os"
+	"os/user"
 )
 
 var (
@@ -32,37 +28,25 @@ func Setup() error {
 	var db = DB
 	dbName := viper.GetString("database.name")
 	driver := viper.GetString("database.driver")
-	logMode := viper.GetBool("database.logmode")
 
-	loglevel := logger.Silent
-	if logMode {
-		loglevel = logger.Info
-	}
 	currentUser, err := user.Current()
 	if currentUser.Username != "root" {
 		home, err := homedir.Dir()
 		if err != nil {
 			fmt.Println(err)
 		}
-		dbName = fmt.Sprintf("%s/%s/rubix_updater.db", home, "/.updater")
+		fmt.Println("user home:", home)
+		//dbName = fmt.Sprintf("%s/%s/rubix_updater.db", home, "/rubix-assist")
+		dbName = fmt.Sprintf("rubix_updater.db")
 	}
 
-	newDBLogger := logger.New(
-		log.New(getWriter(), "\r\n", log.LstdFlags), // io writer
-		logger.Config{
-			SlowThreshold:             time.Second, // Slow SQL threshold
-			LogLevel:                  loglevel,    // Log level (Silent, Error, Warn, Info)
-			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
-			Colorful:                  false,       // Disable color
-		},
-	)
 	if driver == "" {
 		driver = "sqlite"
 	}
-
+	connection := fmt.Sprintf("%s?_foreign_keys=on", dbName)
 	switch driver {
 	case "sqlite":
-		db, err = gorm.Open(sqlite.Open(dbName), &gorm.Config{Logger: newDBLogger})
+		db, err = gorm.Open(sqlite.Open(connection), &gorm.Config{})
 	default:
 		return errors.New("unsupported database driver")
 	}
@@ -74,6 +58,7 @@ func Setup() error {
 
 	// Auto migrate project models
 	err = db.AutoMigrate(
+		&model.Location{},
 		&model.Network{},
 		&model.Host{},
 		&model.Token{},
