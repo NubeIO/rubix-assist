@@ -199,14 +199,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		token.PATCH("/:uuid", api.UpdateToken)
 		token.DELETE("/:uuid", api.DeleteToken)
 	}
-
-	bios := r.Group("/api/bios")
-	{
-		bios.POST("/install", api.InstallBios)
-		//bios.GET("/update_check", api.RubixServiceCheck)
-		//bios.PUT("/upgrade_and_check", api.RubixServiceUpdate)
-	}
-
 	git := r.Group("/api/git")
 	{
 		git.GET("/:uuid", api.GitGetRelease)
