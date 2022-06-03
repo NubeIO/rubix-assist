@@ -2,7 +2,6 @@ package dbase
 
 import (
 	"errors"
-	"fmt"
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/rubix-assist-model/model"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
@@ -42,7 +41,6 @@ func (d *DB) CreateLocation(body *model.Location) (*model.Location, error) {
 		body.Name = uuid.ShortUUID("location")
 	}
 	existingHost, _ := d.GetLocationsByName(body.Name, false)
-	fmt.Println(1111, existingHost)
 	if existingHost != nil {
 		return nil, errors.New("a location with this name exists")
 	}

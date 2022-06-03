@@ -94,7 +94,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		locations.GET("/", api.GetLocations)
 		locations.POST("/", api.CreateLocation)
 		locations.GET("/:uuid", api.GetLocation)
-		locations.PATCH("/:uuid", api.CreateLocation)
+		locations.PATCH("/:uuid", api.UpdateLocation)
 		locations.DELETE("/:uuid", api.DeleteLocation)
 		locations.DELETE("/drop", api.DropLocations)
 	}
