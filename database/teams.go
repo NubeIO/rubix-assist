@@ -15,8 +15,8 @@ func (d *DB) GetTeam(uuid string) (*model.Team, error) {
 	return m, nil
 }
 
-func (d *DB) GetTeams() ([]model.Team, error) {
-	var m []model.Team
+func (d *DB) GetTeams() ([]*model.Team, error) {
+	var m []*model.Team
 	if err := d.DB.Find(&m).Error; err != nil {
 		return nil, err
 	} else {

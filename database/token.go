@@ -15,8 +15,8 @@ func (d *DB) GetToken(uuid string) (*model.Token, error) {
 	return m, nil
 }
 
-func (d *DB) GetTokens() ([]model.Token, error) {
-	var m []model.Token
+func (d *DB) GetTokens() ([]*model.Token, error) {
+	var m []*model.Token
 	if err := d.DB.Find(&m).Error; err != nil {
 		return nil, err
 	} else {
