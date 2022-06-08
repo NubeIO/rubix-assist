@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/NubeIO/lib-uuid/uuid"
-	"github.com/NubeIO/rubix-assist-model/model"
+	"github.com/NubeIO/rubix-assist/pkg/model"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"

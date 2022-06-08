@@ -7,6 +7,7 @@ import (
 	dbhandler "github.com/NubeIO/rubix-assist/pkg/handler"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/service/auth"
+	"github.com/NubeIO/rubix-assist/service/em"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -49,10 +50,12 @@ func Setup(db *gorm.DB) *gin.Engine {
 	dbHandler := &dbhandler.Handler{
 		DB: appDB,
 	}
-	dbhandler.Init(dbHandler)
-	api := controller.Controller{DB: appDB, WS: ws}
+	dbhandler.Init(dbHandler) // TODO REMOVE THIS
+	edgeManger := em.New(&em.EdgeManager{
+		DB: appDB,
+	})
+	api := controller.Controller{DB: appDB, WS: ws, Edge: edgeManger}
 	identityKey := "uuid"
-
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:         "go-proxy-service",
 		Key:           []byte(os.Getenv("JWTSECRET")),
@@ -92,6 +95,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		locations.GET("/schema", api.GetLocationSchema)
 		locations.GET("/", api.GetLocations)
+		locations.POST("/wizard", api.CreateLocationWizard)
 		locations.POST("/", api.CreateLocation)
 		locations.GET("/:uuid", api.GetLocation)
 		locations.PATCH("/:uuid", api.UpdateLocation)
@@ -201,10 +205,16 @@ func Setup(db *gorm.DB) *gin.Engine {
 		token.GET("/:uuid", api.GetToken)
 		token.PATCH("/:uuid", api.UpdateToken)
 		token.DELETE("/:uuid", api.DeleteToken)
+		token.DELETE("/drop", api.DropTokens)
 	}
 	git := r.Group("/api/git")
 	{
 		git.GET("/:uuid", api.GitGetRelease)
+	}
+
+	edge := r.Group("/api/edge")
+	{
+		edge.POST("/apps/install", api.InstallApp)
 	}
 
 	return r

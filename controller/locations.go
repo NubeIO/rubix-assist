@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/NubeIO/rubix-assist-model/model"
+	"github.com/NubeIO/rubix-assist/pkg/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,6 +31,17 @@ func (inst *Controller) GetLocations(c *gin.Context) {
 		return
 	}
 	reposeHandler(hosts, err, c)
+}
+
+func (inst *Controller) CreateLocationWizard(c *gin.Context) {
+	m := new(model.Location)
+	err = c.ShouldBindJSON(&m)
+	host, err := inst.DB.CreateLocationWizard(m)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(host, err, c)
 }
 
 func (inst *Controller) CreateLocation(c *gin.Context) {
