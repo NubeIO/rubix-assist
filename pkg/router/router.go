@@ -162,7 +162,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		alerts.DELETE("/drop", api.DropAlerts)
 	}
 
-	messages := admin.Group("/messages")
+	messages := admin.Group("/transaction")
 	//messages.Use(authMiddleware.MiddlewareFunc())
 	{
 		messages.GET("/schema", api.MessagesSchema)
