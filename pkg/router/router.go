@@ -128,7 +128,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	r.POST("/api/users/login", authMiddleware.LoginHandler)
 
 	users := admin.Group("/users")
-	users.Use(authMiddleware.MiddlewareFunc())
+	//users.Use(authMiddleware.MiddlewareFunc())
 	{
 		users.GET("/schema", api.UsersSchema)
 		users.GET("/", api.GetUsers)
@@ -139,7 +139,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	teams := admin.Group("/teams")
-	teams.Use(authMiddleware.MiddlewareFunc())
+	//teams.Use(authMiddleware.MiddlewareFunc())
 	{
 		teams.GET("/schema", api.TeamsSchema)
 		teams.GET("/", api.GetTeams)
@@ -151,7 +151,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	alerts := admin.Group("/alerts")
-	alerts.Use(authMiddleware.MiddlewareFunc())
+	//alerts.Use(authMiddleware.MiddlewareFunc())
 	{
 		alerts.GET("/schema", api.AlertsSchema)
 		alerts.GET("/", api.GetAlerts)
@@ -163,7 +163,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	messages := admin.Group("/messages")
-	messages.Use(authMiddleware.MiddlewareFunc())
+	//messages.Use(authMiddleware.MiddlewareFunc())
 	{
 		messages.GET("/schema", api.MessagesSchema)
 		messages.GET("/", api.GetMessages)
