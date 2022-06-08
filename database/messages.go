@@ -17,8 +17,8 @@ func (d *DB) GetMessage(uuid string) (*model.Message, error) {
 	return m, nil
 }
 
-func (d *DB) GetMessages() ([]model.Message, error) {
-	var m []model.Message
+func (d *DB) GetMessages() ([]*model.Message, error) {
+	var m []*model.Message
 	if err := d.DB.Find(&m).Error; err != nil {
 		return nil, err
 	} else {
