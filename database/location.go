@@ -1,10 +1,10 @@
-package dbase
+package base
 
 import (
 	"errors"
 	"github.com/NubeIO/lib-uuid/uuid"
-	"github.com/NubeIO/rubix-assist-model/model"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
+	"github.com/NubeIO/rubix-assist/pkg/model"
 )
 
 func (d *DB) GetLocations() ([]*model.Location, error) {
@@ -14,6 +14,26 @@ func (d *DB) GetLocations() ([]*model.Location, error) {
 	} else {
 		return m, nil
 	}
+}
+
+func (d *DB) CreateLocationWizard(body *model.Location) (*model.Location, error) {
+	location, err := d.CreateLocation(body)
+	if err != nil {
+		return nil, err
+	}
+
+	network, err := d.CreateHostNetwork(&model.Network{LocationUUID: location.UUID})
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = d.CreateHost(&model.Host{NetworkUUID: network.UUID})
+	if err != nil {
+		return nil, err
+	}
+
+	return location, nil
+
 }
 
 func (d *DB) GetLocationsByName(name string, isUUID bool) (*model.Location, error) {
@@ -38,7 +58,7 @@ func (d *DB) GetLocationsByName(name string, isUUID bool) (*model.Location, erro
 
 func (d *DB) CreateLocation(body *model.Location) (*model.Location, error) {
 	if body.Name == "" {
-		body.Name = uuid.ShortUUID("location")
+		body.Name = uuid.ShortUUID("location_name")
 	}
 	existingHost, _ := d.GetLocationsByName(body.Name, false)
 	if existingHost != nil {

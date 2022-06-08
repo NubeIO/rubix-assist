@@ -14,24 +14,25 @@ go 1.17
 
 //replace github.com/NubeIO/lib-systemctl-go => /home/aidan/code/go/nube/lib/lib-systemctl-go
 
+//replace github.com/NubeIO/rubix-cli-app => /home/aidan/code/go/nube/rubix-cli-app
+
 require (
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7
 	github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.8
-	github.com/appleboy/gin-jwt/v2 v2.7.0
+	github.com/appleboy/gin-jwt/v2 v2.8.0
 	github.com/gin-contrib/cors v1.3.1
-	github.com/gin-gonic/gin v1.7.4
+	github.com/gin-gonic/gin v1.7.7
 	github.com/go-co-op/gocron v1.11.0
 	github.com/jinzhu/copier v0.3.4
 	github.com/melbahja/goph v1.3.0
-	github.com/oleiade/reflections v1.0.1
 	github.com/pkg/sftp v1.13.4 // indirect
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.11.0
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
 	gopkg.in/olahol/melody.v1 v1.0.0-20170518105555-d52139073376
-	gorm.io/driver/sqlite v1.3.1
-	gorm.io/gorm v1.23.2
+	gorm.io/driver/sqlite v1.3.2
+	gorm.io/gorm v1.23.5
 )
 
 require (
@@ -43,13 +44,13 @@ require (
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
-	github.com/go-resty/resty/v2 v2.7.0 // indirect
-	github.com/golang-jwt/jwt/v4 v4.1.0 // indirect
+	github.com/go-resty/resty/v2 v2.7.0
+	github.com/golang-jwt/jwt/v4 v4.2.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/helloyi/go-sshclient v1.1.0
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.4 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kr/fs v0.1.0 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
@@ -83,14 +84,28 @@ require (
 
 require (
 	github.com/NubeIO/lib-networking v0.0.4
+	github.com/NubeIO/lib-schema v0.0.2
 	github.com/NubeIO/lib-uuid v0.0.1
-	github.com/NubeIO/rubix-assist-model v0.0.2
+	github.com/NubeIO/rubix-cli-app v0.0.4
 )
 
 require (
-	github.com/NubeIO/lib-schema v0.0.1 // indirect
+	github.com/NubeIO/git v0.0.3 // indirect
+	github.com/NubeIO/lib-command v0.0.2 // indirect
+	github.com/NubeIO/lib-date v0.0.1 // indirect
+	github.com/NubeIO/lib-dirs v0.0.1 // indirect
+	github.com/NubeIO/lib-store v0.0.1 // indirect
+	github.com/NubeIO/lib-systemctl-go v0.0.4 // indirect
 	github.com/THREATINT/go-net v1.2.10 // indirect
-	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/google/go-github/v32 v32.1.0 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/mcnijman/go-emailaddress v1.1.0 // indirect
+	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
+	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect
+	google.golang.org/appengine v1.6.7 // indirect
+	gorm.io/datatypes v1.0.6 // indirect
+	gorm.io/driver/mysql v1.3.2 // indirect
 )

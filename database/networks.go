@@ -1,11 +1,11 @@
-package dbase
+package base
 
 import (
 	"errors"
 	"github.com/NubeIO/lib-uuid/uuid"
 
-	"github.com/NubeIO/rubix-assist-model/model"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
+	"github.com/NubeIO/rubix-assist/pkg/model"
 )
 
 func (d *DB) GetHostNetworks() ([]*model.Network, error) {
@@ -39,7 +39,7 @@ func (d *DB) GetHostNetworkByName(name string, isUUID bool) (*model.Network, err
 
 func (d *DB) CreateHostNetwork(body *model.Network) (*model.Network, error) {
 	if body.Name == "" {
-		body.Name = uuid.ShortUUID("network")
+		body.Name = uuid.ShortUUID("network_name")
 	}
 	existing, _ := d.GetLocationsByName(body.Name, false)
 	if existing != nil {

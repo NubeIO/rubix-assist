@@ -1,9 +1,9 @@
-package dbase
+package base
 
 import (
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/uuid"
-	"github.com/NubeIO/rubix-assist-model/model"
+	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
+	"github.com/NubeIO/rubix-assist/pkg/model"
 )
 
 func (d *DB) GetToken(uuid string) (*model.Token, error) {
@@ -25,7 +25,7 @@ func (d *DB) GetTokens() ([]*model.Token, error) {
 }
 
 func (d *DB) CreateToken(Token *model.Token) (*model.Token, error) {
-	Token.UUID, _ = uuid.MakeUUID()
+	Token.UUID = uuid.ShortUUID("tok")
 	if err := d.DB.Create(&Token).Error; err != nil {
 		return nil, err
 	} else {

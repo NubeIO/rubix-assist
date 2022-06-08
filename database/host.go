@@ -1,10 +1,10 @@
-package dbase
+package base
 
 import (
 	"errors"
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
-	"github.com/NubeIO/rubix-assist-model/model"
+	"github.com/NubeIO/rubix-assist/pkg/model"
 	"gorm.io/gorm"
 )
 
@@ -19,7 +19,7 @@ func (d *DB) GetHosts() ([]*model.Host, error) {
 
 func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if host.Name == "" {
-		host.Name = uuid.ShortUUID("host")
+		host.Name = "rc"
 	}
 	existingHost, _ := d.GetHostByName(host.Name, false)
 	if existingHost != nil {
@@ -38,8 +38,11 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if host.Port == 0 {
 		host.Port = 22
 	}
+	if host.IP == "" {
+		host.IP = "0.0.0.0"
+	}
 	if host.RubixPort == 0 {
-		host.RubixPort = 1660
+		host.RubixPort = 1661
 	}
 	if err := d.DB.Create(&host).Error; err != nil {
 		return nil, err

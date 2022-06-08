@@ -1,12 +1,11 @@
-package dbase
+package base
 
 import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-uuid/uuid"
-
-	"github.com/NubeIO/rubix-assist-model/model"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
+	"github.com/NubeIO/rubix-assist/pkg/model"
 )
 
 func (d *DB) GetAlert(uuid string) (*model.Alert, error) {

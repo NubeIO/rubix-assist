@@ -1,9 +1,9 @@
-package dbase
+package base
 
 import (
 	"github.com/NubeIO/lib-uuid/uuid"
-	"github.com/NubeIO/rubix-assist-model/model"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
+	"github.com/NubeIO/rubix-assist/pkg/model"
 )
 
 func (d *DB) GetJob(uuid string) (*model.Job, error) {

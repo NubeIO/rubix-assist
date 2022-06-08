@@ -38,7 +38,7 @@ func Setup() error {
 		logger.Errorf("Unable to decode into struct, %v", err)
 		fmt.Println(err)
 	}
-	viper.SetDefault("server.port", "8080")
+	viper.SetDefault("server.port", "1662")
 	viper.SetDefault("database.driver", "sqlite")
 	viper.SetDefault("database.name", "updater.db")
 
