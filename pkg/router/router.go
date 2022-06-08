@@ -150,7 +150,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		teams.DELETE("/drop", api.DropTeams)
 	}
 
-	alerts := admin.Group("/alerts")
+	alerts := admin.Group("/tasks")
 	//alerts.Use(authMiddleware.MiddlewareFunc())
 	{
 		alerts.GET("/schema", api.AlertsSchema)
