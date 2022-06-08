@@ -34,12 +34,12 @@ func (inst *Controller) GetAlerts(c *gin.Context) {
 func (inst *Controller) CreateAlert(c *gin.Context) {
 	m := new(model.Alert)
 	err = c.ShouldBindJSON(&m)
-	team, err := inst.DB.CreateAlert(m)
+	res, err := inst.DB.CreateAlert(m)
 	if err != nil {
 		reposeHandler(m, err, c)
 		return
 	}
-	reposeHandler(team, err, c)
+	reposeHandler(res, err, c)
 }
 
 func (inst *Controller) UpdateAlert(c *gin.Context) {

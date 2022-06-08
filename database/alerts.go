@@ -7,7 +7,6 @@ import (
 
 	"github.com/NubeIO/rubix-assist-model/model"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
-	"github.com/oleiade/reflections"
 )
 
 func (d *DB) GetAlert(uuid string) (*model.Alert, error) {
@@ -19,8 +18,8 @@ func (d *DB) GetAlert(uuid string) (*model.Alert, error) {
 	return m, nil
 }
 
-func (d *DB) GetAlerts() ([]model.Alert, error) {
-	var m []model.Alert
+func (d *DB) GetAlerts() ([]*model.Alert, error) {
+	var m []*model.Alert
 	if err := d.DB.Preload("Messages").Find(&m).Error; err != nil {
 		return nil, err
 	} else {
@@ -55,16 +54,16 @@ func (d *DB) CreateAlert(alert *model.Alert) (*model.Alert, error) {
 	if err != nil {
 		return nil, errors.New("no valid host found")
 	}
-	items, err := reflections.Items("a")
-	typeExist := false
-	for _, a := range items {
-		if alert.AlertType == a {
-			typeExist = true
-		}
-	}
-	if !typeExist {
-		return nil, errors.New("incorrect AlertType provided")
-	}
+	//items, err := reflections.Items("a")
+	//typeExist := false
+	//for _, a := range items {
+	//	if alert.AlertType == a {
+	//		typeExist = true
+	//	}
+	//}
+	//if !typeExist {
+	//	return nil, errors.New("incorrect AlertType provided")
+	//}
 	alert.UUID = uuid.ShortUUID("alt")
 	alert.HostUUID = host.UUID
 	if err := d.DB.Create(&alert).Error; err != nil {
