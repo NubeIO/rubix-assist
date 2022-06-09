@@ -2,20 +2,7 @@ module github.com/NubeIO/rubix-assist
 
 go 1.17
 
-//replace github.com/NubeIO/nubeio-rubix-lib-helpers-go => /home/aidan/code/go/nube/nubeio-rubix-lib-helpers-go
-//replace github.com/NubeIO/nubeio-rubix-lib-rest-go => /home/aidan/code/go/nube/nubeio-rubix-lib-rest-go
-//replace github.com/NubeDev/bacnet => /home/aidan/code/go/nube/bacnet
-//replace github.com/NubeIO/nubeio-rubix-lib-models-go => /home/aidan/code/go/nube/nubeio-rubix-lib-models-go
-//replace github.com/NubeIO/git => /home/aidan/code/go/nube/lib/git
-//replace github.com/NubeIO/rubix-assist-model => /home/aidan/code/go/nube/lib/rubix-assist-model
-
-//replace github.com/NubeIO/lib-networking => /home/aidan/code/go/nube/lib/lib-networking
-//replace github.com/NubeIO/lib-schema => /home/aidan/code/go/nube/lib/lib-schema
-
-//replace github.com/NubeIO/lib-systemctl-go => /home/aidan/code/go/nube/lib/lib-systemctl-go
-
-//replace github.com/NubeIO/rubix-cli-app => /home/aidan/code/go/nube/rubix-cli-app
-//replace github.com/NubeIO/rubix-automater => /home/aidan/code/go/nube/rubix-automater
+replace github.com/NubeIO/rubix-automater => /home/aidan/code/go/nube/rubix-automater
 
 require (
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7
@@ -82,11 +69,12 @@ require (
 )
 
 require (
+	github.com/NubeIO/edge v0.0.5
 	github.com/NubeIO/lib-networking v0.0.4
 	github.com/NubeIO/lib-schema v0.0.2
 	github.com/NubeIO/lib-uuid v0.0.1
-	github.com/NubeIO/rubix-automater v0.0.1
-	github.com/NubeIO/rubix-cli-app v0.0.4
+	github.com/NubeIO/nubeio-rubix-lib-models-go v1.2.4
+	github.com/NubeIO/rubix-automater v0.0.2
 )
 
 require (
@@ -96,7 +84,6 @@ require (
 	github.com/NubeIO/lib-dirs v0.0.1 // indirect
 	github.com/NubeIO/lib-store v0.0.1 // indirect
 	github.com/NubeIO/lib-systemctl-go v0.0.4 // indirect
-	github.com/NubeIO/nubeio-rubix-lib-models-go v1.2.4 // indirect
 	github.com/THREATINT/go-net v1.2.10 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect

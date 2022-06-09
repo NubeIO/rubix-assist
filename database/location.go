@@ -3,7 +3,6 @@ package base
 import (
 	"errors"
 	"github.com/NubeIO/lib-uuid/uuid"
-	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/pkg/model"
 )
 
@@ -41,14 +40,12 @@ func (d *DB) GetLocationsByName(name string, isUUID bool) (*model.Location, erro
 	switch isUUID {
 	case true:
 		if err := d.DB.Where("uuid = ? ", name).Preload("Networks.Hosts").First(&m).Error; err != nil {
-			logger.Errorf("GetHost error: %v", err)
-			return nil, err
+			return nil, errors.New("failed to find a location")
 		}
 		return m, nil
 	case false:
-		if err := d.DB.Where("name = ? ", name).Preload("Networks").First(&m).Error; err != nil {
-			logger.Errorf("GetHost error: %v", err)
-			return nil, err
+		if err := d.DB.Where("name = ? ", name).Preload("Networks.Hosts").First(&m).Error; err != nil {
+			return nil, errors.New("failed to find a location")
 		}
 		return m, nil
 	default:
@@ -58,7 +55,7 @@ func (d *DB) GetLocationsByName(name string, isUUID bool) (*model.Location, erro
 
 func (d *DB) CreateLocation(body *model.Location) (*model.Location, error) {
 	if body.Name == "" {
-		body.Name = uuid.ShortUUID("location_name")
+		body.Name = "cloud"
 	}
 	existingHost, _ := d.GetLocationsByName(body.Name, false)
 	if existingHost != nil {

@@ -64,8 +64,8 @@ func Setup() error {
 		&model.Token{},
 		&model.User{},
 		&model.Team{},
-		&model.Alert{},
-		&model.Message{})
+		&model.Task{},
+		&model.Transaction{})
 	if err != nil {
 		return err
 	}

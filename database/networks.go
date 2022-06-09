@@ -39,7 +39,7 @@ func (d *DB) GetHostNetworkByName(name string, isUUID bool) (*model.Network, err
 
 func (d *DB) CreateHostNetwork(body *model.Network) (*model.Network, error) {
 	if body.Name == "" {
-		body.Name = uuid.ShortUUID("network_name")
+		body.Name = "net"
 	}
 	existing, _ := d.GetLocationsByName(body.Name, false)
 	if existing != nil {

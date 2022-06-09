@@ -1,15 +1,14 @@
 package controller
 
 import (
-	"github.com/NubeIO/rubix-assist/service/em"
+	"github.com/NubeIO/rubix-assist/service/edge"
 	"github.com/gin-gonic/gin"
 )
 
 func (inst *Controller) InstallApp(c *gin.Context) {
-
-	m := &em.App{}
+	m := &edge.App{}
 	err = c.ShouldBindJSON(&m)
-	data, err := inst.Edge.InstallApp(m)
+	data, err := inst.Edge.RunAppInstall(m)
 	if err != nil {
 		reposeWithCode(404, err, nil, c)
 		return
@@ -18,10 +17,9 @@ func (inst *Controller) InstallApp(c *gin.Context) {
 }
 
 func (inst *Controller) InstallPipeline(c *gin.Context) {
-
-	m := &em.App{}
+	m := &edge.App{}
 	err = c.ShouldBindJSON(&m)
-	data, err := inst.Edge.InstallAppPipeline(m)
+	data, err := inst.Edge.PipeRunner(m)
 	if err != nil {
 		reposeWithCode(404, err, nil, c)
 		return

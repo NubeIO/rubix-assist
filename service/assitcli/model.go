@@ -1,4 +1,4 @@
-package client
+package assitcli
 
 type Ping struct {
 	Version                string `json:"version"`
