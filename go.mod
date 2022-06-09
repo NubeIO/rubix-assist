@@ -85,7 +85,7 @@ require (
 	github.com/NubeIO/lib-networking v0.0.4
 	github.com/NubeIO/lib-schema v0.0.2
 	github.com/NubeIO/lib-uuid v0.0.1
-	github.com/NubeIO/rubix-automater v0.0.0-20220608232748-9bac431772d3
+	github.com/NubeIO/rubix-automater v0.0.1
 	github.com/NubeIO/rubix-cli-app v0.0.4
 )
 
@@ -94,19 +94,14 @@ require (
 	github.com/NubeIO/lib-command v0.0.2 // indirect
 	github.com/NubeIO/lib-date v0.0.1 // indirect
 	github.com/NubeIO/lib-dirs v0.0.1 // indirect
-	github.com/NubeIO/lib-redis v0.0.3 // indirect
 	github.com/NubeIO/lib-store v0.0.1 // indirect
 	github.com/NubeIO/lib-systemctl-go v0.0.4 // indirect
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.2.4 // indirect
 	github.com/THREATINT/go-net v1.2.10 // indirect
-	github.com/cespare/xxhash/v2 v2.1.2 // indirect
-	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/google/go-github/v32 v32.1.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jmattheis/go-timemath v1.0.1 // indirect
