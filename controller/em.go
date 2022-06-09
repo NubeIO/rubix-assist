@@ -1,12 +1,12 @@
 package controller
 
 import (
-	"github.com/NubeIO/rubix-assist/service/edge"
+	"github.com/NubeIO/rubix-assist/service/edgeapi"
 	"github.com/gin-gonic/gin"
 )
 
 func (inst *Controller) InstallApp(c *gin.Context) {
-	m := &edge.App{}
+	m := &edgeapi.App{}
 	err = c.ShouldBindJSON(&m)
 	data, err := inst.Edge.RunAppInstall(m)
 	if err != nil {
@@ -17,7 +17,7 @@ func (inst *Controller) InstallApp(c *gin.Context) {
 }
 
 func (inst *Controller) InstallPipeline(c *gin.Context) {
-	m := &edge.App{}
+	m := &edgeapi.App{}
 	err = c.ShouldBindJSON(&m)
 	data, err := inst.Edge.PipeRunner(m)
 	if err != nil {

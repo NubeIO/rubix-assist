@@ -3,10 +3,10 @@ package assitcli
 import (
 	"fmt"
 	"github.com/NubeIO/edge/service/apps/installer"
-	"github.com/NubeIO/rubix-assist/service/edge"
+	"github.com/NubeIO/rubix-assist/service/edgeapi"
 )
 
-func (inst *Client) InstallApp(body *edge.App) (data *installer.InstallResponse, response *Response) {
+func (inst *Client) InstallApp(body *edgeapi.App) (data *installer.InstallResponse, response *Response) {
 	path := fmt.Sprintf("%s/%s", Paths.Apps.Path, "install")
 	response = &Response{}
 	resp, err := inst.Rest.R().

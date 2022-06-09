@@ -1,4 +1,4 @@
-package edge
+package edgeapi
 
 import (
 	"github.com/NubeIO/edge/service/client"
