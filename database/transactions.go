@@ -8,17 +8,18 @@ import (
 	"github.com/NubeIO/rubix-assist/pkg/model"
 )
 
-func (d *DB) GetMessage(uuid string) (*model.Message, error) {
-	m := new(model.Message)
+func (d *DB) GetTransaction(uuid string) (*model.Transaction, error) {
+	m := new(model.Transaction)
 	if err := d.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
-		logger.Errorf("GetMessage error: %v", err)
+		logger.Errorf("GetTransaction error: %v", err)
 		return nil, err
 	}
+
 	return m, nil
 }
 
-func (d *DB) GetMessages() ([]*model.Message, error) {
-	var m []*model.Message
+func (d *DB) GetTransactions() ([]*model.Transaction, error) {
+	var m []*model.Transaction
 	if err := d.DB.Find(&m).Error; err != nil {
 		return nil, err
 	} else {
@@ -26,13 +27,13 @@ func (d *DB) GetMessages() ([]*model.Message, error) {
 	}
 }
 
-func (d *DB) CreateMessage(message *model.Message) (*model.Message, error) {
-	alert, err := d.GetAlert(message.AlertUUID)
+func (d *DB) CreateTransaction(message *model.Transaction) (*model.Transaction, error) {
+	Task, err := d.GetTask(message.TaskUUID)
 	if err != nil {
-		return nil, errors.New("no alert found")
+		return nil, errors.New("no Task found")
 	}
 	message.UUID = uuid.ShortUUID("msg")
-	message.AlertUUID = alert.UUID
+	message.TaskUUID = Task.UUID
 	if err := d.DB.Create(&message).Error; err != nil {
 		return nil, err
 	} else {
@@ -40,8 +41,8 @@ func (d *DB) CreateMessage(message *model.Message) (*model.Message, error) {
 	}
 }
 
-func (d *DB) UpdateMessage(uuid string, message *model.Message) (*model.Message, error) {
-	m := new(model.Message)
+func (d *DB) UpdateTransaction(uuid string, message *model.Transaction) (*model.Transaction, error) {
+	m := new(model.Transaction)
 	query := d.DB.Where("uuid = ?", uuid).Find(&m).Updates(message)
 	if query.Error != nil {
 		return nil, query.Error
@@ -50,8 +51,8 @@ func (d *DB) UpdateMessage(uuid string, message *model.Message) (*model.Message,
 	}
 }
 
-func (d *DB) DeleteMessage(uuid string) (ok bool, err error) {
-	m := new(model.Message)
+func (d *DB) DeleteTransaction(uuid string) (ok bool, err error) {
+	m := new(model.Transaction)
 	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
 	if query.Error != nil {
 		return false, query.Error
@@ -63,9 +64,9 @@ func (d *DB) DeleteMessage(uuid string) (ok bool, err error) {
 	return true, nil
 }
 
-// DropMessages delete all.
-func (d *DB) DropMessages() (bool, error) {
-	var m *model.Message
+// DropTransactions delete all.
+func (d *DB) DropTransactions() (bool, error) {
+	var m *model.Transaction
 	query := d.DB.Where("1 = 1")
 	query.Delete(&m)
 	if query.Error != nil {

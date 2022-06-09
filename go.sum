@@ -59,6 +59,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
 github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY/8hQs=
+github.com/NubeIO/edge v0.0.5 h1:nKCKBtbNPbpWgW3MWCKaBSQti2yONDWe6nHGRoCQskw=
+github.com/NubeIO/edge v0.0.5/go.mod h1:7Av7CMafZ0yR6uHX0GyEAVEpsc9g2x4qaNUfT7LCUh0=
 github.com/NubeIO/git v0.0.3 h1:W7JAaKSJh6YKYuSa0r/5gMke40Y6GXssWaOFkeMN2wI=
 github.com/NubeIO/git v0.0.3/go.mod h1:qd7e1uVFo7AD6Zmhr2P8zgj+j9JGIsRW7+fUgCg8keA=
 github.com/NubeIO/lib-command v0.0.2 h1:jTg8YRSffIBsPAbU9X1Dn+L4bQ8e7PY2p7zJEcrTjrY=
@@ -89,10 +91,8 @@ github.com/NubeIO/nubeio-rubix-lib-models-go v1.2.4 h1:44Tos3Zbfep20ZdtYQpoFebEY
 github.com/NubeIO/nubeio-rubix-lib-models-go v1.2.4/go.mod h1:J0Xy/dX/f/xIhEnW6ZhkE2LiyuRk2H9gCb0Uk+2SSSk=
 github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.8 h1:Ri5k9eTM03rUGpgfs2+qL4IS+csvK6TrH3QgBJx6CBM=
 github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.8/go.mod h1:MU13rBQBD1xc/n2aRvNyCr8HZ5NNTsPhiZSUFhIgrT4=
+github.com/NubeIO/rubix-assist v0.0.2/go.mod h1:xF2AHoZoWE0WU7Py8gZks0aln+1hnhAZGaox05w/i+4=
 github.com/NubeIO/rubix-assist-model v0.0.1/go.mod h1:C/g3clw6/MmfuJXbxEpSaG+qYLtlUkz0LTqWcbtJO5w=
-github.com/NubeIO/rubix-automater v0.0.1 h1:nZfAG1TYXokbaRFb+beHHsstfpILV26UFg3QpNhUrOQ=
-github.com/NubeIO/rubix-automater v0.0.1/go.mod h1:Nb8RBYD4ioszgl6JIJFz4kvQsY/gIL8pSRtt7+LkYOw=
-github.com/NubeIO/rubix-cli-app v0.0.4 h1:LZzljzVkuYuX7FJ3VDnpPoMd8PEoZ6hqo5e/YCuNKPw=
 github.com/NubeIO/rubix-cli-app v0.0.4/go.mod h1:4BFtzbszgcOI3OMDbiMapG7BfA2wOhwpIHczag51X2c=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/PuerkitoBio/purell v1.1.1 h1:WEQqlqaGbrPkxLJWfBwQmfEAE1Z7ONdDLqrN38tNFfI=

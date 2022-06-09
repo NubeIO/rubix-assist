@@ -3,7 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/service/em"
+	"github.com/NubeIO/rubix-assist/service/edge"
 
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
 
@@ -25,7 +25,7 @@ type Controller struct {
 	WS   *melody.Melody //web socket
 	DB   *dbase.DB
 	Rest *rest.Service
-	Edge *em.EdgeManager
+	Edge *edge.Manager
 }
 
 type WsMsg struct {

@@ -1,4 +1,4 @@
-package client
+package assitcli
 
 import (
 	"fmt"
@@ -23,25 +23,29 @@ type Path struct {
 }
 
 var Paths = struct {
-	Hosts       Path
-	Ping        Path
-	HostNetwork Path
-	Location    Path
-	Users       Path
-	Edge        Path
-	Apps        Path
+	Hosts        Path
+	Ping         Path
+	HostNetwork  Path
+	Location     Path
+	Users        Path
+	Edge         Path
+	Apps         Path
+	Tasks        Path
+	Transactions Path
 }{
-	Hosts:       Path{Path: "/api/hosts"},
-	Ping:        Path{Path: "/api/system/ping"},
-	HostNetwork: Path{Path: "/api/networks"},
-	Location:    Path{Path: "/api/locations"},
-	Users:       Path{Path: "/api/locations"},
-	Edge:        Path{Path: "/api/edge"},
-	Apps:        Path{Path: "/api/edge/apps"},
+	Hosts:        Path{Path: "/api/hosts"},
+	Ping:         Path{Path: "/api/system/ping"},
+	HostNetwork:  Path{Path: "/api/networks"},
+	Location:     Path{Path: "/api/locations"},
+	Users:        Path{Path: "/api/locations"},
+	Edge:         Path{Path: "/api/edge"},
+	Apps:         Path{Path: "/api/edge/apps"},
+	Tasks:        Path{Path: "/api/Tasks"},
+	Transactions: Path{Path: "/api/transactions"},
 }
 
 type Response struct {
-	StatusCode int         `json:"status_code"`
+	StatusCode int         `json:"code"`
 	Message    interface{} `json:"message"`
 	resty      *resty.Response
 }

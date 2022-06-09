@@ -7,7 +7,7 @@ import (
 	dbhandler "github.com/NubeIO/rubix-assist/pkg/handler"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/service/auth"
-	"github.com/NubeIO/rubix-assist/service/em"
+	"github.com/NubeIO/rubix-assist/service/edge"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -51,7 +51,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		DB: appDB,
 	}
 	dbhandler.Init(dbHandler) // TODO REMOVE THIS
-	edgeManger := em.New(&em.EdgeManager{
+	edgeManger := edge.New(&edge.Manager{
 		DB: appDB,
 	})
 	api := controller.Controller{DB: appDB, WS: ws, Edge: edgeManger}
@@ -154,28 +154,28 @@ func Setup(db *gorm.DB) *gin.Engine {
 		teams.DELETE("/drop", api.DropTeams)
 	}
 
-	alerts := admin.Group("/tasks")
-	//alerts.Use(authMiddleware.MiddlewareFunc())
+	Tasks := admin.Group("/tasks")
+	//Tasks.Use(authMiddleware.MiddlewareFunc())
 	{
-		alerts.GET("/schema", api.AlertsSchema)
-		alerts.GET("/", api.GetAlerts)
-		alerts.POST("/", api.CreateAlert)
-		alerts.GET("/:uuid", api.GetAlert)
-		alerts.PATCH("/:uuid", api.UpdateAlert)
-		alerts.DELETE("/:uuid", api.DeleteAlert)
-		alerts.DELETE("/drop", api.DropAlerts)
+		Tasks.GET("/schema", api.TasksSchema)
+		Tasks.GET("/", api.GetTasks)
+		Tasks.POST("/", api.CreateTask)
+		Tasks.GET("/:uuid", api.GetTask)
+		Tasks.PATCH("/:uuid", api.UpdateTask)
+		Tasks.DELETE("/:uuid", api.DeleteTask)
+		Tasks.DELETE("/drop", api.DropTasks)
 	}
 
 	messages := admin.Group("/transactions")
 	//messages.Use(authMiddleware.MiddlewareFunc())
 	{
-		messages.GET("/schema", api.MessagesSchema)
-		messages.GET("/", api.GetMessages)
-		messages.POST("/", api.CreateMessage)
-		messages.GET("/:uuid", api.GetMessage)
-		messages.PATCH("/:uuid", api.UpdateMessage)
-		messages.DELETE("/:uuid", api.DeleteMessage)
-		messages.DELETE("/drop", api.DropMessages)
+		messages.GET("/schema", api.TransactionsSchema)
+		messages.GET("/", api.GetTransactions)
+		messages.POST("/", api.CreateTransaction)
+		messages.GET("/:uuid", api.GetTransaction)
+		messages.PATCH("/:uuid", api.UpdateTransaction)
+		messages.DELETE("/:uuid", api.DeleteTransaction)
+		messages.DELETE("/drop", api.DropTransactions)
 	}
 
 	tools := admin.Group("/tools")
@@ -212,10 +212,10 @@ func Setup(db *gorm.DB) *gin.Engine {
 		git.GET("/:uuid", api.GitGetRelease)
 	}
 
-	edge := r.Group("/api/edge")
+	edgeAssist := r.Group("/api/edge")
 	{
-		edge.POST("/apps/install", api.InstallApp)
-		edge.POST("/apps/pipeline/install", api.InstallPipeline)
+		edgeAssist.POST("/apps/install", api.InstallApp)
+		edgeAssist.POST("/apps/pipeline/install", api.InstallPipeline)
 	}
 
 	return r

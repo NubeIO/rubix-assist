@@ -7,7 +7,7 @@ import (
 
 type Host struct {
 	UUID                 string    `json:"uuid" gorm:"primaryKey" `
-	Name                 string    `json:"name"  gorm:"type:varchar(255);unique;not null"  `
+	Name                 string    `json:"name"  gorm:"type:varchar(255);not null"  `
 	NetworkUUID          string    `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null"`
 	Enable               *bool     `json:"enable"`
 	ProductType          string    //edge28, rubix-compute
