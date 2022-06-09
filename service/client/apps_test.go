@@ -13,7 +13,6 @@ func TestClient_InstallApp(t *testing.T) {
 	body := &em.App{
 		HostName: "rc",
 	}
-	d, r := client.InstallApp(body)
-	fmt.Println(d)
+	_, r := client.InstallApp(body)
 	fmt.Println(r)
 }

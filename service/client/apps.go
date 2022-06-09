@@ -12,6 +12,12 @@ func (inst *Client) InstallApp(body *em.App) (data *installer.InstallResponse, r
 	resp, err := inst.Rest.R().
 		SetBody(body).
 		SetResult(&installer.InstallResponse{}).
+		SetError(&Response{}).
 		Post(path)
-	return resp.Result().(*installer.InstallResponse), response.buildResponse(resp, err)
+	response = response.buildResponse(resp, err)
+	if resp.IsSuccess() {
+		data = resp.Result().(*installer.InstallResponse)
+		response.Message = resp.Result().(*installer.InstallResponse)
+	}
+	return data, response
 }
