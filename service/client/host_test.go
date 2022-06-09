@@ -30,19 +30,19 @@ func TestHost(*testing.T) {
 	host.Name = fmt.Sprintf("name_%d", time.Now().Unix())
 	host, res = client.AddHost(host)
 	host.Name = "get fucked_" + fmt.Sprintf("name_%d", time.Now().Unix())
-	if res.GetStatus() != 200 {
+	if res.StatusCode != 200 {
 		return
 	}
 	fmt.Println("NEW host", host.Name)
 	host, res = client.UpdateHost(host.UUID, host)
-	if res.GetStatus() != 200 {
+	if res.StatusCode != 200 {
 		return
 	}
 	fmt.Println(host.Name, host.UUID)
-	fmt.Println(res.GetStatus())
+	fmt.Println(res.StatusCode)
 	res = client.DeleteHost(host.UUID)
 	fmt.Println(res.Message)
-	if res.GetStatus() != 200 {
+	if res.StatusCode != 200 {
 		return
 	}
 

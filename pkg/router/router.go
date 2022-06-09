@@ -215,6 +215,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	edge := r.Group("/api/edge")
 	{
 		edge.POST("/apps/install", api.InstallApp)
+		edge.POST("/apps/pipeline/install", api.InstallPipeline)
 	}
 
 	return r
