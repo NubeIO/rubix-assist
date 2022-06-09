@@ -3,7 +3,8 @@ package em
 import (
 	"errors"
 	base "github.com/NubeIO/rubix-assist/database"
-	"github.com/NubeIO/rubix-automater/automater/model"
+	"github.com/NubeIO/rubix-assist/pkg/model"
+	automodel "github.com/NubeIO/rubix-automater/automater/model"
 	"github.com/NubeIO/rubix-automater/controller/jobctl"
 	"github.com/NubeIO/rubix-automater/controller/pipectl"
 	autocli "github.com/NubeIO/rubix-automater/service/client"
@@ -42,12 +43,12 @@ func (inst *EdgeManager) response() *client.Response {
 - automater will try to install the apps by calling RA install app api
 */
 
-func (inst *EdgeManager) InstallAppPipeline(body *App) (data *model.Pipeline, response *autocli.Response) {
-	_, err := inst.DB.GetHostByName(body.HostName, false)
+func (inst *EdgeManager) InstallAppPipeline(body *App) (data *automodel.Pipeline, response *autocli.Response) {
+	host, err := inst.DB.GetHostByName(body.HostName, false)
 	if err != nil {
 		return nil, nil
 	}
-	autoData, autoResp := inst.AddPipeline(body)
+	autoData, autoResp := inst.AddPipeline(body, host)
 	return autoData, autoResp
 }
 
@@ -76,21 +77,21 @@ func (inst *EdgeManager) InstallApp(body *App) (*installer.InstallResponse, inte
 	return data, nil
 }
 
-func (inst *EdgeManager) AddPipeline(app *App) (data *model.Pipeline, response *autocli.Response) {
+func (inst *EdgeManager) AddPipeline(app *App, host *model.Host) (data *automodel.Pipeline, response *autocli.Response) {
 
 	cli := autocli.New("0.0.0.0", 1663)
 
 	jobOne := &jobctl.JobBody{
 		Name:       "ping 1",
 		TaskName:   "pingHost",
-		Options:    &model.JobOptions{},
+		Options:    &automodel.JobOptions{},
 		TaskParams: map[string]interface{}{"url": "0.0.0.0", "port": 1662},
 	}
 
 	jobTwo := &jobctl.JobBody{
 		Name:       "install app",
 		TaskName:   "installApp",
-		Options:    &model.JobOptions{},
+		Options:    &automodel.JobOptions{},
 		TaskParams: map[string]interface{}{"hostName": app.HostName, "appName": app.AppName, "version": app.Version},
 	}
 
@@ -102,15 +103,24 @@ func (inst *EdgeManager) AddPipeline(app *App) (data *model.Pipeline, response *
 		Name:       "install app pipeline",
 		Jobs:       jobs,
 		ScheduleAt: "10 sec",
-		PipelineOptions: &model.PipelineOptions{
+		PipelineOptions: &automodel.PipelineOptions{
 			EnableInterval:   false,
 			RunOnInterval:    "10 sec",
 			DelayBetweenTask: 1,
 			CancelOnFailure:  false,
 		},
 	}
+	pipe, resp := cli.AddPipeline(body)
 
-	return cli.AddPipeline(body)
+	inst.DB.CreateAlert(&model.Alert{
+		HostUUID:     host.UUID,
+		Host:         host.UUID,
+		AlertType:    "job",
+		PipelineUUID: pipe.UUID,
+		IsPipeline:   true,
+	})
+
+	return pipe, resp
 
 }
 
