@@ -1,4 +1,4 @@
-package edge
+package edgeapi
 
 import (
 	"errors"
@@ -41,7 +41,7 @@ func (inst *Manager) getHost(body *App) (*model.Host, error, string) {
 	return host, err, token
 }
 
-// installApp will install the app on the edge device
+// installApp will install the app on the edgeapi device
 func (inst *Manager) installApp(body *App, host *model.Host, token string) (*installer.InstallResponse, interface{}) {
 	app := &installer.App{
 		AppName: body.AppName,

@@ -38,8 +38,8 @@ var Paths = struct {
 	HostNetwork:  Path{Path: "/api/networks"},
 	Location:     Path{Path: "/api/locations"},
 	Users:        Path{Path: "/api/locations"},
-	Edge:         Path{Path: "/api/edge"},
-	Apps:         Path{Path: "/api/edge/apps"},
+	Edge:         Path{Path: "/api/edgeapi"},
+	Apps:         Path{Path: "/api/edgeapi/apps"},
 	Tasks:        Path{Path: "/api/Tasks"},
 	Transactions: Path{Path: "/api/transactions"},
 }

@@ -7,7 +7,7 @@ import (
 	dbhandler "github.com/NubeIO/rubix-assist/pkg/handler"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/service/auth"
-	"github.com/NubeIO/rubix-assist/service/edge"
+	"github.com/NubeIO/rubix-assist/service/edgeapi"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -51,7 +51,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		DB: appDB,
 	}
 	dbhandler.Init(dbHandler) // TODO REMOVE THIS
-	edgeManger := edge.New(&edge.Manager{
+	edgeManger := edgeapi.New(&edgeapi.Manager{
 		DB: appDB,
 	})
 	api := controller.Controller{DB: appDB, WS: ws, Edge: edgeManger}
@@ -182,9 +182,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 	//tools.Use(authMiddleware.MiddlewareFunc())
 	{
 
-		tools.GET("/edge/ip/schema", api.EdgeIPSchema)
-		tools.POST("/edge/ip", api.EdgeSetIP)
-		tools.POST("/edge/ip/dhcp", api.EdgeSetIP)
+		tools.GET("/edgeapi/ip/schema", api.EdgeIPSchema)
+		tools.POST("/edgeapi/ip", api.EdgeSetIP)
+		tools.POST("/edgeapi/ip/dhcp", api.EdgeSetIP)
 		tools.POST("/zip", api.ZipUpload)
 
 	}
@@ -212,7 +212,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		git.GET("/:uuid", api.GitGetRelease)
 	}
 
-	edgeAssist := r.Group("/api/edge")
+	edgeAssist := r.Group("/api/edgeapi")
 	{
 		edgeAssist.POST("/apps/install", api.InstallApp)
 		edgeAssist.POST("/apps/pipeline/install", api.InstallPipeline)
