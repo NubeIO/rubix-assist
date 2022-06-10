@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-uuid/uuid"
+	"github.com/NubeIO/rubix-assist/pkg/helpers/ttime"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/pkg/model"
 	"github.com/NubeIO/rubix-assist/service/tasks"
@@ -49,12 +50,7 @@ func (d *DB) GetTaskByType(uuid string, TaskType string) (*model.Task, error) {
 	return m, nil
 }
 
-type TaskParams struct {
-	IsPipeline bool
-	IsJob      bool
-}
-
-func (d *DB) CreateTask(task *model.Task, params *TaskParams) (*model.Task, error) {
+func (d *DB) CreateTask(task *model.Task) (*model.Task, error) {
 	host, err := d.GetHostByName(task.HostUUID, true)
 	if err != nil {
 		return nil, errors.New("no valid host found")
@@ -63,22 +59,68 @@ func (d *DB) CreateTask(task *model.Task, params *TaskParams) (*model.Task, erro
 	if err != nil {
 		return nil, err
 	}
-	if params != nil {
-		if params.IsPipeline {
-			task.IsPipeline = true
-		}
-		if params.IsJob {
-			task.IsJob = true
-		}
+
+	if task.IsPipeline {
+		task.IsPipeline = true
 	}
+	if task.IsJob {
+		task.IsJob = true
+	}
+
 	task.UUID = uuid.ShortUUID("tas")
 	task.HostUUID = host.UUID
 	task.Host = host.Name
+	task.CreatedAt = ttime.Now()
 	if err := d.DB.Create(&task).Error; err != nil {
 		return nil, err
 	} else {
 		return task, nil
 	}
+}
+
+func (d *DB) GetTaskByPipelineUUID(uuid string) (*model.Task, error) {
+	m := new(model.Task)
+	if err := d.DB.Where("pipeline_uuid = ? ", uuid).First(&m).Error; err != nil {
+		logger.Errorf("GetTask error: %v", err)
+		return nil, err
+	}
+	return m, nil
+}
+
+func (d *DB) TaskEntry(task *model.Task) (*model.Task, error) {
+	if task.IsPipeline {
+		existing, _ := d.GetTaskByPipelineUUID(task.PipelineUUID)
+		if existing != nil { // add entry
+			transaction := &model.Transaction{}
+			transaction, err := d.CreateTransaction(transaction)
+			if err != nil {
+				return nil, err
+			}
+			return existing, nil
+		} else {
+			pipeline, err := d.CreateTaskPipeline(task)
+			if err != nil {
+				return nil, err
+			}
+			return pipeline, err
+		}
+	} else {
+		createTask, err := d.CreateTask(task)
+		if err != nil {
+			return nil, err
+		}
+		return createTask, err
+	}
+}
+
+func (d *DB) CreateTaskPipeline(task *model.Task) (*model.Task, error) {
+	if task.PipelineUUID == "" {
+		return nil, errors.New("pipeline uuid cant not be empty")
+	}
+	task.FromAutomater = true
+	task.IsPipeline = true
+	task, err := d.CreateTask(task)
+	return task, err
 }
 
 func (d *DB) UpdateTask(uuid string, Task *model.Task) (*model.Task, error) {

@@ -15,7 +15,15 @@ func New() *RealTime {
 }
 
 // Now returns a timestamp of the current datetime in UTC.
-func (rt *RealTime) Now(utc bool) time.Time {
+func Now() time.Time {
+	if utc {
+		return time.Now().UTC()
+	}
+	return time.Now()
+}
+
+// Now returns a timestamp of the current datetime in UTC.
+func (rt *RealTime) Now() time.Time {
 	if utc {
 		return time.Now().UTC()
 	}
@@ -23,7 +31,7 @@ func (rt *RealTime) Now(utc bool) time.Time {
 }
 
 // Timestamp returns a timestamp of the current datetime in UTC.
-func (rt *RealTime) Timestamp(utc bool) string {
+func (rt *RealTime) Timestamp() string {
 	if utc {
 		return time.Now().UTC().Format(time.RFC3339)
 	}
@@ -31,7 +39,7 @@ func (rt *RealTime) Timestamp(utc bool) string {
 }
 
 // Pretty returns a timestamp of the current datetime in UTC.
-func (rt *RealTime) Pretty(utc bool) string {
+func (rt *RealTime) Pretty() string {
 	if utc {
 		return time.Now().UTC().Format(time.RFC850)
 	}

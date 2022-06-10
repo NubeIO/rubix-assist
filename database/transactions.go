@@ -3,6 +3,7 @@ package base
 import (
 	"errors"
 	"github.com/NubeIO/lib-uuid/uuid"
+	"github.com/NubeIO/rubix-assist/pkg/helpers/ttime"
 	"github.com/NubeIO/rubix-assist/service/tasks"
 
 	"github.com/NubeIO/rubix-assist/pkg/logger"
@@ -15,7 +16,6 @@ func (d *DB) GetTransaction(uuid string) (*model.Transaction, error) {
 		logger.Errorf("GetTransaction error: %v", err)
 		return nil, err
 	}
-
 	return m, nil
 }
 
@@ -39,6 +39,7 @@ func (d *DB) CreateTransaction(transaction *model.Transaction) (*model.Transacti
 	}
 	transaction.UUID = uuid.ShortUUID("trn")
 	transaction.TaskUUID = Task.UUID
+	transaction.CreatedAt = ttime.Now()
 	if err := d.DB.Create(&transaction).Error; err != nil {
 		return nil, err
 	} else {
