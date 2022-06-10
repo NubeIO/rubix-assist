@@ -1,7 +1,6 @@
 package edgeapi
 
 import (
-	"errors"
 	"fmt"
 	"github.com/NubeIO/edge/service/apps/installer"
 	"github.com/NubeIO/rubix-assist/pkg/model"
@@ -17,45 +16,6 @@ import (
 - create
 */
 
-func (inst *Manager) getTokens() (token string, tokens []*model.Token, err error) {
-	tokens = []*model.Token{}
-	tokens, err = inst.DB.GetTokens()
-	if err != nil {
-		return "", nil, errors.New("no token provided")
-	}
-	if len(tokens) == 0 {
-		return "", nil, errors.New("no token provided")
-	}
-	return tokens[0].Token, tokens, nil
-}
-
-// getHost returns the host and a GitHub token
-func (inst *Manager) getHost(body *App) (*model.Host, error, string) {
-	host, err := inst.DB.GetHostByLocationName(body.HostName, body.NetworkName, body.LocationName)
-	if err != nil {
-		return nil, err, ""
-	}
-	token, _, err := inst.getTokens()
-	if err != nil {
-		return nil, err, ""
-	}
-	return host, err, token
-}
-
-// installApp will install the app on the edgeapi device
-func (inst *Manager) installApp(body *App, host *model.Host, token string) (*installer.InstallResponse, interface{}) {
-	app := &installer.App{
-		AppName: body.AppName,
-		Token:   token,
-		Version: body.Version,
-	}
-	data, resp := inst.reset(host.IP, host.RubixPort).InstallApp(app)
-	if resp.StatusCode > 299 {
-		return data, resp.Message
-	}
-	return data, nil
-}
-
 type TaskParams struct {
 	LocationName string `json:"locationName"`
 	NetworkName  string `json:"network_name"`
@@ -66,16 +26,16 @@ type TaskParams struct {
 	Version string `json:"version"`
 }
 
-func (inst *Manager) PipeRunner(app *App) (data *automodel.Pipeline, response *autocli.Response) {
+func (inst *Manager) PipeRunner(app *App) (*automodel.Pipeline, *autocli.Response) {
 	return inst.pipeRunner(app)
 }
 
-func (inst *Manager) pipeRunner(app *App) (data *automodel.Pipeline, response *autocli.Response) {
-	response = &autocli.Response{}
+func (inst *Manager) pipeRunner(app *App) (*automodel.Pipeline, *autocli.Response) {
+	resp := &autocli.Response{}
 	host, err, _ := inst.getHost(app)
 	if err != nil {
-		response.Message = err
-		return nil, response
+		resp.Message = err
+		return nil, resp
 	}
 	pingTask := &jobctl.JobBody{
 		Name:       fmt.Sprintf("run %s task on host:%s", tasks.PingHost.String(), host.Name),
@@ -106,9 +66,29 @@ func (inst *Manager) pipeRunner(app *App) (data *automodel.Pipeline, response *a
 			RunOnInterval:  "10 sec",
 		},
 	}
-
 	client := autocli.New("0.0.0.0", 1663)
-	return client.AddPipeline(pipeBuilder)
+	pipe, resp := client.AddPipeline(pipeBuilder)
+
+	if resp.StatusCode > 299 {
+		return pipe, resp
+	}
+	pipe, resp = inst.taskEntry(pipe, resp)
+	return pipe, resp
+}
+
+func (inst *Manager) taskEntry(data *automodel.Pipeline, response *autocli.Response) (*automodel.Pipeline, *autocli.Response) {
+	task := &model.Task{
+		IsPipeline:   true,
+		PipelineUUID: data.UUID,
+		Status:       data.Status.String(),
+	}
+	_, err := inst.DB.TaskEntry(task)
+	if err != nil {
+		response.Message = err
+		return data, response
+	}
+	return data, response
+
 }
 
 func (inst *Manager) RunAppInstall(body *App) (*installer.InstallResponse, interface{}) {
