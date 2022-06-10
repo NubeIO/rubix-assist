@@ -3,6 +3,7 @@ package base
 import (
 	"errors"
 	"github.com/NubeIO/lib-uuid/uuid"
+	"github.com/NubeIO/rubix-assist/service/tasks"
 
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/pkg/model"
@@ -27,17 +28,21 @@ func (d *DB) GetTransactions() ([]*model.Transaction, error) {
 	}
 }
 
-func (d *DB) CreateTransaction(message *model.Transaction) (*model.Transaction, error) {
-	Task, err := d.GetTask(message.TaskUUID)
+func (d *DB) CreateTransaction(transaction *model.Transaction) (*model.Transaction, error) {
+	Task, err := d.GetTask(transaction.TaskUUID)
 	if err != nil {
 		return nil, errors.New("no Task found")
 	}
-	message.UUID = uuid.ShortUUID("trn")
-	message.TaskUUID = Task.UUID
-	if err := d.DB.Create(&message).Error; err != nil {
+	err = tasks.CheckTransaction(transaction.Type)
+	if err != nil {
+		return nil, err
+	}
+	transaction.UUID = uuid.ShortUUID("trn")
+	transaction.TaskUUID = Task.UUID
+	if err := d.DB.Create(&transaction).Error; err != nil {
 		return nil, err
 	} else {
-		return message, nil
+		return transaction, nil
 	}
 }
 

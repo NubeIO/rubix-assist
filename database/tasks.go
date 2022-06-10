@@ -59,7 +59,7 @@ func (d *DB) CreateTask(task *model.Task, params *TaskParams) (*model.Task, erro
 	if err != nil {
 		return nil, errors.New("no valid host found")
 	}
-	err = tasks.CheckTask(task.TaskType)
+	err = tasks.CheckTask(task.Type)
 	if err != nil {
 		return nil, err
 	}

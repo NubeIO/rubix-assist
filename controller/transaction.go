@@ -37,7 +37,7 @@ func (inst *Controller) CreateTransaction(c *gin.Context) {
 	err = c.ShouldBindJSON(&m)
 	team, err := inst.DB.CreateTransaction(m)
 	if err != nil {
-		reposeHandler(m, err, c)
+		reposeHandler(nil, err, c)
 		return
 	}
 	reposeHandler(team, err, c)
