@@ -9,9 +9,8 @@ type Task struct {
 	UUID          string         `json:"uuid" gorm:"primarykey"`
 	Status        string         `json:"status"`
 	UserUUID      string         `json:"user_uuid"`
-	From          string         `json:"from"`
 	HostUUID      string         `json:"host_uuid"`
-	Host          string         `json:"host,omitempty"`
+	HostName      string         `json:"host_name,omitempty"`
 	Type          string         `json:"type"` //edgeapi.TaskType
 	Count         uint           `json:"count"`
 	CreatedAt     time.Time      `json:"date"`

@@ -207,7 +207,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		git.GET("/:uuid", api.GitGetRelease)
 	}
 
-	edgeAssist := r.Group("/api/edgeapi")
+	edgeAssist := r.Group("/api/edge")
 	{
 		edgeAssist.POST("/apps/install", api.InstallApp)
 		edgeAssist.POST("/apps/pipeline/install", api.InstallPipeline)

@@ -69,7 +69,10 @@ func (d *DB) CreateTask(task *model.Task) (*model.Task, error) {
 
 	task.UUID = uuid.ShortUUID("tas")
 	task.HostUUID = host.UUID
-	task.Host = host.Name
+	if task.HostUUID == "" {
+		return nil, errors.New("host uuid can not be empty")
+	}
+	task.HostName = host.Name
 	task.CreatedAt = ttime.Now()
 	if err := d.DB.Create(&task).Error; err != nil {
 		return nil, err

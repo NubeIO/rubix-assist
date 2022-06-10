@@ -3,6 +3,7 @@ package edgeapi
 import (
 	"fmt"
 	"github.com/NubeIO/edge/service/apps/installer"
+	"github.com/NubeIO/edge/service/client"
 	"github.com/NubeIO/rubix-assist/pkg/model"
 	"github.com/NubeIO/rubix-assist/service/autocli"
 	"github.com/NubeIO/rubix-assist/service/tasks"
@@ -34,7 +35,8 @@ func (inst *Manager) pipeRunner(app *App) (*automodel.Pipeline, *autocli.Respons
 	resp := &autocli.Response{}
 	host, err, _ := inst.getHost(app)
 	if err != nil {
-		resp.Message = err
+		resp.StatusCode = 404
+		resp.Message = err.Error()
 		return nil, resp
 	}
 	pingTask := &jobctl.JobBody{
@@ -68,33 +70,45 @@ func (inst *Manager) pipeRunner(app *App) (*automodel.Pipeline, *autocli.Respons
 	}
 	client := autocli.New("0.0.0.0", 1663)
 	pipe, resp := client.AddPipeline(pipeBuilder)
-
 	if resp.StatusCode > 299 {
 		return pipe, resp
 	}
-	pipe, resp = inst.taskEntry(pipe, resp)
+	err = inst.taskEntry(host, pipe)
+	if err != nil {
+		resp.Message = err.Error()
+		return pipe, resp
+	}
 	return pipe, resp
 }
 
-func (inst *Manager) taskEntry(data *automodel.Pipeline, response *autocli.Response) (*automodel.Pipeline, *autocli.Response) {
+func (inst *Manager) taskEntry(host *model.Host, data *automodel.Pipeline) error {
 	task := &model.Task{
+		Type:         tasks.InstallApp.String(),
+		HostUUID:     host.UUID,
+		HostName:     host.Name,
 		IsPipeline:   true,
 		PipelineUUID: data.UUID,
 		Status:       data.Status.String(),
 	}
 	_, err := inst.DB.TaskEntry(task)
 	if err != nil {
-		response.Message = err
-		return data, response
+		return err
 	}
-	return data, response
+	return nil
 
 }
 
-func (inst *Manager) RunAppInstall(body *App) (*installer.InstallResponse, interface{}) {
+type Response struct {
+	Code    int         `json:"code"`
+	Message interface{} `json:"message"`
+}
+
+func (inst *Manager) RunAppInstall(body *App) (*installer.InstallResponse, *client.Response) {
+	response := &client.Response{}
 	host, err, token := inst.getHost(body)
 	if err != nil {
-		return nil, nil
+		response.Message = err.Error()
+		return nil, response
 	}
 	app := &installer.App{
 		AppName: body.AppName,
@@ -102,8 +116,7 @@ func (inst *Manager) RunAppInstall(body *App) (*installer.InstallResponse, inter
 		Version: body.Version,
 	}
 	data, resp := inst.reset(host.IP, host.RubixPort).InstallApp(app)
-	if resp.StatusCode > 299 {
-		return data, resp.Message
-	}
-	return data, nil
+	fmt.Println(data)
+	fmt.Println(resp)
+	return data, resp
 }

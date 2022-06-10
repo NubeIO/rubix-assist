@@ -10,7 +10,7 @@ func (inst *Controller) InstallApp(c *gin.Context) {
 	err = c.ShouldBindJSON(&m)
 	data, err := inst.Edge.RunAppInstall(m)
 	if err != nil {
-		reposeWithCode(404, err, nil, c)
+		reposeWithCode(404, data, nil, c)
 		return
 	}
 	reposeWithCode(202, data, nil, c)
