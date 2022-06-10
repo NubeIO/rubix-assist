@@ -8,13 +8,13 @@ type TransactionType int
 
 //go:generate stringer -type=TransactionType
 const (
-	Fail TransactionType = iota
+	Failed TransactionType = iota
 	Completed
 )
 
 func CheckTransaction(s string) error {
 	switch s {
-	case Fail.String():
+	case Failed.String():
 		return nil
 	case Completed.String():
 		return nil

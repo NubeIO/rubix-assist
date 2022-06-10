@@ -8,13 +8,13 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
-	_ = x[Fail-0]
+	_ = x[Failed-0]
 	_ = x[Completed-1]
 }
 
-const _TransactionType_name = "FailCompleted"
+const _TransactionType_name = "FailedCompleted"
 
-var _TransactionType_index = [...]uint8{0, 4, 13}
+var _TransactionType_index = [...]uint8{0, 6, 15}
 
 func (i TransactionType) String() string {
 	if i < 0 || i >= TransactionType(len(_TransactionType_index)-1) {

@@ -1,15 +1,17 @@
 package model
 
 import (
+	"gorm.io/datatypes"
 	"time"
 )
 
 type Task struct {
 	UUID          string         `json:"uuid" gorm:"primarykey"`
+	UserUUID      string         `json:"user_uuid"`
 	From          string         `json:"from"`
 	HostUUID      string         `json:"host_uuid"`
 	Host          string         `json:"host,omitempty"`
-	TaskType      string         `json:"task_type"` //edgeapi.TaskType
+	Type          string         `json:"type"` //edgeapi.TaskType
 	Count         uint           `json:"count"`
 	Date          time.Time      `json:"date"`
 	FromAutomater bool           `json:"from_automater"`
@@ -21,10 +23,10 @@ type Task struct {
 }
 
 type Transaction struct {
-	UUID        string    `json:"uuid" gorm:"primarykey"`
-	Title       string    `json:"title,omitempty"`
-	Transaction string    `json:"message,omitempty"`
-	Type        string    `json:"type,omitempty"`
-	Date        time.Time `json:"date,omitempty"`
-	TaskUUID    string    `json:"task_uuid,omitempty" gorm:"TYPE:string REFERENCES tasks;"`
+	UUID     string         `json:"uuid" gorm:"primarykey"`
+	Title    string         `json:"title,omitempty"`
+	Message  datatypes.JSON `json:"message,omitempty"`
+	Type     string         `json:"type,omitempty"`
+	Date     time.Time      `json:"date,omitempty"`
+	TaskUUID string         `json:"task_uuid,omitempty" gorm:"TYPE:string REFERENCES tasks;"`
 }
