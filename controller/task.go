@@ -34,9 +34,9 @@ func (inst *Controller) GetTasks(c *gin.Context) {
 func (inst *Controller) CreateTask(c *gin.Context) {
 	m := new(model.Task)
 	err = c.ShouldBindJSON(&m)
-	res, err := inst.DB.CreateTask(m)
+	res, err := inst.DB.CreateTask(m, nil)
 	if err != nil {
-		reposeHandler(m, err, c)
+		reposeHandler(nil, err, c)
 		return
 	}
 	reposeHandler(res, err, c)

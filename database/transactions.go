@@ -32,7 +32,7 @@ func (d *DB) CreateTransaction(message *model.Transaction) (*model.Transaction, 
 	if err != nil {
 		return nil, errors.New("no Task found")
 	}
-	message.UUID = uuid.ShortUUID("msg")
+	message.UUID = uuid.ShortUUID("trn")
 	message.TaskUUID = Task.UUID
 	if err := d.DB.Create(&message).Error; err != nil {
 		return nil, err

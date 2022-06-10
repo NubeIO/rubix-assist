@@ -6,6 +6,7 @@ import (
 	"github.com/NubeIO/edge/service/apps/installer"
 	"github.com/NubeIO/rubix-assist/pkg/model"
 	"github.com/NubeIO/rubix-assist/service/autocli"
+	"github.com/NubeIO/rubix-assist/service/tasks"
 	automodel "github.com/NubeIO/rubix-automater/automater/model"
 	"github.com/NubeIO/rubix-automater/controller/jobctl"
 	"github.com/NubeIO/rubix-automater/controller/pipectl"
@@ -77,14 +78,14 @@ func (inst *Manager) pipeRunner(app *App) (data *automodel.Pipeline, response *a
 		return nil, response
 	}
 	pingTask := &jobctl.JobBody{
-		Name:       fmt.Sprintf("run %s task on host:%s", PingHost.String(), host.Name),
-		TaskName:   PingHost.String(),
+		Name:       fmt.Sprintf("run %s task on host:%s", tasks.PingHost.String(), host.Name),
+		TaskName:   tasks.PingHost.String(),
 		TaskParams: map[string]interface{}{"url": host.IP, "port": host.RubixPort},
 	}
 
 	installTask := &jobctl.JobBody{
-		Name:     fmt.Sprintf("run %s task on host:%s", InstallApp.String(), host.Name),
-		TaskName: InstallApp.String(),
+		Name:     fmt.Sprintf("run %s task on host:%s", tasks.InstallApp.String(), host.Name),
+		TaskName: tasks.InstallApp.String(),
 		Options: &automodel.JobOptions{
 			EnableInterval: false,
 			RunOnInterval:  "",

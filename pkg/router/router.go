@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/NubeIO/rubix-assist/controller"
 	dbase "github.com/NubeIO/rubix-assist/database"
-	dbhandler "github.com/NubeIO/rubix-assist/pkg/handler"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/service/auth"
 	"github.com/NubeIO/rubix-assist/service/edgeapi"
@@ -47,10 +46,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	appDB := &dbase.DB{
 		DB: db,
 	}
-	dbHandler := &dbhandler.Handler{
-		DB: appDB,
-	}
-	dbhandler.Init(dbHandler) // TODO REMOVE THIS
 	edgeManger := edgeapi.New(&edgeapi.Manager{
 		DB: appDB,
 	})

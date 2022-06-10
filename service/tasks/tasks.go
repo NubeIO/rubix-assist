@@ -1,4 +1,4 @@
-package edgeapi
+package tasks
 
 import "errors"
 
@@ -22,6 +22,6 @@ func CheckTask(s string) error {
 	case RemoveApp.String():
 		return nil
 	}
-	return errors.New("invalid action type, try installApp or ping")
+	return errors.New("invalid action type, try InstallApp or PingHost")
 
 }

@@ -6,11 +6,12 @@ import (
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/pkg/model"
+	"github.com/NubeIO/rubix-assist/service/tasks"
 )
 
 func (d *DB) GetTask(uuid string) (*model.Task, error) {
 	m := new(model.Task)
-	if err := d.DB.Where("uuid = ? ", uuid).Preload("Messages").First(&m).Error; err != nil {
+	if err := d.DB.Where("uuid = ? ", uuid).Preload("Transactions").First(&m).Error; err != nil {
 		logger.Errorf("GetTask error: %v", err)
 		return nil, err
 	}
@@ -19,7 +20,7 @@ func (d *DB) GetTask(uuid string) (*model.Task, error) {
 
 func (d *DB) GetTasks() ([]*model.Task, error) {
 	var m []*model.Task
-	if err := d.DB.Preload("Messages").Find(&m).Error; err != nil {
+	if err := d.DB.Preload("Transactions").Find(&m).Error; err != nil {
 		return nil, err
 	} else {
 		return m, nil
@@ -37,10 +38,10 @@ func (d *DB) GetTaskByField(field string, value string) (*model.Task, error) {
 	return m, nil
 }
 
-// GetTaskByType get an Task by type and its uuid
+// GetTaskByType get a Task by type and its uuid
 func (d *DB) GetTaskByType(uuid string, TaskType string) (*model.Task, error) {
 	var m *model.Task
-	f := "host_uuid = ? AND Task_type = ?"
+	f := "host_uuid = ? AND task_type = ?"
 	query := d.DB.Where(f, uuid, TaskType).First(&m)
 	if query.Error != nil {
 		return nil, query.Error
@@ -48,27 +49,35 @@ func (d *DB) GetTaskByType(uuid string, TaskType string) (*model.Task, error) {
 	return m, nil
 }
 
-func (d *DB) CreateTask(Task *model.Task) (*model.Task, error) {
-	host, err := d.GetHostByName(Task.HostUUID, true)
+type TaskParams struct {
+	IsPipeline bool
+	IsJob      bool
+}
+
+func (d *DB) CreateTask(task *model.Task, params *TaskParams) (*model.Task, error) {
+	host, err := d.GetHostByName(task.HostUUID, true)
 	if err != nil {
 		return nil, errors.New("no valid host found")
 	}
-	//items, err := reflections.Items("a")
-	//typeExist := false
-	//for _, a := range items {
-	//	if Task.TaskType == a {
-	//		typeExist = true
-	//	}
-	//}
-	//if !typeExist {
-	//	return nil, errors.New("incorrect TaskType provided")
-	//}
-	Task.UUID = uuid.ShortUUID("alt")
-	Task.HostUUID = host.UUID
-	if err := d.DB.Create(&Task).Error; err != nil {
+	err = tasks.CheckTask(task.TaskType)
+	if err != nil {
+		return nil, err
+	}
+	if params != nil {
+		if params.IsPipeline {
+			task.IsPipeline = true
+		}
+		if params.IsJob {
+			task.IsJob = true
+		}
+	}
+	task.UUID = uuid.ShortUUID("tas")
+	task.HostUUID = host.UUID
+	task.Host = host.Name
+	if err := d.DB.Create(&task).Error; err != nil {
 		return nil, err
 	} else {
-		return Task, nil
+		return task, nil
 	}
 }
 
