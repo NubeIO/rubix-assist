@@ -1,6 +1,7 @@
 package assitcli
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/NubeIO/rubix-assist/pkg/model"
@@ -52,11 +53,12 @@ func (inst *Client) DeleteLocation(uuid string) (response *Response) {
 	return response.buildResponse(resp, err)
 }
 
-func (inst *Client) GetLocationSchema() (data *model.LocationSchema, response *Response) {
+func (inst *Client) GetLocationSchema() (data interface{}, response *Response) {
 	path := fmt.Sprintf("%s/%s", Paths.Location.Path, "schema")
 	response = &Response{}
 	resp, err := inst.Rest.R().
-		SetResult(&model.LocationSchema{}).
 		Get(path)
-	return resp.Result().(*model.LocationSchema), response.buildResponse(resp, err)
+	var result interface{}
+	err = json.Unmarshal(resp.Body(), &result)
+	return result, response.buildResponse(resp, err)
 }
