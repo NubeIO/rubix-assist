@@ -25,12 +25,30 @@ type Task struct {
 }
 
 type Transaction struct {
-	UUID      string         `json:"uuid" gorm:"primarykey"`
-	Status    string         `json:"status"`
-	Title     string         `json:"title,omitempty"`
-	Type      string         `json:"type,omitempty"`
-	Message   string         `json:"message,omitempty"`
-	Data      datatypes.JSON `json:"data,omitempty"`
-	CreatedAt time.Time      `json:"date,omitempty"`
-	TaskUUID  string         `json:"task_uuid,omitempty" gorm:"TYPE:string REFERENCES tasks;"`
+	UUID     string         `json:"uuid" gorm:"primarykey"`
+	Status   string         `json:"status"`
+	TaskType string         `json:"type,omitempty"`
+	Message  string         `json:"message,omitempty"`
+	Data     datatypes.JSON `json:"data,omitempty"`
+	TaskUUID string         `json:"task_uuid,omitempty" gorm:"TYPE:string REFERENCES tasks;"`
+
+	// JobID is the auto-generated pipeline identifier in UUID4 format.
+	JobID string `json:"job_id"`
+
+	IsPipeLine bool `json:"is_pipe_line"`
+
+	// PipelineID is the auto-generated pipeline identifier in UUID4 format.
+	PipelineID string `json:"pipeline_id,omitempty"`
+
+	RunAtUUID string `json:"run_at_uuid,omitempty"`
+
+	FailureReason string `json:"failure_reason,omitempty"`
+
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	// StartedAt is the UTC timestamp of the moment the job started.
+	StartedAt *time.Time `json:"started_at,omitempty"`
+	// CompletedAt is the UTC timestamp of the moment the job finished.
+	CompletedAt *time.Time `json:"completed_at,omitempty"`
+	// LastRecyclerCreation last time the job was recycled at
+	Duration time.Duration `json:"duration,omitempty"`
 }

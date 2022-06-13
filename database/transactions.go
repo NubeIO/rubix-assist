@@ -33,13 +33,14 @@ func (d *DB) CreateTransaction(transaction *model.Transaction) (*model.Transacti
 	if err != nil {
 		return nil, errors.New("no Task found")
 	}
-	err = tasks.CheckTransaction(transaction.Type)
+	err = tasks.CheckTask(transaction.TaskType)
 	if err != nil {
 		return nil, err
 	}
 	transaction.UUID = uuid.ShortUUID("trn")
 	transaction.TaskUUID = Task.UUID
-	transaction.CreatedAt = ttime.Now()
+	t := ttime.Now()
+	transaction.CreatedAt = &t
 	if err := d.DB.Create(&transaction).Error; err != nil {
 		return nil, err
 	} else {

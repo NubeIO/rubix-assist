@@ -32,38 +32,31 @@ type Host struct {
 
 type NetworkUUID struct {
 	Type     string `json:"type" default:"string"`
-	Required bool   `json:"required" default:"true"`
-	Binding  string `json:"binding" default:"networks/uuid"`
-}
-
-type IsOffline struct {
-	Type     bool `json:"type" default:"bool"`
-	ReadOnly bool `json:"read_only"`
-}
-
-type OfflineCount struct {
-	Type     int  `json:"type" default:"int"`
-	ReadOnly bool `json:"read_only"`
+	Title    string `json:"title" default:"uuid"`
+	ReadOnly bool   `json:"readOnly" default:"true"`
 }
 
 type HostSchema struct {
-	UUID         schema.UUID        `json:"uuid"`
-	Name         schema.Name        `json:"name"`
-	Description  schema.Description `json:"description"`
-	Enable       schema.Enable      `json:"enable"`
-	Product      schema.Product     `json:"product"`
-	NetworkUUID  NetworkUUID        `json:"network_uuid"`
-	IP           schema.IP          `json:"ip"`
-	Port         schema.Port        `json:"port"`
-	HTTPS        schema.HTTPS       `json:"https"`
-	Username     schema.Username    `json:"username"`
-	Password     schema.Password    `json:"password"`
-	IsOffline    schema.Password    `json:"is_offline"`
-	OfflineCount schema.Password    `json:"offline_count"`
+	UUID        schema.UUID        `json:"uuid"`
+	Name        schema.Name        `json:"name"`
+	Description schema.Description `json:"description"`
+	Enable      schema.Enable      `json:"enable"`
+	Product     schema.Product     `json:"product"`
+	NetworkUUID NetworkUUID        `json:"network_uuid"`
+	IP          schema.IP          `json:"ip"`
+	Port        schema.Port        `json:"port"`
+	HTTPS       schema.HTTPS       `json:"https"`
+	Username    schema.Username    `json:"username"`
+	Password    schema.Password    `json:"password"`
+	Required    []string           `json:"required"`
 }
 
 func GetHostSchema() *HostSchema {
-	m := &HostSchema{}
+	m := &HostSchema{
+
+		Required: []string{"name", "ip", "port"},
+	}
+	m.NetworkUUID.Title = "network uuid"
 	schema.Set(m)
 	return m
 }

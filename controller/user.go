@@ -35,10 +35,6 @@ func (inst *Controller) GetUsers(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	inst.publishMSG(&WsMsg{Topic: "hey", Message: hosts})
-	if err != nil {
-		return
-	}
 
 	reposeHandler(hosts, err, c)
 }

@@ -3,14 +3,18 @@ package edgeapi
 import (
 	"github.com/NubeIO/edge/service/client"
 	base "github.com/NubeIO/rubix-assist/database"
+	"github.com/NubeIO/rubix-assist/service/events"
 )
 
 type Manager struct {
-	em *client.Client
-	DB *base.DB
+	em     *client.Client
+	DB     *base.DB
+	Events *events.Events
 }
 
 func New(apps *Manager) *Manager {
+	apps.Events.EventBus.RegisterTopic(automater)
+	apps.registerAutomater()
 	return apps
 }
 

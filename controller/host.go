@@ -16,7 +16,10 @@ func getHostBody(ctx *gin.Context) (dto *model.Host, err error) {
 
 func (inst *Controller) GetHostSchema(ctx *gin.Context) {
 	mod := model.GetHostSchema()
-	reposeHandler(mod, nil, ctx)
+	res := map[string]interface{}{
+		"properties": mod,
+	}
+	reposeHandler(res, nil, ctx)
 }
 
 func (inst *Controller) GetHost(c *gin.Context) {
