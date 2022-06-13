@@ -1,28 +1,23 @@
 package controller
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/NubeIO/rubix-assist/service/edgeapi"
 
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
 
-	"github.com/NubeIO/rubix-assist/service/remote"
-	"github.com/NubeIO/rubix-assist/service/remote/ssh"
-	log "github.com/sirupsen/logrus"
-
 	dbase "github.com/NubeIO/rubix-assist/database"
 	"github.com/NubeIO/rubix-assist/pkg/model"
+	"github.com/NubeIO/rubix-assist/service/remote"
+	"github.com/NubeIO/rubix-assist/service/remote/ssh"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"github.com/melbahja/goph"
-	"gopkg.in/olahol/melody.v1"
 )
 
 type Controller struct {
 	//DB  *gorm.DB
 	SSH  *goph.Client
-	WS   *melody.Melody //web socket
 	DB   *dbase.DB
 	Rest *rest.Service
 	Edge *edgeapi.Manager
@@ -35,29 +30,6 @@ type WsMsg struct {
 }
 
 var err error
-
-////publishMSG send websocket message
-func (inst *Controller) publishMSG(in *WsMsg) ([]byte, error) {
-	msg := map[string]interface{}{
-		"topic":    in.Topic,
-		"msg":      in.Message,
-		"is_error": in.IsError,
-	}
-	b, err := json.Marshal(msg)
-	if err != nil {
-		//panic(err)
-	}
-	if in.IsError {
-		log.Errorf("ERROR: publish websocket topic: %v\n", in.Topic)
-	} else {
-		log.Infof("INFO: publish websocket topic: %v\n", in.Topic)
-	}
-	err = inst.WS.Broadcast(b)
-	if err != nil {
-		return nil, err
-	}
-	return b, nil
-}
 
 func (inst *Controller) resolveHost(ctx *gin.Context) (host *model.Host, useID bool, err error) {
 	idName, useID := useHostNameOrID(ctx)

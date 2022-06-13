@@ -11,8 +11,8 @@ type Network struct {
 
 type LocationUUID struct {
 	Type     string `json:"type" default:"string"`
-	Required bool   `json:"required" default:"true"`
-	Binding  string `json:"binding" default:"locations/uuid"`
+	Title    string `json:"title" default:"uuid"`
+	ReadOnly bool   `json:"readOnly" default:"true"`
 }
 
 type NetworkSchema struct {
@@ -24,6 +24,7 @@ type NetworkSchema struct {
 
 func GetNetworkSchema() *NetworkSchema {
 	m := &NetworkSchema{}
+	m.LocationUUID.Title = "location uuid"
 	schema.Set(m)
 	return m
 }

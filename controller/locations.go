@@ -7,7 +7,10 @@ import (
 
 func (inst *Controller) GetLocationSchema(ctx *gin.Context) {
 	mod := model.GetLocationSchema()
-	reposeHandler(mod, nil, ctx)
+	res := map[string]interface{}{
+		"properties": mod,
+	}
+	reposeHandler(res, nil, ctx)
 }
 
 func getLocationBody(ctx *gin.Context) (dto *model.Location, err error) {
