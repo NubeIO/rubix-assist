@@ -3,7 +3,8 @@ module github.com/NubeIO/rubix-assist
 go 1.17
 
 //replace github.com/NubeIO/edge => /home/aidan/code/go/nube/edge
-//replace github.com/NubeIO/rubix-automater => /home/aidan/code/go/nube/rubix-automater
+replace github.com/NubeIO/rubix-automater => /home/aidan/code/go/nube/rubix-automater
+
 //replace github.com/NubeIO/lib-schema => /home/aidan/code/go/nube/lib/lib-schema
 
 require (
@@ -27,7 +28,7 @@ require (
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/fsnotify/fsnotify v1.5.1 // indirect``
+	github.com/fsnotify/fsnotify v1.5.1 // indirect; indirect``
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
@@ -83,9 +84,9 @@ require (
 	github.com/NubeIO/git v0.0.3 // indirect
 	github.com/NubeIO/lib-command v0.0.2 // indirect
 	github.com/NubeIO/lib-date v0.0.1 // indirect
-	github.com/NubeIO/lib-dirs v0.0.1 // indirect
+	github.com/NubeIO/lib-dirs v0.0.2 // indirect
 	github.com/NubeIO/lib-store v0.0.1 // indirect
-	github.com/NubeIO/lib-systemctl-go v0.0.4 // indirect
+	github.com/NubeIO/lib-systemctl-go v0.0.5 // indirect
 	github.com/THREATINT/go-net v1.2.10 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
