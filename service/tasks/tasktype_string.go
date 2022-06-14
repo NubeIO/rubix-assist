@@ -8,14 +8,27 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
-	_ = x[PingHost-0]
-	_ = x[InstallApp-1]
-	_ = x[RemoveApp-2]
+	_ = x[SubTask-0]
+	_ = x[PingHost-1]
+	_ = x[InstallApp-2]
+	_ = x[InstallPlugin-3]
+	_ = x[RemoveApp-4]
+	_ = x[StopApp-5]
+	_ = x[StartApp-6]
+	_ = x[RestartApp-7]
+	_ = x[EnableApp-8]
+	_ = x[DisableApp-9]
+	_ = x[FileTransfer-10]
+	_ = x[DeleteFile-11]
+	_ = x[Unzip-12]
+	_ = x[CopyDir-13]
+	_ = x[DeleteDir-14]
+	_ = x[RebootHost-15]
 }
 
-const _TaskType_name = "PingHostInstallAppRemoveApp"
+const _TaskType_name = "SubTaskPingHostInstallAppInstallPluginRemoveAppStopAppStartAppRestartAppEnableAppDisableAppFileTransferDeleteFileUnzipCopyDirDeleteDirRebootHost"
 
-var _TaskType_index = [...]uint8{0, 8, 18, 27}
+var _TaskType_index = [...]uint8{0, 7, 15, 25, 38, 47, 54, 62, 72, 81, 91, 103, 113, 118, 125, 134, 144}
 
 func (i TaskType) String() string {
 	if i < 0 || i >= TaskType(len(_TaskType_index)-1) {

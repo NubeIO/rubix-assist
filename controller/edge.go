@@ -1,26 +1,39 @@
 package controller
 
 import (
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nube/edge28/edgeip"
+	"github.com/NubeIO/rubix-assist/service/edgeapi"
 	"github.com/gin-gonic/gin"
 )
 
-func getEdgeIPBody(ctx *gin.Context) (dto edgeip.EdgeNetworking, err error) {
-	err = ctx.ShouldBindJSON(&dto)
-	return dto, err
-}
-
-func (inst *Controller) EdgeIPSchema(ctx *gin.Context) {
-}
-
-func (inst *Controller) EdgeSetIP(ctx *gin.Context) {
-	//body, err := getEdgeIPBody(ctx)
-	_, session, err := inst.getHost(ctx)
+func (inst *Controller) InstallApp(c *gin.Context) {
+	m := &edgeapi.App{}
+	err = c.ShouldBindJSON(&m)
+	data, err := inst.Edge.RunAppInstall(m)
 	if err != nil {
-		reposeHandler(nil, err, ctx)
+		reposeWithCode(404, data, nil, c)
 		return
 	}
+	reposeWithCode(202, data, nil, c)
+}
 
-	session.EdgeSetIP(nil)
+func (inst *Controller) InstallPipeline(c *gin.Context) {
+	m := &edgeapi.App{}
+	err = c.ShouldBindJSON(&m)
+	data, err := inst.Edge.PipeRunner(m)
+	if err != nil {
+		reposeWithCode(404, err, nil, c)
+		return
+	}
+	reposeWithCode(202, data, nil, c)
+}
 
+func (inst *Controller) InstallPipelineTask(c *gin.Context) {
+	m := &edgeapi.App{}
+	err = c.ShouldBindJSON(&m)
+	data, err := inst.Edge.PipeRunner(m)
+	if err != nil {
+		reposeWithCode(404, err, nil, c)
+		return
+	}
+	reposeWithCode(202, data, nil, c)
 }

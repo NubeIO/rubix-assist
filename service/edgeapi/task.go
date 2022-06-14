@@ -22,9 +22,12 @@ type TaskParams struct {
 	NetworkName  string `json:"network_name"`
 	HostName     string `json:"host_name"`
 	HostUUID     string `json:"host_uuid"`
+	AppName      string `json:"app_name"`
+	Version      string `json:"version"`
+}
 
-	AppName string `json:"app_name"`
-	Version string `json:"version"`
+func (inst *Manager) PipeBuilder(app *App) {
+
 }
 
 func (inst *Manager) PipeRunner(app *App) (*automodel.Pipeline, *autocli.Response) {
@@ -68,8 +71,8 @@ func (inst *Manager) pipeRunner(app *App) (*automodel.Pipeline, *autocli.Respons
 			RunOnInterval:  "10 sec",
 		},
 	}
-	client := autocli.New("0.0.0.0", 1663)
-	pipe, resp := client.AddPipeline(pipeBuilder)
+	cli := autocli.New("0.0.0.0", 1663)
+	pipe, resp := cli.AddPipeline(pipeBuilder)
 	if resp.StatusCode > 299 {
 		return pipe, resp
 	}
