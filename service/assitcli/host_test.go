@@ -11,9 +11,7 @@ func TestHost(*testing.T) {
 	client := New("0.0.0.0", 1662)
 
 	hosts, _ := client.GetHosts()
-	fmt.Println(222, hosts)
 	uuid := ""
-	fmt.Println(hosts)
 	for _, host := range hosts {
 		uuid = host.UUID
 	}

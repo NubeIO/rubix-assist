@@ -13,15 +13,14 @@ const allTopic = "*"
 const automater = "automater-transaction"
 
 func (inst *Manager) transactionEntry(data *automodel.PublishTransaction) error {
-
 	task, err := inst.DB.GetTaskByPipelineUUID(data.PipelineID)
 	if err != nil {
 		return err
 	}
-
 	transaction := &model.Transaction{
 		Status:        data.Status,
 		TaskType:      data.TaskType,
+		SubTaskType:   data.SubTaskType,
 		FailureReason: data.FailureReason,
 		Data:          nil,
 		TaskUUID:      task.UUID,

@@ -2,7 +2,6 @@ package base
 
 import (
 	"errors"
-	"fmt"
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
@@ -15,12 +14,9 @@ func (d *DB) GetHostByLocationName(hostName, networkName, locationName string) (
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(location.Name)
 	for _, network := range location.Networks {
-		fmt.Println(network.Name, network.Name == networkName, len(network.Hosts))
 		if network.Name == networkName {
 			for _, host := range network.Hosts {
-				fmt.Println(host.Name, host.Name == hostName)
 				if host.Name == hostName {
 					return host, err
 				}

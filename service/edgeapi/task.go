@@ -26,10 +26,6 @@ type TaskParams struct {
 	Version      string `json:"version"`
 }
 
-func (inst *Manager) PipeBuilder(app *App) {
-
-}
-
 func (inst *Manager) PipeRunner(app *App) (*automodel.Pipeline, *autocli.Response) {
 	return inst.pipeRunner(app)
 }
