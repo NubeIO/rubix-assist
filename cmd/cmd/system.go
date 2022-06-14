@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"github.com/NubeIO/rubix-assist/pkg/model"
 	"github.com/NubeIO/rubix-assist/service/remote"
@@ -30,10 +28,6 @@ func initSession() *remote.Admin {
 	if name != nil {
 		return nil
 	}
-	fmt.Println(host.IP)
-	fmt.Println(host.Port)
-	fmt.Println(host.Username)
-	fmt.Println(host.Password)
 	session := &remote.Admin{
 		SSH: &ssh.Host{
 			Host: &model.Host{

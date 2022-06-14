@@ -27,12 +27,23 @@ func (inst *Controller) InstallPipeline(c *gin.Context) {
 	reposeWithCode(202, data, nil, c)
 }
 
-func (inst *Controller) InstallPipelineTask(c *gin.Context) {
-	m := &edgeapi.App{}
+func (inst *Controller) TaskBuilder(c *gin.Context) {
+	m := &edgeapi.AppTask{}
 	err = c.ShouldBindJSON(&m)
-	data, err := inst.Edge.PipeRunner(m)
+	data, err := inst.Edge.TaskBuilder(m)
 	if err != nil {
 		reposeWithCode(404, err, nil, c)
+		return
+	}
+	reposeWithCode(202, data, nil, c)
+}
+
+func (inst *Controller) TaskRunner(c *gin.Context) {
+	m := &edgeapi.AppTask{}
+	err = c.ShouldBindJSON(&m)
+	data, err := inst.Edge.TaskRunner(m)
+	if err != nil {
+		reposeWithCode(404, data, nil, c)
 		return
 	}
 	reposeWithCode(202, data, nil, c)

@@ -199,6 +199,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		edgeAssist.POST("/apps/install", api.InstallApp)
 		edgeAssist.POST("/apps/pipeline/install", api.InstallPipeline)
+		edgeAssist.POST("/pipeline/builder", api.TaskBuilder)
+		edgeAssist.POST("/pipeline/runner", api.TaskRunner)
 	}
 
 	return r

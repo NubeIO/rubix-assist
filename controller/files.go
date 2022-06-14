@@ -2,8 +2,8 @@ package controller
 
 import (
 	"errors"
-	"fmt"
-	constant2 "github.com/NubeIO/rubix-assist/controller/response"
+
+	"github.com/NubeIO/rubix-assist/controller/response"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
@@ -40,12 +40,12 @@ func (inst *Controller) GetFile(ctx *gin.Context) {
 	localSystemFilePath = ConcatPath(localSystemFilePath)
 
 	fileInfo, err := os.Stat(localSystemFilePath)
-	fmt.Println(1, fileInfo, localSystemFilePath)
+
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			constant2.WithData(ctx, http.StatusOK, constant2.FILENOTEXIST, err)
+			response.WithData(ctx, http.StatusOK, response.FILENOTEXIST, err)
 		} else {
-			constant2.WithData(ctx, http.StatusOK, constant2.ERROR, err)
+			response.WithData(ctx, http.StatusOK, response.ERROR, err)
 		}
 		return
 	}
@@ -54,22 +54,21 @@ func (inst *Controller) GetFile(ctx *gin.Context) {
 	if fileInfo.IsDir() {
 		files, err := ioutil.ReadDir(localSystemFilePath)
 		if err != nil {
-			constant2.WithData(ctx, http.StatusOK, constant2.ERROR, err)
+			response.WithData(ctx, http.StatusOK, response.ERROR, err)
 			return
 		}
 		for _, file := range files {
 			dirContent = append(dirContent, file.Name())
 		}
 	} else {
-		fmt.Println(11111, localSystemFilePath)
 		byteFile, err := ioutil.ReadFile(localSystemFilePath)
 		if err != nil {
-			constant2.WithData(ctx, http.StatusOK, constant2.ERROR, err)
+			response.WithData(ctx, http.StatusOK, response.ERROR, err)
 			return
 		}
 
 		ctx.Header("Content-Disposition", "attachment; filename=Readme.md")
 		ctx.Data(http.StatusOK, "application/octet-stream", byteFile)
 	}
-	constant2.WithData(ctx, http.StatusOK, constant2.SUCCESS, gin.H{"path": dirContent})
+	response.WithData(ctx, http.StatusOK, response.SUCCESS, gin.H{"path": dirContent})
 }

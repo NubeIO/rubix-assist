@@ -11,7 +11,7 @@ type Task struct {
 	UserUUID      string         `json:"user_uuid"`
 	HostUUID      string         `json:"host_uuid"`
 	HostName      string         `json:"host_name,omitempty"`
-	Type          string         `json:"type"` //edgeapi.TaskType
+	Type          string         `json:"type"`
 	Count         uint           `json:"count"`
 	CreatedAt     time.Time      `json:"date"`
 	FromAutomater bool           `json:"from_automater"`
@@ -25,12 +25,13 @@ type Task struct {
 }
 
 type Transaction struct {
-	UUID     string         `json:"uuid" gorm:"primarykey"`
-	Status   string         `json:"status"`
-	TaskType string         `json:"type,omitempty"`
-	Message  string         `json:"message,omitempty"`
-	Data     datatypes.JSON `json:"data,omitempty"`
-	TaskUUID string         `json:"task_uuid,omitempty" gorm:"TYPE:string REFERENCES tasks;"`
+	UUID        string         `json:"uuid" gorm:"primarykey"`
+	Status      string         `json:"status"`
+	TaskType    string         `json:"type,omitempty"`
+	SubTaskType string         `json:"sub_task_type"`
+	Message     string         `json:"message,omitempty"`
+	Data        datatypes.JSON `json:"data,omitempty"`
+	TaskUUID    string         `json:"task_uuid,omitempty" gorm:"TYPE:string REFERENCES tasks;"`
 
 	// JobID is the auto-generated pipeline identifier in UUID4 format.
 	JobID string `json:"job_id"`
