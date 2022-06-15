@@ -1,24 +1,33 @@
 package controller
 
 import (
-	"github.com/NubeIO/edge/service/client"
-
+	"github.com/NubeIO/rubix-assist/service/edgecli"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func (inst *Controller) UploadFile(c *gin.Context) {
 	destination := c.Query("destination")
 	file, err := c.FormFile("file")
+	if err != nil {
+		reposeWithCode(http.StatusBadRequest, nil, err, c)
+		return
+	}
+	f, err := file.Open()
+	if err != nil {
+		reposeWithCode(http.StatusBadRequest, nil, err, c)
+		return
+	}
 	host, _, err := inst.resolveHost(c)
 	if err != nil {
-		reposeWithCode(404, nil, err, c)
+		reposeWithCode(http.StatusBadRequest, nil, err, c)
 		return
 	}
-	data, err := client.New(host.IP, host.WiresPort).UploadFile(file.Filename, destination)
+	data, err := edgecli.New(host.IP, host.RubixPort).UploadFile(file.Filename, destination, f)
 	if err != nil {
-		reposeWithCode(404, data, nil, c)
+		reposeWithCode(http.StatusBadRequest, data, nil, c)
 		return
 	}
-	reposeWithCode(404, data, nil, c)
+	reposeWithCode(http.StatusOK, data, nil, c)
 
 }
