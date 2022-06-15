@@ -168,7 +168,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		tools.GET("/edgeapi/ip/schema", api.EdgeIPSchema)
 		tools.POST("/edgeapi/ip", api.EdgeSetIP)
 		tools.POST("/edgeapi/ip/dhcp", api.EdgeSetIP)
-		tools.POST("/zip", api.UploadFile)
 
 	}
 
