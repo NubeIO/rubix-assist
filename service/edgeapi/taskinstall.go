@@ -13,13 +13,16 @@ func buildInstall(appTask *AppTask, host *model.Host) *jobctl.JobBody {
 	taskName := tasks.SubTask.String()
 	subTaskName := tasks.InstallApp.String()
 	taskParams := map[string]interface{}{
-		"locationName": appTask.LocationName,
-		"networkName":  appTask.NetworkName,
-		"hostName":     host.Name,
-		"hostUUID":     host.UUID,
-		"appName":      appTask.AppName,
-		"version":      appTask.Version,
-		"subTask":      subTaskName,
+		"locationName":       appTask.LocationName,
+		"networkName":        appTask.NetworkName,
+		"hostName":           host.Name,
+		"hostUUID":           host.UUID,
+		"appName":            appTask.AppName,
+		"version":            appTask.Version,
+		"manualInstall":      appTask.ManualInstall,
+		"manualAssetZipName": appTask.ManualAssetZipName,
+		"manualAssetTag":     appTask.ManualAssetTag,
+		"cleanup":            appTask.Cleanup,
 	}
 	task := &jobctl.JobBody{
 		Name:        fmt.Sprintf("run %s task on host:%s", subTaskName, host.Name),

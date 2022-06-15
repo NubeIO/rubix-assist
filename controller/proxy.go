@@ -54,12 +54,11 @@ func (inst *Controller) RubixProxyRequest(ctx *gin.Context) {
 		fmt.Println("proxy err", err)
 	}
 
-	host, b, err := inst.resolveHost(ctx)
-	if err != nil {
-		return
-	}
+	//_, , err := inst.resolveHost(ctx)
+	//if err != nil {
+	//	return
+	//}
 
-	fmt.Println(host, b, err)
 	restService := &rest.Service{}
 	restService.Url = "192.168.15.191"
 	restService.Port = 1616
