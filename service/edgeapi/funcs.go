@@ -18,14 +18,23 @@ func (inst *Manager) getTokens() (token string, tokens []*model.Token, err error
 }
 
 // getHost returns the host and a GitHub token
-func (inst *Manager) getHost(body *App) (*model.Host, error, string) {
-	host, err := inst.DB.GetHostByLocationName(body.HostName, body.NetworkName, body.LocationName)
-	if err != nil {
-		return nil, err, ""
+func (inst *Manager) getHost(body *AppTask) (*model.Host, error, string) {
+	var host *model.Host
+	var err error
+	if body.HostUUID != "" {
+		host, err = inst.DB.GetHostByName(body.HostUUID, true)
+		if err != nil {
+			return nil, err, ""
+		}
+	} else {
+		host, err = inst.DB.GetHostByLocationName(body.HostName, body.NetworkName, body.LocationName)
+		if err != nil {
+			return nil, err, ""
+		}
 	}
 	token, _, err := inst.getTokens()
 	if err != nil {
-		return nil, err, ""
+		//return nil, err, ""
 	}
 	return host, err, token
 }

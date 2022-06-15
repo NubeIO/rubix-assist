@@ -198,9 +198,13 @@ func Setup(db *gorm.DB) *gin.Engine {
 	edgeAssist := r.Group("/api/edge")
 	{
 		edgeAssist.POST("/apps/install", api.InstallApp)
-		edgeAssist.POST("/apps/pipeline/install", api.InstallPipeline)
 		edgeAssist.POST("/pipeline/builder", api.TaskBuilder)
 		edgeAssist.POST("/pipeline/runner", api.TaskRunner)
+	}
+	wires := admin.Group("/wires")
+	{
+		wires.POST("/upload", api.WiresUpload)
+
 	}
 
 	return r

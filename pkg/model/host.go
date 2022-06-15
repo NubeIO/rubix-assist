@@ -17,6 +17,7 @@ type Host struct {
 	Username             string    `json:"username"`
 	Password             string    `json:"password"`
 	RubixPort            int       `json:"rubix_port"`
+	WiresPort            int       `json:"wires_port"`
 	RubixUsername        string    `json:"rubix_username"`
 	RubixPassword        string    `json:"rubix_password" `
 	RubixHTTPS           *bool     `json:"rubix_https" `
@@ -53,7 +54,6 @@ type HostSchema struct {
 
 func GetHostSchema() *HostSchema {
 	m := &HostSchema{
-
 		Required: []string{"name", "ip", "port"},
 	}
 	m.NetworkUUID.Title = "network uuid"

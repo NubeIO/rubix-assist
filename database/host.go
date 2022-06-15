@@ -74,6 +74,12 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if host.HTTPS == nil {
 		host.HTTPS = nils.NewFalse()
 	}
+	if host.RubixUsername == "" {
+		host.RubixUsername = "admin"
+	}
+	if host.Username == "" {
+		host.Username = "pi"
+	}
 	if host.Port == 0 {
 		host.Port = 22
 	}
@@ -82,6 +88,9 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	}
 	if host.RubixPort == 0 {
 		host.RubixPort = 1661
+	}
+	if host.WiresPort == 0 {
+		host.WiresPort = 1313
 	}
 	if err := d.DB.Create(&host).Error; err != nil {
 		return nil, err
@@ -106,7 +115,7 @@ func (d *DB) UpdateHost(uuid string, host *model.Host) (*model.Host, error) {
 	if query.Error != nil {
 		return nil, query.Error
 	} else {
-		return host, query.Error
+		return m, query.Error
 	}
 }
 

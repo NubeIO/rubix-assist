@@ -1,8 +1,6 @@
 package edgeapi
 
 import (
-	"fmt"
-	"github.com/NubeIO/rubix-assist/pkg/model"
 	"github.com/NubeIO/rubix-assist/service/autocli"
 	"github.com/NubeIO/rubix-assist/service/tasks"
 	automodel "github.com/NubeIO/rubix-automater/automater/model"
@@ -11,6 +9,7 @@ import (
 )
 
 type AppTask struct {
+	Description     string   `json:"description"`
 	LocationName    string   `json:"locationName"`
 	NetworkName     string   `json:"networkName"`
 	HostName        string   `json:"hostName"`
@@ -23,15 +22,7 @@ type AppTask struct {
 
 func (inst *Manager) TaskBuilder(appTask *AppTask) (*automodel.Pipeline, *autocli.Response) {
 	resp := &autocli.Response{}
-	app := &App{
-		LocationName: appTask.LocationName,
-		NetworkName:  appTask.NetworkName,
-		HostName:     appTask.HostName,
-		HostUUID:     appTask.HostUUID,
-		AppName:      appTask.AppName,
-		Version:      appTask.Version,
-	}
-	host, err, _ := inst.getHost(app)
+	host, err, _ := inst.getHost(appTask)
 	if err != nil {
 		resp.StatusCode = 404
 		resp.Message = err.Error()
@@ -56,13 +47,17 @@ func (inst *Manager) TaskBuilder(appTask *AppTask) (*automodel.Pipeline, *autocl
 		}
 
 	}
+	description := "run assist sub-task"
+	if appTask.Description != "" {
+		description = appTask.Description
+	}
 	pipeBuilder := &pipectl.PipelineBody{
-		Name:       "ping pipeline",
+		Name:       description,
 		Jobs:       jobs,
-		ScheduleAt: "2 sec",
+		ScheduleAt: "1 sec",
 		PipelineOptions: &automodel.PipelineOptions{
 			EnableInterval: false,
-			RunOnInterval:  "10 sec",
+			RunOnInterval:  "1 sec",
 		},
 	}
 	cli := autocli.New("0.0.0.0", 1663)
@@ -76,44 +71,4 @@ func (inst *Manager) TaskBuilder(appTask *AppTask) (*automodel.Pipeline, *autocl
 		return pipe, resp
 	}
 	return pipe, resp
-}
-
-func buildPing(appTask *AppTask, host *model.Host) *jobctl.JobBody {
-	taskName := tasks.SubTask.String()
-	subTaskName := tasks.PingHost.String()
-	taskParams := map[string]interface{}{
-		"locationName": appTask.LocationName,
-		"networkName":  appTask.NetworkName,
-		"hostName":     host.Name,
-		"hostUUID":     host.UUID,
-		"appName":      taskName,
-		"subTask":      subTaskName,
-	}
-	task := &jobctl.JobBody{
-		Name:        fmt.Sprintf("run %s task on host:%s", taskName, host.Name),
-		TaskName:    taskName,
-		SubTaskName: subTaskName,
-		TaskParams:  taskParams,
-	}
-	return task
-}
-
-func buildInstall(appTask *AppTask, host *model.Host) *jobctl.JobBody {
-	taskName := tasks.PingHost.String()
-	subTaskName := tasks.PingHost.String()
-	taskParams := map[string]interface{}{
-		"locationName": appTask.LocationName,
-		"networkName":  appTask.NetworkName,
-		"hostName":     host.Name,
-		"hostUUID":     host.UUID,
-		"appName":      taskName,
-		"subTask":      subTaskName,
-	}
-	task := &jobctl.JobBody{
-		Name:        fmt.Sprintf("run %s task on host:%s", taskName, host.Name),
-		TaskName:    taskName,
-		SubTaskName: subTaskName,
-		TaskParams:  taskParams,
-	}
-	return task
 }
