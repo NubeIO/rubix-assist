@@ -28,6 +28,8 @@ func (inst *Controller) GetHost(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
+	host.Password = "***"
+	host.RubixPassword = "***"
 	reposeHandler(host, err, c)
 }
 
@@ -36,6 +38,10 @@ func (inst *Controller) GetHosts(c *gin.Context) {
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
+	}
+	for _, host := range hosts {
+		host.Password = "***"
+		host.RubixPassword = "***"
 	}
 	reposeHandler(hosts, err, c)
 }
@@ -48,16 +54,26 @@ func (inst *Controller) CreateHost(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
+	host.Password = "***"
+	host.RubixPassword = "***"
 	reposeHandler(host, err, c)
 }
 
 func (inst *Controller) UpdateHost(c *gin.Context) {
 	body, _ := getHostBody(c)
-	host, err := inst.DB.UpdateHost(c.Params.ByName("uuid"), body)
+	host, _, err := inst.resolveHost(c)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
 	}
+
+	host, err = inst.DB.UpdateHost(host.UUID, body)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	host.Password = "***"
+	host.RubixPassword = "***"
 	reposeHandler(host, err, c)
 }
 

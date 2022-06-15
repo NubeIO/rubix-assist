@@ -6,22 +6,11 @@ import (
 )
 
 func (inst *Controller) InstallApp(c *gin.Context) {
-	m := &edgeapi.App{}
+	m := &edgeapi.AppTask{}
 	err = c.ShouldBindJSON(&m)
-	data, err := inst.Edge.RunAppInstall(m)
+	data, err := inst.Edge.RunInstall(m)
 	if err != nil {
 		reposeWithCode(404, data, nil, c)
-		return
-	}
-	reposeWithCode(202, data, nil, c)
-}
-
-func (inst *Controller) InstallPipeline(c *gin.Context) {
-	m := &edgeapi.App{}
-	err = c.ShouldBindJSON(&m)
-	data, err := inst.Edge.PipeRunner(m)
-	if err != nil {
-		reposeWithCode(404, err, nil, c)
 		return
 	}
 	reposeWithCode(202, data, nil, c)
