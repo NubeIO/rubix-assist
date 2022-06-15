@@ -67,7 +67,7 @@ require (
 )
 
 require (
-	github.com/NubeIO/edge v0.0.7
+	github.com/NubeIO/edge v0.0.8
 	github.com/NubeIO/lib-bus v0.0.1
 	github.com/NubeIO/lib-networking v0.0.4
 	github.com/NubeIO/lib-redis v0.0.3

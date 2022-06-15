@@ -59,8 +59,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
 github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY/8hQs=
-github.com/NubeIO/edge v0.0.7 h1:gmWVVqcv275X/DlBLhG8bVbFGV5OYLTtF8QdnO4Z+eU=
-github.com/NubeIO/edge v0.0.7/go.mod h1:7Av7CMafZ0yR6uHX0GyEAVEpsc9g2x4qaNUfT7LCUh0=
+github.com/NubeIO/edge v0.0.8 h1:pvEfKI5fA13Szyft9HExO4OYUjD5lClfPFmNT5kBUcQ=
+github.com/NubeIO/edge v0.0.8/go.mod h1:eLE5pZGSj0+7x+2P2f1kc64EqLoTSZ/Zt2jwKRHF0U8=
 github.com/NubeIO/git v0.0.3 h1:W7JAaKSJh6YKYuSa0r/5gMke40Y6GXssWaOFkeMN2wI=
 github.com/NubeIO/git v0.0.3/go.mod h1:qd7e1uVFo7AD6Zmhr2P8zgj+j9JGIsRW7+fUgCg8keA=
 github.com/NubeIO/lib-bus v0.0.1 h1:8bHmnbGeA9h0GMCiYoVwPLyBiaM332GM1cN1aPiK/6g=
@@ -70,7 +70,6 @@ github.com/NubeIO/lib-command v0.0.2/go.mod h1:Qjl490ti7E47AhftOOvUfhAsM6NhZpBAe
 github.com/NubeIO/lib-date v0.0.1 h1:u1/MIoeOj4fVrNPr0Oy4J/l6e38lBFxE2s0XGVf4GnY=
 github.com/NubeIO/lib-date v0.0.1/go.mod h1:VvpSwdwcVCaOgTN+Ad96nHBkFDWTt3VekG933QCtGtc=
 github.com/NubeIO/lib-dhcpd v0.0.1/go.mod h1:X+9x4ePY4/Ut20HKnoOjzVru0GbXvFpt6eb2dW+cnZU=
-github.com/NubeIO/lib-dirs v0.0.0-20220528083754-afff5e1f2f7d/go.mod h1:vlzlBhNNwOGhtrvzKV/G0Y5Gs9EhzUjafYkBB65QREg=
 github.com/NubeIO/lib-dirs v0.0.1/go.mod h1:PCDWQm82Nezp9oyhkpqyfVH6w6+1lzfDwfRdYVF5sPY=
 github.com/NubeIO/lib-dirs v0.0.2 h1:8mdDMNpNgmcyXBSllyNdeN/5bgCJ7LssaRqg8N2YVC4=
 github.com/NubeIO/lib-dirs v0.0.2/go.mod h1:PCDWQm82Nezp9oyhkpqyfVH6w6+1lzfDwfRdYVF5sPY=
@@ -84,7 +83,6 @@ github.com/NubeIO/lib-schema v0.0.3 h1:s1RkXZ4u423n0ggtET6m/aAWjr5iXUp390ydjqtmg
 github.com/NubeIO/lib-schema v0.0.3/go.mod h1:+XEsOqjtJ/NlVo13p+5nZQK4LDRKkJTB3SxPi6u8vhM=
 github.com/NubeIO/lib-store v0.0.1 h1:7VwFEf70oLnSTDIRckNA2tXELPoxfTkH1rEU5wAkNSw=
 github.com/NubeIO/lib-store v0.0.1/go.mod h1:N+uMx5s5C8clvAKOUaNNLaHmjVSxHrTvcca73d6DNAk=
-github.com/NubeIO/lib-systemctl-go v0.0.4/go.mod h1:LEQoNVU87sqBc40Kdr2K+aUiqTUH8sVZkRZQBJBjm+w=
 github.com/NubeIO/lib-systemctl-go v0.0.5 h1:Bh0ibU56WR/Em+39J4ygQ7KQEqT2+kSkml4WcHl0hv8=
 github.com/NubeIO/lib-systemctl-go v0.0.5/go.mod h1:gpVy2jcgc8AiCBf3k+sSDwDoxYtdNzd3hEeK3ygJz+c=
 github.com/NubeIO/lib-uuid v0.0.1 h1:qIwb0mNZkrS74JeNhz/61HBvq8+PswRiw78nOj5FUIY=
@@ -319,7 +317,6 @@ github.com/googleapis/gax-go/v2 v2.1.1/go.mod h1:hddJymUZASv3XPyGkUpKj8pPO47Rmb0
 github.com/googleapis/gax-go/v2 v2.2.0/go.mod h1:as02EH8zWkzwUoLbBaFeQ+arQaj/OthfcblKl4IGNaM=
 github.com/googleapis/gax-go/v2 v2.3.0/go.mod h1:b8LNqSzNabLiUpXKkY7HAR5jr6bIT99EXz9pXxye9YM=
 github.com/googleapis/google-cloud-go-testing v0.0.0-20200911160855-bcd43fbb19e8/go.mod h1:dvDLG8qkwmyD9a/MJJN3XJcT3xFxOKAvTZGvuZmac9g=
-github.com/gorilla/websocket v1.5.0/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/grpc-ecosystem/grpc-gateway v1.16.0/go.mod h1:BDjrQk3hbvj6Nolgz8mAMFbcEtjT1g+wF4CSlocrBnw=
 github.com/hashicorp/consul/api v1.12.0/go.mod h1:6pVBMo0ebnYdt2S3H87XhekM/HHrUoTD2XXb/VrZVy0=
 github.com/hashicorp/consul/sdk v0.8.0/go.mod h1:GBvyrGALthsZObzUGsfgHZQDXjg4lOjagTIwIR1vPms=
@@ -1121,7 +1118,6 @@ gopkg.in/go-playground/validator.v9 v9.29.1/go.mod h1:+c9/zcJMFNgbLvly1L1V+PpxWd
 gopkg.in/inconshreveable/log15.v2 v2.0.0-20180818164646-67afb5ed74ec/go.mod h1:aPpfJ7XW+gOuirDoZ8gHhLh3kZ1B08FtV2bbmy7Jv3s=
 gopkg.in/ini.v1 v1.66.4 h1:SsAcf+mM7mRZo2nJNGt8mZCjG8ZRaNGMURJw7BsIST4=
 gopkg.in/ini.v1 v1.66.4/go.mod h1:pNLf8WUiyNEtQjuu5G5vTm06TEv9tsIgeAvK8hOrP4k=
-gopkg.in/olahol/melody.v1 v1.0.0-20170518105555-d52139073376/go.mod h1:BHKOc1m5wm8WwQkMqYBoo4vNxhmF7xg8+xhG8L+Cy3M=
 gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 h1:uRGJdciOHaEIrze2W8Q3AKkepLTh2hOroT7a+7czfdQ=
 gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7/go.mod h1:dt/ZhP58zS4L8KSrWDmTeBkI65Dw0HsyUHuEVlX15mw=
 gopkg.in/yaml.v2 v2.2.1/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
