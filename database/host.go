@@ -4,9 +4,10 @@ import (
 	"errors"
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
-	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/pkg/model"
 )
+
+const hostName = "host"
 
 func (d *DB) GetHostByLocationName(hostName, networkName, locationName string) (*model.Host, error) {
 	location, err := d.GetLocationsByName(locationName, false)
@@ -23,7 +24,6 @@ func (d *DB) GetHostByLocationName(hostName, networkName, locationName string) (
 		}
 	}
 	return nil, errors.New("no host was found")
-
 }
 
 func (d *DB) GetHostByName(name string, isUUID bool) (*model.Host, error) {
@@ -31,18 +31,16 @@ func (d *DB) GetHostByName(name string, isUUID bool) (*model.Host, error) {
 	switch isUUID {
 	case true:
 		if err := d.DB.Where("uuid = ? ", name).First(&m).Error; err != nil {
-			logger.Errorf("GetHost error: %v", err)
-			return nil, err
+			return nil, handelNotFound(hostName)
 		}
 		return m, nil
 	case false:
 		if err := d.DB.Where("name = ? ", name).First(&m).Error; err != nil {
-			logger.Errorf("GetHost error: %v", err)
-			return nil, err
+			return nil, handelNotFound(hostName)
 		}
 		return m, nil
 	default:
-		return nil, errors.New("ERROR no valid uuid or name was provided in the request")
+		return nil, errors.New("no valid uuid or name was provided in the request")
 	}
 }
 
@@ -61,7 +59,7 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	}
 	existingHost, _ := d.GetHostByName(host.Name, false)
 	if existingHost != nil {
-		return nil, errors.New("a host with this name exists")
+		return nil, errors.New("an existing host with this name exists")
 	}
 	host.UUID = uuid.ShortUUID("hos")
 	if host.PingEnable == nil {
@@ -102,9 +100,9 @@ func (d *DB) UpdateHostByName(name string, host *model.Host) (*model.Host, error
 	m := new(model.Host)
 	query := d.DB.Where("name = ?", name).Find(&m).Updates(host)
 	if query.Error != nil {
-		return nil, query.Error
+		return nil, handelNotFound(hostName)
 	} else {
-		return m, query.Error
+		return m, nil
 	}
 }
 
@@ -112,9 +110,9 @@ func (d *DB) UpdateHost(uuid string, host *model.Host) (*model.Host, error) {
 	m := new(model.Host)
 	query := d.DB.Where("uuid = ?", uuid).Find(&m).Updates(host)
 	if query.Error != nil {
-		return nil, query.Error
+		return nil, handelNotFound(hostName)
 	} else {
-		return m, query.Error
+		return m, nil
 	}
 }
 

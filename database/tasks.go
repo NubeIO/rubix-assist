@@ -10,6 +10,8 @@ import (
 	"github.com/NubeIO/rubix-assist/service/tasks"
 )
 
+const taskName = "task"
+
 func (d *DB) GetTask(uuid string) (*model.Task, error) {
 	m := new(model.Task)
 	if err := d.DB.Where("uuid = ? ", uuid).Preload("Transactions").First(&m).Error; err != nil {
@@ -34,7 +36,7 @@ func (d *DB) GetTaskByField(field string, value string) (*model.Task, error) {
 	f := fmt.Sprintf("%s = ? ", field)
 	query := d.DB.Where(f, value).First(&m)
 	if query.Error != nil {
-		return nil, query.Error
+		return nil, handelNotFound(taskName)
 	}
 	return m, nil
 }
@@ -45,7 +47,7 @@ func (d *DB) GetTaskByType(uuid string, TaskType string) (*model.Task, error) {
 	f := "host_uuid = ? AND task_type = ?"
 	query := d.DB.Where(f, uuid, TaskType).First(&m)
 	if query.Error != nil {
-		return nil, query.Error
+		return nil, handelNotFound(taskName)
 	}
 	return m, nil
 }
@@ -129,7 +131,7 @@ func (d *DB) UpdateTask(uuid string, Task *model.Task) (*model.Task, error) {
 	m := new(model.Task)
 	query := d.DB.Where("uuid = ?", uuid).Find(&m).Updates(Task)
 	if query.Error != nil {
-		return nil, query.Error
+		return nil, handelNotFound(taskName)
 	} else {
 		return Task, query.Error
 	}
