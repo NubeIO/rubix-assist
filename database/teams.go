@@ -43,30 +43,16 @@ func (d *DB) UpdateTeam(uuid string, Team *model.Team) (*model.Team, error) {
 	}
 }
 
-func (d *DB) DeleteTeam(uuid string) (ok bool, err error) {
+func (d *DB) DeleteTeam(uuid string) (*DeleteMessage, error) {
 	m := new(model.Team)
 	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
-	if query.Error != nil {
-		return false, query.Error
-	}
-	r := query.RowsAffected
-	if r == 0 {
-		return false, nil
-	}
-	return true, nil
+	return deleteResponse(query)
 }
 
 // DropTeams delete all.
-func (d *DB) DropTeams() (bool, error) {
+func (d *DB) DropTeams() (*DeleteMessage, error) {
 	var m *model.Team
 	query := d.DB.Where("1 = 1")
 	query.Delete(&m)
-	if query.Error != nil {
-		return false, query.Error
-	}
-	r := query.RowsAffected
-	if r == 0 {
-		return false, nil
-	}
-	return true, nil
+	return deleteResponse(query)
 }

@@ -43,30 +43,16 @@ func (d *DB) UpdateUser(uuid string, User *model.User) (*model.User, error) {
 	}
 }
 
-func (d *DB) DeleteUser(uuid string) (ok bool, err error) {
+func (d *DB) DeleteUser(uuid string) (*DeleteMessage, error) {
 	m := new(model.User)
 	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
-	if query.Error != nil {
-		return false, query.Error
-	}
-	r := query.RowsAffected
-	if r == 0 {
-		return false, nil
-	}
-	return true, nil
+	return deleteResponse(query)
 }
 
 // DropUsers delete all.
-func (d *DB) DropUsers() (bool, error) {
+func (d *DB) DropUsers() (*DeleteMessage, error) {
 	var m *model.User
 	query := d.DB.Where("1 = 1")
 	query.Delete(&m)
-	if query.Error != nil {
-		return false, query.Error
-	}
-	r := query.RowsAffected
-	if r == 0 {
-		return false, nil
-	}
-	return true, nil
+	return deleteResponse(query)
 }

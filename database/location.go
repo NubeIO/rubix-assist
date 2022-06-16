@@ -95,16 +95,9 @@ func (d *DB) DeleteLocation(uuid string) (*DeleteMessage, error) {
 	return deleteResponse(query)
 }
 
-func (d *DB) DropLocations() (bool, error) {
+func (d *DB) DropLocations() (*DeleteMessage, error) {
 	var m *model.Location
 	query := d.DB.Where("1 = 1")
 	query.Delete(&m)
-	if query.Error != nil {
-		return false, query.Error
-	}
-	r := query.RowsAffected
-	if r == 0 {
-		return false, nil
-	}
-	return true, nil
+	return deleteResponse(query)
 }

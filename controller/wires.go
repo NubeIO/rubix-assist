@@ -35,7 +35,7 @@ func (inst *Controller) WiresUpload(c *gin.Context) {
 		return
 	}
 	if token == nil {
-		reposeHandler("failed to get token", err, c)
+		reposeHandler("failed to get wires token", err, c)
 		return
 	}
 	ok, res := wirescli.New(host.IP, host.WiresPort).Upload(body, token.Token)

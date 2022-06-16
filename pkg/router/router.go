@@ -3,7 +3,6 @@ package router
 import (
 	"github.com/NubeIO/rubix-assist/controller"
 	dbase "github.com/NubeIO/rubix-assist/database"
-	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/service/auth"
 	"github.com/NubeIO/rubix-assist/service/edgeapi"
 	"github.com/NubeIO/rubix-assist/service/events"
@@ -11,20 +10,12 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"io"
 	"os"
 	"time"
 )
 
 func Setup(db *gorm.DB) *gin.Engine {
 	r := gin.New()
-	// Write gin access log to file
-	f, err := os.OpenFile("rubix.access.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		logger.Errorf("Failed to create access log file: %v", err)
-	} else {
-		gin.DefaultWriter = io.MultiWriter(f)
-	}
 
 	// Set default middlewares
 	r.Use(gin.Logger())
@@ -53,7 +44,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	api := controller.Controller{DB: appDB, Edge: edgeManger}
 	identityKey := "uuid"
-	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
+	authMiddleware, _ := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:         "go-proxy-service",
 		Key:           []byte(os.Getenv("JWTSECRET")),
 		Timeout:       time.Hour * 1000,
@@ -108,7 +99,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hosts.PATCH("/:uuid", api.UpdateHost)
 		hosts.DELETE("/:uuid", api.DeleteHost)
 		hosts.DELETE("/drop", api.DropHosts)
-		hosts.POST("/ops", api.MassOperations)
 	}
 
 	r.POST("/api/users", api.AddUser)
