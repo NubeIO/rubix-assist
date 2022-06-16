@@ -8,23 +8,19 @@ import (
 func (inst *Controller) InstallApp(c *gin.Context) {
 	m := &edgeapi.AppTask{}
 	err = c.ShouldBindJSON(&m)
-	data, err := inst.Edge.RunInstall(m)
 	if err != nil {
-		reposeWithCode(404, data, nil, c)
+		reposeHandler(nil, err, c)
 		return
 	}
-	reposeWithCode(202, data, nil, c)
+	data, _ := inst.Edge.RunInstall(m)
+	reposeHandler(data, err, c)
 }
 
 func (inst *Controller) TaskBuilder(c *gin.Context) {
 	m := &edgeapi.AppTask{}
 	err = c.ShouldBindJSON(&m)
-	data, err := inst.Edge.TaskBuilder(m)
-	if err != nil {
-		reposeWithCode(404, err, nil, c)
-		return
-	}
-	reposeWithCode(202, data, nil, c)
+	data, _ := inst.Edge.TaskBuilder(m)
+	reposeHandler(data, err, c)
 }
 
 func (inst *Controller) TaskRunner(c *gin.Context) {
@@ -32,8 +28,8 @@ func (inst *Controller) TaskRunner(c *gin.Context) {
 	err = c.ShouldBindJSON(&m)
 	data, err := inst.Edge.TaskRunner(m)
 	if err != nil {
-		reposeWithCode(404, data, nil, c)
+		reposeHandler(data, err, c)
 		return
 	}
-	reposeWithCode(202, data, nil, c)
+	reposeHandler(data, err, c)
 }

@@ -35,7 +35,6 @@ func (inst *Controller) GetUsers(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-
 	reposeHandler(hosts, err, c)
 }
 
@@ -68,16 +67,16 @@ func (inst *Controller) DropUsers(c *gin.Context) {
 }
 
 func (inst *Controller) Login(c *gin.Context) (interface{}, error) {
-	var loginVals model.LoginUser
+	var login model.LoginUser
 	var user model.User
-	if err := c.ShouldBindJSON(&loginVals); err != nil {
+	if err := c.ShouldBindJSON(&login); err != nil {
 		return "", jwt.ErrMissingLoginValues
 	}
-	email := loginVals.Email
+	email := login.Email
 	if result := inst.DB.DB.Where("email = ?", email).First(&user); result.Error != nil {
 		return "", jwt.ErrFailedAuthentication
 	} else {
-		if err := bcrypt.CompareHashAndPassword([]byte(user.Hash), []byte(loginVals.Password)); err != nil {
+		if err := bcrypt.CompareHashAndPassword([]byte(user.Hash), []byte(login.Password)); err != nil {
 			return "", jwt.ErrFailedAuthentication
 		}
 		return user, nil

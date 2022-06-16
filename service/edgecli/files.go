@@ -6,32 +6,33 @@ import (
 )
 
 type UploadResponse struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-	Data struct {
-		Destination string `json:"destination,omitempty"`
-		File        string `json:"file,omitempty"`
-		Size        string `json:"size,omitempty"`
-		UploadTime  string `json:"upload_time,omitempty"`
-	} `json:"data"`
+	Message     interface{} `json:"message,omitempty"`
+	Destination string      `json:"destination,omitempty"`
+	File        string      `json:"file,omitempty"`
+	Size        string      `json:"size,omitempty"`
+	UploadTime  string      `json:"upload_time,omitempty"`
+}
+
+type Response struct {
+	StatusCode int         `json:"status_code"`
+	Message    interface{} `json:"message"`
 }
 
 func (inst *Client) UploadFile(fileName, destination string, reader io.Reader) (*UploadResponse, error) {
-	path := fmt.Sprintf("/api/files/upload?destination=%s", destination)
-	response := &UploadResponse{}
 	resp, err := inst.Rest.R().
 		SetResult(&UploadResponse{}).
 		SetError(&UploadResponse{}).
 		SetFileReader("file", fileName, reader).
-		Post(path)
+		Post(fmt.Sprintf("/api/files/upload?destination=%s", destination))
 	if err != nil {
-		response.Code = 500
-		response.Msg = err.Error()
-		return response, err
+		return nil, err
 	}
-	response.Code = resp.StatusCode()
+	data := &UploadResponse{}
 	if resp.IsSuccess() {
-		return resp.Result().(*UploadResponse), nil
+		data = resp.Result().(*UploadResponse)
+		return data, err
+	} else {
+		data = resp.Error().(*UploadResponse)
+		return data, err
 	}
-	return resp.Error().(*UploadResponse), err
 }

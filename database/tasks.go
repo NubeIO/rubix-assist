@@ -84,7 +84,6 @@ func (d *DB) CreateTask(task *model.Task) (*model.Task, error) {
 func (d *DB) GetTaskByPipelineUUID(uuid string) (*model.Task, error) {
 	m := new(model.Task)
 	if err := d.DB.Where("pipeline_uuid = ? ", uuid).First(&m).Error; err != nil {
-		logger.Errorf("GetTask error: %v", err)
 		return nil, err
 	}
 	return m, nil
@@ -136,33 +135,16 @@ func (d *DB) UpdateTask(uuid string, Task *model.Task) (*model.Task, error) {
 	}
 }
 
-func (d *DB) DeleteTask(uuid string) (ok bool, err error) {
+func (d *DB) DeleteTask(uuid string) (*DeleteMessage, error) {
 	m := new(model.Task)
 	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
-	if query.Error != nil {
-		return false, query.Error
-	}
-	r := query.RowsAffected
-	if r == 0 {
-		return false, nil
-	}
-	return true, nil
+	return deleteResponse(query)
 }
 
 // DropTasks delete all.
-func (d *DB) DropTasks() (bool, error) {
+func (d *DB) DropTasks() (*DeleteMessage, error) {
 	var m *model.Task
 	query := d.DB.Where("1 = 1")
 	query.Delete(&m)
-	var msg *model.Task
-	query = d.DB.Where("1 = 1")
-	query.Delete(&msg)
-	if query.Error != nil {
-		return false, query.Error
-	}
-	r := query.RowsAffected
-	if r == 0 {
-		return false, nil
-	}
-	return true, nil
+	return deleteResponse(query)
 }

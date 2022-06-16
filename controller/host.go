@@ -5,10 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Message struct {
-	Message string `json:"message"`
-}
-
 func getHostBody(ctx *gin.Context) (dto *model.Host, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err

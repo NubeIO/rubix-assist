@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"github.com/NubeIO/rubix-assist/service/edgeapi"
+	"net/http"
 
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
 
@@ -16,17 +17,10 @@ import (
 )
 
 type Controller struct {
-	//DB  *gorm.DB
 	SSH  *goph.Client
 	DB   *dbase.DB
 	Rest *rest.Service
 	Edge *edgeapi.Manager
-}
-
-type WsMsg struct {
-	Topic   string      `json:"topic"`
-	Message interface{} `json:"message"`
-	IsError bool        `json:"is_error"`
 }
 
 var err error
@@ -84,65 +78,31 @@ func resolveHeaderHostName(ctx *gin.Context) string {
 	return ctx.GetHeader("host_name")
 }
 
-func resolveHeaderGitToken(ctx *gin.Context) string {
-	return ctx.GetHeader("git_token")
-}
-
-func reposeWithCode(code int, body interface{}, err error, ctx *gin.Context) {
+func reposeHandler(body interface{}, err error, c *gin.Context, statusCode ...int) {
+	var code int
 	if err != nil {
-		if err == nil {
-			ctx.JSON(code, Message{Message: "unknown error"})
+		if len(statusCode) > 0 {
+			code = statusCode[0]
 		} else {
-			if body != nil {
-				ctx.JSON(code, body)
-			} else {
-				ctx.JSON(code, Message{Message: err.Error()})
-			}
-
+			code = http.StatusNotFound
 		}
+		msg := Message{
+			Message: err.Error(),
+		}
+		c.JSON(code, msg)
 	} else {
-		ctx.JSON(code, body)
+		if len(statusCode) > 0 {
+			code = statusCode[0]
+		} else {
+			code = http.StatusOK
+		}
+		c.JSON(code, body)
+
 	}
 }
 
-type Response struct {
-	StatusCode   int         `json:"status_code"`
-	ErrorMessage string      `json:"error_message"`
-	Message      string      `json:"message"`
-	Data         interface{} `json:"data"`
-}
-
-func reposeHandler(body interface{}, err error, ctx *gin.Context) {
-	if err != nil {
-		if err == nil {
-			ctx.JSON(404, Message{Message: "unknown error"})
-		} else {
-			if body != nil {
-				ctx.JSON(404, body)
-			} else {
-				ctx.JSON(404, Message{Message: err.Error()})
-			}
-		}
-	} else {
-		ctx.JSON(200, body)
-	}
-}
-
-func reposeMessage(code int, body interface{}, err error, ctx *gin.Context) {
-	if err != nil {
-		if err == nil {
-			ctx.JSON(code, Message{Message: "unknown error"})
-		} else {
-			if body != nil {
-				ctx.JSON(code, body)
-			} else {
-				ctx.JSON(code, Message{Message: err.Error()})
-			}
-
-		}
-	} else {
-		ctx.JSON(code, body)
-	}
+type Message struct {
+	Message interface{} `json:"message"`
 }
 
 //hostCopy copy same types from this host to the host needed for ssh.Host

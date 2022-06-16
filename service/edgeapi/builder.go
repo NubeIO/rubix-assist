@@ -41,15 +41,14 @@ func (inst *Manager) TaskBuilder(appTask *AppTask) (*automodel.Pipeline, *autocl
 		case tasks.InstallApp.String():
 			jobs = append(jobs, buildInstall(appTask, host))
 		case tasks.InstallPlugin.String():
-
 		case tasks.RemoveApp.String():
-
 		case tasks.StopApp.String():
-
 		case tasks.StartApp.String():
-
+		default:
+			resp.StatusCode = 404
+			resp.Message = "no valid task was selected try, PingHost, InstallApp"
+			return nil, resp
 		}
-
 	}
 	description := "run assist sub-task"
 	if appTask.Description != "" {

@@ -43,30 +43,16 @@ func (d *DB) UpdateToken(uuid string, Token *model.Token) (*model.Token, error) 
 	}
 }
 
-func (d *DB) DeleteToken(uuid string) (ok bool, err error) {
+func (d *DB) DeleteToken(uuid string) (*DeleteMessage, error) {
 	m := new(model.Token)
 	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
-	if query.Error != nil {
-		return false, query.Error
-	}
-	r := query.RowsAffected
-	if r == 0 {
-		return false, nil
-	}
-	return true, nil
+	return deleteResponse(query)
 }
 
 // DropTokens delete all.
-func (d *DB) DropTokens() (bool, error) {
+func (d *DB) DropTokens() (*DeleteMessage, error) {
 	var m *model.Token
 	query := d.DB.Where("1 = 1")
 	query.Delete(&m)
-	if query.Error != nil {
-		return false, query.Error
-	}
-	r := query.RowsAffected
-	if r == 0 {
-		return false, nil
-	}
-	return true, nil
+	return deleteResponse(query)
 }
