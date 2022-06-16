@@ -6,6 +6,8 @@ import (
 	"github.com/NubeIO/rubix-assist/pkg/model"
 )
 
+const locationName = "location"
+
 func (d *DB) GetLocations() ([]*model.Location, error) {
 	var m []*model.Location
 	if err := d.DB.Preload("Networks.Hosts").Find(&m).Error; err != nil {
@@ -40,12 +42,12 @@ func (d *DB) GetLocationsByName(name string, isUUID bool) (*model.Location, erro
 	switch isUUID {
 	case true:
 		if err := d.DB.Where("uuid = ? ", name).Preload("Networks.Hosts").First(&m).Error; err != nil {
-			return nil, errors.New("failed to find a location")
+			return nil, handelNotFound(locationName)
 		}
 		return m, nil
 	case false:
 		if err := d.DB.Where("name = ? ", name).Preload("Networks.Hosts").First(&m).Error; err != nil {
-			return nil, errors.New("failed to find a location")
+			return nil, handelNotFound(locationName)
 		}
 		return m, nil
 	default:
@@ -73,9 +75,9 @@ func (d *DB) UpdateLocationsByName(name string, host *model.Location) (*model.Lo
 	m := new(model.Location)
 	query := d.DB.Where("name = ?", name).Find(&m).Updates(host)
 	if query.Error != nil {
-		return nil, query.Error
+		return nil, handelNotFound(locationName)
 	} else {
-		return m, query.Error
+		return m, nil
 	}
 }
 
@@ -83,9 +85,9 @@ func (d *DB) UpdateLocation(uuid string, host *model.Location) (*model.Location,
 	m := new(model.Location)
 	query := d.DB.Where("uuid = ?", uuid).Find(&m).Updates(host)
 	if query.Error != nil {
-		return nil, query.Error
+		return nil, handelNotFound(locationName)
 	} else {
-		return host, query.Error
+		return m, nil
 	}
 }
 

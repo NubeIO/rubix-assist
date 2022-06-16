@@ -27,3 +27,7 @@ func deleteResponse(query *gorm.DB) (*DeleteMessage, error) {
 	msg.Message = fmt.Sprintf("deleted count:%d", query.RowsAffected)
 	return msg, nil
 }
+
+func handelNotFound(name string) error {
+	return fmt.Errorf("no %s with that id was found", name)
+}
