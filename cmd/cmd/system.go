@@ -24,7 +24,7 @@ func initSession() *remote.Admin {
 
 	db := initDB()
 
-	host, name := db.GetHostByName(hostName, false)
+	host, name := db.GetHostByName(hostName)
 	if name != nil {
 		return nil
 	}

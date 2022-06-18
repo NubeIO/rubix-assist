@@ -53,7 +53,7 @@ func (d *DB) GetTaskByType(uuid string, TaskType string) (*model.Task, error) {
 }
 
 func (d *DB) CreateTask(task *model.Task) (*model.Task, error) {
-	host, err := d.GetHostByName(task.HostUUID, true)
+	host, err := d.GetHost(task.HostUUID)
 	if err != nil {
 		return nil, errors.New("no valid host found")
 	}

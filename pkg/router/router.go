@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"github.com/NubeIO/rubix-assist/controller"
 	dbase "github.com/NubeIO/rubix-assist/database"
 	"github.com/NubeIO/rubix-assist/service/auth"
@@ -10,13 +11,22 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"net/http"
 	"os"
 	"time"
 )
 
+func NotFound() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		message := fmt.Sprintf("%s %s [%d]: %s", ctx.Request.Method, ctx.Request.URL, 404, "api not found")
+		ctx.JSON(http.StatusNotFound, controller.Message{Message: message})
+	}
+}
+
 func Setup(db *gorm.DB) *gin.Engine {
 	r := gin.New()
 
+	r.NoRoute(NotFound())
 	// Set default middlewares
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
@@ -166,15 +176,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		files.POST("/upload", api.UploadFile)
 	}
 
-	proxyRubix := r.Group("/api/rubix/proxy")
-	{
-		proxyRubix.GET("/*proxy", api.RubixProxyRequest)
-		proxyRubix.POST("/*proxy", api.RubixProxyRequest)
-		proxyRubix.PUT("/*proxy", api.RubixProxyRequest)
-		proxyRubix.PATCH("/*proxy", api.RubixProxyRequest)
-		proxyRubix.DELETE("/*proxy", api.RubixProxyRequest)
-	}
-
 	token := r.Group("/api/tokens")
 	{
 		token.GET("/", api.GetTokens)
@@ -198,8 +199,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 	wires := admin.Group("/wires")
 	{
 		wires.POST("/upload", api.WiresUpload)
-
 	}
+
+	r.Any("/proxy/*proxyPath", api.Proxy)
 
 	return r
 }

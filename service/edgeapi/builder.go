@@ -1,7 +1,7 @@
 package edgeapi
 
 import (
-	"github.com/NubeIO/rubix-assist/service/autocli"
+	"github.com/NubeIO/rubix-assist/service/clients/autocli"
 	"github.com/NubeIO/rubix-assist/service/tasks"
 	automodel "github.com/NubeIO/rubix-automater/automater/model"
 	"github.com/NubeIO/rubix-automater/controller/jobctl"

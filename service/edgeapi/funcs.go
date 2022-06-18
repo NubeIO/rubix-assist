@@ -22,7 +22,7 @@ func (inst *Manager) getHost(body *AppTask) (*model.Host, error, string) {
 	var host *model.Host
 	var err error
 	if body.HostUUID != "" {
-		host, err = inst.DB.GetHostByName(body.HostUUID, true)
+		host, err = inst.DB.GetHost(body.HostUUID)
 		if err != nil {
 			return nil, err, ""
 		}

@@ -2,8 +2,10 @@ package base
 
 import (
 	"errors"
+	"fmt"
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
+	"github.com/NubeIO/rubix-assist/pkg/helpers/ip"
 	"github.com/NubeIO/rubix-assist/pkg/model"
 )
 
@@ -26,22 +28,20 @@ func (d *DB) GetHostByLocationName(hostName, networkName, locationName string) (
 	return nil, errors.New("no host was found")
 }
 
-func (d *DB) GetHostByName(name string, isUUID bool) (*model.Host, error) {
+func (d *DB) GetHost(uuid string) (*model.Host, error) {
 	m := new(model.Host)
-	switch isUUID {
-	case true:
-		if err := d.DB.Where("uuid = ? ", name).First(&m).Error; err != nil {
-			return nil, handelNotFound(hostName)
-		}
-		return m, nil
-	case false:
-		if err := d.DB.Where("name = ? ", name).First(&m).Error; err != nil {
-			return nil, handelNotFound(hostName)
-		}
-		return m, nil
-	default:
-		return nil, errors.New("no valid uuid or name was provided in the request")
+	if err := d.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
+		return nil, errors.New(fmt.Sprintf("no host was found with uuid:%s", uuid))
 	}
+	return m, nil
+}
+
+func (d *DB) GetHostByName(name string) (*model.Host, error) {
+	m := new(model.Host)
+	if err := d.DB.Where("name = ? ", name).First(&m).Error; err != nil {
+		return nil, errors.New(fmt.Sprintf("no host was found with name:%s", name))
+	}
+	return m, nil
 }
 
 func (d *DB) GetHosts() ([]*model.Host, error) {
@@ -57,7 +57,10 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if host.Name == "" {
 		host.Name = "rc"
 	}
-	existingHost, _ := d.GetHostByName(host.Name, false)
+	if len(host.Name) < 1 {
+		return nil, errors.New("host name length must be grater then two")
+	}
+	existingHost, _ := d.GetHostByName(host.Name)
 	if existingHost != nil {
 		return nil, errors.New("an existing host with this name exists")
 	}
@@ -88,6 +91,14 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	}
 	if host.WiresPort == 0 {
 		host.WiresPort = 1313
+	}
+	err := ip.CheckURL(host.IP, host.Port)
+	if err != nil {
+		return nil, fmt.Errorf("invaild ssh ip:port:%s", err.Error())
+	}
+	err = ip.CheckURL(host.IP, host.RubixPort)
+	if err != nil {
+		return nil, fmt.Errorf("invaild rubix ip:port:%s", err.Error())
 	}
 	if err := d.DB.Create(&host).Error; err != nil {
 		return nil, err
