@@ -10,7 +10,7 @@ import (
 func (inst *Controller) wiresToken(c *gin.Context) (*wirescli.Token, *model.Host, error) {
 	body := &wirescli.WiresTokenBody{}
 	err = c.ShouldBindJSON(body)
-	host, _, err := inst.resolveHost(c)
+	host, err := inst.resolveHost(c)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -1,11 +1,11 @@
 package controller
 
 import (
+	"errors"
 	"fmt"
+	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
 	"github.com/NubeIO/rubix-assist/service/edgeapi"
 	"net/http"
-
-	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
 
 	dbase "github.com/NubeIO/rubix-assist/database"
 	"github.com/NubeIO/rubix-assist/pkg/model"
@@ -25,16 +25,38 @@ type Controller struct {
 
 var err error
 
-func (inst *Controller) resolveHost(ctx *gin.Context) (host *model.Host, useID bool, err error) {
-	idName, useID := useHostNameOrID(ctx)
-	host, err = inst.DB.GetHostByName(idName, useID)
-	return host, useID, err
+func (inst *Controller) resolveHost(c *gin.Context) (*model.Host, error) {
+	uuid := matchHostUUID(c)
+	name := matchHostName(c)
+	if uuid != "" {
+		host, _ := inst.DB.GetHost(uuid)
+		if host != nil {
+			return host, nil
+		}
+	}
+	if name != "" {
+		host, _ := inst.DB.GetHostByName(name)
+		if host != nil {
+			return host, nil
+		}
+	}
+	var hostNames []string
+	var hostUUIDs []string
+	var count int
+	hosts, err := inst.DB.GetHosts()
+	if err != nil {
+		return nil, err
+	}
+	for _, h := range hosts {
+		hostNames = append(hostNames, h.Name)
+		hostUUIDs = append(hostUUIDs, h.UUID)
+		count++
+	}
+	return nil, errors.New(fmt.Sprintf("no valid host was found: host count:%d, host names found:%v uuids:%v", count, hostNames, hostUUIDs))
 }
 
-func (inst *Controller) getHost(ctx *gin.Context) (host *model.Host, session *remote.Admin, err error) {
-	idName, useID := useHostNameOrID(ctx)
-	host, err = inst.DB.GetHostByName(idName, useID)
-
+func (inst *Controller) getHost(c *gin.Context) (host *model.Host, session *remote.Admin, err error) {
+	host, err = inst.resolveHost(c)
 	rs := &remote.Admin{
 		SSH: &ssh.Host{
 			Host: &model.Host{
@@ -58,16 +80,28 @@ func bodyAsJSON(ctx *gin.Context) (interface{}, error) {
 	return body, err
 }
 
-func useHostNameOrID(ctx *gin.Context) (idName string, useID bool) {
-	hostID := resolveHeaderHostID(ctx)
-	hostName := resolveHeaderHostName(ctx)
-	if hostID != "" {
-		return hostID, true
-	} else if hostName != "" {
-		return hostName, false
-	} else {
-		return "", false
+func matchUUID(uuid string) bool {
+	if len(uuid) == 16 {
+		if uuid[0:4] == "hos_" {
+			return true
+		}
 	}
+	return false
+}
+
+func matchHostUUID(ctx *gin.Context) string {
+	hostID := resolveHeaderHostID(ctx)
+	if len(hostID) == 16 {
+		if matchUUID(hostID) {
+			return hostID
+		}
+	}
+	return ""
+}
+
+func matchHostName(ctx *gin.Context) string {
+	name := resolveHeaderHostName(ctx)
+	return name
 }
 
 func resolveHeaderHostID(ctx *gin.Context) string {

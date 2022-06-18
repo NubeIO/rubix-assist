@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/NubeIO/rubix-assist/service/edgecli"
+	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,7 +17,7 @@ func (inst *Controller) UploadFile(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	host, _, err := inst.resolveHost(c)
+	host, err := inst.resolveHost(c)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
