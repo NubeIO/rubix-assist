@@ -2,6 +2,7 @@ package ip
 
 import (
 	"fmt"
+	"net"
 	"testing"
 )
 
@@ -14,5 +15,9 @@ func TestCheckHTTP(t *testing.T) {
 		fmt.Println(a.IP)
 		//pprint.PrintJOSN(a)
 	}
+
+	i, err := net.LookupHost("http://0.0.0.0:1662/")
+
+	fmt.Println(i, err)
 
 }
