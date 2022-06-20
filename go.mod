@@ -101,6 +101,7 @@ require (
 	github.com/mcnijman/go-emailaddress v1.1.0 // indirect
 	github.com/mustafaturan/monoton/v2 v2.0.2 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
+	github.com/stretchr/objx v0.4.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect
