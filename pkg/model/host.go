@@ -56,6 +56,7 @@ func GetHostSchema() *HostSchema {
 	m := &HostSchema{
 		Required: []string{"name", "ip", "port"},
 	}
+	m.IP.Default = "0.0.0.0"
 	m.NetworkUUID.Title = "network uuid"
 	schema.Set(m)
 	return m
