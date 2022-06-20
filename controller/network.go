@@ -12,10 +12,7 @@ func getNetworkBody(ctx *gin.Context) (dto *model.Network, err error) {
 
 func (inst *Controller) GetNetworkSchema(ctx *gin.Context) {
 	mod := model.GetNetworkSchema()
-	res := map[string]interface{}{
-		"properties": mod,
-	}
-	reposeHandler(res, nil, ctx)
+	reposeHandler(mod, nil, ctx)
 }
 
 func (inst *Controller) GetHostNetwork(c *gin.Context) {
