@@ -201,6 +201,18 @@ func Setup(db *gorm.DB) *gin.Engine {
 		wires.POST("/upload", api.WiresUpload)
 	}
 
+	system := admin.Group("/system")
+	{
+		system.GET("/ping", api.Ping)
+		system.GET("/time", api.HostTime)
+	}
+
+	networking := admin.Group("/networking")
+	{
+		networking.GET("/networks", api.Networking)
+		networking.GET("/interfaces", api.GetInterfacesNames)
+		networking.GET("/internet", api.InternetIP)
+	}
 	r.Any("/proxy/*proxyPath", api.Proxy)
 
 	return r

@@ -54,13 +54,7 @@ func (inst *Controller) CreateHost(c *gin.Context) {
 
 func (inst *Controller) UpdateHost(c *gin.Context) {
 	body, _ := getHostBody(c)
-	host, err := inst.resolveHost(c)
-	if err != nil {
-		reposeHandler(nil, err, c)
-		return
-	}
-
-	host, err = inst.DB.UpdateHost(host.UUID, body)
+	host, err := inst.DB.UpdateHost(c.Params.ByName("uuid"), body)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
