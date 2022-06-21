@@ -8,7 +8,7 @@ import (
 func TestClient_InstallApp(t *testing.T) {
 
 	client := New("0.0.0.0", 1662)
-	d, _ := client.GetLocationSchema()
+	d, _, _ := client.GetInternetIP()
 
 	pprint.PrintJOSN(d)
 
