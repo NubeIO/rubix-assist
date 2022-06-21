@@ -32,6 +32,8 @@ var Paths = struct {
 	Apps         Path
 	Tasks        Path
 	Transactions Path
+	System       Path
+	Networking   Path
 }{
 	Hosts:        Path{Path: "/api/hosts"},
 	Ping:         Path{Path: "/api/system/ping"},
@@ -42,6 +44,8 @@ var Paths = struct {
 	Apps:         Path{Path: "/api/edgeapi/apps"},
 	Tasks:        Path{Path: "/api/Tasks"},
 	Transactions: Path{Path: "/api/transactions"},
+	System:       Path{Path: "/api/system"},
+	Networking:   Path{Path: "/api/networking"},
 }
 
 type Response struct {
