@@ -77,6 +77,9 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if host.RubixUsername == "" {
 		host.RubixUsername = "admin"
 	}
+	if host.RubixPassword == "" {
+		host.RubixPassword = "admin"
+	}
 	if host.Username == "" {
 		host.Username = "pi"
 	}

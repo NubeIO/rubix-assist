@@ -19,6 +19,7 @@ func (inst *Client) ProxyGET(hostID, path string) (*resty.Response, error) {
 func (inst *Client) ProxyPOST(hostID, path string, body interface{}) (*resty.Response, error) {
 	path = fmt.Sprintf("proxy/%s", path)
 	path = strings.Replace(path, "//", "/", -1) // makes this /api//host/123 => /api/host/123
+	fmt.Println(path)
 	resp, err := inst.Rest.R().
 		SetBody(body).
 		SetHeader("host_uuid", hostID).
