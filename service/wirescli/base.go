@@ -25,9 +25,11 @@ type Path struct {
 var Paths = struct {
 	Auth   Path
 	Upload Path
+	Export Path
 }{
 	Auth:   Path{Path: "/api/auth/login"},
 	Upload: Path{Path: "/api/editor/c/0/import"},
+	Export: Path{Path: "/api/editor/c/0/export"},
 }
 
 type Response struct {
@@ -74,7 +76,6 @@ type NodesBody struct {
 }
 
 func (inst *Client) Upload(body *NodesBody, token string) (ok bool, response *Response) {
-
 	path := fmt.Sprintf(Paths.Upload.Path)
 	response = &Response{}
 	resp, err := inst.Rest.R().
@@ -84,6 +85,22 @@ func (inst *Client) Upload(body *NodesBody, token string) (ok bool, response *Re
 		}).
 		SetAuthToken(token).
 		Post(path)
+	if resp.IsSuccess() {
+		return true, response.buildResponse(resp, err)
+	}
+	return false, response.buildResponse(resp, err)
+}
+
+func (inst *Client) Backup(token string) (ok bool, response *Response) {
+	path := fmt.Sprintf("/wires/download/nodes")
+	response = &Response{}
+	resp, err := inst.Rest.R().
+		SetHeaders(map[string]string{
+			"token": token,
+		}).
+		SetAuthToken(token).
+		Post(path)
+	fmt.Println(resp.String())
 	if resp.IsSuccess() {
 		return true, response.buildResponse(resp, err)
 	}
