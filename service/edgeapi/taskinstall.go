@@ -45,7 +45,7 @@ func (inst *Manager) RunInstall(body *AppTask) (*installer.InstallResponse, *cli
 		Token:   token,
 		Version: body.Version,
 	}
-	data, resp := inst.reset(host.IP, host.RubixPort).InstallApp(app)
+	data, resp := inst.reset(host.IP, host.Port).InstallApp(app)
 	if resp.StatusCode > 299 {
 		return data, resp
 	}

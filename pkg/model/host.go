@@ -16,10 +16,10 @@ type Host struct {
 	HTTPS                *bool     `json:"https"`
 	Username             string    `json:"username"`
 	Password             string    `json:"password"`
-	RubixPort            int       `json:"rubix_port"`
 	WiresPort            int       `json:"wires_port"`
-	RubixUsername        string    `json:"rubix_username"`
-	RubixPassword        string    `json:"rubix_password" `
+	SSHPort              int       `json:"ssh_port"`
+	SSHUsername          string    `json:"ssh_username"`
+	SSHPassword          string    `json:"ssh_password" `
 	RubixHTTPS           *bool     `json:"rubix_https" `
 	IsLocalhost          *bool     `json:"is_localhost" `
 	PingEnable           *bool     `json:"ping_enable"`
@@ -37,6 +37,28 @@ type NetworkUUID struct {
 	ReadOnly bool   `json:"readOnly" default:"true"`
 }
 
+type SSHUsername struct {
+	Type    string `json:"type" default:"string"`
+	Title   string `json:"title" default:"ssh username"`
+	Min     int    `json:"minLength" default:"1"`
+	Max     int    `json:"maxLength" default:"50"`
+	Default string `json:"default" default:"admin"`
+}
+
+type SSHPassword struct {
+	Type  string `json:"type" default:"string"`
+	Title string `json:"title" default:"ssh password"`
+}
+
+type SSHPort struct {
+	Type    string `json:"type" default:"number"`
+	Title   string `json:"title" default:"rubix port"`
+	Min     int    `json:"minLength" default:"2"`
+	Max     int    `json:"maxLength" default:"65535"`
+	Default int    `json:"default" default:"22"`
+	Help    string `json:"help" default:"ip port, eg port 8080 192.168.15.10:8080"`
+}
+
 type HostSchema struct {
 	UUID        schema.UUID        `json:"uuid"`
 	Name        schema.Name        `json:"name"`
@@ -49,6 +71,9 @@ type HostSchema struct {
 	HTTPS       schema.HTTPS       `json:"https"`
 	Username    schema.Username    `json:"username"`
 	Password    schema.Password    `json:"password"`
+	SSHPort     SSHPort            `json:"ssh_port"`
+	SSHUsername SSHUsername        `json:"ssh_username"`
+	SSHPassword SSHPassword        `json:"ssh_password" `
 	Required    []string           `json:"required"`
 }
 

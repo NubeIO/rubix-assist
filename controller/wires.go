@@ -14,8 +14,8 @@ func (inst *Controller) wiresToken(c *gin.Context) (*wirescli.Token, *model.Host
 	if err != nil {
 		return nil, nil, err
 	}
-	body.Username = host.RubixUsername
-	body.Password = host.RubixPassword
+	body.Username = host.Username
+	body.Password = host.Password
 	data, _ := wirescli.New(host.IP, host.WiresPort).GetToken(body)
 	return data, host, nil
 }
@@ -44,4 +44,22 @@ func (inst *Controller) WiresUpload(c *gin.Context) {
 		"code":     res.StatusCode,
 	}
 	reposeHandler(r, err, c)
+}
+
+func (inst *Controller) WiresBackup(c *gin.Context) {
+	token, host, err := inst.wiresToken(c)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	if token == nil {
+		reposeHandler("failed to get wires token", err, c)
+		return
+	}
+	data, err := wirescli.New(host.IP, host.WiresPort).Backup(token.Token)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(data, err, c)
 }

@@ -15,7 +15,7 @@ func (inst *Controller) Proxy(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	remote, err := ip.Builder(host.IP, host.RubixPort)
+	remote, err := ip.Builder(host.IP, host.Port)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return

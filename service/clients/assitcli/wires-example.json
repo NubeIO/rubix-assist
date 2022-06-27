@@ -1,0 +1,176 @@
+[
+  {
+    "_id": "uni-TFdyQUuuTh6pVoSmUQ",
+    "cid": "0",
+    "flags": {},
+    "icon": null,
+    "id": "uni-TFdyQUuuTh6pVoSmUQ",
+    "inputs": {
+      "0": {
+        "name": "in 1",
+        "type": "boolean",
+        "label": null,
+        "locked": null,
+        "pos": null,
+        "round": null,
+        "subNodeId": null,
+        "link": null,
+        "setting": {
+          "exist": false,
+          "nullable": true,
+          "hidden": false
+        },
+        "isOptional": null
+      },
+      "1": {
+        "name": "in 2",
+        "type": "boolean",
+        "label": null,
+        "locked": null,
+        "pos": null,
+        "round": null,
+        "subNodeId": null,
+        "link": null,
+        "setting": {
+          "exist": false,
+          "nullable": true,
+          "hidden": false
+        },
+        "isOptional": null
+      }
+    },
+    "name": null,
+    "outputs": {
+      "0": {
+        "name": "output",
+        "type": "boolean",
+        "label": null,
+        "locked": null,
+        "pos": null,
+        "round": null,
+        "subNodeId": null,
+        "links": [
+          {
+            "nodeId": "vJMIY1zgRoK_BACyM0-A4g",
+            "slot": 1,
+            "ioId": "1"
+          }
+        ]
+      },
+      "1": {
+        "name": "out not",
+        "type": "boolean",
+        "label": null,
+        "locked": null,
+        "pos": null,
+        "round": null,
+        "subNodeId": null,
+        "links": []
+      }
+    },
+    "pos": [
+      -1330.5,
+      -1583
+    ],
+    "properties": {},
+    "settings": {
+      "inputs": {
+        "config": null,
+        "description": "Inputs count",
+        "type": "number",
+        "value": 2
+      }
+    },
+    "size": [
+      100,
+      21
+    ],
+    "type": "boolean/and"
+  },
+  {
+    "_id": "vJMIY1zgRoK_BACyM0-A4g",
+    "cid": "0",
+    "flags": {},
+    "icon": null,
+    "id": "vJMIY1zgRoK_BACyM0-A4g",
+    "inputs": {
+      "0": {
+        "name": "in 1",
+        "type": "boolean",
+        "label": null,
+        "locked": null,
+        "pos": null,
+        "round": null,
+        "subNodeId": null,
+        "link": null,
+        "setting": {
+          "exist": false,
+          "nullable": true,
+          "hidden": false
+        },
+        "isOptional": null
+      },
+      "1": {
+        "name": "in 2",
+        "type": "boolean",
+        "label": null,
+        "locked": null,
+        "pos": null,
+        "round": null,
+        "subNodeId": null,
+        "link": {
+          "nodeId": "uni-TFdyQUuuTh6pVoSmUQ",
+          "slot": 0,
+          "ioId": 0
+        },
+        "setting": {
+          "exist": false,
+          "nullable": true,
+          "hidden": false
+        },
+        "isOptional": null
+      }
+    },
+    "name": null,
+    "outputs": {
+      "0": {
+        "name": "output",
+        "type": "boolean",
+        "label": null,
+        "locked": null,
+        "pos": null,
+        "round": null,
+        "subNodeId": null,
+        "links": []
+      },
+      "1": {
+        "name": "out not",
+        "type": "boolean",
+        "label": null,
+        "locked": null,
+        "pos": null,
+        "round": null,
+        "subNodeId": null,
+        "links": []
+      }
+    },
+    "pos": [
+      -1169.5,
+      -1617
+    ],
+    "properties": {},
+    "settings": {
+      "inputs": {
+        "config": null,
+        "description": "Inputs count",
+        "type": "number",
+        "value": 2
+      }
+    },
+    "size": [
+      100,
+      21
+    ],
+    "type": "boolean/and"
+  }
+]

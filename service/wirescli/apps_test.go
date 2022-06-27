@@ -1,7 +1,6 @@
 package wirescli
 
 import (
-	"fmt"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"testing"
 )
@@ -14,10 +13,8 @@ func TestClient_InstallApp(t *testing.T) {
 		Username: "admin",
 		Password: "admin",
 	}
-	token, r := client.GetToken(body)
-	fmt.Println(r)
+	token, _ := client.GetToken(body)
 	pprint.PrintJOSN(token)
-	ok, res := client.Backup(token.Token)
-
-	fmt.Println(ok, res)
+	data, _ := client.Backup(token.Token)
+	pprint.PrintJOSN(data.Objects)
 }

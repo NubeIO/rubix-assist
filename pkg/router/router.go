@@ -199,6 +199,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	wires := admin.Group("/wires")
 	{
 		wires.POST("/upload", api.WiresUpload)
+		wires.GET("/backup", api.WiresBackup)
 	}
 
 	system := admin.Group("/system")

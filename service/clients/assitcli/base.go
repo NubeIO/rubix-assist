@@ -34,6 +34,7 @@ var Paths = struct {
 	Transactions Path
 	System       Path
 	Networking   Path
+	Wires        Path
 }{
 	Hosts:        Path{Path: "/api/hosts"},
 	Ping:         Path{Path: "/api/system/ping"},
@@ -46,6 +47,7 @@ var Paths = struct {
 	Transactions: Path{Path: "/api/transactions"},
 	System:       Path{Path: "/api/system"},
 	Networking:   Path{Path: "/api/networking"},
+	Wires:        Path{Path: "/api/wires"},
 }
 
 type Response struct {
