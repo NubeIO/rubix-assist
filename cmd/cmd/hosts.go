@@ -54,14 +54,11 @@ func getHosts(appDB *dbase.DB) {
 
 func addHost(appDB *dbase.DB) {
 	h := &model.Host{
-		Name:          hostName,
-		IP:            hostIP,
-		Port:          hostPort,
-		Username:      hostUsername,
-		Password:      hostPassword,
-		RubixUsername: rubixUsername,
-		RubixPassword: rubixPassword,
-		RubixPort:     rubixPort,
+		Name:     hostName,
+		IP:       hostIP,
+		Port:     hostPort,
+		Username: hostUsername,
+		Password: hostPassword,
 	}
 	host, err := appDB.CreateHost(h)
 	if err == nil {

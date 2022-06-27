@@ -22,7 +22,7 @@ func (inst *Controller) UploadFile(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	data, err := edgecli.New(host.IP, host.RubixPort).UploadFile(file.Filename, destination, f)
+	data, err := edgecli.New(host.IP, host.Port).UploadFile(file.Filename, destination, f)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return

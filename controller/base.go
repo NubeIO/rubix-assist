@@ -62,8 +62,8 @@ func (inst *Controller) getHost(c *gin.Context) (host *model.Host, session *remo
 			Host: &model.Host{
 				IP:       host.IP,
 				Port:     host.Port,
-				Username: host.Username,
-				Password: host.Password,
+				Username: host.SSHUsername,
+				Password: host.SSHPassword,
 			},
 		},
 	}

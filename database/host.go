@@ -74,23 +74,17 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if host.HTTPS == nil {
 		host.HTTPS = nils.NewFalse()
 	}
-	if host.RubixUsername == "" {
-		host.RubixUsername = "admin"
-	}
-	if host.RubixPassword == "" {
-		host.RubixPassword = "admin"
-	}
 	if host.Username == "" {
-		host.Username = "pi"
+		host.Username = "admin"
 	}
-	if host.Port == 0 {
-		host.Port = 22
+	if host.Password == "" {
+		host.Password = "admin"
 	}
 	if host.IP == "" {
 		host.IP = "0.0.0.0"
 	}
-	if host.RubixPort == 0 {
-		host.RubixPort = 1661
+	if host.Port == 0 {
+		host.Port = 1661
 	}
 	if host.WiresPort == 0 {
 		host.WiresPort = 1313
@@ -99,7 +93,7 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if err != nil {
 		return nil, fmt.Errorf("invaild ssh ip:port:%s", err.Error())
 	}
-	err = ip.CheckURL(host.IP, host.RubixPort)
+	err = ip.CheckURL(host.IP, host.Port)
 	if err != nil {
 		return nil, fmt.Errorf("invaild rubix ip:port:%s", err.Error())
 	}

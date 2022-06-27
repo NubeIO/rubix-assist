@@ -23,7 +23,7 @@ func (inst *Manager) TaskRunner(appTask *AppTask) (*TaskResponse, error) {
 	task := appTask.SubTask
 	switch task {
 	case tasks.PingHost.String():
-		_, err := runPingHost(host.IP, host.RubixPort, 2)
+		_, err := runPingHost(host.IP, host.Port, 2)
 		if err != nil {
 			resp.Message = "host is offline"
 			resp.ErrorMessage = err.Error()

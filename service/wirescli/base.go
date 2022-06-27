@@ -29,7 +29,7 @@ var Paths = struct {
 }{
 	Auth:   Path{Path: "/api/auth/login"},
 	Upload: Path{Path: "/api/editor/c/0/import"},
-	Export: Path{Path: "/api/editor/c/0/export"},
+	Export: Path{Path: "/api/editor/export/all"},
 }
 
 type Response struct {
@@ -91,18 +91,28 @@ func (inst *Client) Upload(body *NodesBody, token string) (ok bool, response *Re
 	return false, response.buildResponse(resp, err)
 }
 
-func (inst *Client) Backup(token string) (ok bool, response *Response) {
-	path := fmt.Sprintf("/wires/download/nodes")
-	response = &Response{}
+type WiresExport struct {
+	Objects     interface{}
+	Errors      []interface{} `json:"errors"`
+	ContainerId string        `json:"containerId"`
+	Total       int           `json:"total"`
+	Message     string        `json:"message"`
+}
+
+func (inst *Client) Backup(token string) (data *WiresExport, err error) {
+	path := fmt.Sprintf(Paths.Export.Path)
 	resp, err := inst.Rest.R().
 		SetHeaders(map[string]string{
 			"token": token,
 		}).
+		SetResult(&WiresExport{}).
 		SetAuthToken(token).
-		Post(path)
-	fmt.Println(resp.String())
+		Get(path)
 	if resp.IsSuccess() {
-		return true, response.buildResponse(resp, err)
+		data = resp.Result().(*WiresExport)
+		return data, err
+	} else {
+		data = resp.Error().(*WiresExport)
+		return data, err
 	}
-	return false, response.buildResponse(resp, err)
 }
