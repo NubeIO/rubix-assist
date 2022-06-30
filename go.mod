@@ -67,18 +67,18 @@ require (
 )
 
 require (
+	github.com/NubeDev/bacnet v0.0.4
 	github.com/NubeIO/edge v0.0.8
+	github.com/NubeIO/flow-framework v0.5.6
 	github.com/NubeIO/lib-bus v0.0.1
 	github.com/NubeIO/lib-date v0.0.1
 	github.com/NubeIO/lib-networking v0.0.4
 	github.com/NubeIO/lib-redis v0.0.3
 	github.com/NubeIO/lib-schema v0.0.3
 	github.com/NubeIO/lib-uuid v0.0.1
-	github.com/NubeIO/nubeio-rubix-lib-models-go v1.2.4
+	github.com/NubeIO/nubeio-rubix-lib-models-go v1.2.5
 	github.com/NubeIO/rubix-automater v0.0.6
-	github.com/iancoleman/strcase v0.2.0
 	github.com/mustafaturan/bus/v3 v3.0.3
-	github.com/tidwall/gjson v1.12.1
 	gorm.io/datatypes v1.0.6
 )
 
@@ -101,9 +101,6 @@ require (
 	github.com/mcnijman/go-emailaddress v1.1.0 // indirect
 	github.com/mustafaturan/monoton/v2 v2.0.2 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
-	github.com/stretchr/objx v0.4.0 // indirect
-	github.com/tidwall/match v1.1.1 // indirect
-	github.com/tidwall/pretty v1.2.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	gorm.io/driver/mysql v1.3.2 // indirect
