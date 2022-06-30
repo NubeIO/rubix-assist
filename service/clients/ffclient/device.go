@@ -2,47 +2,68 @@ package ffclient
 
 import (
 	"fmt"
-	"github.com/NubeIO/lib-uuid/uuid"
+	"github.com/NubeIO/nubeio-rubix-lib-models-go/pkg/v1/model"
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
 )
 
-// ClientAddDevice an object
-func (a *FlowClient) ClientAddDevice(networkUUID string) (*ResponseBody, error) {
-	name := uuid.ShortUUID()
-	name = fmt.Sprintf("dev_name_%s", name)
-	resp, err := nresty.FormatRestyResponse(a.client.R().
-		SetResult(&ResponseBody{}).
-		SetBody(map[string]string{"name": name, "network_uuid": networkUUID}).
-		Post("/api/devices"))
+// AddDevice an object
+func (inst *FlowClient) AddDevice(device *model.Device) (*model.Device, error) {
+	url := fmt.Sprintf("/api/devices")
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&model.Device{}).
+		SetBody(device).
+		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*ResponseBody), nil
+	return resp.Result().(*model.Device), nil
 }
 
-// ClientGetDevice an object
-func (a *FlowClient) ClientGetDevice(uuid string) (*ResponseBody, error) {
-	resp, err := nresty.FormatRestyResponse(a.client.R().
-		SetResult(&ResponseBody{}).
-		SetPathParams(map[string]string{"uuid": uuid}).
-		Get("/api/devices/{uuid}"))
+// GetFirstDevice first object
+func (inst *FlowClient) GetFirstDevice() (*model.Device, error) {
+	devices, err := inst.GetDevices()
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*ResponseBody), nil
+
+	for _, device := range *devices {
+		return &device, err
+	}
+	return nil, err
 }
 
-// ClientEditDevice edit an object
-func (a *FlowClient) ClientEditDevice(uuid_ string) (*ResponseBody, error) {
-	name := uuid.ShortUUID()
-	name = fmt.Sprintf("dev_new_name_%s", name)
-	resp, err := nresty.FormatRestyResponse(a.client.R().
-		SetResult(&ResponseBody{}).
-		SetBody(map[string]string{"name": name}).
-		SetPathParams(map[string]string{"uuid": uuid_}).
-		Post("/api/devices/{}"))
+// GetDevices all objects
+func (inst *FlowClient) GetDevices() (*[]model.Device, error) {
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&[]model.Device{}).
+		Get("/api/devices"))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*ResponseBody), nil
+	return resp.Result().(*[]model.Device), nil
+}
+
+// GetDevice an object
+func (inst *FlowClient) GetDevice(uuid string) (*model.Device, error) {
+	url := fmt.Sprintf("/api/devices/%s", uuid)
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&model.Device{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*model.Device), nil
+}
+
+// EditDevice edit an object
+func (inst *FlowClient) EditDevice(uuid string, device *model.Device) (*model.Device, error) {
+	url := fmt.Sprintf("/api/devices/%s", uuid)
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&model.Device{}).
+		SetBody(device).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*model.Device), nil
 }

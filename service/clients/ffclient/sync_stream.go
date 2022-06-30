@@ -5,8 +5,8 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
 )
 
-func (a *FlowClient) SyncStream(body *model.SyncStream) (*model.StreamClone, error) {
-	resp, err := nresty.FormatRestyResponse(a.client.R().
+func (inst *FlowClient) SyncStream(body *model.SyncStream) (*model.StreamClone, error) {
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.StreamClone{}).
 		SetBody(body).
 		Post("/api/sync/stream"))

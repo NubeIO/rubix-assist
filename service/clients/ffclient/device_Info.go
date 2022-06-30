@@ -5,8 +5,8 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
 )
 
-func (a *FlowClient) DeviceInfo() (*model.DeviceInfo, error) {
-	resp, err := nresty.FormatRestyResponse(a.client.R().
+func (inst *FlowClient) DeviceInfo() (*model.DeviceInfo, error) {
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.DeviceInfo{}).
 		Get("/api/system/device_info"))
 	if err != nil {
