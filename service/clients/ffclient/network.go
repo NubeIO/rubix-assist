@@ -6,6 +6,31 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
 )
 
+// AddNetwork an object
+func (inst *FlowClient) AddNetwork(body *model.Point) (*model.Network, error) {
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&model.Network{}).
+		SetBody(body).
+		Post("/api/networks"))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*model.Network), nil
+}
+
+// EditNetwork edit an object
+func (inst *FlowClient) EditNetwork(uuid string, device *model.Network) (*model.Network, error) {
+	url := fmt.Sprintf("/api/networks/%s", uuid)
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&model.Network{}).
+		SetBody(device).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*model.Network), nil
+}
+
 // GetNetworkByPluginName an object
 func (inst *FlowClient) GetNetworkByPluginName(pluginName string, withPoints ...bool) (*model.Network, error) {
 	url := fmt.Sprintf("/api/networks/plugin/%s", pluginName)

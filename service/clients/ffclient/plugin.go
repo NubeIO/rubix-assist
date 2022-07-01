@@ -1,32 +1,73 @@
 package ffclient
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-models-go/pkg/v1/model"
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
 )
 
-// ClientGetPlugins an object
-func (inst *FlowClient) ClientGetPlugins() (*ResponsePlugins, error) {
+// GetPlugins an object
+func (inst *FlowClient) GetPlugins() ([]model.PluginConf, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
-		SetResult(&ResponsePlugins{}).
-		Get("/plugins"))
+		SetResult(&[]model.PluginConf{}).
+		Get("/api/plugins"))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*ResponsePlugins), nil
+	var out []model.PluginConf
+	out = *resp.Result().(*[]model.PluginConf)
+	return out, nil
 }
 
-// ClientGetPlugin an object
-func (inst *FlowClient) ClientGetPlugin(uuid string) (*ResponseBody, error) {
+// GetPlugin an object
+func (inst *FlowClient) GetPlugin(uuid string) (*model.PluginConf, error) {
+	url := fmt.Sprintf("/api/plugins/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
-		SetResult(&ResponseBody{}).
-		SetPathParams(map[string]string{"uuid": uuid}).
-		Get("/api/plugins/{uuid}"))
+		SetResult(&model.PluginConf{}).
+		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*ResponseBody), nil
+	return resp.Result().(*model.PluginConf), nil
+}
+
+type enablePlugin struct {
+	Enabled bool `json:"enabled"`
+}
+
+func (inst *FlowClient) DisablePlugin(uuid string) (interface{}, error) {
+	url := fmt.Sprintf("/api/plugins/enable/%s", uuid)
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&ResponseBody{}).
+		SetBody(enablePlugin{Enabled: false}).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	var out interface{}
+	err = json.Unmarshal(resp.Body(), &out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (inst *FlowClient) EnablePlugin(uuid string) (interface{}, error) {
+	url := fmt.Sprintf("/api/plugins/enable/%s", uuid)
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&ResponseBody{}).
+		SetBody(enablePlugin{Enabled: true}).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	var out interface{}
+	err = json.Unmarshal(resp.Body(), &out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 // CreateNetworkPlugin an object
