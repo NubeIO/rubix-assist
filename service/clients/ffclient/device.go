@@ -75,3 +75,14 @@ func (inst *FlowClient) EditDevice(uuid string, device *model.Device) (*model.De
 	}
 	return resp.Result().(*model.Device), nil
 }
+
+// DeleteDevice an object
+func (inst *FlowClient) DeleteDevice(uuid string) (bool, error) {
+	_, err := nresty.FormatRestyResponse(inst.client.R().
+		SetPathParams(map[string]string{"uuid": uuid}).
+		Delete("/api/devices/{uuid}"))
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
