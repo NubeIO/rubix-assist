@@ -7,7 +7,7 @@ import (
 )
 
 // AddNetwork an object
-func (inst *FlowClient) AddNetwork(body *model.Point) (*model.Network, error) {
+func (inst *FlowClient) AddNetwork(body *model.Network) (*model.Network, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Network{}).
 		SetBody(body).
@@ -47,7 +47,7 @@ func (inst *FlowClient) GetNetworkByPluginName(pluginName string, withPoints ...
 }
 
 // GetNetworks an object
-func (inst *FlowClient) GetNetworks(withDevices ...bool) (*[]model.Network, error) {
+func (inst *FlowClient) GetNetworks(withDevices ...bool) ([]model.Network, error) {
 	url := fmt.Sprintf("/api/networks")
 	if len(withDevices) > 0 {
 		url = fmt.Sprintf("/api/networks/?with_devices=true")
@@ -58,18 +58,25 @@ func (inst *FlowClient) GetNetworks(withDevices ...bool) (*[]model.Network, erro
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*[]model.Network), nil
+	var out []model.Network
+	out = *resp.Result().(*[]model.Network)
+	return out, nil
 }
 
 // GetNetworksWithPoints an object
-func (inst *FlowClient) GetNetworksWithPoints() (*[]model.Network, error) {
+func (inst *FlowClient) GetNetworksWithPoints() ([]model.Network, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&[]model.Network{}).
 		Get("/api/networks/?with_points=true"))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*[]model.Network), nil
+	if err != nil {
+		return nil, err
+	}
+	var out []model.Network
+	out = *resp.Result().(*[]model.Network)
+	return out, nil
 }
 
 // GetNetworkWithPoints an object
@@ -102,8 +109,19 @@ func (inst *FlowClient) GetFirstNetwork(withDevices ...bool) (*model.Network, er
 	if err != nil {
 		return nil, err
 	}
-	for _, net := range *nets {
+	for _, net := range nets {
 		return &net, err
 	}
 	return nil, err
+}
+
+// DeleteNetwork an object
+func (inst *FlowClient) DeleteNetwork(uuid string) (bool, error) {
+	_, err := nresty.FormatRestyResponse(inst.client.R().
+		SetPathParams(map[string]string{"uuid": uuid}).
+		Delete("/api/networks/{uuid}"))
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

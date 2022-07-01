@@ -42,6 +42,17 @@ func (inst *FlowClient) GetPoint(uuid string) (*model.Point, error) {
 	return resp.Result().(*model.Point), nil
 }
 
+// DeletePoint an object
+func (inst *FlowClient) DeletePoint(uuid string) (bool, error) {
+	_, err := nresty.FormatRestyResponse(inst.client.R().
+		SetPathParams(map[string]string{"uuid": uuid}).
+		Delete("/api/points/{uuid}"))
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
 // EditPoint an object
 func (inst *FlowClient) EditPoint(uuid string, body *model.Point) (*model.Point, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
