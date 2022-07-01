@@ -76,7 +76,7 @@ require (
 	github.com/NubeIO/lib-redis v0.0.3
 	github.com/NubeIO/lib-schema v0.0.3
 	github.com/NubeIO/lib-uuid v0.0.1
-	github.com/NubeIO/nubeio-rubix-lib-models-go v1.2.5
+	github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.0
 	github.com/NubeIO/rubix-automater v0.0.6
 	github.com/mustafaturan/bus/v3 v3.0.3
 	gorm.io/datatypes v1.0.6
