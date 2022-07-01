@@ -20,12 +20,11 @@ func (inst *FlowClient) AddDevice(device *model.Device) (*model.Device, error) {
 }
 
 // GetFirstDevice first object
-func (inst *FlowClient) GetFirstDevice() (*model.Device, error) {
-	devices, err := inst.GetDevices()
+func (inst *FlowClient) GetFirstDevice(withPoints ...bool) (*model.Device, error) {
+	devices, err := inst.GetDevices(withPoints...)
 	if err != nil {
 		return nil, err
 	}
-
 	for _, device := range *devices {
 		return &device, err
 	}
@@ -33,10 +32,14 @@ func (inst *FlowClient) GetFirstDevice() (*model.Device, error) {
 }
 
 // GetDevices all objects
-func (inst *FlowClient) GetDevices() (*[]model.Device, error) {
+func (inst *FlowClient) GetDevices(withPoints ...bool) (*[]model.Device, error) {
+	url := fmt.Sprintf("/api/devices")
+	if len(withPoints) > 0 {
+		url = fmt.Sprintf("/api/devices/?with_points=true")
+	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&[]model.Device{}).
-		Get("/api/devices"))
+		Get(url))
 	if err != nil {
 		return nil, err
 	}
@@ -44,8 +47,11 @@ func (inst *FlowClient) GetDevices() (*[]model.Device, error) {
 }
 
 // GetDevice an object
-func (inst *FlowClient) GetDevice(uuid string) (*model.Device, error) {
+func (inst *FlowClient) GetDevice(uuid string, withPoints ...bool) (*model.Device, error) {
 	url := fmt.Sprintf("/api/devices/%s", uuid)
+	if len(withPoints) > 0 {
+		url = fmt.Sprintf("/api/devices/%s?with_points=true", uuid)
+	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Device{}).
 		Get(url))
