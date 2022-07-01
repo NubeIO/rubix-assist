@@ -1,7 +1,7 @@
 package edgeapi
 
 import (
-	"github.com/NubeIO/rubix-assist/pkg/model"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/service/tasks"
 	automodel "github.com/NubeIO/rubix-automater/automater/model"
 )

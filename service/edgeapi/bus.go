@@ -3,7 +3,7 @@ package edgeapi
 import (
 	"context"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/pkg/model"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	automodel "github.com/NubeIO/rubix-automater/automater/model"
 	"github.com/mustafaturan/bus/v3"
 	log "github.com/sirupsen/logrus"

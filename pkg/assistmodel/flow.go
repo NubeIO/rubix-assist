@@ -1,4 +1,4 @@
-package model
+package assistmodel
 
 type FFNetwork struct {
 	NetworkName string   `json:"network_name"`

@@ -3,7 +3,7 @@ package edgeapi
 import (
 	"errors"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/pkg/model"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/service/tasks"
 	"github.com/NubeIO/rubix-automater/controller/jobctl"
 	"github.com/sirupsen/logrus"

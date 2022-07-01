@@ -3,7 +3,7 @@ package assitcli
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/pkg/model"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 )
 
 func (inst *Client) GetHosts() (data []model.Host, response *Response) {

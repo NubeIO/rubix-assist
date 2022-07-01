@@ -1,4 +1,4 @@
-package model
+package assistmodel
 
 type Token struct {
 	UUID  string `json:"uuid" gorm:"primarykey"`

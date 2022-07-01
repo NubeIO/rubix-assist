@@ -3,7 +3,7 @@ package base
 import (
 	"errors"
 	"github.com/NubeIO/lib-uuid/uuid"
-	"github.com/NubeIO/rubix-assist/pkg/model"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 )
 
 const locationName = "location"

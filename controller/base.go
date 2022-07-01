@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	dbase "github.com/NubeIO/rubix-assist/database"
-	"github.com/NubeIO/rubix-assist/pkg/model"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/service/remote"
 	"github.com/NubeIO/rubix-assist/service/remote/ssh"
 	"github.com/gin-gonic/gin"
