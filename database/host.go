@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/pkg/helpers/ip"
-	"github.com/NubeIO/rubix-assist/pkg/model"
 )
 
 const hostName = "host"

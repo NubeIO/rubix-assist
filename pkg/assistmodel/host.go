@@ -1,4 +1,4 @@
-package model
+package assistmodel
 
 import (
 	"github.com/NubeIO/lib-schema/schema"

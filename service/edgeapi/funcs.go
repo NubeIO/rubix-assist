@@ -2,7 +2,7 @@ package edgeapi
 
 import (
 	"errors"
-	"github.com/NubeIO/rubix-assist/pkg/model"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 )
 
 func (inst *Manager) getTokens() (token string, tokens []*model.Token, err error) {

@@ -2,7 +2,7 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/NubeIO/rubix-assist/pkg/model"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/service/wirescli"
 	"github.com/gin-gonic/gin"
 )

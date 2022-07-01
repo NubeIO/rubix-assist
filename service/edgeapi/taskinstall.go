@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/edge/service/apps/installer"
 	"github.com/NubeIO/edge/service/client"
-	"github.com/NubeIO/rubix-assist/pkg/model"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/service/tasks"
 	"github.com/NubeIO/rubix-automater/controller/jobctl"
 )
