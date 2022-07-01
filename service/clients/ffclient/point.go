@@ -18,14 +18,16 @@ func (inst *FlowClient) AddPoint(body *model.Point) (*model.Point, error) {
 }
 
 // GetPoints an objects
-func (inst *FlowClient) GetPoints() (*[]model.Point, error) {
+func (inst *FlowClient) GetPoints() ([]model.Point, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&[]model.Point{}).
 		Get("/api/points"))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*[]model.Point), nil
+	var out []model.Point
+	out = *resp.Result().(*[]model.Point)
+	return out, nil
 }
 
 // GetPoint an object

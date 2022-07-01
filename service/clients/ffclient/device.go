@@ -25,14 +25,14 @@ func (inst *FlowClient) GetFirstDevice(withPoints ...bool) (*model.Device, error
 	if err != nil {
 		return nil, err
 	}
-	for _, device := range *devices {
+	for _, device := range devices {
 		return &device, err
 	}
 	return nil, err
 }
 
 // GetDevices all objects
-func (inst *FlowClient) GetDevices(withPoints ...bool) (*[]model.Device, error) {
+func (inst *FlowClient) GetDevices(withPoints ...bool) ([]model.Device, error) {
 	url := fmt.Sprintf("/api/devices")
 	if len(withPoints) > 0 {
 		url = fmt.Sprintf("/api/devices/?with_points=true")
@@ -43,7 +43,9 @@ func (inst *FlowClient) GetDevices(withPoints ...bool) (*[]model.Device, error) 
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*[]model.Device), nil
+	var out []model.Device
+	out = *resp.Result().(*[]model.Device)
+	return out, nil
 }
 
 // GetDevice an object
