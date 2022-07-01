@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
-	"github.com/NubeIO/rubix-assist/pkg/model"
 	"github.com/NubeIO/rubix-assist/service/remote"
 	"github.com/NubeIO/rubix-assist/service/remote/ssh"
 	"github.com/spf13/cobra"

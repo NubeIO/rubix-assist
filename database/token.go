@@ -2,8 +2,8 @@ package base
 
 import (
 	"github.com/NubeIO/lib-uuid/uuid"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
-	"github.com/NubeIO/rubix-assist/pkg/model"
 )
 
 func (d *DB) GetToken(uuid string) (*model.Token, error) {

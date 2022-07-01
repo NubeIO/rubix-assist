@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"github.com/NubeIO/rubix-assist/pkg/model"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	jwt "github.com/appleboy/gin-jwt/v2"
 )
 

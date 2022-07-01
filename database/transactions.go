@@ -3,10 +3,9 @@ package base
 import (
 	"errors"
 	"github.com/NubeIO/lib-uuid/uuid"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/pkg/helpers/ttime"
 	"github.com/NubeIO/rubix-assist/service/tasks"
-
-	"github.com/NubeIO/rubix-assist/pkg/model"
 )
 
 func (d *DB) GetTransaction(uuid string) (*model.Transaction, error) {

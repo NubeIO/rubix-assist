@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
-	"github.com/NubeIO/rubix-assist/pkg/model"
+	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/service/remote/ssh"
 )
 
