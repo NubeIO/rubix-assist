@@ -3,24 +3,24 @@ package ffclient
 import (
 	"fmt"
 	"github.com/NubeDev/bacnet"
-	"github.com/NubeDev/bacnet/btypes"
 	"github.com/NubeDev/bacnet/network"
+	"github.com/NubeIO/nubeio-rubix-lib-models-go/pkg/v1/model"
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
 )
 
 const bacnetMaster = "bacnetmaster"
 
 // BacnetWhoIs do a whois on an existing network
-func (inst *FlowClient) BacnetWhoIs(body *bacnet.WhoIsOpts, networkUUID string, addDevices bool) (*[]btypes.Device, error) {
+func (inst *FlowClient) BacnetWhoIs(body *bacnet.WhoIsOpts, networkUUID string, addDevices bool) (*[]model.Device, error) {
 	url := fmt.Sprintf("/api/plugins/api/%s/whois/%s?add_devices=%t", bacnetMaster, networkUUID, addDevices)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetBody(body).
-		SetResult(&[]btypes.Device{}).
+		SetResult(&[]model.Device{}).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*[]btypes.Device), nil
+	return resp.Result().(*[]model.Device), nil
 }
 
 // BacnetDevicePoints get points from an added device
