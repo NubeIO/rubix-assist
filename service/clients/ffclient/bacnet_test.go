@@ -11,7 +11,7 @@ func TestFlowClient_BacnetWhoIs(t *testing.T) {
 
 	cli := NewLocalClient(&Connection{})
 	var err error
-	devices, err := cli.BacnetWhoIs(&bacnet.WhoIsOpts{}, "net_1dc89f79b04e4874", true)
+	devices, err := cli.BacnetWhoIs(&bacnet.WhoIsOpts{}, "net_1dc89f79b04e4874", false)
 	fmt.Println(err)
 	pprint.PrintJOSN(devices)
 
