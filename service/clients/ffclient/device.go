@@ -35,7 +35,9 @@ func (inst *FlowClient) GetFirstDevice(withPoints ...bool) (*model.Device, error
 func (inst *FlowClient) GetDevices(withPoints ...bool) ([]model.Device, error) {
 	url := fmt.Sprintf("/api/devices")
 	if len(withPoints) > 0 {
-		url = fmt.Sprintf("/api/devices/?with_points=true")
+		if withPoints[0] == true {
+			url = fmt.Sprintf("/api/devices/?with_points=true")
+		}
 	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&[]model.Device{}).
@@ -52,7 +54,9 @@ func (inst *FlowClient) GetDevices(withPoints ...bool) ([]model.Device, error) {
 func (inst *FlowClient) GetDevice(uuid string, withPoints ...bool) (*model.Device, error) {
 	url := fmt.Sprintf("/api/devices/%s", uuid)
 	if len(withPoints) > 0 {
-		url = fmt.Sprintf("/api/devices/%s?with_points=true", uuid)
+		if withPoints[0] == true {
+			url = fmt.Sprintf("/api/devices/%s?with_points=true", uuid)
+		}
 	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Device{}).
