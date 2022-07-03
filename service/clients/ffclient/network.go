@@ -50,7 +50,10 @@ func (inst *FlowClient) GetNetworkByPluginName(pluginName string, withPoints ...
 func (inst *FlowClient) GetNetworks(withDevices ...bool) ([]model.Network, error) {
 	url := fmt.Sprintf("/api/networks")
 	if len(withDevices) > 0 {
-		url = fmt.Sprintf("/api/networks/?with_devices=true")
+		if withDevices[0] == true {
+			url = fmt.Sprintf("/api/networks/?with_devices=true")
+		}
+
 	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&[]model.Network{}).
@@ -92,11 +95,16 @@ func (inst *FlowClient) GetNetworkWithPoints(uuid string) (*model.Network, error
 }
 
 // GetNetwork an object
-func (inst *FlowClient) GetNetwork(uuid string) (*model.Network, error) {
+func (inst *FlowClient) GetNetwork(uuid string, withDevices ...bool) (*model.Network, error) {
+	url := fmt.Sprintf("/api/networks/%s", uuid)
+	if len(withDevices) > 0 {
+		if withDevices[0] == true {
+			url = fmt.Sprintf("/api/networks/%s?with_devices=true", uuid)
+		}
+	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Network{}).
-		SetPathParams(map[string]string{"uuid": uuid}).
-		Get("/api/networks/{uuid}"))
+		Get(url))
 	if err != nil {
 		return nil, err
 	}

@@ -16,7 +16,7 @@ func (inst *Controller) GetHostSchema(ctx *gin.Context) {
 }
 
 func (inst *Controller) GetHost(c *gin.Context) {
-	host, err := inst.DB.GetHostByName(c.Params.ByName("uuid"))
+	host, err := inst.DB.GetHost(c.Params.ByName("uuid"))
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
