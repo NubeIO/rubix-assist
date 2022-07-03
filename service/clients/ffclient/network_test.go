@@ -8,16 +8,22 @@ import (
 func TestFlowClient_GetNetworksWithPoints(t *testing.T) {
 	cli := NewLocalClient(&Connection{})
 	var err error
-	nets, err := cli.GetFirstNetwork(true)
+	nets, err := cli.GetNetworkByPluginName("bacnetmaster", true)
 	if err != nil {
 		return
 	}
 	for _, device := range nets.Devices {
 		fmt.Println(device)
 	}
-	fmt.Println(nets)
-	//for _, network := range *nets {
-	//	fmt.Println(network)
-	//}
+	fmt.Println(nets.UUID)
+
+	network, err := cli.GetNetwork(nets.UUID, false)
+	if err != nil {
+		return
+	}
+	fmt.Println(network.Devices)
+	for _, d := range network.Devices {
+		fmt.Println(d)
+	}
 
 }
