@@ -2,16 +2,21 @@ package ffclient
 
 import (
 	"fmt"
-	"github.com/NubeDev/bacnet"
-	"github.com/NubeDev/bacnet/network"
 	"github.com/NubeIO/nubeio-rubix-lib-models-go/pkg/v1/model"
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
 )
 
+type WhoIsOpts struct {
+	Low             int    `json:"low"`
+	High            int    `json:"high"`
+	GlobalBroadcast bool   `json:"global_broadcast"`
+	NetworkNumber   uint16 `json:"network_number"`
+}
+
 const bacnetMaster = "bacnetmaster"
 
 // BacnetWhoIs do a whois on an existing network
-func (inst *FlowClient) BacnetWhoIs(body *bacnet.WhoIsOpts, networkUUID string, addDevices bool) (*[]model.Device, error) {
+func (inst *FlowClient) BacnetWhoIs(body *WhoIsOpts, networkUUID string, addDevices bool) (*[]model.Device, error) {
 	url := fmt.Sprintf("/api/plugins/api/%s/whois/%s?add_devices=%t", bacnetMaster, networkUUID, addDevices)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetBody(body).
@@ -24,13 +29,13 @@ func (inst *FlowClient) BacnetWhoIs(body *bacnet.WhoIsOpts, networkUUID string, 
 }
 
 // BacnetDevicePoints get points from an added device
-func (inst *FlowClient) BacnetDevicePoints(deviceUUID string, addPoints bool) (*[]network.PointDetails, error) {
-	url := fmt.Sprintf("/api/plugins/api/%s/device/points/%s?add_points=%t", bacnetMaster, deviceUUID, addPoints)
-	resp, err := nresty.FormatRestyResponse(inst.client.R().
-		SetResult(&[]network.PointDetails{}).
-		Post(url))
-	if err != nil {
-		return nil, err
-	}
-	return resp.Result().(*[]network.PointDetails), nil
-}
+//func (inst *FlowClient) BacnetDevicePoints(deviceUUID string, addPoints bool) (*[]network.PointDetails, error) {
+//	url := fmt.Sprintf("/api/plugins/api/%s/device/points/%s?add_points=%t", bacnetMaster, deviceUUID, addPoints)
+//	resp, err := nresty.FormatRestyResponse(inst.client.R().
+//		SetResult(&[]network.PointDetails{}).
+//		Post(url))
+//	if err != nil {
+//		return nil, err
+//	}
+//	return resp.Result().(*[]network.PointDetails), nil
+//}
