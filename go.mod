@@ -67,7 +67,7 @@ require (
 )
 
 require (
-	github.com/NubeDev/bacnet v0.0.4
+	github.com/NubeDev/bacnet v0.0.7
 	github.com/NubeIO/edge v0.0.8
 	github.com/NubeIO/flow-framework v0.5.6
 	github.com/NubeIO/lib-bus v0.0.1
