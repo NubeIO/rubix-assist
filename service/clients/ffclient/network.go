@@ -24,7 +24,7 @@ func (inst *FlowClient) EditNetwork(uuid string, device *model.Network) (*model.
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Network{}).
 		SetBody(device).
-		Post(url))
+		Patch(url))
 	if err != nil {
 		return nil, err
 	}

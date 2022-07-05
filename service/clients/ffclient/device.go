@@ -73,7 +73,7 @@ func (inst *FlowClient) EditDevice(uuid string, device *model.Device) (*model.De
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Device{}).
 		SetBody(device).
-		Post(url))
+		Patch(url))
 	if err != nil {
 		return nil, err
 	}
