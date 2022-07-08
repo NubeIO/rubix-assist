@@ -29,13 +29,13 @@ func (inst *FlowClient) BacnetWhoIs(body *WhoIsOpts, networkUUID string, addDevi
 }
 
 // BacnetDevicePoints get points from an added device
-//func (inst *FlowClient) BacnetDevicePoints(deviceUUID string, addPoints bool) (*[]network.PointDetails, error) {
-//	url := fmt.Sprintf("/api/plugins/api/%s/device/points/%s?add_points=%t", bacnetMaster, deviceUUID, addPoints)
-//	resp, err := nresty.FormatRestyResponse(inst.client.R().
-//		SetResult(&[]network.PointDetails{}).
-//		Post(url))
-//	if err != nil {
-//		return nil, err
-//	}
-//	return resp.Result().(*[]network.PointDetails), nil
-//}
+func (inst *FlowClient) BacnetDevicePoints(deviceUUID string, addPoints, makeWriteable bool) (*[]model.Point, error) {
+	url := fmt.Sprintf("/api/plugins/api/%s/device/points/%s?add_points=%t&writeable_points=%t", bacnetMaster, deviceUUID, addPoints, makeWriteable)
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&[]model.Point{}).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*[]model.Point), nil
+}

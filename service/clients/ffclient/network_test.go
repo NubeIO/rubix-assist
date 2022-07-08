@@ -17,7 +17,7 @@ func TestFlowClient_GetNetworksWithPoints(t *testing.T) {
 	}
 	fmt.Println(nets.UUID)
 
-	network, err := cli.GetNetwork(nets.UUID, false)
+	network, err := cli.GetNetwork(nets.UUID, true)
 	if err != nil {
 		return
 	}

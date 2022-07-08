@@ -10,7 +10,7 @@ type Host struct {
 	Name                 string    `json:"name"  gorm:"type:varchar(255);not null"  `
 	NetworkUUID          string    `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null"`
 	Enable               *bool     `json:"enable"`
-	ProductType          string    //edge28, rubix-compute
+	ProductType          string    `json:"product_type"` //edge28, rubix-compute
 	IP                   string    `json:"ip"`
 	Port                 int       `json:"port"`
 	HTTPS                *bool     `json:"https"`
@@ -64,7 +64,7 @@ type HostSchema struct {
 	Name        schema.Name        `json:"name"`
 	Description schema.Description `json:"description"`
 	Enable      schema.Enable      `json:"enable"`
-	Product     schema.Product     `json:"product"`
+	Product     schema.Product     `json:"product_type"`
 	NetworkUUID NetworkUUID        `json:"network_uuid"`
 	IP          schema.IP          `json:"ip"`
 	Port        schema.Port        `json:"port"`
