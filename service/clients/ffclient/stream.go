@@ -32,16 +32,16 @@ func (inst *FlowClient) EditStream(uuid string, body *model.Stream) (*model.Stre
 }
 
 // GetStreamClones an object
-func (inst *FlowClient) GetStreamClones() ([]model.Stream, error) {
+func (inst *FlowClient) GetStreamClones() ([]model.StreamClone, error) {
 	url := fmt.Sprintf("/api/stream_clones")
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
-		SetResult(&[]model.Stream{}).
+		SetResult(&[]model.StreamClone{}).
 		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	var out []model.Stream
-	out = *resp.Result().(*[]model.Stream)
+	var out []model.StreamClone
+	out = *resp.Result().(*[]model.StreamClone)
 	return out, nil
 }
 
