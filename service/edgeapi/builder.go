@@ -6,6 +6,7 @@ import (
 	automodel "github.com/NubeIO/rubix-automater/automater/model"
 	"github.com/NubeIO/rubix-automater/controller/jobctl"
 	"github.com/NubeIO/rubix-automater/controller/pipectl"
+	log "github.com/sirupsen/logrus"
 )
 
 type AppTask struct {
@@ -65,6 +66,7 @@ func (inst *Manager) TaskBuilder(appTask *AppTask) (*automodel.Pipeline, *autocl
 	}
 	cli := autocli.New("0.0.0.0", 1663)
 	pipe, resp := cli.AddPipeline(pipeBuilder)
+	log.Infof("task builder resp from automater:%d", resp.StatusCode)
 	if resp.StatusCode > 299 {
 		return pipe, resp
 	}

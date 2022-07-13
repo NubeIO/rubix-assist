@@ -19,8 +19,17 @@ func (inst *Controller) InstallApp(c *gin.Context) {
 func (inst *Controller) TaskBuilder(c *gin.Context) {
 	m := &edgeapi.AppTask{}
 	err = c.ShouldBindJSON(&m)
-	data, _ := inst.Edge.TaskBuilder(m)
-	reposeHandler(data, err, c)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	data, resp := inst.Edge.TaskBuilder(m)
+	if data == nil {
+		reposeHandler(resp.Message, nil, c)
+	} else {
+		reposeHandler(data, nil, c)
+	}
+
 }
 
 func (inst *Controller) TaskRunner(c *gin.Context) {

@@ -5,6 +5,7 @@ import (
 	"github.com/NubeIO/edge/service/apps/installer"
 	"github.com/NubeIO/edge/service/client"
 	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"github.com/NubeIO/rubix-assist/service/tasks"
 	"github.com/NubeIO/rubix-automater/controller/jobctl"
 )
@@ -23,6 +24,7 @@ func buildInstall(appTask *AppTask, host *model.Host) *jobctl.JobBody {
 		"manualAssetZipName": appTask.ManualAssetZipName,
 		"manualAssetTag":     appTask.ManualAssetTag,
 		"cleanup":            appTask.Cleanup,
+		"subTask":            subTaskName,
 	}
 	task := &jobctl.JobBody{
 		Name:        fmt.Sprintf("run %s task on host:%s", subTaskName, host.Name),
@@ -45,6 +47,8 @@ func (inst *Manager) RunInstall(body *AppTask) (*installer.InstallResponse, *cli
 		Token:   token,
 		Version: body.Version,
 	}
+	fmt.Println(11111, host.IP, host.Port)
+	pprint.PrintJOSN(app)
 	data, resp := inst.reset(host.IP, host.Port).InstallApp(app)
 	if resp.StatusCode > 299 {
 		return data, resp
