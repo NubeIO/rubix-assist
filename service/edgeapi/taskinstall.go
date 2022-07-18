@@ -47,7 +47,6 @@ func (inst *Manager) RunInstall(body *AppTask) (*installer.InstallResponse, *cli
 		Token:   token,
 		Version: body.Version,
 	}
-	fmt.Println(11111, host.IP, host.Port)
 	pprint.PrintJOSN(app)
 	data, resp := inst.reset(host.IP, host.Port).InstallApp(app)
 	if resp.StatusCode > 299 {
