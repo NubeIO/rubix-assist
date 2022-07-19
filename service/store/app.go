@@ -2,43 +2,82 @@ package store
 
 import (
 	"fmt"
-	"github.com/NubeIO/lib-rubix-installer/installer"
+	"io/fs"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
 // Making an app
 // make the app store dirs
 
-// ListApps make all the app store dirs
-func (inst *Store) ListApps() ([]installer.AppResponse, error) {
-	return inst.App.DiscoverStoreInstalled()
+type App struct {
+	Name        string `json:"name"`    // rubix-wires
+	Version     string `json:"version"` // v1.1.1
+	ServiceFile string `json:"service_file"`
 }
 
 // AddApp make all the app store dirs
-func (inst *Store) AddApp(appName, version string) error {
-	if err := inst.App.MakeStoreAll(); err != nil {
-		return err
+func (inst *Store) AddApp(app *App) (*App, error) {
+	appName := app.Name
+	version := app.Version
+	if err := inst.App.MakeDataDir(); err != nil {
+		return nil, err
 	}
-	if err := inst.MakeAppDir(); err != nil {
-		return err
+	if err := inst.makeStoreDir(); err != nil {
+		return nil, err
 	}
-	if err := inst.MakeApp(appName); err != nil {
-		return err
+	if err := inst.makeAppDir(); err != nil {
+		return nil, err
 	}
-	if err := inst.MakeAppVersionDir(appName, version); err != nil {
-		return err
+	if err := inst.makeApp(appName); err != nil {
+		return nil, err
 	}
-	return nil
+	if err := inst.makeAppVersionDir(appName, version); err != nil {
+		return nil, err
+	}
+	return app, nil
+}
+
+func (inst *Store) ListStore() ([]App, error) {
+	rootDir := inst.App.GetStoreDir()
+	var files []App
+	app := App{}
+	err := filepath.WalkDir(rootDir, func(p string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() && strings.Count(p, string(os.PathSeparator)) == 5 {
+			parts := strings.Split(p, "/")
+			if len(parts) >= 4 { // app name
+				app.Name = parts[4]
+			}
+			if len(parts) >= 5 { // version
+				app.Version = parts[5]
+			}
+			files = append(files, app)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return files, nil
+}
+
+//MakeAppDir  => /data/store/
+func (inst *Store) makeStoreDir() error {
+	return inst.App.MakeDirectoryIfNotExists(inst.App.GetStoreDir(), os.FileMode(FilePerm))
 }
 
 //MakeAppDir  => /data/store/apps/
-func (inst *Store) MakeAppDir() error {
+func (inst *Store) makeAppDir() error {
 	path := fmt.Sprintf("%s/%s", inst.App.GetStoreDir(), "/apps")
 	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(FilePerm))
 }
 
 //MakeApp  => /data/store/apps/flow-framework
-func (inst *Store) MakeApp(appName string) error {
+func (inst *Store) makeApp(appName string) error {
 	if err := emptyPath(appName); err != nil {
 		return err
 	}
@@ -47,7 +86,7 @@ func (inst *Store) MakeApp(appName string) error {
 }
 
 //MakeAppVersionDir  => /data/store/apps/flow-framework/v1.1.1
-func (inst *Store) MakeAppVersionDir(appName, version string) error {
+func (inst *Store) makeAppVersionDir(appName, version string) error {
 	if err := emptyPath(appName); err != nil {
 		return err
 	}

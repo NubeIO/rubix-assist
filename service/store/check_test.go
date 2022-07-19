@@ -7,9 +7,10 @@ import (
 	"testing"
 )
 
-func TestStore_addApp(t *testing.T) {
-	appName := "rubix-wires"
-	appVersion := "v2.7.4"
+func Test_read(t *testing.T) {
+
+	appName := "flow-framework"
+	appVersion := "v0.6.0"
 
 	appStore, err := New(&Store{
 		App: &installer.App{
@@ -18,12 +19,16 @@ func TestStore_addApp(t *testing.T) {
 		},
 		Perm: nonRoot,
 	})
-	app, err := appStore.AddApp(&App{Name: appName, Version: appVersion})
+
+	details, err := getFileDetails("/data/store/apps/flow-framework/v0.6.0/")
+
+	pprint.PrintJOSN(details)
+
+	buildCheck, err := appStore.checkApp(appName, appVersion, "nubeio-flow-framework.service")
 	fmt.Println(err)
 	if err != nil {
 		return
 	}
-
-	pprint.PrintJOSN(app)
+	pprint.PrintJOSN(buildCheck)
 
 }

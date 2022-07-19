@@ -76,19 +76,22 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	admin := r.Group("/api")
 
-	storeList := admin.Group("/store")
+	appStore := admin.Group("/store")
 	{
-		storeList.GET("/", api.ListStore)
+		appStore.GET("/", api.ListStore)
+		appStore.POST("/", api.AddApp)
+		appStore.POST("/check/app", api.CheckApp)
+		appStore.POST("/check/apps", api.CheckApps)
 	}
 
 	storeUpload := admin.Group("/store/upload")
 	{
-		storeUpload.POST("/", api.InstallApp)
+		storeUpload.POST("/", api.UploadApp)
 	}
 
-	appInstall := admin.Group("/store/install")
+	appService := admin.Group("/store/service")
 	{
-		appInstall.POST("/", api.InstallApp)
+		appService.POST("/", api.AddApp)
 	}
 
 	locations := admin.Group("/locations")

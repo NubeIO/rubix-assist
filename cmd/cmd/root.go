@@ -58,6 +58,7 @@ func runServer(cmd *cobra.Command, args []string) {
 		setup()
 		db := database.GetDB()
 		r := router.Setup(db)
+		r.MaxMultipartMemory = 250 << 20 //250 mb
 		host := "0.0.0.0"
 		if h := viper.GetString("server.host"); h != "" {
 			host = h

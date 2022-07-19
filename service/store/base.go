@@ -25,6 +25,12 @@ func New(store *Store) (*Store, error) {
 	if store.Perm == 0 {
 		store.Perm = FilePerm
 	}
+	if store.App.FilePerm == 0 {
+		store.App.FilePerm = FilePerm
+	}
+	if store.App.DataDir == "" {
+		store.App.DataDir = "/data"
+	}
 	store.App = installer.New(store.App)
 	return store, nil
 }
