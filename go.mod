@@ -51,7 +51,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pkg/errors v0.9.1
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
@@ -71,7 +71,9 @@ require (
 	github.com/NubeIO/edge v0.0.8
 	github.com/NubeIO/flow-framework v0.5.6
 	github.com/NubeIO/lib-bus v0.0.1
+	github.com/NubeIO/lib-command v0.0.2
 	github.com/NubeIO/lib-date v0.0.1
+	github.com/NubeIO/lib-dirs v0.0.2
 	github.com/NubeIO/lib-networking v0.0.4
 	github.com/NubeIO/lib-redis v0.0.3
 	github.com/NubeIO/lib-rubix-installer v0.0.1
@@ -85,8 +87,6 @@ require (
 
 require (
 	github.com/NubeIO/git v0.0.3 // indirect
-	github.com/NubeIO/lib-command v0.0.2 // indirect
-	github.com/NubeIO/lib-dirs v0.0.2 // indirect
 	github.com/NubeIO/lib-store v0.0.1 // indirect
 	github.com/NubeIO/lib-systemctl-go v0.0.5 // indirect
 	github.com/THREATINT/go-net v1.2.10 // indirect

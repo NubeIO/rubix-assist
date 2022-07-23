@@ -55,7 +55,7 @@ func (inst *Store) checkApp(appName, version, serviceName string) (*CheckApp, er
 	if err == nil {
 		checkApp.ServiceFileExists = true
 	}
-	matchBuild, err := inst.buildCheck(appName, version)
+	matchBuild, err := inst.BuildCheck(appName, version, "")
 	checkApp.MatchBuild = matchBuild
 
 	return checkApp, nil
@@ -70,8 +70,10 @@ type MatchBuild struct {
 	Arch               string `json:"arch"`
 }
 
-func (inst *Store) buildCheck(appName, version string) (*MatchBuild, error) {
-	path := fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
+func (inst *Store) BuildCheck(appName, version, path string) (*MatchBuild, error) {
+	if path == "" {
+		path = fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
+	}
 	details, err := getFileDetails(path)
 	if err != nil {
 		return nil, err
@@ -108,11 +110,8 @@ func (inst *Store) buildCheck(appName, version string) (*MatchBuild, error) {
 
 			checks.BuildZipName = fileName
 			checks.Arch = arch
-
 		}
-
 	}
-
 	return checks, nil
 
 }

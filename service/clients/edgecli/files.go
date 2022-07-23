@@ -23,12 +23,10 @@ type Response struct {
 
 func (inst *Client) UploadLocalFile(filePath, fileName, destination string) (*UploadResponse, error) {
 	fileAndPath := filepath.FromSlash(fmt.Sprintf("%s/%s", filePath, fileName))
-	fmt.Println(fileAndPath)
 	reader, err := os.Open(fileAndPath)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("error open file:%s err:%s", fileAndPath, err.Error()))
 	}
-
 	resp, err := inst.Rest.R().
 		SetResult(&UploadResponse{}).
 		SetError(&UploadResponse{}).
