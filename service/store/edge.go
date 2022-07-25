@@ -38,7 +38,11 @@ func (inst *Store) UploadEdgeApp(hostUUID, hostName string, app *EdgeApp) (*inst
 	if err != nil {
 		return nil, err
 	}
-	return client.UploadApp(appName, version, buildName, fileName, reader)
+	host, err := inst.getHost(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.UploadApp(host.UUID, appName, version, buildName, fileName, reader)
 }
 
 // InstallEdgeApp
@@ -48,7 +52,11 @@ func (inst *Store) InstallEdgeApp(hostUUID, hostName string, body *installer.Ins
 	if err != nil {
 		return nil, err
 	}
-	return client.InstallApp(body)
+	host, err := inst.getHost(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.InstallApp(host.UUID, body)
 }
 
 // UploadEdgeService

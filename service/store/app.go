@@ -69,7 +69,7 @@ func (inst *Store) ListStore() ([]App, error) {
 }
 
 func (inst *Store) GetAppZipName(appName, version string) (fileName string, path string, match *installer.MatchBuild, err error) {
-	path = inst.getAppPathAndVersion(appName, version)
+	path = inst.getAppStorePathAndVersion(appName, version)
 	check, err := inst.App.BuildCheck(appName, version, path)
 	if err != nil {
 		return "", path, nil, err
@@ -77,8 +77,8 @@ func (inst *Store) GetAppZipName(appName, version string) (fileName string, path
 	return filePath(check.BuildZipName), path, check, err
 }
 
-// getAppPathAndVersion get the full app install path and version
-func (inst *Store) getAppPathAndVersion(appName, version string) string {
+// getAppStorePathAndVersion get the full app install path and version
+func (inst *Store) getAppStorePathAndVersion(appName, version string) string {
 	path := fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
 	return filePath(path)
 }

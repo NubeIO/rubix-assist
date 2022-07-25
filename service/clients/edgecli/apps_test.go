@@ -23,7 +23,7 @@ func Test_UploadApp(*testing.T) {
 		return
 	}
 
-	file, err := cli.UploadApp(appName, appVersion, buildName, fileName, reader)
+	file, err := cli.UploadApp("rc", appName, appVersion, buildName, fileName, reader)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -35,7 +35,7 @@ func Test_UploadApp(*testing.T) {
 func Test_InstallApp(*testing.T) {
 
 	cli := New("", 0)
-	file, err := cli.InstallApp(&installer.Install{
+	file, err := cli.InstallApp("rc", &installer.Install{
 		Name:      appName,
 		BuildName: buildName,
 		Version:   appVersion,
