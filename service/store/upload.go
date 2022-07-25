@@ -14,7 +14,7 @@ type UploadResponse struct {
 	UploadedFile string `json:"uploaded_file"`
 }
 
-func (inst *Store) UploadApp(app *installer.Upload) (*UploadResponse, error) {
+func (inst *Store) UploadStoreApp(app *installer.Upload) (*UploadResponse, error) {
 	if app.Name == "" {
 		return nil, errors.New("app name can not be empty")
 	}

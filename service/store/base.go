@@ -3,6 +3,7 @@ package store
 import (
 	"errors"
 	"github.com/NubeIO/lib-rubix-installer/installer"
+	base "github.com/NubeIO/rubix-assist/database"
 )
 
 const nonRoot = 0700
@@ -13,6 +14,7 @@ var FilePerm = root
 type Store struct {
 	App  *installer.App
 	Perm int `json:"file_perm"`
+	DB   *base.DB
 }
 
 func New(store *Store) (*Store, error) {

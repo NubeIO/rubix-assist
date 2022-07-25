@@ -2,6 +2,7 @@ package store
 
 import (
 	"fmt"
+	"github.com/NubeIO/lib-rubix-installer/installer"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -12,9 +13,11 @@ import (
 // make the app store dirs
 
 type App struct {
-	Name        string `json:"name"`    // rubix-wires
-	Version     string `json:"version"` // v1.1.1
-	ServiceFile string `json:"service_file"`
+	Name        string `json:"name"`         // rubix-wires
+	Version     string `json:"version"`      // v1.1.1
+	ServiceFile string `json:"service_file"` // nubeio-rubix-wires
+	//BuildName   string `json:"build_name"`   // wires-builds
+	//FileName    string `json:"file_name"`
 }
 
 // AddApp make all the app store dirs
@@ -63,6 +66,21 @@ func (inst *Store) ListStore() ([]App, error) {
 		return nil, err
 	}
 	return files, nil
+}
+
+func (inst *Store) GetAppZipName(appName, version string) (fileName string, path string, match *installer.MatchBuild, err error) {
+	path = inst.getAppPathAndVersion(appName, version)
+	check, err := inst.App.BuildCheck(appName, version, path)
+	if err != nil {
+		return "", path, nil, err
+	}
+	return filePath(check.BuildZipName), path, check, err
+}
+
+// getAppPathAndVersion get the full app install path and version
+func (inst *Store) getAppPathAndVersion(appName, version string) string {
+	path := fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
+	return filePath(path)
 }
 
 //MakeAppDir  => /data/store/

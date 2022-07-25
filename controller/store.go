@@ -15,9 +15,8 @@ func (inst *Controller) ListStore(c *gin.Context) {
 	reposeHandler(data, err, c)
 }
 
-// UploadApp
-// upload the build
-func (inst *Controller) UploadApp(c *gin.Context) {
+// UploadStoreApp *
+func (inst *Controller) UploadStoreApp(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		reposeHandler(nil, err, c)
@@ -28,7 +27,7 @@ func (inst *Controller) UploadApp(c *gin.Context) {
 		Version: c.Query("version"),
 		File:    file,
 	}
-	data, err := inst.Store.UploadApp(m)
+	data, err := inst.Store.UploadStoreApp(m)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -36,7 +35,7 @@ func (inst *Controller) UploadApp(c *gin.Context) {
 	reposeHandler(data, nil, c)
 }
 
-func (inst *Controller) AddApp(c *gin.Context) {
+func (inst *Controller) AddStoreApp(c *gin.Context) {
 	m := &store.App{}
 	err = c.ShouldBindJSON(&m)
 	data, err := inst.Store.AddApp(m)
@@ -47,7 +46,7 @@ func (inst *Controller) AddApp(c *gin.Context) {
 	reposeHandler(data, err, c)
 }
 
-func (inst *Controller) CheckApp(c *gin.Context) {
+func (inst *Controller) CheckStoreApp(c *gin.Context) {
 	m := &store.App{}
 	err = c.ShouldBindJSON(&m)
 	data, err := inst.Store.CheckApp(m)
@@ -58,7 +57,7 @@ func (inst *Controller) CheckApp(c *gin.Context) {
 	reposeHandler(data, err, c)
 }
 
-func (inst *Controller) CheckApps(c *gin.Context) {
+func (inst *Controller) CheckStoreApps(c *gin.Context) {
 	var m []store.App
 	err = c.ShouldBindJSON(&m)
 	data, err := inst.Store.CheckApps(m)

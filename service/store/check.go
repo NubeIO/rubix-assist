@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-command/command"
 	"github.com/NubeIO/lib-command/unixcmd"
+	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"path/filepath"
 	"strconv"
@@ -17,7 +17,7 @@ type CheckApp struct {
 	Version           string `json:"version"` // v1.1.1
 	HasBuild          bool   `json:"has_build"`
 	ServiceFileExists bool   `json:"service_file_exists"`
-	*MatchBuild
+	*installer.MatchBuild
 }
 
 func (inst *Store) CheckApp(app *App) (*CheckApp, error) {
@@ -55,65 +55,11 @@ func (inst *Store) checkApp(appName, version, serviceName string) (*CheckApp, er
 	if err == nil {
 		checkApp.ServiceFileExists = true
 	}
-	matchBuild, err := inst.BuildCheck(appName, version, "")
+	path := fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
+	matchBuild, err := inst.App.BuildCheck(appName, version, path)
 	checkApp.MatchBuild = matchBuild
 
 	return checkApp, nil
-}
-
-type MatchBuild struct {
-	MatchName          bool   `json:"match_name"`
-	MatchNamePartly    bool   `json:"match_name_partly"`
-	MatchVersion       bool   `json:"match_version"`
-	MatchVersionPartly bool   `json:"match_version_partly"`
-	BuildZipName       string `json:"file_name"`
-	Arch               string `json:"arch"`
-}
-
-func (inst *Store) BuildCheck(appName, version, path string) (*MatchBuild, error) {
-	if path == "" {
-		path = fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
-	}
-	details, err := getFileDetails(path)
-	if err != nil {
-		return nil, err
-	}
-	checks := &MatchBuild{}
-	for _, detail := range details {
-		if detail.Extension == ".zip" {
-			fileName := detail.Name
-
-			if strings.Contains(fileName, appName) {
-				checks.MatchNamePartly = true
-			}
-			if strings.Contains(fileName, version) {
-				checks.MatchVersionPartly = true
-			}
-			match, count, versionCheck, archMatch, arch := matchRepoName(fileName, appName)
-			if !match {
-				errMsg := fmt.Sprintf("failed on match uploaded app, match-count:%d zip file name:%s repo-name:%s arch%s", count, fileName, appName, arch)
-				log.Errorln(errMsg)
-			} else {
-				checks.MatchName = true
-			}
-			if !archMatch {
-				errMsg := fmt.Sprintf("failed on match arch, zip file name:%s repo-name:%s arch%s", fileName, appName, arch)
-				log.Errorln(errMsg)
-			}
-			if version != fmt.Sprintf("v%s", versionCheck) {
-				errMsg := fmt.Sprintf("failed on match arch, zip file name:%s repo-name:%s arch%s", fileName, appName, arch)
-				log.Errorln(errMsg)
-			} else {
-				checks.MatchVersionPartly = true
-				checks.MatchVersion = true
-			}
-
-			checks.BuildZipName = fileName
-			checks.Arch = arch
-		}
-	}
-	return checks, nil
-
 }
 
 func (inst *Store) serviceFileExists(appName, version, serviceName string) error {

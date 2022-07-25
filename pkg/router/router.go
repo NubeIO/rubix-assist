@@ -53,7 +53,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		DB:     appDB,
 		Events: ebus,
 	})
-	makeStore, _ := store.New(&store.Store{App: &installer.App{}})
+	makeStore, _ := store.New(&store.Store{App: &installer.App{}, DB: appDB})
 	api := controller.Controller{DB: appDB, Edge: edgeManger, Store: makeStore}
 	identityKey := "uuid"
 	authMiddleware, _ := jwt.New(&jwt.GinJWTMiddleware{
@@ -77,25 +77,25 @@ func Setup(db *gorm.DB) *gin.Engine {
 	admin := r.Group("/api")
 
 	appStore := admin.Group("/store")
+
 	{
 		appStore.GET("/", api.ListStore)
-		appStore.POST("/", api.AddApp)
-		appStore.POST("/check/app", api.CheckApp)
-		appStore.POST("/check/apps", api.CheckApps)
+		appStore.POST("/add", api.AddStoreApp)
+		appStore.POST("/upload", api.UploadStoreApp)
+		appStore.POST("/check/app", api.CheckStoreApp)
+		appStore.POST("/check/apps", api.CheckStoreApps)
 	}
 
-	storeUpload := admin.Group("/store/upload")
+	edgeApps := admin.Group("/edge")
 	{
-		storeUpload.POST("/", api.UploadApp)
-	}
-
-	appService := admin.Group("/store/service")
-	{
-		appService.POST("/", api.AddApp)
+		edgeApps.POST("/apps/upload", api.UploadEdgeApp)
+		edgeApps.POST("/apps/install", api.InstallEdgeApp)
+		edgeApps.POST("/apps/service/upload", api.UploadEdgeService)
+		edgeApps.POST("/apps/service/install", api.InstallEdgeService)
 	}
 
 	locations := admin.Group("/locations")
-	//hosts.Use(authMiddleware.MiddlewareFunc())
+
 	{
 		locations.GET("/schema", api.GetLocationSchema)
 		locations.GET("/", api.GetLocations)
@@ -212,7 +212,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	edgeAssist := r.Group("/api/edge")
 	{
-		edgeAssist.POST("/apps/install", api.InstallApp)
+		//edgeAssist.POST("/apps/install", api.InstallApp)
 		edgeAssist.POST("/pipeline/builder", api.TaskBuilder)
 		edgeAssist.POST("/pipeline/runner", api.TaskRunner)
 	}
