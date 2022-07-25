@@ -3,6 +3,7 @@ package store
 import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
+	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"testing"
 )
 
@@ -19,7 +20,7 @@ func TestStore_generateServiceFile(t *testing.T) {
 		Perm: nonRoot,
 	})
 	fmt.Println(err)
-	err = appStore.generateServiceFile(&ServiceFile{
+	resp, err := appStore.EdgeServiceUpload("", "rc", &ServiceFile{
 		AppName:                 appName,
 		AppVersion:              appVersion,
 		AppBuildName:            appBuildName,
@@ -32,5 +33,6 @@ func TestStore_generateServiceFile(t *testing.T) {
 	if err != nil {
 		return
 	}
+	pprint.PrintJOSN(resp)
 
 }

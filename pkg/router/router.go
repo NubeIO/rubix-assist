@@ -90,8 +90,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		edgeApps.POST("/apps/upload", api.UploadEdgeApp)
 		edgeApps.POST("/apps/install", api.InstallEdgeApp)
-		edgeApps.POST("/apps/service/upload", api.UploadEdgeService)
-		edgeApps.POST("/apps/service/install", api.InstallEdgeService)
+		edgeApps.POST("/apps/service/upload", api.EdgeServiceUpload)
+		edgeApps.POST("/apps/service/install", api.EdgeServiceInstall)
 	}
 
 	locations := admin.Group("/locations")

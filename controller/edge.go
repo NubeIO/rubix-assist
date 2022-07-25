@@ -43,37 +43,36 @@ func (inst *Controller) InstallEdgeApp(c *gin.Context) {
 	reposeHandler(data, nil, c)
 }
 
-// UploadEdgeService
-// upload the service file
-func (inst *Controller) UploadEdgeService(c *gin.Context) {
-	//file, err := c.FormFile("file")
-	//if err != nil {
-	//	reposeHandler(nil, err, c)
-	//	return
-	//}
-	//m := &installer.Upload{
-	//	Name:      c.Query("name"),
-	//	BuildName: c.Query("buildName"),
-	//	Version:   c.Query("version"),
-	//	File:      file,
-	//}
-	//data, err := inst.Rubix.UploadServiceFile(m)
-	//if err != nil {
-	//	reposeHandler(nil, err, c)
-	//	return
-	//}
-	//reposeHandler(data, nil, c)
+func (inst *Controller) EdgeServiceUpload(c *gin.Context) {
+	var m *store.ServiceFile
+	err = c.ShouldBindJSON(&m)
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	data, err := inst.Store.EdgeServiceUpload(host.UUID, host.Name, m)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(data, nil, c)
 }
 
-func (inst *Controller) InstallEdgeService(c *gin.Context) {
-	//var m *installer.Install
-	//err = c.ShouldBindJSON(&m)
-	//data, err := inst.Rubix.InstallService(m)
-	//if err != nil {
-	//	reposeHandler(nil, err, c)
-	//	return
-	//}
-	//reposeHandler(data, nil, c)
+func (inst *Controller) EdgeServiceInstall(c *gin.Context) {
+	var m *installer.Install
+	err = c.ShouldBindJSON(&m)
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	data, err := inst.Store.EdgeServiceInstall(host.UUID, host.Name, m)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(data, nil, c)
 }
 
 func (inst *Controller) TaskBuilder(c *gin.Context) {

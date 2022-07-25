@@ -8,11 +8,9 @@ import (
 )
 
 // UploadApp upload an app
-func (inst *Client) UploadApp(hostIDName, appName, version, buildName, fileName string, reader io.Reader) (*installer.UploadResponse, error) {
+func (inst *Client) UploadApp(appName, version, buildName, fileName string, reader io.Reader) (*installer.UploadResponse, error) {
 	url := fmt.Sprintf("/api/apps/upload/?name=%s&buildName=%s&version=%s", appName, buildName, version)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetHeader("host_uuid", hostIDName).
-		SetHeader("host_name", hostIDName).
 		SetResult(&installer.UploadResponse{}).
 		SetFileReader("file", fileName, reader).
 		Post(url))
@@ -31,11 +29,9 @@ func (inst *Client) UploadApp(hostIDName, appName, version, buildName, fileName 
     "source": "/data/tmp/tmp_DB18FE83463A/flow-framework-0.6.0-8655148f.amd64.zip"
 }
 */
-func (inst *Client) InstallApp(hostIDName string, body *installer.Install) (*installer.AppResponse, error) {
+func (inst *Client) InstallApp(body *installer.Install) (*installer.AppResponse, error) {
 	url := fmt.Sprintf("/api/apps/install")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetHeader("host_uuid", hostIDName).
-		SetHeader("host_name", hostIDName).
 		SetResult(&installer.AppResponse{}).
 		SetBody(body).
 		Post(url))

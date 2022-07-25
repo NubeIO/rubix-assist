@@ -22,7 +22,7 @@ func TestClient_UploadEdgeApp(t *testing.T) {
 	}
 	pprint.PrintJOSN(listStore)
 
-	app, err := client.UploadEdgeApp(&store.EdgeApp{
+	app, err := client.UploadEdgeApp("rc", &store.EdgeApp{
 
 		AppName:   appName,
 		BuildName: buildName,
@@ -47,7 +47,7 @@ func TestClient_InstallEdgeApp(t *testing.T) {
 	}
 	pprint.PrintJOSN(listStore)
 
-	app, err := client.InstallEdgeApp(&store.EdgeApp{
+	app, err := client.InstallEdgeApp("rc", &store.EdgeApp{
 		AppName:   appName,
 		BuildName: buildName,
 		Version:   appVersion,
