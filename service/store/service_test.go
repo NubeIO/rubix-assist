@@ -20,15 +20,15 @@ func TestStore_generateServiceFile(t *testing.T) {
 		Perm: nonRoot,
 	})
 	fmt.Println(err)
-	resp, err := appStore.EdgeServiceUpload("", "rc", &ServiceFile{
-		AppName:                 appName,
-		AppVersion:              appVersion,
-		AppBuildName:            appBuildName,
+	resp, err := appStore.GenerateUploadEdgeService("", "rc", &ServiceFile{
+		Name:                    appName,
+		Version:                 appVersion,
+		BuildName:               appBuildName,
 		ServiceDescription:      "",
 		RunAsUser:               "",
 		ServiceWorkingDirectory: "",
 		AppSpecficExecStart:     "app -p 1660 -g /data/flow-framework -d data -prod",
-	}, "/data/tmp")
+	})
 	fmt.Println(err)
 	if err != nil {
 		return

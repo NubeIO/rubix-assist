@@ -7,9 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// UploadEdgeApp
+// AddUploadEdgeApp
 // upload the build
-func (inst *Controller) UploadEdgeApp(c *gin.Context) {
+func (inst *Controller) AddUploadEdgeApp(c *gin.Context) {
 	var m *store.EdgeApp
 	err = c.ShouldBindJSON(&m)
 	host, err := inst.resolveHost(c)
@@ -17,7 +17,7 @@ func (inst *Controller) UploadEdgeApp(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	data, err := inst.Store.UploadEdgeApp(host.UUID, host.Name, m)
+	data, err := inst.Store.AddUploadEdgeApp(host.UUID, host.Name, m)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -25,25 +25,7 @@ func (inst *Controller) UploadEdgeApp(c *gin.Context) {
 	reposeHandler(data, nil, c)
 }
 
-// InstallEdgeApp
-// make all the dirs and install the uploaded build
-func (inst *Controller) InstallEdgeApp(c *gin.Context) {
-	var m *installer.Install
-	err = c.ShouldBindJSON(&m)
-	host, err := inst.resolveHost(c)
-	if err != nil {
-		reposeHandler(nil, err, c)
-		return
-	}
-	data, err := inst.Store.InstallEdgeApp(host.UUID, host.Name, m)
-	if err != nil {
-		reposeHandler(nil, err, c)
-		return
-	}
-	reposeHandler(data, nil, c)
-}
-
-func (inst *Controller) EdgeServiceUpload(c *gin.Context) {
+func (inst *Controller) GenerateUploadEdgeService(c *gin.Context) {
 	var m *store.ServiceFile
 	err = c.ShouldBindJSON(&m)
 	host, err := inst.resolveHost(c)
@@ -51,7 +33,7 @@ func (inst *Controller) EdgeServiceUpload(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	data, err := inst.Store.EdgeServiceUpload(host.UUID, host.Name, m)
+	data, err := inst.Store.GenerateUploadEdgeService(host.UUID, host.Name, m)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -59,7 +41,7 @@ func (inst *Controller) EdgeServiceUpload(c *gin.Context) {
 	reposeHandler(data, nil, c)
 }
 
-func (inst *Controller) EdgeServiceInstall(c *gin.Context) {
+func (inst *Controller) InstallEdgeService(c *gin.Context) {
 	var m *installer.Install
 	err = c.ShouldBindJSON(&m)
 	host, err := inst.resolveHost(c)
@@ -67,7 +49,7 @@ func (inst *Controller) EdgeServiceInstall(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	data, err := inst.Store.EdgeServiceInstall(host.UUID, host.Name, m)
+	data, err := inst.Store.InstallEdgeService(host.UUID, host.Name, m)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return

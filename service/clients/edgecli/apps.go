@@ -8,16 +8,16 @@ import (
 )
 
 // UploadApp upload an app
-func (inst *Client) UploadApp(appName, version, buildName, fileName string, reader io.Reader) (*installer.UploadResponse, error) {
-	url := fmt.Sprintf("/api/apps/upload/?name=%s&buildName=%s&version=%s", appName, buildName, version)
+func (inst *Client) UploadApp(appName, version, buildName, fileName string, reader io.Reader) (*installer.AppResponse, error) {
+	url := fmt.Sprintf("/api/apps/add/?name=%s&buildName=%s&version=%s", appName, buildName, version)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&installer.UploadResponse{}).
+		SetResult(&installer.AppResponse{}).
 		SetFileReader("file", fileName, reader).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*installer.UploadResponse), nil
+	return resp.Result().(*installer.AppResponse), nil
 }
 
 // InstallApp add/install a new an app (needs the build on the edge device)
@@ -43,7 +43,7 @@ func (inst *Client) InstallApp(body *installer.Install) (*installer.AppResponse,
 
 // UploadServiceFile add/install a new an app service (service file needs to be needs the build on the edge device)
 func (inst *Client) UploadServiceFile(appName, version, buildName, fileName string, reader io.Reader) (*installer.UploadResponse, error) {
-	url := fmt.Sprintf("/api/apps/service/?name=%s&buildName=%s&version=%s", appName, buildName, version)
+	url := fmt.Sprintf("/api/apps/service/upload/?name=%s&buildName=%s&version=%s", appName, buildName, version)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&installer.UploadResponse{}).
 		SetFileReader("file", fileName, reader).
@@ -65,7 +65,7 @@ func (inst *Client) UploadServiceFile(appName, version, buildName, fileName stri
 }
 */
 func (inst *Client) InstallService(body *installer.Install) (*installer.InstallResp, error) {
-	url := fmt.Sprintf("/api/apps/install")
+	url := fmt.Sprintf("/api/apps/service/install")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&installer.InstallResp{}).
 		SetBody(body).

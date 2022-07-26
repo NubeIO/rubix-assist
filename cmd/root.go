@@ -78,7 +78,7 @@ func Execute() {
 
 func init() {
 	RootCmd.Flags().BoolVarP(&flgRoot.startApp, "server", "", false, "start rubix assist")
-	RootCmd.PersistentFlags().StringVarP(&hostName, "host", "", "RC", "host name (default RC)")
+	RootCmd.PersistentFlags().StringVarP(&hostName, "host", "", "rc", "host name (default rc)")
 	RootCmd.PersistentFlags().StringVarP(&hostIP, "ip", "", "192.168.15.10", "host ip (default 192.168.15.10)")
 	RootCmd.PersistentFlags().IntVarP(&hostPort, "port", "", 22, "SSH Port")
 	RootCmd.PersistentFlags().StringVarP(&iface, "iface", "", "", "pc or host network interface example: eth0")

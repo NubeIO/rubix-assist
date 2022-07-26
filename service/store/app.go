@@ -16,8 +16,6 @@ type App struct {
 	Name        string `json:"name"`         // rubix-wires
 	Version     string `json:"version"`      // v1.1.1
 	ServiceFile string `json:"service_file"` // nubeio-rubix-wires
-	//BuildName   string `json:"build_name"`   // wires-builds
-	//FileName    string `json:"file_name"`
 }
 
 // AddApp make all the app store dirs

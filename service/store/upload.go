@@ -14,26 +14,20 @@ type UploadResponse struct {
 	UploadedFile string `json:"uploaded_file"`
 }
 
-func (inst *Store) UploadStoreApp(app *installer.Upload) (*UploadResponse, error) {
+func (inst *Store) AddUploadStoreApp(app *installer.Upload) (*UploadResponse, error) {
 	if app.Name == "" {
 		return nil, errors.New("app name can not be empty")
 	}
 	if app.Version == "" {
 		return nil, errors.New("app name can not be empty")
 	}
-	check := inst.App.ConfirmStoreDir()
-	if !check {
-		return nil, errors.New("app store dir not found")
+	_, err := inst.AddApp(&App{
+		Name:    app.Name,
+		Version: app.Version,
+	})
+	if err != nil {
+		return nil, err
 	}
-	check = inst.App.ConfirmStoreAppDir(app.Name)
-	if !check {
-		return nil, errors.New(fmt.Sprintf("app store dir not found for app:%s", app.Name))
-	}
-	check = inst.App.ConfirmStoreAppVersionDir(app.Name, app.Version)
-	if !check {
-		return nil, errors.New(fmt.Sprintf("app store dir not found for app:%s version:%s", app.Name, app.Version))
-	}
-
 	var appName = app.Name
 	var version = app.Version
 	var file = app.File
@@ -51,12 +45,12 @@ func (inst *Store) UploadStoreApp(app *installer.Upload) (*UploadResponse, error
 	uploadResp.TmpFile = resp.TmpFile
 	source := resp.UploadedFile
 	dest := fmt.Sprintf("%s/apps/%s/%s/%s", inst.App.GetStoreDir(), appName, version, resp.FileName)
-	check = inst.App.FileExists(source)
+	check := inst.App.FileExists(source)
 	if !check {
 		return nil, errors.New(fmt.Sprintf("upload file tmp dir not found:%s", source))
 	}
 	uploadResp.UploadedFile = dest
-	err = inst.App.MoveFile(source, dest, false)
+	err = inst.App.MoveFile(source, dest, true)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("move build error:%s", err.Error()))
 	}

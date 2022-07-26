@@ -2,10 +2,7 @@ module github.com/NubeIO/rubix-assist
 
 go 1.17
 
-//replace github.com/NubeIO/edge => /home/aidan/code/go/nube/edge
-//replace github.com/NubeIO/rubix-automater => /home/aidan/code/go/nube/rubix-automater
-//replace github.com/NubeIO/lib-schema => /home/aidan/code/go/nube/lib/lib-schema
-replace github.com/NubeIO/lib-rubix-installer => /home/aidan/code/go/nube/lib/lib-rubix-installer
+//replace github.com/NubeIO/lib-rubix-installer => /home/aidan/code/go/nube/lib/lib-rubix-installer
 
 require (
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7
@@ -76,8 +73,9 @@ require (
 	github.com/NubeIO/lib-dirs v0.0.2
 	github.com/NubeIO/lib-networking v0.0.4
 	github.com/NubeIO/lib-redis v0.0.3
-	github.com/NubeIO/lib-rubix-installer v0.0.1
+	github.com/NubeIO/lib-rubix-installer v0.0.2
 	github.com/NubeIO/lib-schema v0.0.3
+	github.com/NubeIO/lib-systemctl-go v0.0.5
 	github.com/NubeIO/lib-uuid v0.0.2
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.0
 	github.com/NubeIO/rubix-automater v0.0.6
@@ -88,7 +86,6 @@ require (
 require (
 	github.com/NubeIO/git v0.0.3 // indirect
 	github.com/NubeIO/lib-store v0.0.1 // indirect
-	github.com/NubeIO/lib-systemctl-go v0.0.5 // indirect
 	github.com/THREATINT/go-net v1.2.10 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect

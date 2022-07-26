@@ -2,6 +2,7 @@ package assitcli
 
 import (
 	"fmt"
+	"github.com/NubeIO/lib-rubix-installer/installer"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"github.com/NubeIO/rubix-assist/service/store"
 	"testing"
@@ -24,7 +25,7 @@ func TestClient_UploadEdgeApp(t *testing.T) {
 
 	app, err := client.UploadEdgeApp("rc", &store.EdgeApp{
 
-		AppName:   appName,
+		Name:      appName,
 		BuildName: buildName,
 		Version:   appVersion,
 	})
@@ -47,10 +48,11 @@ func TestClient_InstallEdgeApp(t *testing.T) {
 	}
 	pprint.PrintJOSN(listStore)
 
-	app, err := client.InstallEdgeApp("rc", &store.EdgeApp{
-		AppName:   appName,
+	app, err := client.InstallEdgeApp("rc", &installer.Install{
+		Name:      appName,
 		BuildName: buildName,
 		Version:   appVersion,
+		Source:    "/data/tmp/tmp_891F067EDA1E/flow-framework-0.6.1-6cfec278.amd64.zip",
 	})
 	fmt.Println(err)
 	if err != nil {

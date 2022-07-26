@@ -15,8 +15,8 @@ func (inst *Controller) ListStore(c *gin.Context) {
 	reposeHandler(data, err, c)
 }
 
-// UploadStoreApp *
-func (inst *Controller) UploadStoreApp(c *gin.Context) {
+// AddUploadStoreApp *
+func (inst *Controller) AddUploadStoreApp(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		reposeHandler(nil, err, c)
@@ -27,23 +27,12 @@ func (inst *Controller) UploadStoreApp(c *gin.Context) {
 		Version: c.Query("version"),
 		File:    file,
 	}
-	data, err := inst.Store.UploadStoreApp(m)
+	data, err := inst.Store.AddUploadStoreApp(m)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
 	}
 	reposeHandler(data, nil, c)
-}
-
-func (inst *Controller) AddStoreApp(c *gin.Context) {
-	m := &store.App{}
-	err = c.ShouldBindJSON(&m)
-	data, err := inst.Store.AddApp(m)
-	if err != nil {
-		reposeHandler(data, err, c)
-		return
-	}
-	reposeHandler(data, err, c)
 }
 
 func (inst *Controller) CheckStoreApp(c *gin.Context) {
