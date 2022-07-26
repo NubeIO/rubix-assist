@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
-	"github.com/NubeIO/rubix-assist/service/edgeapi"
 	"github.com/NubeIO/rubix-assist/service/store"
 	"net/http"
 
@@ -21,7 +20,6 @@ type Controller struct {
 	SSH   *goph.Client
 	DB    *dbase.DB
 	Rest  *rest.Service
-	Edge  *edgeapi.Manager
 	Store *store.Store
 }
 

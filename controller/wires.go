@@ -3,7 +3,7 @@ package controller
 import (
 	"encoding/json"
 	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
-	"github.com/NubeIO/rubix-assist/service/wirescli"
+	"github.com/NubeIO/rubix-assist/service/clients/wirescli"
 	"github.com/gin-gonic/gin"
 )
 

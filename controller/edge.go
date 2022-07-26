@@ -2,7 +2,6 @@ package controller
 
 import (
 	"github.com/NubeIO/lib-rubix-installer/installer"
-	"github.com/NubeIO/rubix-assist/service/edgeapi"
 	"github.com/NubeIO/rubix-assist/service/store"
 	"github.com/gin-gonic/gin"
 )
@@ -55,31 +54,4 @@ func (inst *Controller) InstallEdgeService(c *gin.Context) {
 		return
 	}
 	reposeHandler(data, nil, c)
-}
-
-func (inst *Controller) TaskBuilder(c *gin.Context) {
-	m := &edgeapi.AppTask{}
-	err = c.ShouldBindJSON(&m)
-	if err != nil {
-		reposeHandler(nil, err, c)
-		return
-	}
-	data, resp := inst.Edge.TaskBuilder(m)
-	if data == nil {
-		reposeHandler(resp.Message, nil, c)
-	} else {
-		reposeHandler(data, nil, c)
-	}
-
-}
-
-func (inst *Controller) TaskRunner(c *gin.Context) {
-	m := &edgeapi.AppTask{}
-	err = c.ShouldBindJSON(&m)
-	data, err := inst.Edge.TaskRunner(m)
-	if err != nil {
-		reposeHandler(data, err, c)
-		return
-	}
-	reposeHandler(data, err, c)
 }

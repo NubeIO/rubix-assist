@@ -32,7 +32,6 @@ require (
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/golang-jwt/jwt/v4 v4.2.0 // indirect
-	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/helloyi/go-sshclient v1.1.0
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -65,41 +64,24 @@ require (
 )
 
 require (
-	github.com/NubeIO/edge v0.0.8
 	github.com/NubeIO/flow-framework v0.5.6
-	github.com/NubeIO/lib-bus v0.0.1
 	github.com/NubeIO/lib-command v0.0.2
 	github.com/NubeIO/lib-date v0.0.1
 	github.com/NubeIO/lib-dirs v0.0.2
 	github.com/NubeIO/lib-networking v0.0.4
-	github.com/NubeIO/lib-redis v0.0.3
 	github.com/NubeIO/lib-rubix-installer v0.0.2
 	github.com/NubeIO/lib-schema v0.0.3
 	github.com/NubeIO/lib-systemctl-go v0.0.5
 	github.com/NubeIO/lib-uuid v0.0.2
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.0
-	github.com/NubeIO/rubix-automater v0.0.6
-	github.com/mustafaturan/bus/v3 v3.0.3
 	gorm.io/datatypes v1.0.6
 )
 
 require (
-	github.com/NubeIO/git v0.0.3 // indirect
-	github.com/NubeIO/lib-store v0.0.1 // indirect
 	github.com/THREATINT/go-net v1.2.10 // indirect
-	github.com/cespare/xxhash/v2 v2.1.2 // indirect
-	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
-	github.com/google/go-github/v32 v32.1.0 // indirect
-	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/jmattheis/go-timemath v1.0.1 // indirect
 	github.com/mcnijman/go-emailaddress v1.1.0 // indirect
-	github.com/mustafaturan/monoton/v2 v2.0.2 // indirect
-	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
-	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
 	gorm.io/driver/mysql v1.3.2 // indirect
 )

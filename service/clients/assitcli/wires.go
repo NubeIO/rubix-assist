@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/service/wirescli"
+	"github.com/NubeIO/rubix-assist/service/clients/wirescli"
 )
 
 func (inst *Client) WiresUpload(hostID string, body interface{}) (data interface{}, response *Response) {

@@ -6,8 +6,6 @@ import (
 	"github.com/NubeIO/rubix-assist/controller"
 	dbase "github.com/NubeIO/rubix-assist/database"
 	"github.com/NubeIO/rubix-assist/service/auth"
-	"github.com/NubeIO/rubix-assist/service/edgeapi"
-	"github.com/NubeIO/rubix-assist/service/events"
 	"github.com/NubeIO/rubix-assist/service/store"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-contrib/cors"
@@ -47,14 +45,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 	appDB := &dbase.DB{
 		DB: db,
 	}
-
-	ebus := events.New(&events.Events{})
-	edgeManger := edgeapi.New(&edgeapi.Manager{
-		DB:     appDB,
-		Events: ebus,
-	})
 	makeStore, _ := store.New(&store.Store{App: &installer.App{}, DB: appDB})
-	api := controller.Controller{DB: appDB, Edge: edgeManger, Store: makeStore}
+	api := controller.Controller{DB: appDB, Store: makeStore}
 	identityKey := "uuid"
 	authMiddleware, _ := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:         "go-proxy-service",
@@ -208,12 +200,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		git.GET("/:uuid", api.GitGetRelease)
 	}
 
-	edgeAssist := r.Group("/api/edge")
-	{
-		//edgeAssist.POST("/apps/install", api.InstallApp)
-		edgeAssist.POST("/pipeline/builder", api.TaskBuilder)
-		edgeAssist.POST("/pipeline/runner", api.TaskRunner)
-	}
 	wires := admin.Group("/wires")
 	{
 		wires.POST("/upload", api.WiresUpload)
