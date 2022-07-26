@@ -2,11 +2,13 @@ package router
 
 import (
 	"fmt"
+	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/rubix-assist/controller"
 	dbase "github.com/NubeIO/rubix-assist/database"
 	"github.com/NubeIO/rubix-assist/service/auth"
 	"github.com/NubeIO/rubix-assist/service/edgeapi"
 	"github.com/NubeIO/rubix-assist/service/events"
+	"github.com/NubeIO/rubix-assist/service/store"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -51,8 +53,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 		DB:     appDB,
 		Events: ebus,
 	})
-
-	api := controller.Controller{DB: appDB, Edge: edgeManger}
+	makeStore, _ := store.New(&store.Store{App: &installer.App{}, DB: appDB})
+	api := controller.Controller{DB: appDB, Edge: edgeManger, Store: makeStore}
 	identityKey := "uuid"
 	authMiddleware, _ := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:         "go-proxy-service",
@@ -74,8 +76,24 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	admin := r.Group("/api")
 
+	appStore := admin.Group("/store")
+
+	{
+		appStore.GET("/", api.ListStore)
+		appStore.POST("/add", api.AddUploadStoreApp)
+		appStore.POST("/check/app", api.CheckStoreApp)
+		appStore.POST("/check/apps", api.CheckStoreApps)
+	}
+
+	edgeApps := admin.Group("/edge")
+	{
+		edgeApps.POST("/apps/add", api.AddUploadEdgeApp)
+		edgeApps.POST("/apps/service/upload", api.GenerateUploadEdgeService)
+		edgeApps.POST("/apps/service/install", api.InstallEdgeService)
+	}
+
 	locations := admin.Group("/locations")
-	//hosts.Use(authMiddleware.MiddlewareFunc())
+
 	{
 		locations.GET("/schema", api.GetLocationSchema)
 		locations.GET("/", api.GetLocations)
@@ -192,7 +210,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	edgeAssist := r.Group("/api/edge")
 	{
-		edgeAssist.POST("/apps/install", api.InstallApp)
+		//edgeAssist.POST("/apps/install", api.InstallApp)
 		edgeAssist.POST("/pipeline/builder", api.TaskBuilder)
 		edgeAssist.POST("/pipeline/runner", api.TaskRunner)
 	}

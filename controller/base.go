@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
 	"github.com/NubeIO/rubix-assist/service/edgeapi"
+	"github.com/NubeIO/rubix-assist/service/store"
 	"net/http"
 
 	dbase "github.com/NubeIO/rubix-assist/database"
@@ -17,10 +18,11 @@ import (
 )
 
 type Controller struct {
-	SSH  *goph.Client
-	DB   *dbase.DB
-	Rest *rest.Service
-	Edge *edgeapi.Manager
+	SSH   *goph.Client
+	DB    *dbase.DB
+	Rest  *rest.Service
+	Edge  *edgeapi.Manager
+	Store *store.Store
 }
 
 var err error

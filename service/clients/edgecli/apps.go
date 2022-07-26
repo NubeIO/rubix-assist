@@ -2,70 +2,77 @@ package edgecli
 
 import (
 	"fmt"
-	"github.com/NubeIO/edge/service/apps"
-	"github.com/NubeIO/edge/service/apps/installer"
+	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
+	"io"
 )
 
-type AppsResp struct {
-	Code    int        `json:"code"`
-	Message string     `json:"msg"`
-	Data    []apps.App `json:"data"`
-}
-
-type AppResp struct {
-	Code    int       `json:"code"`
-	Message string    `json:"msg"`
-	Data    *apps.App `json:"data"`
-}
-
-func (inst *Client) GetApps() (data []apps.App, response *Response) {
-	path := fmt.Sprintf(paths.Apps.path)
-	response = &Response{}
-	resp, err := inst.Rest.R().
-		SetResult(&[]apps.App{}).
-		Get(path)
-	return *resp.Result().(*[]apps.App), response.buildResponse(resp, err)
-}
-
-func (inst *Client) InstallApp(body *installer.App) (*installer.InstallResponse, *Response) {
-	path := fmt.Sprintf(paths.Apps.path)
-	response := &Response{}
-	resp, _ := inst.Rest.R().
-		SetBody(body).
-		SetResult(&installer.InstallResponse{}).
-		SetError(&installer.InstallResponse{}).
-		Post(path)
-	response.StatusCode = resp.StatusCode()
-	if resp.IsSuccess() {
-		response.Message = resp.Result().(*installer.InstallResponse)
-		return resp.Result().(*installer.InstallResponse), response
+// UploadApp upload an app
+func (inst *Client) UploadApp(appName, version, buildName, fileName string, reader io.Reader) (*installer.AppResponse, error) {
+	url := fmt.Sprintf("/api/apps/add/?name=%s&buildName=%s&version=%s", appName, buildName, version)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&installer.AppResponse{}).
+		SetFileReader("file", fileName, reader).
+		Post(url))
+	if err != nil {
+		return nil, err
 	}
-	return resp.Error().(*installer.InstallResponse), response
+	return resp.Result().(*installer.AppResponse), nil
 }
 
-func (inst *Client) GetApp(uuid string) (data *AppResp, response *Response) {
-	path := fmt.Sprintf("%s/%s", paths.Apps.path, uuid)
-	response = &Response{}
-	resp, err := inst.Rest.R().
-		SetResult(&AppResp{}).
-		Get(path)
-	return resp.Result().(*AppResp), response.buildResponse(resp, err)
+// InstallApp add/install a new an app (needs the build on the edge device)
+/*
+{
+    "name": "flow-framework",
+    "build_name": "flow-framework",
+    "version": "v1.1",
+    "source": "/data/tmp/tmp_DB18FE83463A/flow-framework-0.6.0-8655148f.amd64.zip"
 }
-
-func (inst *Client) UpdateApp(uuid string, body *apps.App) (data *apps.App, response *Response) {
-	path := fmt.Sprintf("%s/%s", paths.Apps.path, uuid)
-	response = &Response{}
-	resp, err := inst.Rest.R().
+*/
+func (inst *Client) InstallApp(body *installer.Install) (*installer.AppResponse, error) {
+	url := fmt.Sprintf("/api/apps/install")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&installer.AppResponse{}).
 		SetBody(body).
-		SetResult(&apps.App{}).
-		Patch(path)
-	return resp.Result().(*apps.App), response.buildResponse(resp, err)
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*installer.AppResponse), nil
 }
 
-func (inst *Client) DeleteApp(uuid string) (response *Response) {
-	path := fmt.Sprintf("%s/%s", paths.Apps.path, uuid)
-	response = &Response{}
-	resp, err := inst.Rest.R().
-		Delete(path)
-	return response.buildResponse(resp, err)
+// UploadServiceFile add/install a new an app service (service file needs to be needs the build on the edge device)
+func (inst *Client) UploadServiceFile(appName, version, buildName, fileName string, reader io.Reader) (*installer.UploadResponse, error) {
+	url := fmt.Sprintf("/api/apps/service/upload/?name=%s&buildName=%s&version=%s", appName, buildName, version)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&installer.UploadResponse{}).
+		SetFileReader("file", fileName, reader).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*installer.UploadResponse), nil
+}
+
+// InstallService add/install a new an app service (service file needs to be needs the build on the edge device)
+/*
+{
+    "name": "flow-framework",
+    "build_name": "flow-framework",
+    "version": "v0.6.0",
+    "service_name": "nubeio-flow-framework.service",
+    "source": "/data/tmp/tmp_F7CFBE2FA1E3/nubeio-flow-framework.service"
+}
+*/
+func (inst *Client) InstallService(body *installer.Install) (*installer.InstallResp, error) {
+	url := fmt.Sprintf("/api/apps/service/install")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&installer.InstallResp{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*installer.InstallResp), nil
+
 }
