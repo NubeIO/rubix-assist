@@ -20,8 +20,8 @@ func (inst *Client) ListStore() (*[]store.App, error) {
 }
 
 // AddUploadStoreApp upload an app
-func (inst *Client) AddUploadStoreApp(appName, version, fileName string, reader io.Reader) (*store.UploadResponse, error) {
-	url := fmt.Sprintf("/api/store/add/?name=%s&version=%s", appName, version)
+func (inst *Client) AddUploadStoreApp(appName, version, product, arch, fileName string, reader io.Reader) (*store.UploadResponse, error) {
+	url := fmt.Sprintf("/api/store/add/?name=%s&version=%s&product=%s&arch=%s", appName, version, product, arch)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&store.UploadResponse{}).
 		SetFileReader("file", fileName, reader).

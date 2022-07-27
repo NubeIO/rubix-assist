@@ -25,6 +25,8 @@ func (inst *Controller) AddUploadStoreApp(c *gin.Context) {
 	m := &installer.Upload{
 		Name:    c.Query("name"),
 		Version: c.Query("version"),
+		Product: c.Query("product"),
+		Arch:    c.Query("arch"),
 		File:    file,
 	}
 	data, err := inst.Store.AddUploadStoreApp(m)

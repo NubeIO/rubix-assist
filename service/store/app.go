@@ -2,7 +2,6 @@ package store
 
 import (
 	"fmt"
-	"github.com/NubeIO/lib-rubix-installer/installer"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -66,14 +65,14 @@ func (inst *Store) ListStore() ([]App, error) {
 	return files, nil
 }
 
-func (inst *Store) GetAppZipName(appName, version string) (fileName string, path string, match *installer.MatchBuild, err error) {
-	path = inst.getAppStorePathAndVersion(appName, version)
-	check, err := inst.App.BuildCheck(appName, version, path)
-	if err != nil {
-		return "", path, nil, err
-	}
-	return filePath(check.BuildZipName), path, check, err
-}
+//func (inst *Store) GetAppZipName(appName, version string) (fileName string, path string, match *installer.MatchBuild, err error) {
+//	path = inst.getAppStorePathAndVersion(appName, version)
+//	check, err := inst.App.BuildCheck(appName, version, path)
+//	if err != nil {
+//		return "", path, nil, err
+//	}
+//	return filePath(check.BuildZipName), path, check, err
+//}
 
 // getAppStorePathAndVersion get the full app install path and version
 func (inst *Store) getAppStorePathAndVersion(appName, version string) string {

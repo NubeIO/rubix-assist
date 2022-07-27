@@ -15,6 +15,8 @@ type EdgeApp struct {
 	Name              string `json:"name"`
 	BuildName         string `json:"build_name"`
 	Version           string `json:"version"`
+	Product           string `json:"product"`
+	Arch              string `json:"arch"`
 	ServiceDependency string `json:"service_dependency"` // nodejs
 }
 
@@ -24,29 +26,46 @@ func (inst *Store) AddUploadEdgeApp(hostUUID, hostName string, app *EdgeApp) (*i
 	appName := app.Name
 	version := app.Version
 	buildName := app.BuildName
+	archType := app.Arch
+	productType := app.Product
 	if appName == "" {
-		return nil, errors.New("app name can not be empty")
+		return nil, errors.New("upload app to edge app name can not be empty")
 	}
 	if buildName == "" {
-		return nil, errors.New("app build name can not be empty")
+		return nil, errors.New("upload app to edge  app build name can not be empty")
 	}
 	if version == "" {
-		return nil, errors.New("app version can not be empty")
+		return nil, errors.New("upload app to edge  app version can not be empty")
 	}
-	fileName, path, _, err := inst.GetAppZipName(appName, version)
+	if productType == "" {
+		return nil, errors.New("upload app to edge  product type can not be empty, try RubixCompute, RubixComputeIO, RubixCompute5, Server, Edge28, Nuc")
+	}
+	if archType == "" {
+		return nil, errors.New("upload app to edge arch type can not be empty, try armv7 amd64")
+	}
+	var fileName string
+	path := inst.getAppStorePathAndVersion(appName, version)
+	fileNames, err := inst.App.GetBuildZipNames(path)
 	if err != nil {
+		err = errors.New(fmt.Sprintf("failed to find zip build err:%s", err.Error()))
+		return nil, err
+	}
+	if len(fileNames) > 0 {
+		fileName = fileNames[0].ZipName
+	} else {
+		err := errors.New(fmt.Sprintf("no zip builds found in path:%s", path))
 		return nil, err
 	}
 	fileAndPath := filePath(fmt.Sprintf("%s/%s", path, fileName))
 	reader, err := os.Open(fileAndPath)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error open file:%s err:%s", fileAndPath, err.Error()))
+		return nil, errors.New(fmt.Sprintf("error open build for app:%s fileName:%s  err:%s", appName, fileName, err.Error()))
 	}
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
 	}
-	return client.UploadApp(appName, version, buildName, fileName, reader)
+	return client.UploadApp(appName, version, buildName, productType, archType, fileName, reader)
 }
 
 func (inst *Store) setServiceName(appName string) string {

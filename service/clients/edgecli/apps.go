@@ -8,8 +8,8 @@ import (
 )
 
 // UploadApp upload an app
-func (inst *Client) UploadApp(appName, version, buildName, fileName string, reader io.Reader) (*installer.AppResponse, error) {
-	url := fmt.Sprintf("/api/apps/add/?name=%s&buildName=%s&version=%s", appName, buildName, version)
+func (inst *Client) UploadApp(appName, version, buildName, productType, archType, fileName string, reader io.Reader) (*installer.AppResponse, error) {
+	url := fmt.Sprintf("/api/apps/add/?name=%s&buildName=%s&version=%s&product=%s&arch=%s", appName, buildName, version, productType, archType)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&installer.AppResponse{}).
 		SetFileReader("file", fileName, reader).
@@ -21,14 +21,6 @@ func (inst *Client) UploadApp(appName, version, buildName, fileName string, read
 }
 
 // InstallApp add/install a new an app (needs the build on the edge device)
-/*
-{
-    "name": "flow-framework",
-    "build_name": "flow-framework",
-    "version": "v1.1",
-    "source": "/data/tmp/tmp_DB18FE83463A/flow-framework-0.6.0-8655148f.amd64.zip"
-}
-*/
 func (inst *Client) InstallApp(body *installer.Install) (*installer.AppResponse, error) {
 	url := fmt.Sprintf("/api/apps/install")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -55,15 +47,6 @@ func (inst *Client) UploadServiceFile(appName, version, buildName, fileName stri
 }
 
 // InstallService add/install a new an app service (service file needs to be needs the build on the edge device)
-/*
-{
-    "name": "flow-framework",
-    "build_name": "flow-framework",
-    "version": "v0.6.0",
-    "service_name": "nubeio-flow-framework.service",
-    "source": "/data/tmp/tmp_F7CFBE2FA1E3/nubeio-flow-framework.service"
-}
-*/
 func (inst *Client) InstallService(body *installer.Install) (*installer.InstallResp, error) {
 	url := fmt.Sprintf("/api/apps/service/install")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().

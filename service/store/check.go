@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-command/command"
 	"github.com/NubeIO/lib-command/unixcmd"
-	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"path/filepath"
@@ -17,7 +16,6 @@ type CheckApp struct {
 	Version           string `json:"version"` // v1.1.1
 	HasBuild          bool   `json:"has_build"`
 	ServiceFileExists bool   `json:"service_file_exists"`
-	*installer.MatchBuild
 }
 
 func (inst *Store) CheckApp(app *App) (*CheckApp, error) {
@@ -55,9 +53,7 @@ func (inst *Store) checkApp(appName, version, serviceName string) (*CheckApp, er
 	if err == nil {
 		checkApp.ServiceFileExists = true
 	}
-	path := fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
-	matchBuild, err := inst.App.BuildCheck(appName, version, path)
-	checkApp.MatchBuild = matchBuild
+	//path := fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
 
 	return checkApp, nil
 }

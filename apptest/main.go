@@ -13,6 +13,8 @@ var appName = "flow-framework"
 var buildName = "flow-framework"
 var appVersion = "v0.6.1"
 var source = ""
+var arch = "amd64"
+var product = "Server"
 
 func addUploadApp() error {
 	client := assitcli.New("0.0.0.0", 1662)
@@ -32,12 +34,12 @@ func addUploadApp() error {
 	pprint.PrintJOSN(listStore)
 
 	app, err := client.AddUploadEdgeApp("rc", &store.EdgeApp{
-
 		Name:      appName,
 		BuildName: buildName,
 		Version:   appVersion,
+		Product:   product,
+		Arch:      arch,
 	})
-	fmt.Println(err)
 	if err != nil {
 		return err
 	}
@@ -83,17 +85,19 @@ func installService() error {
 
 func main() {
 	err := addUploadApp()
-	fmt.Println(err)
+	fmt.Println("addUploadApp")
 	fmt.Println(err)
 	if err != nil {
 		return
 	}
 	err = uploadService()
+	fmt.Println("uploadService")
 	fmt.Println(err)
 	if err != nil {
 		return
 	}
 	err = installService()
+	fmt.Println("installService")
 	fmt.Println(err)
 	if err != nil {
 		return
