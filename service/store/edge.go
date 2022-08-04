@@ -13,7 +13,6 @@ import (
 
 type EdgeApp struct {
 	Name              string `json:"name"`
-	BuildName         string `json:"build_name"`
 	Version           string `json:"version"`
 	Product           string `json:"product"`
 	Arch              string `json:"arch"`
@@ -25,14 +24,10 @@ type EdgeApp struct {
 func (inst *Store) AddUploadEdgeApp(hostUUID, hostName string, app *EdgeApp) (*installer.AppResponse, error) {
 	appName := app.Name
 	version := app.Version
-	buildName := app.BuildName
 	archType := app.Arch
 	productType := app.Product
 	if appName == "" {
 		return nil, errors.New("upload app to edge app name can not be empty")
-	}
-	if buildName == "" {
-		return nil, errors.New("upload app to edge  app build name can not be empty")
 	}
 	if version == "" {
 		return nil, errors.New("upload app to edge  app version can not be empty")
@@ -65,7 +60,7 @@ func (inst *Store) AddUploadEdgeApp(hostUUID, hostName string, app *EdgeApp) (*i
 	if err != nil {
 		return nil, err
 	}
-	return client.UploadApp(appName, version, buildName, productType, archType, fileName, reader)
+	return client.UploadApp(appName, version, productType, archType, fileName, reader)
 }
 
 func (inst *Store) setServiceName(appName string) string {
@@ -76,17 +71,17 @@ func (inst *Store) setServiceFileName(appName string) string {
 	return fmt.Sprintf("nubeio-%s.service", appName)
 }
 
-func (inst *Store) setServiceWorkingDir(appBuildName, appVersion string) string {
-	return inst.App.GetAppInstallPathAndVersion(appBuildName, appVersion)
+func (inst *Store) setServiceWorkingDir(appName, appVersion string) string {
+	return inst.App.GetAppInstallPathAndVersion(appName, appVersion)
 }
 
-func (inst *Store) setServiceExecStart(appBuildName, appVersion, AppSpecficExecStart string) string {
-	workingDir := inst.App.GetAppInstallPathAndVersion(appBuildName, appVersion)
+func (inst *Store) setServiceExecStart(appName, appVersion, AppSpecficExecStart string) string {
+	workingDir := inst.App.GetAppInstallPathAndVersion(appName, appVersion)
 	return fmt.Sprintf("%s/%s", workingDir, AppSpecficExecStart)
 }
 
-func (inst *Store) checkServiceExecStart(service, appBuildName, appVersion string) error {
-	if strings.Contains(service, inst.App.GetAppInstallPathAndVersion(appBuildName, appVersion)) {
+func (inst *Store) checkServiceExecStart(service, appName, appVersion string) error {
+	if strings.Contains(service, inst.App.GetAppInstallPathAndVersion(appName, appVersion)) {
 		return nil
 	}
 	return errors.New("ExecStart command is not matching appBuildName & appVersion")
@@ -95,7 +90,6 @@ func (inst *Store) checkServiceExecStart(service, appBuildName, appVersion strin
 type ServiceFile struct {
 	Name                    string `json:"name"`
 	Version                 string `json:"version"`
-	BuildName               string `json:"build_name"`
 	ServiceDependency       string `json:"service_dependency"` // nodejs
 	ServiceDescription      string `json:"service_description"`
 	RunAsUser               string `json:"run_as_user"`
@@ -140,13 +134,13 @@ func (inst *Store) generateUploadEdgeService(hostUUID, hostName string, app *Ser
 	if err = checkVersion(appVersion); err != nil {
 		return nil, err
 	}
-	appBuildName := app.BuildName
+	appName := app.Name
 	if appVersion == "" {
 		return nil, errors.New("app build name can not be empty, try wires-builds")
 	}
 	workingDirectory := app.ServiceWorkingDirectory
 	if workingDirectory == "" {
-		workingDirectory = inst.setServiceWorkingDir(appBuildName, appVersion)
+		workingDirectory = inst.setServiceWorkingDir(appName, appVersion)
 	}
 	user := app.RunAsUser
 	if user == "" {
@@ -160,7 +154,7 @@ func (inst *Store) generateUploadEdgeService(hostUUID, hostName string, app *Ser
 			return nil, errors.New("app service ExecStart cant not be empty")
 		}
 		execCmd = inst.setServiceExecStart(app.Name, appVersion, execCmd)
-		if err := inst.checkServiceExecStart(execCmd, appBuildName, appVersion); err != nil {
+		if err := inst.checkServiceExecStart(execCmd, appName, appVersion); err != nil {
 			return nil, err
 		}
 	}
@@ -200,5 +194,5 @@ func (inst *Store) generateUploadEdgeService(hostUUID, hostName string, app *Ser
 		return nil, err
 	}
 
-	return client.UploadServiceFile(app.Name, appVersion, appBuildName, serviceFileName, reader)
+	return client.UploadServiceFile(app.Name, appVersion, serviceFileName, reader)
 }

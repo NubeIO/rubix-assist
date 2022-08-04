@@ -8,8 +8,8 @@ import (
 )
 
 // UploadApp upload an app
-func (inst *Client) UploadApp(appName, version, buildName, productType, archType, fileName string, reader io.Reader) (*installer.AppResponse, error) {
-	url := fmt.Sprintf("/api/apps/add/?name=%s&buildName=%s&version=%s&product=%s&arch=%s", appName, buildName, version, productType, archType)
+func (inst *Client) UploadApp(appName, version, productType, archType, fileName string, reader io.Reader) (*installer.AppResponse, error) {
+	url := fmt.Sprintf("/api/apps/add/?name=%s&version=%s&product=%s&arch=%s", appName, version, productType, archType)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&installer.AppResponse{}).
 		SetFileReader("file", fileName, reader).
@@ -34,8 +34,8 @@ func (inst *Client) InstallApp(body *installer.Install) (*installer.AppResponse,
 }
 
 // UploadServiceFile add/install a new an app service (service file needs to be needs the build on the edge device)
-func (inst *Client) UploadServiceFile(appName, version, buildName, fileName string, reader io.Reader) (*installer.UploadResponse, error) {
-	url := fmt.Sprintf("/api/apps/service/upload/?name=%s&buildName=%s&version=%s", appName, buildName, version)
+func (inst *Client) UploadServiceFile(appName, version, fileName string, reader io.Reader) (*installer.UploadResponse, error) {
+	url := fmt.Sprintf("/api/apps/service/upload/?name=%s&version=%s", appName, version)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&installer.UploadResponse{}).
 		SetFileReader("file", fileName, reader).
