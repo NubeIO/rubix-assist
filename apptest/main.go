@@ -10,7 +10,6 @@ import (
 )
 
 var appName = "flow-framework"
-var buildName = "flow-framework"
 var appVersion = "v0.6.1"
 var source = ""
 var arch = "amd64"
@@ -18,7 +17,6 @@ var product = "Server"
 
 func addUploadApp() error {
 	client := assitcli.New("0.0.0.0", 1662)
-
 	listStore, err := client.ListStore()
 	fmt.Println(err)
 	if err != nil {
@@ -34,11 +32,10 @@ func addUploadApp() error {
 	pprint.PrintJOSN(listStore)
 
 	app, err := client.AddUploadEdgeApp("rc", &store.EdgeApp{
-		Name:      appName,
-		BuildName: buildName,
-		Version:   appVersion,
-		Product:   product,
-		Arch:      arch,
+		Name:    appName,
+		Version: appVersion,
+		Product: product,
+		Arch:    arch,
 	})
 	if err != nil {
 		return err
@@ -52,7 +49,6 @@ func uploadService() error {
 	service, err := client.UploadEdgeService("rc", &store.ServiceFile{
 		Name:                    appName,
 		Version:                 appVersion,
-		BuildName:               buildName,
 		ServiceDescription:      "",
 		RunAsUser:               "",
 		ServiceWorkingDirectory: "",
@@ -70,7 +66,6 @@ func installService() error {
 	client := assitcli.New("0.0.0.0", 1662)
 	service, err := client.InstallEdgeService("rc", &installer.Install{
 		Name:        appName,
-		BuildName:   buildName,
 		Version:     appVersion,
 		ServiceName: "",
 		Source:      source,
