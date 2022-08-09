@@ -11,7 +11,6 @@ func TestStore_generateServiceFile(t *testing.T) {
 	var err error
 	appName := "flow-framework"
 	appVersion := "v0.6.0"
-	appBuildName := "flow-framework"
 	appStore, err := New(&Store{
 		App: &installer.App{
 			DataDir:  "/data",
@@ -23,7 +22,6 @@ func TestStore_generateServiceFile(t *testing.T) {
 	resp, err := appStore.GenerateUploadEdgeService("", "rc", &ServiceFile{
 		Name:                    appName,
 		Version:                 appVersion,
-		BuildName:               appBuildName,
 		ServiceDescription:      "",
 		RunAsUser:               "",
 		ServiceWorkingDirectory: "",

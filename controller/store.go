@@ -2,12 +2,11 @@ package controller
 
 import (
 	"github.com/NubeIO/lib-rubix-installer/installer"
-	"github.com/NubeIO/rubix-assist/service/store"
 	"github.com/gin-gonic/gin"
 )
 
 func (inst *Controller) ListStore(c *gin.Context) {
-	data, err := inst.Store.ListStore()
+	data, err := inst.Store.ListApps()
 	if err != nil {
 		reposeHandler(data, err, c)
 		return
@@ -35,26 +34,4 @@ func (inst *Controller) AddUploadStoreApp(c *gin.Context) {
 		return
 	}
 	reposeHandler(data, nil, c)
-}
-
-func (inst *Controller) CheckStoreApp(c *gin.Context) {
-	m := &store.App{}
-	err = c.ShouldBindJSON(&m)
-	data, err := inst.Store.CheckApp(m)
-	if err != nil {
-		reposeHandler(data, err, c)
-		return
-	}
-	reposeHandler(data, err, c)
-}
-
-func (inst *Controller) CheckStoreApps(c *gin.Context) {
-	var m []store.App
-	err = c.ShouldBindJSON(&m)
-	data, err := inst.Store.CheckApps(m)
-	if err != nil {
-		reposeHandler(data, err, c)
-		return
-	}
-	reposeHandler(data, err, c)
 }

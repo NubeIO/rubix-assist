@@ -73,8 +73,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		appStore.GET("/", api.ListStore)
 		appStore.POST("/add", api.AddUploadStoreApp)
-		appStore.POST("/check/app", api.CheckStoreApp)
-		appStore.POST("/check/apps", api.CheckStoreApps)
 	}
 
 	edgeApps := admin.Group("/edge")

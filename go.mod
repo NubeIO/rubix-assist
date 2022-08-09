@@ -65,7 +65,6 @@ require (
 
 require (
 	github.com/NubeIO/flow-framework v0.5.6
-	github.com/NubeIO/lib-command v0.0.2
 	github.com/NubeIO/lib-date v0.0.1
 	github.com/NubeIO/lib-dirs v0.0.2
 	github.com/NubeIO/lib-networking v0.0.4
