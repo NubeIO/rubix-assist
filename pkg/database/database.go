@@ -4,13 +4,13 @@ import (
 	"errors"
 	"fmt"
 	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
-	"github.com/NubeIO/rubix-assist/pkg/helpers/homedir"
+	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/spf13/viper"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"io"
 	"os"
-	"os/user"
+	"path"
 )
 
 var (
@@ -29,21 +29,10 @@ func Setup() error {
 	dbName := viper.GetString("database.name")
 	driver := viper.GetString("database.driver")
 
-	currentUser, err := user.Current()
-	if currentUser.Username != "root" {
-		home, err := homedir.Dir()
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println("user home:", home)
-		//dbName = fmt.Sprintf("%s/%s/rubix_updater.db", home, "/rubix-assist")
-		dbName = fmt.Sprintf("rubix_updater.db")
-	}
-
 	if driver == "" {
 		driver = "sqlite"
 	}
-	connection := fmt.Sprintf("%s?_foreign_keys=on", dbName)
+	connection := fmt.Sprintf("%s?_foreign_keys=on", path.Join(config.Config.GetAbsDataDir(), dbName))
 	switch driver {
 	case "sqlite":
 		db, err = gorm.Open(sqlite.Open(connection), &gorm.Config{})
@@ -85,7 +74,8 @@ func GetDBErr() error {
 }
 
 func getWriter() io.Writer {
-	file, err := os.OpenFile("rubix.db.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	fileLocation := fmt.Sprintf("%s/rubix.db.log", config.Config.GetAbsDataDir())
+	file, err := os.OpenFile(fileLocation, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		return os.Stdout
 	} else {

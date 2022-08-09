@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	//model.Host
+	// model.Host
 	hostsGet       bool
 	hostAdd        bool
 	hostsDrop      bool
@@ -29,7 +29,7 @@ var hostsCmd = &cobra.Command{
 }
 
 func initDB() *dbase.DB {
-	if err := config.Setup(); err != nil {
+	if err := config.Setup(RootCmd); err != nil {
 		log.Errorln("config.Setup() error: %s", err)
 	}
 	if err := database.Setup(); err != nil {

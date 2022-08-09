@@ -77,27 +77,27 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%S')"
 
-      - name: Edit app.go for environment
+      - name: Edit main.go for environment
         env:
           VERSION: ${{ needs.context.outputs.version }}
           COMMIT: ${{ needs.context.outputs.shortCommitId }}
           BUILD_DATE: ${{ steps.date.outputs.date }}
         run: |
-          sed -i -e 's,<version>,'"${VERSION}"',' app.go
-          sed -i -e 's/<commit>/'"${COMMIT}"'/' app.go
-          sed -i -e 's/<build_date>/'"${BUILD_DATE}"'/' app.go
+          sed -i -e 's,<version>,'"${VERSION}"',' main.go
+          sed -i -e 's/<commit>/'"${COMMIT}"'/' main.go
+          sed -i -e 's/<build_date>/'"${BUILD_DATE}"'/' main.go
 
       - name: Build amd64
         run: |
           go mod tidy
-          go build -o app-amd64 app.go
+          go build -o app-amd64 main.go
 
 
       - name: Build armv7
         if: ${{ needs.context.outputs.isRelease == 'true' }}
         run: |
           sudo apt-get install -y gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf
-          env GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=1 CC=arm-linux-gnueabihf-gcc  CXX=arm-linux-gnueabihf-g++ go build -o app-armv7 app.go
+          env GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=1 CC=arm-linux-gnueabihf-gcc  CXX=arm-linux-gnueabihf-g++ go build -o app-armv7 main.go
 
       - name: Zip artifacts
         if: ${{ needs.context.outputs.isRelease == 'true' }}

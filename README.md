@@ -1,24 +1,17 @@
 # getting started
 
+## install
+
+need to run as sudo to install apps
 
 ```
-cd cmd
-go run main.go --server=true
-````
-run as sudo when running app store
+go mod tidy
+go build main.go && sudo ./main server
 ```
-cd cmd
-go build main.go && sudo ./main --server=true
-```
-
-rename the `config-example.yml` file to `config.yml`
-
-run the bash script to build and start
-`bash build.bash`
 
 ## default port
 
-8080
+1662
 
 ## docs
 
