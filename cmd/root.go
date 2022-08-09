@@ -5,7 +5,6 @@ import (
 )
 
 var (
-	// model.Host
 	hostName     string
 	hostIP       string
 	hostPort     int
@@ -45,9 +44,9 @@ func Execute() {
 
 func init() {
 	RootCmd.PersistentFlags().BoolVarP(&flgRoot.prod, "prod", "", false, "prod")
-	RootCmd.PersistentFlags().IntVarP(&flgRoot.port, "port", "p", 1662, "port (default 1661)")
+	RootCmd.PersistentFlags().IntVarP(&flgRoot.port, "port", "p", 1662, "port (default 1662)")
 	RootCmd.PersistentFlags().StringVarP(&flgRoot.rootDir, "root-dir", "r", "./", "root dir") // in production it will be `/data`
-	RootCmd.PersistentFlags().StringVarP(&flgRoot.appDir, "app-dir", "a", "./", "global dir") // in production it will be `/edge`
+	RootCmd.PersistentFlags().StringVarP(&flgRoot.appDir, "app-dir", "a", "./", "app dir")    // in production it will be `/rubix-assist`
 	RootCmd.PersistentFlags().StringVarP(&flgRoot.dataDir, "data-dir", "d", "data", "data dir")
 	RootCmd.PersistentFlags().StringVarP(&flgRoot.configDir, "config-dir", "c", "config", "config dir")
 	RootCmd.PersistentFlags().StringVarP(&hostName, "host", "", "rc", "host name (default rc)")
@@ -60,5 +59,4 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&rubixUsername, "rubix-user", "", "admin", "rubix username (default admin)")
 	RootCmd.PersistentFlags().StringVarP(&rubixPassword, "rubix-pass", "", "N00BWires", "rubix password")
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
 }
