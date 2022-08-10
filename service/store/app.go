@@ -2,19 +2,24 @@ package store
 
 import (
 	"fmt"
-	"io/fs"
+	"github.com/NubeIO/lib-rubix-installer/installer"
+	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 // Making an app
 // make the app store dirs
 
 type App struct {
-	Name        string `json:"name"`         // rubix-wires
-	Version     string `json:"version"`      // v1.1.1
-	ServiceFile string `json:"service_file"` // nubeio-rubix-wires
+	Name    string `json:"name"`    // rubix-wires
+	Version string `json:"version"` // v1.1.1
+}
+
+type AppsLibrary struct {
+	Name        string   `json:"name"`    // rubix-wires
+	Version     string   `json:"version"` // v1.1.1
+	ArchVersion []string `json:"arch_version"`
 }
 
 // AddApp make all the app store dirs
@@ -39,40 +44,121 @@ func (inst *Store) AddApp(app *App) (*App, error) {
 	return app, nil
 }
 
-func (inst *Store) ListStore() ([]App, error) {
+type Builds struct {
+	Name    string   `json:"name"`
+	Version []string `json:"version,omitempty"`
+	Arch    string   `json:"arch"`
+	Path    string   `json:"path"`
+}
+
+type ListApps struct {
+	Name     string   `json:"name,omitempty"`
+	Path     string   `json:"path,omitempty"`
+	Version  string   `json:"version,omitempty"`
+	Versions []string `json:"versions,omitempty"`
+	Builds   []Builds `json:"builds,omitempty"`
+}
+
+func (inst *Store) ListApps() ([]ListApps, error) {
 	rootDir := inst.App.GetStoreDir()
-	var files []App
-	app := App{}
-	err := filepath.WalkDir(rootDir, func(p string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if d.IsDir() && strings.Count(p, string(os.PathSeparator)) == 5 {
-			parts := strings.Split(p, "/")
-			if len(parts) >= 4 { // app name
-				app.Name = parts[4]
-			}
-			if len(parts) >= 5 { // version
-				app.Version = parts[5]
-			}
-			files = append(files, app)
-		}
-		return nil
-	})
+	var apps []ListApps
+	var app ListApps
+	files, err := ioutil.ReadDir(fmt.Sprintf("%s/apps", rootDir))
 	if err != nil {
 		return nil, err
 	}
-	return files, nil
+	for _, file := range files {
+		app.Name = file.Name()
+		app.Path = fmt.Sprintf("%s/apps/%s", rootDir, file.Name())
+		apps = append(apps, app)
+	}
+	return apps, err
 }
 
-//func (inst *Store) GetAppZipName(appName, version string) (fileName string, path string, match *installer.MatchBuild, err error) {
-//	path = inst.getAppStorePathAndVersion(appName, version)
-//	check, err := inst.App.BuildCheck(appName, version, path)
-//	if err != nil {
-//		return "", path, nil, err
-//	}
-//	return filePath(check.BuildZipName), path, check, err
-//}
+func (inst *Store) ListAppsWithVersions() ([]ListApps, error) {
+	listApps, err := inst.ListApps()
+	var apps []ListApps
+	for _, app := range listApps {
+		versions, err := inst.ListAppVersions(app.Name)
+		if err != nil {
+			return nil, err
+		}
+		for _, version := range versions {
+			apps = append(apps, version)
+		}
+	}
+	return apps, err
+}
+
+func (inst *Store) ListAppsBuildDetails() ([]installer.BuildDetails, error) {
+	listApps, err := inst.ListAppsWithVersions()
+	var apps []installer.BuildDetails
+	for _, app := range listApps {
+		versions, err := inst.ListAppArchTypes(app.Name, app.Version)
+		if err != nil {
+			return nil, err
+		}
+		for _, version := range versions {
+			apps = append(apps, version)
+		}
+	}
+	return apps, err
+}
+
+func (inst *Store) ListAppVersions(appName string) ([]ListApps, error) {
+	var apps []ListApps
+	var app ListApps
+	var path = fmt.Sprintf("%s", inst.getAppStorePath(appName))
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		return nil, err
+	}
+	for _, file := range files {
+		app.Name = appName
+		app.Version = file.Name()
+		app.Path = fmt.Sprintf("%s/apps/%s", path, file.Name())
+		apps = append(apps, app)
+	}
+	return apps, err
+}
+
+func (inst *Store) ListAppArchTypes(appName, version string) ([]installer.BuildDetails, error) {
+	var apps []installer.BuildDetails
+	files, err := inst.listAppBuilds(appName, version)
+	if err != nil {
+		return nil, err
+	}
+	for _, file := range files {
+		details := inst.App.GetZipBuildDetails(file.Name)
+		if details.MatchedName == "" {
+			details.MatchedName = appName
+		}
+		apps = append(apps, *details)
+	}
+	return apps, err
+}
+
+func (inst *Store) listAppBuilds(appName, version string) ([]ListApps, error) {
+	var apps []ListApps
+	var app ListApps
+	var path = fmt.Sprintf("%s", inst.getAppStorePathAndVersion(appName, version))
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		return nil, err
+	}
+	for _, file := range files {
+		app.Name = file.Name()
+		app.Path = fmt.Sprintf("%s/%s", path, file.Name())
+		apps = append(apps, app)
+	}
+	return apps, err
+}
+
+// getAppStorePathAndVersion get the full app install path and version
+func (inst *Store) getAppStorePath(appName string) string {
+	path := fmt.Sprintf("%s/apps/%s", inst.App.GetStoreDir(), appName)
+	return filePath(path)
+}
 
 // getAppStorePathAndVersion get the full app install path and version
 func (inst *Store) getAppStorePathAndVersion(appName, version string) string {
@@ -110,4 +196,27 @@ func (inst *Store) makeAppVersionDir(appName, version string) error {
 	}
 	path := fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
 	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(FilePerm))
+}
+
+type fileDetails struct {
+	Name      string `json:"name"`
+	Extension string `json:"extension"`
+	IsDir     bool   `json:"is_dir"`
+}
+
+func getFileDetails(dir string) ([]fileDetails, error) {
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return nil, err
+	}
+	var out []fileDetails
+	var f fileDetails
+	for _, file := range files {
+		var extension = filepath.Ext(file.Name())
+		f.Extension = extension
+		f.Name = file.Name()
+		f.IsDir = file.IsDir()
+		out = append(out, f)
+	}
+	return out, nil
 }
