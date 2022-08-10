@@ -5,8 +5,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (inst *Controller) ListStore(c *gin.Context) {
-	data, err := inst.Store.ListApps()
+func (inst *Controller) ListAppsWithVersions(c *gin.Context) {
+	data, err := inst.Store.ListAppsWithVersions()
+	if err != nil {
+		reposeHandler(data, err, c)
+		return
+	}
+	reposeHandler(data, err, c)
+}
+
+func (inst *Controller) ListAppsBuildDetails(c *gin.Context) {
+	data, err := inst.Store.ListAppsBuildDetails()
 	if err != nil {
 		reposeHandler(data, err, c)
 		return

@@ -67,11 +67,11 @@ func Setup(db *gorm.DB) *gin.Engine {
 	})
 
 	admin := r.Group("/api")
-
 	appStore := admin.Group("/store")
 
 	{
-		appStore.GET("/", api.ListStore)
+		appStore.GET("/apps", api.ListAppsWithVersions)
+		appStore.GET("/apps/details", api.ListAppsBuildDetails)
 		appStore.POST("/add", api.AddUploadStoreApp)
 	}
 

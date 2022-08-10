@@ -6,14 +6,24 @@ import (
 	"testing"
 )
 
-func TestClient_ListStore(t *testing.T) {
+func TestClient_ListAppsWithVersions(t *testing.T) {
 	client := New("0.0.0.0", 1662)
-	store, err := client.ListStore()
+	store, err := client.ListAppsWithVersions()
 	fmt.Println(err)
 	if err != nil {
 		return
 	}
+	pprint.PrintJOSN(store)
 
+}
+
+func TestClient_ListAppsBuildDetails(t *testing.T) {
+	client := New("0.0.0.0", 1662)
+	store, err := client.ListAppsBuildDetails()
+	fmt.Println(err)
+	if err != nil {
+		return
+	}
 	pprint.PrintJOSN(store)
 
 }

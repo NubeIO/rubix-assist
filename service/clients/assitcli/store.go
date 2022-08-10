@@ -2,21 +2,34 @@ package assitcli
 
 import (
 	"fmt"
+	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
 	"github.com/NubeIO/rubix-assist/service/store"
 	"io"
 )
 
-// ListStore list apps and store
-func (inst *Client) ListStore() ([]store.App, error) {
-	url := fmt.Sprintf("/api/store")
+// ListAppsWithVersions list apps with versions
+func (inst *Client) ListAppsWithVersions() ([]store.ListApps, error) {
+	url := fmt.Sprintf("/api/store/apps")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&[]store.App{}).
+		SetResult(&[]store.ListApps{}).
 		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	return *resp.Result().(*[]store.App), nil
+	return *resp.Result().(*[]store.ListApps), nil
+}
+
+// ListAppsBuildDetails list apps with arch
+func (inst *Client) ListAppsBuildDetails() ([]installer.BuildDetails, error) {
+	url := fmt.Sprintf("/api/store/apps/details")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&[]installer.BuildDetails{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	return *resp.Result().(*[]installer.BuildDetails), nil
 }
 
 // AddUploadStoreApp upload an app

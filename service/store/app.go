@@ -2,6 +2,7 @@ package store
 
 import (
 	"fmt"
+	"github.com/NubeIO/lib-rubix-installer/installer"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -53,34 +54,10 @@ type Builds struct {
 type ListApps struct {
 	Name     string   `json:"name,omitempty"`
 	Path     string   `json:"path,omitempty"`
+	Version  string   `json:"version,omitempty"`
 	Versions []string `json:"versions,omitempty"`
 	Builds   []Builds `json:"builds,omitempty"`
 }
-
-//func (inst *Store) ListApps() ([]ListApps, error) {
-//	rootDir := inst.App.GetStoreDir()
-//	var apps []ListApps
-//	var app ListApps
-//	err := filepath.Walk(fmt.Sprintf("%s/apps", rootDir),
-//		func(path string, info os.FileInfo, err error) error {
-//			if err != nil {
-//				return err
-//			}
-//			parts := strings.Split(path, "/")
-//			if len(parts) >= 5 {
-//				if len(parts) == 5 { // app name
-//					app.Name = parts[4]
-//					app.Path = path
-//					apps = append(apps, app)
-//				}
-//			}
-//			return nil
-//		})
-//	if err != nil {
-//		return nil, err
-//	}
-//	return apps, nil
-//}
 
 func (inst *Store) ListApps() ([]ListApps, error) {
 	rootDir := inst.App.GetStoreDir()
@@ -98,36 +75,73 @@ func (inst *Store) ListApps() ([]ListApps, error) {
 	return apps, err
 }
 
-func (inst *Store) ListAppsVersions(path string) ([]ListApps, error) {
+func (inst *Store) ListAppsWithVersions() ([]ListApps, error) {
+	listApps, err := inst.ListApps()
+	var apps []ListApps
+	for _, app := range listApps {
+		versions, err := inst.ListAppVersions(app.Name)
+		if err != nil {
+			return nil, err
+		}
+		for _, version := range versions {
+			apps = append(apps, version)
+		}
+	}
+	return apps, err
+}
+
+func (inst *Store) ListAppsBuildDetails() ([]installer.BuildDetails, error) {
+	listApps, err := inst.ListAppsWithVersions()
+	var apps []installer.BuildDetails
+	for _, app := range listApps {
+		versions, err := inst.ListAppArchTypes(app.Name, app.Version)
+		if err != nil {
+			return nil, err
+		}
+		for _, version := range versions {
+			apps = append(apps, version)
+		}
+	}
+	return apps, err
+}
+
+func (inst *Store) ListAppVersions(appName string) ([]ListApps, error) {
 	var apps []ListApps
 	var app ListApps
+	var path = fmt.Sprintf("%s", inst.getAppStorePath(appName))
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, err
 	}
 	for _, file := range files {
-		app.Name = file.Name()
+		app.Name = appName
+		app.Version = file.Name()
 		app.Path = fmt.Sprintf("%s/apps/%s", path, file.Name())
 		apps = append(apps, app)
 	}
 	return apps, err
 }
 
-//func (inst *Store) ListAppsArchTypes(path string) ([]ListApps, error) {
-//	raw, err := inst.listAppsArchTypesRaw(path)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	for _, apps := range raw {
-//		//apps
-//
-//	}
-//}
+func (inst *Store) ListAppArchTypes(appName, version string) ([]installer.BuildDetails, error) {
+	var apps []installer.BuildDetails
+	files, err := inst.listAppBuilds(appName, version)
+	if err != nil {
+		return nil, err
+	}
+	for _, file := range files {
+		details := inst.App.GetZipBuildDetails(file.Name)
+		if details.MatchedName == "" {
+			details.MatchedName = appName
+		}
+		apps = append(apps, *details)
+	}
+	return apps, err
+}
 
-func (inst *Store) listAppsBuilds(path string) ([]ListApps, error) {
+func (inst *Store) listAppBuilds(appName, version string) ([]ListApps, error) {
 	var apps []ListApps
 	var app ListApps
+	var path = fmt.Sprintf("%s", inst.getAppStorePathAndVersion(appName, version))
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, err
@@ -140,62 +154,11 @@ func (inst *Store) listAppsBuilds(path string) ([]ListApps, error) {
 	return apps, err
 }
 
-//func (inst *Store) ListAppsVersions(path string) ([]ListApps, error) {
-//	//rootDir := inst.App.GetStoreDir()
-//
-//	files, err := ioutil.ReadDir(path)
-//	if err != nil {
-//		//log.Fatal(err)
-//	}
-//	for _, file := range files {
-//		fmt.Println(file.Name(), file.IsDir())
-//	}
-//}
-
-//func (inst *Store) ListStore() ([]string, error) {
-//	rootDir := inst.App.GetStoreDir()
-//	var files []AppsLibrary
-//	app := AppsLibrary{}
-//	var archVersion []string
-//	err := filepath.Walk(fmt.Sprintf("%s/apps", rootDir),
-//		func(path string, info os.FileInfo, err error) error {
-//			if err != nil {
-//				return err
-//			}
-//			parts := strings.Split(path, "/")
-//			if len(parts) >= 5 {
-//				fmt.Println(path)
-//				if len(parts) == 5 { // app name
-//					fmt.Println(parts[4])
-//					app.Name = parts[4]
-//				}
-//				if len(parts) == 6 { // version
-//					app.Version = parts[5]
-//				}
-//				if len(parts) == 7 { // build
-//					details := inst.App.GetZipBuildDetails(parts[6])
-//					if details != nil {
-//						if details.MatchedArch != "" {
-//							archVersion = append(archVersion, details.MatchedArch)
-//							app.ArchVersion = archVersion
-//						}
-//						if details.ZipName != "" {
-//							files = append(files, app)
-//						}
-//					}
-//				}
-//			}
-//			return nil
-//		})
-//	if err != nil {
-//		return nil, err
-//	}
-//	return files, nil
-//}
-
-// list apps
-// list version for an app
-// list all arch for an app
+// getAppStorePathAndVersion get the full app install path and version
+func (inst *Store) getAppStorePath(appName string) string {
+	path := fmt.Sprintf("%s/apps/%s", inst.App.GetStoreDir(), appName)
+	return filePath(path)
+}
 
 // getAppStorePathAndVersion get the full app install path and version
 func (inst *Store) getAppStorePathAndVersion(appName, version string) string {
