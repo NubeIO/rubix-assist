@@ -14,20 +14,6 @@ var source = "/data/tmp/tmp_E57DA9ED2A7B/flow-framework-0.6.1-6cfec278.amd64.zip
 
 func Test_UploadApp(*testing.T) {
 
-	//cli := New("", 0)
-	//reader, err := os.Open(fmt.Sprintf("/data/store/apps/%s/%s/%s", appName, appVersion, fileName))
-	//fmt.Println(err)
-	//if err != nil {
-	//	return
-	//}
-	//
-	//file, err := cli.UploadApp(appName, appVersion, fileName, reader)
-	//if err != nil {
-	//	fmt.Println(err)
-	//	return
-	//}
-	//pprint.PrintJOSN(file)
-
 }
 
 func Test_InstallApp(*testing.T) {
