@@ -8,7 +8,6 @@ import (
 	"github.com/NubeIO/rubix-assist/pkg/router"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"log"
 	"os"
 )
@@ -30,7 +29,7 @@ func runServer(cmd *cobra.Command, args []string) {
 	port := config.Config.GetPort()
 	logger.Infof("Server is starting at %s:%s", host, port)
 	fmt.Printf("server is running at %s:%s Check logs for details\n", host, port)
-	log.Fatalf("%v", r.Run(host+":"+viper.GetString("server.port")))
+	log.Fatalf("%v", r.Run(host+":"+port))
 }
 
 func init() {
