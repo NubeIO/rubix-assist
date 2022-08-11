@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
-	"github.com/NubeIO/rubix-assist/service/store"
+	"github.com/NubeIO/rubix-assist/service/appstore"
 	"net/http"
 
 	dbase "github.com/NubeIO/rubix-assist/database"
@@ -20,7 +20,7 @@ type Controller struct {
 	SSH   *goph.Client
 	DB    *dbase.DB
 	Rest  *rest.Service
-	Store *store.Store
+	Store *appstore.Store
 }
 
 var err error
@@ -28,6 +28,9 @@ var err error
 func (inst *Controller) resolveHost(c *gin.Context) (*model.Host, error) {
 	uuid := matchHostUUID(c)
 	name := matchHostName(c)
+	if uuid == "" && name == "" {
+		return nil, errors.New("host-uuid, and host-name can bot not be empty")
+	}
 	if uuid != "" {
 		host, _ := inst.DB.GetHost(uuid)
 		if host != nil {

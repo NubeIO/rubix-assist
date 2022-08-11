@@ -1,4 +1,4 @@
-package store
+package appstore
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 )
 
 // Making an app
-// make the app store dirs
+// make the app appstore dirs
 
 type App struct {
 	Name    string `json:"name"`    // rubix-wires
@@ -22,7 +22,7 @@ type AppsLibrary struct {
 	ArchVersion []string `json:"arch_version"`
 }
 
-// AddApp make all the app store dirs
+// AddApp make all the app appstore dirs
 func (inst *Store) AddApp(app *App) (*App, error) {
 	appName := app.Name
 	version := app.Version
@@ -166,18 +166,18 @@ func (inst *Store) getAppStorePathAndVersion(appName, version string) string {
 	return filePath(path)
 }
 
-//MakeAppDir  => /data/store/
+//MakeAppDir  => /data/appstore/
 func (inst *Store) makeStoreDir() error {
 	return inst.App.MakeDirectoryIfNotExists(inst.App.GetStoreDir(), os.FileMode(FilePerm))
 }
 
-//MakeAppDir  => /data/store/apps/
+//MakeAppDir  => /data/appstore/apps/
 func (inst *Store) makeAppDir() error {
 	path := fmt.Sprintf("%s/%s", inst.App.GetStoreDir(), "/apps")
 	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(FilePerm))
 }
 
-//MakeApp  => /data/store/apps/flow-framework
+//MakeApp  => /data/appstore/apps/flow-framework
 func (inst *Store) makeApp(appName string) error {
 	if err := emptyPath(appName); err != nil {
 		return err
@@ -186,7 +186,7 @@ func (inst *Store) makeApp(appName string) error {
 	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(FilePerm))
 }
 
-//MakeAppVersionDir  => /data/store/apps/flow-framework/v1.1.1
+//MakeAppVersionDir  => /data/appstore/apps/flow-framework/v1.1.1
 func (inst *Store) makeAppVersionDir(appName, version string) error {
 	if err := emptyPath(appName); err != nil {
 		return err

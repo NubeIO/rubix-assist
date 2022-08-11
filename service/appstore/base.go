@@ -1,4 +1,4 @@
-package store
+package appstore
 
 import (
 	"errors"
@@ -19,7 +19,7 @@ type Store struct {
 
 func New(store *Store) (*Store, error) {
 	if store == nil {
-		return nil, errors.New("store can not be empty")
+		return nil, errors.New("appstore can not be empty")
 	}
 	if store.App == nil {
 		return nil, errors.New("app can not be empty")

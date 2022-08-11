@@ -12,21 +12,36 @@ var appVersion = "v0.6.1"
 var fileName = "flow-framework-0.6.1-6cfec278.amd64.zip"
 var source = "/data/tmp/tmp_E57DA9ED2A7B/flow-framework-0.6.1-6cfec278.amd64.zip"
 
-func Test_UploadApp(*testing.T) {
+func Test_ListApps(*testing.T) {
+	cli := New("", 0)
+	apps, err := cli.ListApps()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	pprint.PrintJOSN(apps)
 
-	//cli := New("", 0)
-	//reader, err := os.Open(fmt.Sprintf("/data/store/apps/%s/%s/%s", appName, appVersion, fileName))
-	//fmt.Println(err)
-	//if err != nil {
-	//	return
-	//}
-	//
-	//file, err := cli.UploadApp(appName, appVersion, fileName, reader)
-	//if err != nil {
-	//	fmt.Println(err)
-	//	return
-	//}
-	//pprint.PrintJOSN(file)
+}
+
+func Test_ListAppsAndService(*testing.T) {
+	cli := New("", 0)
+	apps, err := cli.ListAppsAndService()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	pprint.PrintJOSN(apps)
+
+}
+
+func Test_ListNubeServices(*testing.T) {
+	cli := New("", 0)
+	apps, err := cli.ListNubeServices()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	pprint.PrintJOSN(apps)
 
 }
 

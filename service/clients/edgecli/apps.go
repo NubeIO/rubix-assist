@@ -3,9 +3,49 @@ package edgecli
 import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/lib-systemctl-go/systemctl"
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
 	"io"
 )
+
+// ListApps apps by listed in the installation (/data/rubix-service/apps/install)
+func (inst *Client) ListApps() ([]installer.Apps, error) {
+	url := fmt.Sprintf("/api/apps")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&[]installer.Apps{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	data := resp.Result().(*[]installer.Apps)
+	return *data, nil
+}
+
+// ListAppsAndService get all the apps by listed in the installation (/data/rubix-service/apps/install) dir and then check the service
+func (inst *Client) ListAppsAndService() ([]installer.InstalledServices, error) {
+	url := fmt.Sprintf("/api/apps/services")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&[]installer.InstalledServices{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	data := resp.Result().(*[]installer.InstalledServices)
+	return *data, nil
+}
+
+// ListNubeServices list all the services by filtering all the service files with name nubeio
+func (inst *Client) ListNubeServices() ([]installer.InstalledServices, error) {
+	url := fmt.Sprintf("/api/apps/services/nube")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&[]installer.InstalledServices{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	data := resp.Result().(*[]installer.InstalledServices)
+	return *data, nil
+}
 
 // UploadApp upload an app
 func (inst *Client) UploadApp(appName, version, productType, archType, fileName string, reader io.Reader) (*installer.AppResponse, error) {
@@ -58,4 +98,52 @@ func (inst *Client) InstallService(body *installer.Install) (*installer.InstallR
 	}
 	return resp.Result().(*installer.InstallResp), nil
 
+}
+
+func (inst *Client) EdgeCtlAction(body *installer.CtlBody) (*systemctl.SystemResponse, error) {
+	url := fmt.Sprintf("/api/apps/control/action")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&systemctl.SystemResponse{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*systemctl.SystemResponse), nil
+}
+
+func (inst *Client) EdgeServiceMassAction(body *installer.CtlBody) ([]systemctl.MassSystemResponse, error) {
+	url := fmt.Sprintf("/api/apps/control/action/mass")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&[]systemctl.MassSystemResponse{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().([]systemctl.MassSystemResponse), nil
+}
+
+func (inst *Client) EdgeCtlStatus(body *installer.CtlBody) (*systemctl.SystemResponseChecks, error) {
+	url := fmt.Sprintf("/api/apps/control/status")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&systemctl.SystemResponseChecks{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*systemctl.SystemResponseChecks), nil
+}
+
+func (inst *Client) EdgeServiceMassStatus(body *installer.CtlBody) ([]systemctl.MassSystemResponseChecks, error) {
+	url := fmt.Sprintf("/api/apps/control/status/mass")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&[]systemctl.MassSystemResponseChecks{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().([]systemctl.MassSystemResponseChecks), nil
 }

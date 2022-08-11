@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-const utc = false //used for when doing dev to store as local time
+const utc = false //used for when doing dev to appstore as local time
 
 // RealTime is a concrete implementation of Time interface.
 type RealTime struct{}

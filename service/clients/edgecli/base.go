@@ -15,7 +15,7 @@ var paths = struct {
 	System path
 }{
 	Apps:   path{path: "/api/apps"},
-	Store:  path{path: "/api/store"},
+	Store:  path{path: "/api/appstore"},
 	System: path{path: "/api/system"},
 }
 

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
+	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli"
-	"github.com/NubeIO/rubix-assist/service/store"
 	"github.com/pkg/errors"
 )
 
@@ -17,13 +17,13 @@ var product = "Server"
 
 func addUploadApp() error {
 	client := assitcli.New("0.0.0.0", 1662)
-	listStore, err := client.ListStore()
+	listStore, err := client.ListAppsBuildDetails()
 	fmt.Println(err)
 	if err != nil {
 		return err
 	}
 
-	if len(*listStore) == 0 {
+	if len(listStore) == 0 {
 
 		if err != nil {
 			return errors.New("no apps are added")
@@ -31,7 +31,7 @@ func addUploadApp() error {
 	}
 	pprint.PrintJOSN(listStore)
 
-	app, err := client.AddUploadEdgeApp("rc", &store.EdgeApp{
+	app, err := client.AddUploadEdgeApp("rc", &appstore.EdgeApp{
 		Name:    appName,
 		Version: appVersion,
 		Product: product,
@@ -46,7 +46,7 @@ func addUploadApp() error {
 
 func uploadService() error {
 	client := assitcli.New("0.0.0.0", 1662)
-	service, err := client.UploadEdgeService("rc", &store.ServiceFile{
+	service, err := client.UploadEdgeService("rc", &appstore.ServiceFile{
 		Name:                    appName,
 		Version:                 appVersion,
 		ServiceDescription:      "",
