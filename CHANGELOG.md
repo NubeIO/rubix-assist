@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v0.2.5](https://github.com/NubeIO/rubix-assist/tree/v0.2.5) (2022-08-11)
+
+- Bump installer version
+- Change product schema
+
 ## [v0.2.4](https://github.com/NubeIO/rubix-assist/tree/v0.2.4) (2022-08-11)
 
 - Added edge app installer
