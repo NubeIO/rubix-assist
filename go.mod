@@ -68,8 +68,8 @@ require (
 	github.com/NubeIO/lib-date v0.0.1
 	github.com/NubeIO/lib-dirs v0.0.2
 	github.com/NubeIO/lib-networking v0.0.4
-	github.com/NubeIO/lib-rubix-installer v0.0.7
-	github.com/NubeIO/lib-schema v0.0.3
+	github.com/NubeIO/lib-rubix-installer v0.0.8
+	github.com/NubeIO/lib-schema v0.0.9
 	github.com/NubeIO/lib-systemctl-go v0.0.7
 	github.com/NubeIO/lib-uuid v0.0.2
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.0
