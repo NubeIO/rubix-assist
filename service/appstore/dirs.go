@@ -26,7 +26,7 @@ func (inst *Store) makeUserRubixHome() error {
 }
 
 func userHomeDir() string {
-	homeDir, _ := fileutils.Dir()
+	homeDir, _ := fileutils.HomeDir()
 	return homeDir
 }
 
