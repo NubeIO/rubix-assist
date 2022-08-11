@@ -4,12 +4,26 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
+	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
-	"github.com/NubeIO/rubix-assist/service/store"
 )
 
+// EdgeProductInfo get edge product info
+func (inst *Client) EdgeProductInfo(hostIDName string) (*installer.Product, error) {
+	url := fmt.Sprintf("/api/edge/system/product")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&installer.Product{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*installer.Product), nil
+}
+
 // AddUploadEdgeApp upload an app to the edge device
-func (inst *Client) AddUploadEdgeApp(hostIDName string, app *store.EdgeApp) (*installer.AppResponse, error) {
+func (inst *Client) AddUploadEdgeApp(hostIDName string, app *appstore.EdgeApp) (*installer.AppResponse, error) {
 	url := fmt.Sprintf("/api/edge/apps/add")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -24,18 +38,18 @@ func (inst *Client) AddUploadEdgeApp(hostIDName string, app *store.EdgeApp) (*in
 }
 
 // UploadEdgeService generate a service file and upload it to edge device
-func (inst *Client) UploadEdgeService(hostIDName string, app *store.ServiceFile) (*store.UploadResponse, error) {
+func (inst *Client) UploadEdgeService(hostIDName string, app *appstore.ServiceFile) (*appstore.UploadResponse, error) {
 	url := fmt.Sprintf("/api/edge/apps/service/upload")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
-		SetResult(&store.UploadResponse{}).
+		SetResult(&appstore.UploadResponse{}).
 		SetBody(app).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*store.UploadResponse), nil
+	return resp.Result().(*appstore.UploadResponse), nil
 }
 
 // InstallEdgeService this assumes that the service file and app already exists on the edge device

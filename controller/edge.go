@@ -2,9 +2,24 @@ package controller
 
 import (
 	"github.com/NubeIO/lib-rubix-installer/installer"
-	"github.com/NubeIO/rubix-assist/service/store"
+	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/gin-gonic/gin"
 )
+
+// EdgeProductInfo get edge details
+func (inst *Controller) EdgeProductInfo(c *gin.Context) {
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	data, err := inst.Store.EdgeProductInfo(host.UUID, host.Name)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(data, nil, c)
+}
 
 // EdgeListApps apps by listed in the installation (/data/rubix-service/apps/install)
 func (inst *Controller) EdgeListApps(c *gin.Context) {
@@ -59,7 +74,7 @@ func (inst *Controller) AddUploadEdgeApp(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	var m *store.EdgeApp
+	var m *appstore.EdgeApp
 	err = c.ShouldBindJSON(&m)
 	data, err := inst.Store.AddUploadEdgeApp(host.UUID, host.Name, m)
 	if err != nil {
@@ -75,7 +90,7 @@ func (inst *Controller) GenerateUploadEdgeService(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	var m *store.ServiceFile
+	var m *appstore.ServiceFile
 	err = c.ShouldBindJSON(&m)
 	data, err := inst.Store.GenerateUploadEdgeService(host.UUID, host.Name, m)
 	if err != nil {

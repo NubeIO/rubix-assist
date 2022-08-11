@@ -23,3 +23,10 @@ func TestClient_EdgeListAppsAndService(t *testing.T) {
 	fmt.Println(err)
 	pprint.PrintJOSN(data)
 }
+
+func TestClient_EdgeProductInfo(t *testing.T) {
+	client := New("0.0.0.0", 1662)
+	data, err := client.EdgeProductInfo("rc")
+	fmt.Println(err)
+	pprint.PrintJOSN(data)
+}

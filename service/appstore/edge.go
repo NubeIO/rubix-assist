@@ -1,4 +1,4 @@
-package store
+package appstore
 
 import (
 	"errors"
@@ -252,4 +252,12 @@ func (inst *Store) EdgeServiceMassStatus(hostUUID, hostName string, body *instal
 		return nil, err
 	}
 	return client.EdgeServiceMassStatus(body)
+}
+
+func (inst *Store) EdgeProductInfo(hostUUID, hostName string) (*installer.Product, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.EdgeProductInfo()
 }

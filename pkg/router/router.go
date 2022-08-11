@@ -5,8 +5,8 @@ import (
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/rubix-assist/controller"
 	dbase "github.com/NubeIO/rubix-assist/database"
+	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/NubeIO/rubix-assist/service/auth"
-	"github.com/NubeIO/rubix-assist/service/store"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -45,7 +45,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	appDB := &dbase.DB{
 		DB: db,
 	}
-	makeStore, _ := store.New(&store.Store{App: &installer.App{}, DB: appDB})
+	makeStore, _ := appstore.New(&appstore.Store{App: &installer.App{}, DB: appDB})
 	api := controller.Controller{DB: appDB, Store: makeStore}
 	identityKey := "uuid"
 	authMiddleware, _ := jwt.New(&jwt.GinJWTMiddleware{
@@ -67,7 +67,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	})
 
 	admin := r.Group("/api")
-	appStore := admin.Group("/store")
+	appStore := admin.Group("/appstore")
 
 	{
 		appStore.GET("/apps", api.ListAppsWithVersions)
@@ -77,6 +77,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	edgeApps := admin.Group("/edge")
 	{
+		edgeApps.GET("/system/product", api.EdgeProductInfo)
 		edgeApps.GET("/apps", api.EdgeListApps)
 		edgeApps.GET("/apps/services", api.EdgeListAppsAndService)
 		edgeApps.GET("/apps/services/nube", api.EdgeListNubeServices)
