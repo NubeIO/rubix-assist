@@ -8,6 +8,7 @@ import (
 )
 
 func (inst *Store) getClient(hostUUID, hostName string) (*edgecli.Client, error) {
+
 	host, err := inst.getHost(hostUUID, hostName)
 	if err != nil {
 		return nil, err

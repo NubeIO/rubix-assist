@@ -198,7 +198,7 @@ func (inst *Store) generateUploadEdgeService(hostUUID, hostName string, app *Ser
 	return client.UploadServiceFile(app.Name, appVersion, serviceFileName, reader)
 }
 
-func (inst *Store) EdgeListApps(hostUUID, hostName string) (*installer.Apps, error) {
+func (inst *Store) EdgeListApps(hostUUID, hostName string) ([]installer.Apps, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -206,7 +206,7 @@ func (inst *Store) EdgeListApps(hostUUID, hostName string) (*installer.Apps, err
 	return client.ListApps()
 }
 
-func (inst *Store) EdgeListAppsAndService(hostUUID, hostName string) (*installer.InstalledServices, error) {
+func (inst *Store) EdgeListAppsAndService(hostUUID, hostName string) ([]installer.InstalledServices, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -214,7 +214,7 @@ func (inst *Store) EdgeListAppsAndService(hostUUID, hostName string) (*installer
 	return client.ListAppsAndService()
 }
 
-func (inst *Store) EdgeListNubeServices(hostUUID, hostName string) (*installer.InstalledServices, error) {
+func (inst *Store) EdgeListNubeServices(hostUUID, hostName string) ([]installer.InstalledServices, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err

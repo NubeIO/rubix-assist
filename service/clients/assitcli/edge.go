@@ -54,44 +54,54 @@ func (inst *Client) InstallEdgeService(hostIDName string, body *installer.Instal
 }
 
 // EdgeListApps apps by listed in the installation (/data/rubix-service/apps/install)
-func (inst *Client) EdgeListApps() (*installer.Apps, error) {
-	url := fmt.Sprintf("/edge/api/apps")
+func (inst *Client) EdgeListApps(hostIDName string) ([]installer.Apps, error) {
+	url := fmt.Sprintf("/api/edge/apps")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&installer.Apps{}).
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&[]installer.Apps{}).
 		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*installer.Apps), nil
+	data := resp.Result().(*[]installer.Apps)
+	return *data, nil
 }
 
 // EdgeListAppsAndService get all the apps by listed in the installation (/data/rubix-service/apps/install) dir and then check the service
-func (inst *Client) EdgeListAppsAndService() (*installer.InstalledServices, error) {
+func (inst *Client) EdgeListAppsAndService(hostIDName string) ([]installer.InstalledServices, error) {
 	url := fmt.Sprintf("/api/edge/apps/services")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&installer.InstalledServices{}).
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&[]installer.InstalledServices{}).
 		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*installer.InstalledServices), nil
+	data := resp.Result().(*[]installer.InstalledServices)
+	return *data, nil
 }
 
 // EdgeListNubeServices list all the services by filtering all the service files with name nubeio
-func (inst *Client) EdgeListNubeServices() (*installer.InstalledServices, error) {
-	url := fmt.Sprintf("/api/edge/services/nube")
+func (inst *Client) EdgeListNubeServices(hostIDName string) ([]installer.InstalledServices, error) {
+	url := fmt.Sprintf("/api/edge/apps/services/nube")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&installer.InstalledServices{}).
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&[]installer.InstalledServices{}).
 		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*installer.InstalledServices), nil
+	data := resp.Result().(*[]installer.InstalledServices)
+	return *data, nil
 }
-
-func (inst *Client) EdgeCtlAction(body *installer.CtlBody) (*systemctl.SystemResponse, error) {
+func (inst *Client) EdgeCtlAction(hostIDName string, body *installer.CtlBody) (*systemctl.SystemResponse, error) {
 	url := fmt.Sprintf("/api/edge/apps/control/action")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
 		SetResult(&systemctl.SystemResponse{}).
 		SetBody(body).
 		Post(url))
@@ -101,9 +111,11 @@ func (inst *Client) EdgeCtlAction(body *installer.CtlBody) (*systemctl.SystemRes
 	return resp.Result().(*systemctl.SystemResponse), nil
 }
 
-func (inst *Client) EdgeServiceMassAction(body *installer.CtlBody) (*[]systemctl.MassSystemResponse, error) {
+func (inst *Client) EdgeServiceMassAction(hostIDName string, body *installer.CtlBody) (*[]systemctl.MassSystemResponse, error) {
 	url := fmt.Sprintf("/api/edge/apps/control/action/mass")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
 		SetResult(&[]systemctl.MassSystemResponse{}).
 		SetBody(body).
 		Post(url))
@@ -113,9 +125,11 @@ func (inst *Client) EdgeServiceMassAction(body *installer.CtlBody) (*[]systemctl
 	return resp.Result().(*[]systemctl.MassSystemResponse), nil
 }
 
-func (inst *Client) EdgeCtlStatus(body *installer.CtlBody) (*systemctl.SystemResponseChecks, error) {
+func (inst *Client) EdgeCtlStatus(hostIDName string, body *installer.CtlBody) (*systemctl.SystemResponseChecks, error) {
 	url := fmt.Sprintf("/api/edge/apps/control/status")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
 		SetResult(&systemctl.SystemResponseChecks{}).
 		SetBody(body).
 		Post(url))
@@ -125,9 +139,11 @@ func (inst *Client) EdgeCtlStatus(body *installer.CtlBody) (*systemctl.SystemRes
 	return resp.Result().(*systemctl.SystemResponseChecks), nil
 }
 
-func (inst *Client) EdgeServiceMassStatus(body *installer.CtlBody) ([]systemctl.MassSystemResponseChecks, error) {
+func (inst *Client) EdgeServiceMassStatus(hostIDName string, body *installer.CtlBody) ([]systemctl.MassSystemResponseChecks, error) {
 	url := fmt.Sprintf("/api/edge/apps/control/status/mass")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
 		SetResult(&[]systemctl.MassSystemResponseChecks{}).
 		SetBody(body).
 		Post(url))

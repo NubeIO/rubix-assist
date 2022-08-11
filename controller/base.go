@@ -28,6 +28,9 @@ var err error
 func (inst *Controller) resolveHost(c *gin.Context) (*model.Host, error) {
 	uuid := matchHostUUID(c)
 	name := matchHostName(c)
+	if uuid == "" && name == "" {
+		return nil, errors.New("host-uuid, and host-name can bot not be empty")
+	}
 	if uuid != "" {
 		host, _ := inst.DB.GetHost(uuid)
 		if host != nil {

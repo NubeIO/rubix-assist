@@ -9,39 +9,42 @@ import (
 )
 
 // ListApps apps by listed in the installation (/data/rubix-service/apps/install)
-func (inst *Client) ListApps() (*installer.Apps, error) {
+func (inst *Client) ListApps() ([]installer.Apps, error) {
 	url := fmt.Sprintf("/api/apps")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&installer.Apps{}).
+		SetResult(&[]installer.Apps{}).
 		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*installer.Apps), nil
+	data := resp.Result().(*[]installer.Apps)
+	return *data, nil
 }
 
 // ListAppsAndService get all the apps by listed in the installation (/data/rubix-service/apps/install) dir and then check the service
-func (inst *Client) ListAppsAndService() (*installer.InstalledServices, error) {
+func (inst *Client) ListAppsAndService() ([]installer.InstalledServices, error) {
 	url := fmt.Sprintf("/api/apps/services")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&installer.InstalledServices{}).
+		SetResult(&[]installer.InstalledServices{}).
 		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*installer.InstalledServices), nil
+	data := resp.Result().(*[]installer.InstalledServices)
+	return *data, nil
 }
 
 // ListNubeServices list all the services by filtering all the service files with name nubeio
-func (inst *Client) ListNubeServices() (*installer.InstalledServices, error) {
-	url := fmt.Sprintf("/api/services/nube")
+func (inst *Client) ListNubeServices() ([]installer.InstalledServices, error) {
+	url := fmt.Sprintf("/api/apps/services/nube")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&installer.InstalledServices{}).
+		SetResult(&[]installer.InstalledServices{}).
 		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*installer.InstalledServices), nil
+	data := resp.Result().(*[]installer.InstalledServices)
+	return *data, nil
 }
 
 // UploadApp upload an app
