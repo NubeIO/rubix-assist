@@ -86,6 +86,14 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgeApps.POST("/apps/service/install", api.InstallEdgeService)
 	}
 
+	edgeAppsControl := admin.Group("/edge/control")
+	{
+		edgeAppsControl.POST("/action", api.EdgeCtlAction)              // start, stop
+		edgeAppsControl.POST("/action/mass", api.EdgeServiceMassAction) // mass operation start, stop
+		edgeAppsControl.POST("/status", api.EdgeCtlStatus)              // isRunning, isInstalled and so on
+		edgeAppsControl.POST("/status/mass", api.EdgeServiceMassStatus) // mass isRunning, isInstalled and so on
+	}
+
 	locations := admin.Group("/locations")
 
 	{
