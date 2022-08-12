@@ -76,7 +76,7 @@ func (inst *Client) InstallApp(body *installer.Install) (*installer.AppResponse,
 
 // UnInstallApp remove/delete an app and its service
 func (inst *Client) UnInstallApp(appName, serviceName string, deleteApp bool) (*installer.RemoveRes, error) {
-	url := fmt.Sprintf("/api/apps/?name=%s&service=%s&service=%s", appName, serviceName, strconv.FormatBool(deleteApp))
+	url := fmt.Sprintf("/api/apps/?name=%s&service=%s&delete=%s", appName, serviceName, strconv.FormatBool(deleteApp))
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&installer.RemoveRes{}).
 		Delete(url))
