@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v0.2.6](https://github.com/NubeIO/rubix-assist/tree/v0.2.5) (2022-08-12)
+
+- Bump installer and dirs version
+- added api to remove an app
+
 ## [v0.2.5](https://github.com/NubeIO/rubix-assist/tree/v0.2.5) (2022-08-11)
 
 - Bump installer version
