@@ -6,6 +6,7 @@ import (
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
+	"strconv"
 )
 
 // EdgeProductInfo get edge product info
@@ -65,6 +66,20 @@ func (inst *Client) InstallEdgeService(hostIDName string, body *installer.Instal
 		return nil, err
 	}
 	return resp.Result().(*installer.InstallResp), nil
+}
+
+// EdgeUnInstallApp remove/delete an app and its service
+func (inst *Client) EdgeUnInstallApp(hostIDName, appName, serviceName string, deleteApp bool) (*installer.RemoveRes, error) {
+	url := fmt.Sprintf("/api/edge/apps/?name=%s&service=%s&service=%s", appName, serviceName, strconv.FormatBool(deleteApp))
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&installer.RemoveRes{}).
+		Delete(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*installer.RemoveRes), nil
 }
 
 // EdgeListApps apps by listed in the installation (/data/rubix-service/apps/install)

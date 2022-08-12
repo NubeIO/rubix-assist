@@ -198,6 +198,14 @@ func (inst *Store) generateUploadEdgeService(hostUUID, hostName string, app *Ser
 	return client.UploadServiceFile(app.Name, appVersion, serviceFileName, reader)
 }
 
+func (inst *Store) EdgeUnInstallApp(hostUUID, hostName, appName, serviceName string, deleteApp bool) (*installer.RemoveRes, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.UnInstallApp(appName, serviceName, deleteApp)
+}
+
 func (inst *Store) EdgeListApps(hostUUID, hostName string) ([]installer.Apps, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {

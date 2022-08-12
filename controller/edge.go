@@ -4,6 +4,7 @@ import (
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 // EdgeProductInfo get edge details
@@ -109,6 +110,22 @@ func (inst *Controller) InstallEdgeService(c *gin.Context) {
 	var m *installer.Install
 	err = c.ShouldBindJSON(&m)
 	data, err := inst.Store.InstallEdgeService(host.UUID, host.Name, m)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(data, nil, c)
+}
+
+// EdgeUninstallApp full uninstallation of an app
+func (inst *Controller) EdgeUninstallApp(c *gin.Context) {
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	deleteApp, _ := strconv.ParseBool(c.Query("delete"))
+	data, err := inst.Store.EdgeUnInstallApp(host.UUID, host.Name, c.Query("name"), c.Query("service"), deleteApp)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return

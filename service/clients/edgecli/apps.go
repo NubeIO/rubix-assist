@@ -6,6 +6,7 @@ import (
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
 	"io"
+	"strconv"
 )
 
 // ListApps apps by listed in the installation (/data/rubix-service/apps/install)
@@ -71,6 +72,18 @@ func (inst *Client) InstallApp(body *installer.Install) (*installer.AppResponse,
 		return nil, err
 	}
 	return resp.Result().(*installer.AppResponse), nil
+}
+
+// UnInstallApp remove/delete an app and its service
+func (inst *Client) UnInstallApp(appName, serviceName string, deleteApp bool) (*installer.RemoveRes, error) {
+	url := fmt.Sprintf("/api/apps/?name=%s&service=%s&service=%s", appName, serviceName, strconv.FormatBool(deleteApp))
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&installer.RemoveRes{}).
+		Delete(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*installer.RemoveRes), nil
 }
 
 // UploadServiceFile add/install a new an app service (service file needs to be needs the build on the edge device)
