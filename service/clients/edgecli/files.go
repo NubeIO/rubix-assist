@@ -85,6 +85,19 @@ func (inst *Client) DeleteFile(path string) (*Message, error) {
 	return resp.Result().(*Message), nil
 }
 
+// DeleteAllFiles delete all file's in a dir
+// use the full name of file and path
+func (inst *Client) DeleteAllFiles(path string) (*Message, error) {
+	url := fmt.Sprintf("/api/files/delete/all/?path=%s", path)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&Message{}).
+		Delete(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
 // DeleteDir delete a dir
 // use the full name of file and path
 func (inst *Client) DeleteDir(path string, recursively bool) (*Message, error) {

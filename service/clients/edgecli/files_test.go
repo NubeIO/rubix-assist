@@ -85,3 +85,19 @@ func TestClient_DownloadFile(t *testing.T) {
 	pprint.PrintJOSN(message)
 
 }
+
+func TestClient_DeleteAllFiles(t *testing.T) {
+	cli := New("", 0)
+	dir, err := fileutils.HomeDir()
+	if err != nil {
+		return
+	}
+	path := fmt.Sprintf("%s/test", dir)
+	message, err := cli.DeleteAllFiles(path)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	pprint.PrintJOSN(message)
+
+}
