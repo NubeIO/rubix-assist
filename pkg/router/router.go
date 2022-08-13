@@ -67,24 +67,38 @@ func Setup(db *gorm.DB) *gin.Engine {
 	})
 
 	admin := r.Group("/api")
-	appStore := admin.Group("/appstore")
+	appStore := admin.Group("/store")
 
 	{
 		appStore.GET("/apps", api.ListAppsWithVersions)
 		appStore.GET("/apps/details", api.ListAppsBuildDetails)
 		appStore.POST("/add", api.AddUploadStoreApp)
+		appStore.POST("/upload/plugin", api.UploadStorePlugin)
+
 	}
 
-	edgeApps := admin.Group("/edge")
+	edge := admin.Group("/edge")
 	{
-		edgeApps.GET("/system/product", api.EdgeProductInfo)
-		edgeApps.GET("/apps", api.EdgeListApps)
-		edgeApps.GET("/apps/services", api.EdgeListAppsAndService)
-		edgeApps.GET("/apps/services/nube", api.EdgeListNubeServices)
-		edgeApps.POST("/apps/add", api.AddUploadEdgeApp)
-		edgeApps.POST("/apps/service/upload", api.GenerateUploadEdgeService)
-		edgeApps.POST("/apps/service/install", api.InstallEdgeService)
-		edgeApps.DELETE("/apps", api.EdgeUninstallApp)
+		edge.GET("/system/product", api.EdgeProductInfo)
+	}
+
+	edgeApps := admin.Group("/edge/apps")
+	{
+		edgeApps.GET("/", api.EdgeListApps)
+		edgeApps.GET("/services", api.EdgeListAppsAndService)
+		edgeApps.GET("/services/nube", api.EdgeListNubeServices)
+		edgeApps.POST("/add", api.AddUploadEdgeApp)
+		edgeApps.POST("/service/upload", api.GenerateUploadEdgeService)
+		edgeApps.POST("/service/install", api.InstallEdgeService)
+		edgeApps.DELETE("/", api.EdgeUninstallApp)
+	}
+
+	edgePlugins := admin.Group("/edge/plugins")
+	{
+		edgePlugins.GET("/", api.EdgeListPlugins)
+		edgePlugins.POST("/", api.EdgeUploadPlugin)
+		edgePlugins.DELETE("/", api.EdgeDeletePlugin)
+		edgePlugins.DELETE("/all", api.EdgeDeleteAllPlugins)
 	}
 
 	edgeAppsControl := admin.Group("/edge/control")

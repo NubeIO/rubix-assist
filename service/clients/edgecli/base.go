@@ -37,16 +37,3 @@ func New(url string, port int) *Client {
 	rest.Rest.SetBaseURL(fmt.Sprintf("http://%s:%d", url, port))
 	return rest
 }
-
-func (response Response) buildResponse(resp *resty.Response, err error) *Response {
-	response.StatusCode = resp.StatusCode()
-
-	if resp.IsError() {
-		response.Message = resp.Error()
-	}
-	if resp.StatusCode() == 0 {
-		response.Message = "server is unreachable"
-		response.StatusCode = 503
-	}
-	return &response
-}

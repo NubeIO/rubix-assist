@@ -8,7 +8,6 @@ import (
 )
 
 func (inst *Store) getClient(hostUUID, hostName string) (*edgecli.Client, error) {
-
 	host, err := inst.getHost(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -54,7 +53,10 @@ func (inst *Store) getHost(hostUUID, hostName string) (*model.Host, error) {
 			return nil, err
 		}
 	} else {
+		fmt.Println(111111, hostName)
 		host, err = inst.DB.GetHostByName(hostName)
+		fmt.Println(111111, host)
+		fmt.Println(111111, err)
 		if err != nil {
 			var hostNames []string
 			var hostUUIDs []string

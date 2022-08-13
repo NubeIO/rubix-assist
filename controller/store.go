@@ -44,3 +44,21 @@ func (inst *Controller) AddUploadStoreApp(c *gin.Context) {
 	}
 	reposeHandler(data, nil, c)
 }
+
+// UploadStorePlugin upload a plugin
+func (inst *Controller) UploadStorePlugin(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	m := &installer.Upload{
+		File: file,
+	}
+	data, err := inst.Store.UploadStorePlugin(m)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(data, nil, c)
+}
