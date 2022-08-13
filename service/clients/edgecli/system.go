@@ -7,6 +7,7 @@ import (
 
 type Message struct {
 	Message interface{} `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 type Time struct {

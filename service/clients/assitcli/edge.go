@@ -53,6 +53,28 @@ func (inst *Client) UploadEdgeService(hostIDName string, app *appstore.ServiceFi
 	return resp.Result().(*appstore.UploadResponse), nil
 }
 
+type EdgeUploadResponse struct {
+	Destination string `json:"destination"`
+	File        string `json:"file"`
+	Size        string `json:"size"`
+	UploadTime  string `json:"upload_time"`
+}
+
+// EdgeUploadPlugin upload a plugin to the edge device
+func (inst *Client) EdgeUploadPlugin(hostIDName string, body *appstore.Plugin) (*EdgeUploadResponse, error) {
+	url := fmt.Sprintf("/api/edge/plugins/add")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&EdgeUploadResponse{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*EdgeUploadResponse), nil
+}
+
 // InstallEdgeService this assumes that the service file and app already exists on the edge device
 func (inst *Client) InstallEdgeService(hostIDName string, body *installer.Install) (*installer.InstallResp, error) {
 	url := fmt.Sprintf("/api/edge/apps/service/install")

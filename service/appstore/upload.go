@@ -7,11 +7,11 @@ import (
 )
 
 type UploadResponse struct {
-	Name         string `json:"name"`
-	Version      string `json:"version"`
-	UploadedOk   bool   `json:"uploaded_ok"`
-	TmpFile      string `json:"tmp_file"`
-	UploadedFile string `json:"uploaded_file"`
+	Name         string `json:"name,omitempty"`
+	Version      string `json:"version,omitempty"`
+	UploadedOk   bool   `json:"uploaded_ok,omitempty"`
+	TmpFile      string `json:"tmp_file,omitempty"`
+	UploadedFile string `json:"uploaded_file,omitempty"`
 }
 
 func (inst *Store) AddUploadStoreApp(app *installer.Upload) (*UploadResponse, error) {

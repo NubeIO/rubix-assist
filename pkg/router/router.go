@@ -67,12 +67,14 @@ func Setup(db *gorm.DB) *gin.Engine {
 	})
 
 	admin := r.Group("/api")
-	appStore := admin.Group("/appstore")
+	appStore := admin.Group("/store")
 
 	{
 		appStore.GET("/apps", api.ListAppsWithVersions)
 		appStore.GET("/apps/details", api.ListAppsBuildDetails)
 		appStore.POST("/add", api.AddUploadStoreApp)
+		appStore.POST("/upload/plugin", api.UploadStorePlugin)
+
 	}
 
 	edgeApps := admin.Group("/edge")
@@ -82,6 +84,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgeApps.GET("/apps/services", api.EdgeListAppsAndService)
 		edgeApps.GET("/apps/services/nube", api.EdgeListNubeServices)
 		edgeApps.POST("/apps/add", api.AddUploadEdgeApp)
+		edgeApps.POST("/plugins/add", api.UploadPluginToEdge)
 		edgeApps.POST("/apps/service/upload", api.GenerateUploadEdgeService)
 		edgeApps.POST("/apps/service/install", api.InstallEdgeService)
 		edgeApps.DELETE("/apps", api.EdgeUninstallApp)

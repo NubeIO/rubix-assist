@@ -85,6 +85,23 @@ func (inst *Controller) AddUploadEdgeApp(c *gin.Context) {
 	reposeHandler(data, nil, c)
 }
 
+// UploadPluginToEdge upload a plugin to the edge dev
+func (inst *Controller) UploadPluginToEdge(c *gin.Context) {
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	var m *appstore.Plugin
+	err = c.ShouldBindJSON(&m)
+	data, err := inst.Store.UploadPluginToEdge(host.UUID, host.Name, m)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(data, nil, c)
+}
+
 func (inst *Controller) GenerateUploadEdgeService(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {

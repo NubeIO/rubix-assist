@@ -8,6 +8,7 @@ import (
 
 const nonRoot = 0700
 const root = 0777
+const flowFramework = "flow-framework"
 
 var FilePerm = root
 

@@ -7,9 +7,8 @@ import (
 	"github.com/NubeIO/lib-systemctl-go/builder"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
 	log "github.com/sirupsen/logrus"
-	"strings"
-
 	"os"
+	"strings"
 )
 
 type EdgeApp struct {
@@ -268,4 +267,28 @@ func (inst *Store) EdgeProductInfo(hostUUID, hostName string) (*installer.Produc
 		return nil, err
 	}
 	return client.EdgeProductInfo()
+}
+
+type EdgeUploadResponse struct {
+	Destination string `json:"destination"`
+	File        string `json:"file"`
+	Size        string `json:"size"`
+	UploadTime  string `json:"upload_time"`
+}
+
+func (inst *Store) EdgeUploadLocalFile(hostUUID, hostName, path, fileName, destination string) (*EdgeUploadResponse, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := client.UploadLocalFile(path, fileName, destination)
+	if err != nil {
+		return nil, err
+	}
+	return &EdgeUploadResponse{
+		Destination: resp.Destination,
+		File:        resp.File,
+		Size:        resp.Size,
+		UploadTime:  resp.UploadTime,
+	}, nil
 }
