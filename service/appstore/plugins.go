@@ -3,7 +3,6 @@ package appstore
 import (
 	"errors"
 	"fmt"
-	fileutils "github.com/NubeIO/lib-dirs/dirs"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"io/ioutil"
 	"os"
@@ -28,6 +27,15 @@ func (inst *Store) PluginDetails(pluginName string) (appName, arch, fileExtensio
 	return appName, arch, fileExtension
 }
 
+//PluginDetail takes in the name (influx-amd64.so) and returns the info
+func (inst *Store) PluginDetail(pluginName string) *Plugin {
+	appName, arch, _ := inst.PluginDetails(pluginName)
+	return &Plugin{
+		PluginName: appName,
+		Arch:       arch,
+	}
+}
+
 //CheckBinaryPlugin check if all the details of a binary name is correct (influx-amd64.so)
 func (inst *Store) CheckBinaryPlugin(pluginName string) error {
 	appName, arch, fileExtension := inst.PluginDetails(pluginName)
@@ -46,50 +54,7 @@ func (inst *Store) CheckBinaryPlugin(pluginName string) error {
 type Plugin struct {
 	PluginName string `json:"plugin_name"`
 	Arch       string `json:"arch"`
-	Version    string `json:"version"`
-}
-
-//UploadPluginToEdge to edge device
-// rubix-ui to pass in a plugin RA and then unzip it to tmp dir and check its arch
-// then upload it to edge
-// restart FF if as an option
-func (inst *Store) UploadPluginToEdge(hostUUID, hostName string, plugin *Plugin) (*EdgeUploadResponse, error) {
-	pluginPath, pluginName, err := inst.GetPluginPath(plugin)
-	if err != nil {
-		return nil, err
-	}
-	pluginPathName := fmt.Sprintf("%s/%s", pluginPath, pluginName)
-	tmpDir, err := inst.App.MakeTmpDirUpload()
-	if err != nil {
-		return nil, err
-	}
-	if err != nil {
-		return nil, err
-	}
-	zip, err := fileutils.New().UnZip(pluginPathName, tmpDir, os.FileMode(FilePerm))
-	if err != nil {
-		return nil, err
-	}
-	if len(zip) == 1 {
-	} else {
-		return nil, errors.New("the plugin folder contents was greater then one")
-	}
-	binaryName := zip[0]
-	err = inst.CheckBinaryPlugin(binaryName)
-	if err != nil {
-		return nil, err
-	}
-	flowPath := inst.App.GetAppPath(flowFramework)
-	flowPathPluginPath := fmt.Sprintf("%s/data/plugins", flowPath)
-	uploadResp, err := inst.EdgeUploadLocalFile(hostUUID, hostName, tmpDir, binaryName, flowPathPluginPath)
-	if err != nil {
-		return nil, err
-	}
-	//err = fileutils.New().RmRF(tmpDir)
-	//if err != nil {
-	//	return nil, err
-	//}
-	return uploadResp, nil
+	Version    string `json:"version,omitempty"`
 }
 
 func (inst *Store) GetPluginPath(plugin *Plugin) (path, zipName string, err error) {

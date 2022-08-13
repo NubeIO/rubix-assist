@@ -37,7 +37,6 @@ func Test_ListPlugins(t *testing.T) {
 		return
 	}
 	pprint.PrintJOSN(details)
-
 }
 
 func Test_getPluginPath(t *testing.T) {
@@ -59,24 +58,4 @@ func Test_getPluginPath(t *testing.T) {
 	}
 	fmt.Println(details)
 	fmt.Println(name)
-}
-
-func Test_UploadPluginToEdge(t *testing.T) {
-	appStore, err := New(&Store{
-		App: &installer.App{
-			DataDir:  "/data",
-			FilePerm: nonRoot,
-		},
-		Perm: nonRoot,
-	})
-	resp, err := appStore.UploadPluginToEdge("", "rc", &Plugin{
-		PluginName: "bacnetserver",
-		Arch:       "amd64",
-		Version:    "v0.6.6",
-	})
-	fmt.Println(err)
-	if err != nil {
-		return
-	}
-	pprint.PrintJOSN(resp)
 }

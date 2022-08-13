@@ -6,6 +6,7 @@ import (
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/lib-systemctl-go/builder"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
+	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"strings"
@@ -274,6 +275,62 @@ type EdgeUploadResponse struct {
 	File        string `json:"file"`
 	Size        string `json:"size"`
 	UploadTime  string `json:"upload_time"`
+}
+
+func (inst *Store) EdgeListFiles(hostUUID, hostName, path string) ([]string, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.ListFiles(path)
+}
+
+func (inst *Store) EdgeWalkFiles(hostUUID, hostName, path string) ([]string, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.Walk(path)
+}
+
+func (inst *Store) EdgeRenameFile(hostUUID, hostName, oldNameAndPath, newNameAndPath string) (*edgecli.Message, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.RenameFile(oldNameAndPath, newNameAndPath)
+}
+
+func (inst *Store) EdgeCopyFile(hostUUID, hostName, from, to string) (*edgecli.Message, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.CopyFile(from, to)
+}
+
+func (inst *Store) EdgeMoveFile(hostUUID, hostName, from, to string) (*edgecli.Message, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.MoveFile(from, to)
+}
+
+func (inst *Store) EdgeDeleteFile(hostUUID, hostName, path string) (*edgecli.Message, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.DeleteFile(path)
+}
+
+func (inst *Store) EdgeDeleteFolder(hostUUID, hostName, path string, recursively bool) (*edgecli.Message, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.DeleteDir(path, recursively)
 }
 
 func (inst *Store) EdgeUploadLocalFile(hostUUID, hostName, path, fileName, destination string) (*EdgeUploadResponse, error) {

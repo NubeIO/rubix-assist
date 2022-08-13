@@ -72,6 +72,35 @@ func (inst *Client) MoveFile(from, to string) (*Message, error) {
 	return resp.Result().(*Message), nil
 }
 
+// DeleteFile delete a file
+// use the full name of file and path
+func (inst *Client) DeleteFile(path string) (*Message, error) {
+	url := fmt.Sprintf("/api/files/delete/?path=%s", path)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&Message{}).
+		Delete(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
+// DeleteDir delete a dir
+// use the full name of file and path
+func (inst *Client) DeleteDir(path string, recursively bool) (*Message, error) {
+	url := fmt.Sprintf("/api/files/delete/?path=%s&recursively=%s", path, "false")
+	if recursively {
+		url = fmt.Sprintf("/api/files/delete/?path=%s&recursively=%s", path, "true")
+	}
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&Message{}).
+		Delete(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
 type EdgeUploadResponse struct {
 	Destination string `json:"destination"`
 	File        string `json:"file"`
