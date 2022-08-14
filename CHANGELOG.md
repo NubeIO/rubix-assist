@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v0.2.7](https://github.com/NubeIO/rubix-assist/tree/v0.2.7) (2022-08-12)
+
+- add plugins apis
+
 ## [v0.2.6](https://github.com/NubeIO/rubix-assist/tree/v0.2.5) (2022-08-12)
 
 - Bump installer and dirs version
