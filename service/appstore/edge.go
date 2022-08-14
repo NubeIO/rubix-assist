@@ -85,7 +85,7 @@ func (inst *Store) checkServiceExecStart(service, appName, appVersion string) er
 	if strings.Contains(service, inst.App.GetAppInstallPathAndVersion(appName, appVersion)) {
 		return nil
 	}
-	return errors.New("ExecStart command is not matching appBuildName & appVersion")
+	return errors.New(fmt.Sprintf("ExecStart command is not matching appName:%sappName & appVersion:%s", appName, appVersion))
 }
 
 type ServiceFile struct {
@@ -238,7 +238,7 @@ func (inst *Store) EdgeCtlAction(hostUUID, hostName string, body *installer.CtlB
 	return client.EdgeCtlAction(body)
 }
 
-func (inst *Store) EdgeCtlStatus(hostUUID, hostName string, body *installer.CtlBody) (*systemctl.SystemResponseChecks, error) {
+func (inst *Store) EdgeCtlStatus(hostUUID, hostName string, body *installer.CtlBody) (*systemctl.SystemState, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -254,7 +254,7 @@ func (inst *Store) EdgeServiceMassAction(hostUUID, hostName string, body *instal
 	return client.EdgeServiceMassAction(body)
 }
 
-func (inst *Store) EdgeServiceMassStatus(hostUUID, hostName string, body *installer.CtlBody) ([]systemctl.MassSystemResponseChecks, error) {
+func (inst *Store) EdgeServiceMassStatus(hostUUID, hostName string, body *installer.CtlBody) ([]systemctl.SystemState, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err

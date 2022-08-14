@@ -3,6 +3,7 @@ package controller
 import (
 	"errors"
 	"fmt"
+	fileutils "github.com/NubeIO/lib-dirs/dirs"
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"net/http"
@@ -16,14 +17,19 @@ import (
 	"github.com/melbahja/goph"
 )
 
+const nonRoot = 0700
+const root = 0777
+
+var fileUtils = fileutils.New()
+var filePerm = root
+var err error
+
 type Controller struct {
 	SSH   *goph.Client
 	DB    *dbase.DB
 	Rest  *rest.Service
 	Store *appstore.Store
 }
-
-var err error
 
 func (inst *Controller) resolveHost(c *gin.Context) (*model.Host, error) {
 	uuid := matchHostUUID(c)

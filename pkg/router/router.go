@@ -196,20 +196,15 @@ func Setup(db *gorm.DB) *gin.Engine {
 		messages.DELETE("/drop", api.DropTransactions)
 	}
 
-	tools := admin.Group("/tools")
-	//tools.Use(authMiddleware.MiddlewareFunc())
-	{
-
-		tools.GET("/edgeapi/ip/schema", api.EdgeIPSchema)
-		tools.POST("/edgeapi/ip", api.EdgeSetIP)
-		tools.POST("/edgeapi/ip/dhcp", api.EdgeSetIP)
-
-	}
-
-	files := admin.Group("/files")
-	{
-		files.POST("/upload", api.UploadFile)
-	}
+	//tools := admin.Group("/tools")
+	////tools.Use(authMiddleware.MiddlewareFunc())
+	//{
+	//
+	//	tools.GET("/edgeapi/ip/schema", api.EdgeIPSchema)
+	//	tools.POST("/edgeapi/ip", api.EdgeSetIP)
+	//	tools.POST("/edgeapi/ip/dhcp", api.EdgeSetIP)
+	//
+	//}
 
 	token := r.Group("/api/tokens")
 	{
@@ -243,6 +238,33 @@ func Setup(db *gorm.DB) *gin.Engine {
 		networking.GET("/interfaces", api.GetInterfacesNames)
 		networking.GET("/internet", api.InternetIP)
 	}
+
+	files := admin.Group("/files")
+	{
+		files.GET("/walk", api.WalkFile)
+		files.GET("/list", api.ListFiles) // /api/files/list?file=/data
+		files.POST("/rename", api.RenameFile)
+		files.POST("/copy", api.CopyFile)
+		files.POST("/move", api.MoveFile)
+		files.POST("/upload", api.UploadFile)
+		files.POST("/download", api.DownloadFile)
+		files.DELETE("/delete", api.DeleteFile)
+		files.DELETE("/delete/all", api.DeleteAllFiles)
+	}
+
+	dirs := admin.Group("/dirs")
+	{
+		dirs.POST("/create", api.CreateDir)
+		dirs.POST("/copy", api.CopyDir)
+		dirs.DELETE("/delete", api.DeleteDir)
+	}
+
+	zip := admin.Group("/zip")
+	{
+		zip.POST("/unzip", api.Unzip)
+		zip.POST("/zip", api.ZipDir)
+	}
+
 	r.Any("/proxy/*proxyPath", api.Proxy)
 
 	return r

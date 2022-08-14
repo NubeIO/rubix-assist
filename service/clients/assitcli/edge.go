@@ -141,7 +141,7 @@ func (inst *Client) EdgeCtlAction(hostIDName string, body *installer.CtlBody) (*
 	return resp.Result().(*systemctl.SystemResponse), nil
 }
 
-func (inst *Client) EdgeServiceMassAction(hostIDName string, body *installer.CtlBody) (*[]systemctl.MassSystemResponse, error) {
+func (inst *Client) EdgeServiceMassAction(hostIDName string, body *installer.CtlBody) ([]systemctl.MassSystemResponse, error) {
 	url := fmt.Sprintf("/api/edge/control/action/mass")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -152,33 +152,35 @@ func (inst *Client) EdgeServiceMassAction(hostIDName string, body *installer.Ctl
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*[]systemctl.MassSystemResponse), nil
+	data := resp.Result().(*[]systemctl.MassSystemResponse)
+	return *data, nil
 }
 
-func (inst *Client) EdgeCtlStatus(hostIDName string, body *installer.CtlBody) (*systemctl.SystemResponseChecks, error) {
+func (inst *Client) EdgeCtlStatus(hostIDName string, body *installer.CtlBody) (*systemctl.SystemState, error) {
 	url := fmt.Sprintf("/api/edge/control/status")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
-		SetResult(&systemctl.SystemResponseChecks{}).
+		SetResult(&systemctl.SystemState{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*systemctl.SystemResponseChecks), nil
+	return resp.Result().(*systemctl.SystemState), nil
 }
 
-func (inst *Client) EdgeServiceMassStatus(hostIDName string, body *installer.CtlBody) ([]systemctl.MassSystemResponseChecks, error) {
+func (inst *Client) EdgeServiceMassStatus(hostIDName string, body *installer.CtlBody) ([]systemctl.SystemState, error) {
 	url := fmt.Sprintf("/api/edge/control/status/mass")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
-		SetResult(&[]systemctl.MassSystemResponseChecks{}).
+		SetResult(&[]systemctl.SystemState{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().([]systemctl.MassSystemResponseChecks), nil
+	data := resp.Result().(*[]systemctl.SystemState)
+	return *data, nil
 }

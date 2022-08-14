@@ -134,29 +134,31 @@ func (inst *Client) EdgeServiceMassAction(body *installer.CtlBody) ([]systemctl.
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().([]systemctl.MassSystemResponse), nil
+	data := resp.Result().(*[]systemctl.MassSystemResponse)
+	return *data, nil
 }
 
-func (inst *Client) EdgeCtlStatus(body *installer.CtlBody) (*systemctl.SystemResponseChecks, error) {
+func (inst *Client) EdgeCtlStatus(body *installer.CtlBody) (*systemctl.SystemState, error) {
 	url := fmt.Sprintf("/api/apps/control/status")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&systemctl.SystemResponseChecks{}).
+		SetResult(&systemctl.SystemState{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*systemctl.SystemResponseChecks), nil
+	return resp.Result().(*systemctl.SystemState), nil
 }
 
-func (inst *Client) EdgeServiceMassStatus(body *installer.CtlBody) ([]systemctl.MassSystemResponseChecks, error) {
+func (inst *Client) EdgeServiceMassStatus(body *installer.CtlBody) ([]systemctl.SystemState, error) {
 	url := fmt.Sprintf("/api/apps/control/status/mass")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&[]systemctl.MassSystemResponseChecks{}).
+		SetResult(&[]systemctl.SystemState{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().([]systemctl.MassSystemResponseChecks), nil
+	data := resp.Result().(*[]systemctl.SystemState)
+	return *data, nil
 }

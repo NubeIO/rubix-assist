@@ -124,5 +124,5 @@ func (inst *Store) EdgeDeleteAllPlugins(hostUUID, hostName string) (*edgecli.Mes
 	if err != nil {
 		return nil, err
 	}
-	return client.DeleteFile(path)
+	return client.DeleteAllFiles(path)
 }

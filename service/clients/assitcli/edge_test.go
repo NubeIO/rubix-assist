@@ -53,3 +53,14 @@ func TestClient_EdgeCtlStatus(t *testing.T) {
 	fmt.Println(err)
 	pprint.PrintJOSN(data)
 }
+
+func TestClient_EdgeServiceMassStatus(t *testing.T) {
+	client := New("0.0.0.0", 1662)
+	data, err := client.EdgeServiceMassStatus("rc", &installer.CtlBody{
+		AppNames: []string{"flow-framewor"},
+		Service:  "",
+		Action:   "isInstalled",
+	})
+	fmt.Println(err)
+	pprint.PrintJOSN(data)
+}
