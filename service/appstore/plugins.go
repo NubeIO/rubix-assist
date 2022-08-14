@@ -61,7 +61,7 @@ func (inst *Store) GetPluginPath(plugin *Plugin) (path, zipName string, err erro
 	if plugin == nil {
 		return "", "", errors.New("plugin is nil, cant not be empty")
 	}
-	plugins, err := inst.ListPlugins()
+	plugins, err := inst.StoreListPlugins()
 	if err != nil {
 		return "", "", err
 	}
@@ -87,7 +87,7 @@ func (inst *Store) GetPluginPath(plugin *Plugin) (path, zipName string, err erro
 	return "", "", errors.New(fmt.Sprintf("failed to find plugin version:%s", plugin.Version))
 }
 
-func (inst *Store) ListPlugins() ([]installer.BuildDetails, error) {
+func (inst *Store) StoreListPlugins() ([]installer.BuildDetails, error) {
 	pluginStore := fmt.Sprintf("%s/plugins", inst.App.GetStoreDir())
 	files, err := ioutil.ReadDir(pluginStore)
 	if err != nil {
@@ -100,11 +100,12 @@ func (inst *Store) ListPlugins() ([]installer.BuildDetails, error) {
 	return plugins, err
 }
 
+// PluginZipDetails list the details from the name of the plugin zip, as in name, version and arch
 func (inst *Store) PluginZipDetails(pluginName string) *installer.BuildDetails {
 	return inst.App.GetZipBuildDetails(pluginName)
 }
 
-func (inst *Store) UploadStorePlugin(app *installer.Upload) (*UploadResponse, error) {
+func (inst *Store) StoreUploadPlugin(app *installer.Upload) (*UploadResponse, error) {
 	var file = app.File
 	uploadResp := &UploadResponse{}
 	resp, err := inst.App.Upload(file)

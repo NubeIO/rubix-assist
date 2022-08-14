@@ -34,7 +34,7 @@ func (inst *Client) ListAppsBuildDetails() ([]installer.BuildDetails, error) {
 
 // AddUploadStoreApp upload an app
 func (inst *Client) AddUploadStoreApp(appName, version, product, arch, fileName string, reader io.Reader) (*appstore.UploadResponse, error) {
-	url := fmt.Sprintf("/api/store/add/?name=%s&version=%s&product=%s&arch=%s", appName, version, product, arch)
+	url := fmt.Sprintf("/api/store/apps/?name=%s&version=%s&product=%s&arch=%s", appName, version, product, arch)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&appstore.UploadResponse{}).
 		SetFileReader("file", fileName, reader).
@@ -43,16 +43,4 @@ func (inst *Client) AddUploadStoreApp(appName, version, product, arch, fileName 
 		return nil, err
 	}
 	return resp.Result().(*appstore.UploadResponse), nil
-}
-
-// CheckStoreApp list apps and appstore
-func (inst *Client) CheckStoreApp(appName, version string) (*[]appstore.App, error) {
-	url := fmt.Sprintf("/api/store/check/app/?name=%s&version=%s", appName, version)
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&[]appstore.App{}).
-		Get(url))
-	if err != nil {
-		return nil, err
-	}
-	return resp.Result().(*[]appstore.App), nil
 }

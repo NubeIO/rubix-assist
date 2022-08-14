@@ -110,7 +110,7 @@ func (inst *Controller) EdgeUninstallApp(c *gin.Context) {
 		return
 	}
 	deleteApp, _ := strconv.ParseBool(c.Query("delete"))
-	data, err := inst.Store.EdgeUnInstallApp(host.UUID, host.Name, c.Query("name"), c.Query("service"), deleteApp)
+	data, err := inst.Store.EdgeUnInstallApp(host.UUID, host.Name, c.Query("name"), deleteApp)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return

@@ -31,7 +31,7 @@ func Test_ListPlugins(t *testing.T) {
 		App:  &installer.App{},
 		Perm: nonRoot,
 	})
-	details, err := appStore.ListPlugins()
+	details, err := appStore.StoreListPlugins()
 	fmt.Println(err)
 	if err != nil {
 		return

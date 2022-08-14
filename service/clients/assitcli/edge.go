@@ -69,8 +69,8 @@ func (inst *Client) InstallEdgeService(hostIDName string, body *installer.Instal
 }
 
 // EdgeUnInstallApp remove/delete an app and its service
-func (inst *Client) EdgeUnInstallApp(hostIDName, appName, serviceName string, deleteApp bool) (*installer.RemoveRes, error) {
-	url := fmt.Sprintf("/api/edge/apps/?name=%s&service=%s&service=%s", appName, serviceName, strconv.FormatBool(deleteApp))
+func (inst *Client) EdgeUnInstallApp(hostIDName, appName string, deleteApp bool) (*installer.RemoveRes, error) {
+	url := fmt.Sprintf("/api/edge/apps/?name=%s&delete=%s", appName, strconv.FormatBool(deleteApp))
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
