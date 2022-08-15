@@ -6,7 +6,8 @@ need to run as sudo to install apps
 
 ```
 go mod tidy
-go build main.go && sudo ./main server
+go build main.go && sudo ./main server --auth=false
+go build main.go && sudo ./main server --auth
 ```
 
 ## default port

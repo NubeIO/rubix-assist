@@ -3,6 +3,7 @@ package database
 import (
 	"errors"
 	"fmt"
+	"github.com/NubeIO/nubeio-rubix-lib-auth-go/user"
 	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/spf13/viper"
@@ -11,6 +12,11 @@ import (
 	"io"
 	"os"
 	"path"
+)
+
+const (
+	username = "admin"
+	password = "N00BWires"
 )
 
 var (
@@ -60,6 +66,10 @@ func Setup() error {
 	}
 	DB = db
 
+	user_, _ := user.GetUser()
+	if user_ == nil {
+		_, _ = user.CreateUser(&user.User{Username: username, Password: password})
+	}
 	return nil
 }
 
