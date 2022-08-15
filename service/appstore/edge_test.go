@@ -3,11 +3,11 @@ package appstore
 import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
-	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"testing"
 )
 
-func TestStore_GenerateUploadEdgeService(t *testing.T) {
+func TestStore_generateServiceFile(t *testing.T) {
+
 	var err error
 	appName := "flow-framework"
 	appVersion := "v0.6.0"
@@ -19,18 +19,27 @@ func TestStore_GenerateUploadEdgeService(t *testing.T) {
 		Perm: nonRoot,
 	})
 	fmt.Println(err)
-	resp, err := appStore.GenerateUploadEdgeService("", "rc", &ServiceFile{
+
+	exe := []string{"g=/data/bacnet-server-c", "a=/data"}
+
+	file, s, s2, err := appStore.generateServiceFile(&ServiceFile{
 		Name:                    appName,
 		Version:                 appVersion,
+		ServiceDependency:       "",
 		ServiceDescription:      "",
 		RunAsUser:               "",
 		ServiceWorkingDirectory: "",
-		AppSpecficExecStart:     "app -p 1660 -g /data/flow-framework -d data -prod",
+		AppSpecficExecStart:     "app",
+		CustomServiceExecStart:  "",
+		EnvironmentVars:         exe,
 	})
-	fmt.Println(err)
+	fmt.Println(file, s, s2)
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(resp)
+
+	if err != nil {
+		return
+	}
 
 }
