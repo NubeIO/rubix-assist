@@ -3,9 +3,11 @@ package appstore
 import (
 	"errors"
 	"fmt"
+	fileutils "github.com/NubeIO/lib-dirs/dirs"
 	"github.com/NubeIO/lib-rubix-installer/installer"
-	"github.com/NubeIO/lib-systemctl-go/builder"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
+	"github.com/sergeymakinen/go-systemdconf/v2"
+	"github.com/sergeymakinen/go-systemdconf/v2/unit"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"strings"
@@ -88,14 +90,15 @@ func (inst *Store) checkServiceExecStart(service, appName, appVersion string) er
 }
 
 type ServiceFile struct {
-	Name                    string `json:"name"`
-	Version                 string `json:"version"`
-	ServiceDependency       string `json:"service_dependency"` // nodejs
-	ServiceDescription      string `json:"service_description"`
-	RunAsUser               string `json:"run_as_user"`
-	ServiceWorkingDirectory string `json:"service_working_directory"` // /data/rubix-service/apps/install/flow-framework/v0.6.1/
-	AppSpecficExecStart     string `json:"app_specfic_exec_start"`    // WORKING-DIR/app -p 1660 -g /data/flow-framework -d data -prod
-	CustomServiceExecStart  string `json:"custom_service_exec_start"` // npm run prod:start --prod --datadir /data/rubix-wires/data --envFile /data/rubix-wires/config/.env
+	Name                    string   `json:"name"`
+	Version                 string   `json:"version"`
+	ServiceDependency       string   `json:"service_dependency"` // nodejs
+	ServiceDescription      string   `json:"service_description"`
+	RunAsUser               string   `json:"run_as_user"`
+	ServiceWorkingDirectory string   `json:"service_working_directory"` // /data/rubix-service/apps/install/flow-framework/v0.6.1/
+	AppSpecficExecStart     string   `json:"app_specfic_exec_start"`    // WORKING-DIR/app -p 1660 -g /data/flow-framework -d data -prod
+	CustomServiceExecStart  string   `json:"custom_service_exec_start"` // npm run prod:start --prod --datadir /data/rubix-wires/data --envFile /data/rubix-wires/config/.env
+	EnvironmentVars         []string `json:"environment_vars"`          // Environment="g=/data/bacnet-server-c"
 }
 
 // InstallEdgeService this assumes that the service file and app already exists on the edge device
@@ -116,32 +119,32 @@ func (inst *Store) GenerateUploadEdgeService(hostUUID, hostName string, app *Ser
 	return resp, err
 }
 
-// GenerateUploadEdgeService this will generate and upload the service file to the edge device
-func (inst *Store) generateUploadEdgeService(hostUUID, hostName string, app *ServiceFile) (*installer.UploadResponse, error) {
+func (inst *Store) generateServiceFile(app *ServiceFile) (tmpDir, serviceFile, fileAndPath string, err error) {
 	tmpFilePath, err := inst.App.MakeTmpDirUpload()
 	if err != nil {
-		return nil, err
+		return "", "", "", err
 	}
 	if app.Name == "" {
-		return nil, errors.New("app name can not be empty, try flow-framework")
+		return "", "", "", errors.New("app name can not be empty, try flow-framework")
 	}
 	serviceName := inst.setServiceName(app.Name)
 	serviceFileName := inst.setServiceFileName(app.Name)
 	appVersion := app.Version
 	if appVersion == "" {
-		return nil, errors.New("app version can not be empty, try v0.6.0")
+		return "", "", "", errors.New("app version can not be empty, try v0.6.0")
 	}
 	if err = checkVersion(appVersion); err != nil {
-		return nil, err
+		return "", "", "", err
 	}
 	appName := app.Name
 	if appVersion == "" {
-		return nil, errors.New("app build name can not be empty, try wires-builds")
+		return "", "", "", errors.New("app build name can not be empty, try wires-builds")
 	}
 	workingDirectory := app.ServiceWorkingDirectory
 	if workingDirectory == "" {
 		workingDirectory = inst.setServiceWorkingDir(appName, appVersion)
 	}
+	log.Infof("generate service working dir: %s", workingDirectory)
 	user := app.RunAsUser
 	if user == "" {
 		user = "root"
@@ -151,51 +154,172 @@ func (inst *Store) generateUploadEdgeService(hostUUID, hostName string, app *Ser
 		execCmd = app.CustomServiceExecStart
 	} else {
 		if execCmd == "" {
-			return nil, errors.New("app service ExecStart cant not be empty")
+			return "", "", "", errors.New("app service ExecStart cant not be empty")
 		}
 		execCmd = inst.setServiceExecStart(app.Name, appVersion, execCmd)
 		if err := inst.checkServiceExecStart(execCmd, appName, appVersion); err != nil {
-			return nil, err
+			return "", "", "", err
 		}
 	}
-	log.Infof("generate service working dir: %s", workingDirectory)
+
 	log.Infof("generate service execCmd: %s", execCmd)
 	description := app.ServiceDescription
-	bld := &builder.SystemDBuilder{
-		ServiceName:      serviceName,
-		Description:      description,
-		User:             user,
-		WorkingDirectory: workingDirectory,
-		ExecStart:        execCmd,
-		SyslogIdentifier: serviceName,
-		WriteFile: builder.WriteFile{
-			Write:    true,
-			FileName: serviceName,
-			Path:     tmpFilePath,
+	if description == "" {
+		description = fmt.Sprintf("NubeIO %s", app.Name)
+	}
+
+	var env systemdconf.Value
+	for _, s := range app.EnvironmentVars {
+		env = append(env, s)
+	}
+	service := unit.ServiceFile{
+		Unit: unit.UnitSection{ // [Unit]
+			Description: systemdconf.Value{description},
+			After:       systemdconf.Value{"network.target"},
+		},
+		Service: unit.ServiceSection{ // [Service]
+			ExecStartPre: nil,
+			Type:         systemdconf.Value{"simple"},
+			ExecOptions: unit.ExecOptions{
+				User:             systemdconf.Value{user},
+				WorkingDirectory: systemdconf.Value{workingDirectory},
+				Environment:      env,
+				StandardOutput:   systemdconf.Value{"syslog"},
+				StandardError:    systemdconf.Value{"syslog"},
+				SyslogIdentifier: systemdconf.Value{app.Name},
+			},
+			ExecStart: systemdconf.Value{
+				execCmd,
+			},
+			Restart:    systemdconf.Value{"always"},
+			RestartSec: systemdconf.Value{"10"},
+		},
+		Install: unit.InstallSection{ // [Install]
+			WantedBy: systemdconf.Value{"multi-user.target"},
 		},
 	}
-	err = bld.Build(os.FileMode(inst.Perm))
+
+	b, _ := systemdconf.Marshal(service)
+	fmt.Println(serviceFileName)
+	fmt.Println(string(b))
+
+	servicePath := fmt.Sprintf("%s/%s", tmpFilePath, serviceFileName)
+	file := fileutils.New()
+	err = file.WriteFile(servicePath, string(b), os.FileMode(FilePerm))
 	if err != nil {
-		log.Errorf("generate service file name:%s, err:%s", serviceName, err.Error())
+		log.Errorf("write service file error %s", err.Error())
+	}
+	log.Infof("generate service file name:%s", serviceName)
+	//fileAndPath := filePath(fmt.Sprintf("%s/%s", tmpFilePath, serviceFileName))
+	log.Infof("generate service file path:%s", servicePath)
+	return tmpFilePath, serviceFileName, servicePath, nil
+
+}
+
+// GenerateUploadEdgeService this will generate and upload the service file to the edge device
+func (inst *Store) generateUploadEdgeService(hostUUID, hostName string, app *ServiceFile) (*installer.UploadResponse, error) {
+	tmpDir, serviceFile, fileAndPath, err := inst.generateServiceFile(app)
+	if err != nil {
 		return nil, err
 	}
-
-	log.Infof("generate service file name:%s", serviceName)
-
-	fileAndPath := filePath(fmt.Sprintf("%s/%s", tmpFilePath, serviceFileName))
-	log.Infof("generate service file path:%s", fileAndPath)
 	reader, err := os.Open(fileAndPath)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error open file:%s err:%s", fileAndPath, err.Error()))
+		return nil, errors.New(fmt.Sprintf("error open service-file:%s err:%s", serviceFile, err.Error()))
 	}
 
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
 	}
+	err = fileutils.New().RmRF(tmpDir)
+	if err != nil {
+		log.Errorf("assist: delete tmp dir after generating service file%s", fileAndPath)
+	}
+	return client.UploadServiceFile(app.Name, app.Version, serviceFile, reader)
 
-	return client.UploadServiceFile(app.Name, appVersion, serviceFileName, reader)
 }
+
+//// GenerateUploadEdgeService this will generate and upload the service file to the edge device
+//func (inst *Store) generateUploadEdgeService(hostUUID, hostName string, app *ServiceFile) (*installer.UploadResponse, error) {
+//	tmpFilePath, err := inst.App.MakeTmpDirUpload()
+//	if err != nil {
+//		return nil, err
+//	}
+//	if app.Name == "" {
+//		return nil, errors.New("app name can not be empty, try flow-framework")
+//	}
+//	serviceName := inst.setServiceName(app.Name)
+//	serviceFileName := inst.setServiceFileName(app.Name)
+//	appVersion := app.Version
+//	if appVersion == "" {
+//		return nil, errors.New("app version can not be empty, try v0.6.0")
+//	}
+//	if err = checkVersion(appVersion); err != nil {
+//		return nil, err
+//	}
+//	appName := app.Name
+//	if appVersion == "" {
+//		return nil, errors.New("app build name can not be empty, try wires-builds")
+//	}
+//	workingDirectory := app.ServiceWorkingDirectory
+//	if workingDirectory == "" {
+//		workingDirectory = inst.setServiceWorkingDir(appName, appVersion)
+//	}
+//	log.Infof("generate service working dir: %s", workingDirectory)
+//	user := app.RunAsUser
+//	if user == "" {
+//		user = "root"
+//	}
+//	execCmd := app.AppSpecficExecStart
+//	if app.CustomServiceExecStart != "" { // example use would be in wires
+//		execCmd = app.CustomServiceExecStart
+//	} else {
+//		if execCmd == "" {
+//			return nil, errors.New("app service ExecStart cant not be empty")
+//		}
+//		execCmd = inst.setServiceExecStart(app.Name, appVersion, execCmd)
+//		if err := inst.checkServiceExecStart(execCmd, appName, appVersion); err != nil {
+//			return nil, err
+//		}
+//	}
+//
+//	log.Infof("generate service execCmd: %s", execCmd)
+//	description := app.ServiceDescription
+//	bld := &builder.SystemDBuilder{
+//		ServiceName:      serviceName,
+//		Description:      description,
+//		User:             user,
+//		WorkingDirectory: workingDirectory,
+//		ExecStart:        execCmd,
+//		SyslogIdentifier: serviceName,
+//		WriteFile: builder.WriteFile{
+//			Write:    true,
+//			FileName: serviceName,
+//			Path:     tmpFilePath,
+//		},
+//	}
+//	err = bld.Build(os.FileMode(inst.Perm))
+//	if err != nil {
+//		log.Errorf("generate service file name:%s, err:%s", serviceName, err.Error())
+//		return nil, err
+//	}
+//
+//	log.Infof("generate service file name:%s", serviceName)
+//
+//	fileAndPath := filePath(fmt.Sprintf("%s/%s", tmpFilePath, serviceFileName))
+//	log.Infof("generate service file path:%s", fileAndPath)
+//	reader, err := os.Open(fileAndPath)
+//	if err != nil {
+//		return nil, errors.New(fmt.Sprintf("error open file:%s err:%s", fileAndPath, err.Error()))
+//	}
+//
+//	client, err := inst.getClient(hostUUID, hostName)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	return client.UploadServiceFile(app.Name, appVersion, serviceFileName, reader)
+//}
 
 func (inst *Store) EdgeUnInstallApp(hostUUID, hostName, appName string, deleteApp bool) (*installer.RemoveRes, error) {
 	client, err := inst.getClient(hostUUID, hostName)
