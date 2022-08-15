@@ -5,14 +5,12 @@ import (
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/rubix-assist/controller"
 	dbase "github.com/NubeIO/rubix-assist/database"
+	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/service/appstore"
-	"github.com/NubeIO/rubix-assist/service/auth"
-	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -47,26 +45,14 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 	makeStore, _ := appstore.New(&appstore.Store{App: &installer.App{}, DB: appDB})
 	api := controller.Controller{DB: appDB, Store: makeStore}
-	identityKey := "uuid"
-	authMiddleware, _ := jwt.New(&jwt.GinJWTMiddleware{
-		Realm:         "go-proxy-service",
-		Key:           []byte(os.Getenv("JWTSECRET")),
-		Timeout:       time.Hour * 1000,
-		MaxRefresh:    time.Hour,
-		IdentityKey:   identityKey,
-		PayloadFunc:   auth.MapClaims,
-		Authenticator: api.Login,
-		Unauthorized: func(c *gin.Context, code int, message string) {
-			c.JSON(code, gin.H{
-				"code":    code,
-				"message": message,
-			})
-		},
-		TokenLookup: "header: Authorization",
-		TimeFunc:    time.Now,
-	})
 
-	admin := r.Group("/api")
+	r.POST("/api/users/login", api.Login)
+
+	handleAuth := func(c *gin.Context) { c.Next() }
+	if config.Config.Auth() {
+		handleAuth = api.HandleAuth()
+	}
+	admin := r.Group("/api", handleAuth)
 
 	appStore := admin.Group("/store/apps")
 	{
@@ -127,7 +113,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	hostNetworks := admin.Group("/networks")
-	//hosts.Use(authMiddleware.MiddlewareFunc())
 	{
 		hostNetworks.GET("/schema", api.GetNetworkSchema)
 		hostNetworks.GET("/", api.GetHostNetworks)
@@ -139,7 +124,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	hosts := admin.Group("/hosts")
-	//hosts.Use(authMiddleware.MiddlewareFunc())
 	{
 		hosts.GET("/schema", api.GetHostSchema)
 		hosts.GET("/", api.GetHosts)
@@ -150,22 +134,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hosts.DELETE("/drop", api.DropHosts)
 	}
 
-	r.POST("/api/users", api.AddUser)
-	r.POST("/api/users/login", authMiddleware.LoginHandler)
-
-	users := admin.Group("/users")
-	//users.Use(authMiddleware.MiddlewareFunc())
-	{
-		users.GET("/schema", api.UsersSchema)
-		users.GET("/", api.GetUsers)
-		users.GET("/:uuid", api.GetUser)
-		users.PATCH("/:uuid", api.UpdateUser)
-		users.DELETE("/:uuid", api.DeleteUser)
-		users.DELETE("/drop", api.DropUsers)
-	}
-
 	teams := admin.Group("/teams")
-	//teams.Use(authMiddleware.MiddlewareFunc())
 	{
 		teams.GET("/schema", api.TeamsSchema)
 		teams.GET("/", api.GetTeams)
@@ -177,7 +146,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	Tasks := admin.Group("/tasks")
-	//Tasks.Use(authMiddleware.MiddlewareFunc())
 	{
 		Tasks.GET("/schema", api.TasksSchema)
 		Tasks.GET("/", api.GetTasks)
@@ -189,7 +157,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	messages := admin.Group("/transactions")
-	//messages.Use(authMiddleware.MiddlewareFunc())
 	{
 		messages.GET("/schema", api.TransactionsSchema)
 		messages.GET("/", api.GetTransactions)
@@ -200,25 +167,16 @@ func Setup(db *gorm.DB) *gin.Engine {
 		messages.DELETE("/drop", api.DropTransactions)
 	}
 
-	//tools := admin.Group("/tools")
-	////tools.Use(authMiddleware.MiddlewareFunc())
-	//{
+	// tools := admin.Group("/tools")
+	// //tools.Use(authMiddleware.MiddlewareFunc())
+	// {
 	//
 	//	tools.GET("/edgeapi/ip/schema", api.EdgeIPSchema)
 	//	tools.POST("/edgeapi/ip", api.EdgeSetIP)
 	//	tools.POST("/edgeapi/ip/dhcp", api.EdgeSetIP)
 	//
-	//}
+	// }
 
-	token := r.Group("/api/tokens")
-	{
-		token.GET("/", api.GetTokens)
-		token.POST("/", api.CreateToken)
-		token.GET("/:uuid", api.GetToken)
-		token.PATCH("/:uuid", api.UpdateToken)
-		token.DELETE("/:uuid", api.DeleteToken)
-		token.DELETE("/drop", api.DropTokens)
-	}
 	git := r.Group("/api/git")
 	{
 		git.GET("/:uuid", api.GitGetRelease)
@@ -267,6 +225,21 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		zip.POST("/unzip", api.Unzip)
 		zip.POST("/zip", api.ZipDir)
+	}
+
+	user := admin.Group("/users")
+	{
+		user.PUT("", api.UpdateUser)
+		user.GET("", api.GetUser)
+	}
+
+	token := admin.Group("/tokens")
+	{
+		token.GET("", api.GetTokens)
+		token.POST("/generate", api.GenerateToken)
+		token.PUT("/:uuid/block", api.BlockToken)
+		token.PUT("/:uuid/regenerate", api.RegenerateToken)
+		token.DELETE("/:uuid", api.DeleteToken)
 	}
 
 	r.Any("/proxy/*proxyPath", api.Proxy)

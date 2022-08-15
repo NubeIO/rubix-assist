@@ -28,6 +28,7 @@ var RootCmd = &cobra.Command{
 var flgRoot struct {
 	startApp  bool
 	prod      bool
+	auth      bool
 	port      int
 	rootDir   string
 	appDir    string
@@ -44,6 +45,7 @@ func Execute() {
 
 func init() {
 	RootCmd.PersistentFlags().BoolVarP(&flgRoot.prod, "prod", "", false, "prod")
+	RootCmd.PersistentFlags().BoolVarP(&flgRoot.prod, "auth", "", true, "auth")
 	RootCmd.PersistentFlags().IntVarP(&flgRoot.port, "port", "p", 1662, "port (default 1662)")
 	RootCmd.PersistentFlags().StringVarP(&flgRoot.rootDir, "root-dir", "r", "./", "root dir") // in production it will be `/data`
 	RootCmd.PersistentFlags().StringVarP(&flgRoot.appDir, "app-dir", "a", "./", "app dir")    // in production it will be `/rubix-assist`

@@ -7,7 +7,6 @@ go 1.17
 require (
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7
 	github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.8
-	github.com/appleboy/gin-jwt/v2 v2.8.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.8.0
 	github.com/jinzhu/copier v0.3.4
@@ -16,7 +15,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.11.0
-	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
+	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	gorm.io/driver/sqlite v1.3.2
 	gorm.io/gorm v1.23.5
 )
@@ -31,7 +30,6 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
 	github.com/go-resty/resty/v2 v2.7.0
-	github.com/golang-jwt/jwt/v4 v4.2.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/helloyi/go-sshclient v1.1.0
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -64,7 +62,6 @@ require (
 )
 
 require (
-	github.com/NubeIO/flow-framework v0.5.6
 	github.com/NubeIO/lib-date v0.0.1
 	github.com/NubeIO/lib-dirs v0.0.5
 	github.com/NubeIO/lib-networking v0.0.4
@@ -72,7 +69,9 @@ require (
 	github.com/NubeIO/lib-schema v0.0.9
 	github.com/NubeIO/lib-systemctl-go v0.1.0
 	github.com/NubeIO/lib-uuid v0.0.2
+	github.com/NubeIO/nubeio-rubix-lib-auth-go v1.0.3
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.0
+	github.com/google/uuid v1.1.2
 	github.com/sergeymakinen/go-systemdconf/v2 v2.0.2
 	gorm.io/datatypes v1.0.6
 )
@@ -81,6 +80,7 @@ require (
 	github.com/THREATINT/go-net v1.2.10 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/mcnijman/go-emailaddress v1.1.0 // indirect
 	gorm.io/driver/mysql v1.3.2 // indirect
