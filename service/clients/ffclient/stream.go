@@ -112,7 +112,7 @@ func (inst *FlowClient) DeleteStream(uuid string) (bool, error) {
 func (inst *FlowClient) DeleteStreamClone(uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.client.R().
 		SetPathParams(map[string]string{"uuid": uuid}).
-		Delete("/api/streams_clone/{uuid}"))
+		Delete("/api/stream_clones/{uuid}"))
 	if err != nil {
 		return false, err
 	}
