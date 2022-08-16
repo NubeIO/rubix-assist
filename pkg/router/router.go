@@ -83,6 +83,11 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgeApps.DELETE("/", api.EdgeUninstallApp)
 	}
 
+	edgeConfig := admin.Group("/edge/config")
+	{
+		edgeConfig.POST("/", api.EdgeReplaceConfig)
+	}
+
 	edgePlugins := admin.Group("/edge/plugins")
 	{
 		edgePlugins.GET("/", api.EdgeListPlugins)

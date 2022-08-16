@@ -120,18 +120,18 @@ UploadFile
 */
 func (inst *Controller) UploadFile(c *gin.Context) {
 	now := time.Now()
-	path := c.Query("destination")
+	destination := c.Query("destination")
 	file, err := c.FormFile("file")
 	resp := &UploadResponse{}
 	if err != nil || file == nil {
 		reposeHandler(resp, err, c)
 		return
 	}
-	if found := fileutils.New().DirExists(path); !found {
-		reposeHandler(nil, errors.New(fmt.Sprintf("path not found %s", path)), c)
+	if found := fileutils.New().DirExists(destination); !found {
+		reposeHandler(nil, errors.New(fmt.Sprintf("path not found %s", destination)), c)
 		return
 	}
-	toFileLocation := fmt.Sprintf("%s/%s", path, filepath.Base(file.Filename))
+	toFileLocation := fmt.Sprintf("%s/%s", destination, filepath.Base(file.Filename))
 	if err := c.SaveUploadedFile(file, toFileLocation); err != nil {
 		reposeHandler(resp, err, c)
 		return
