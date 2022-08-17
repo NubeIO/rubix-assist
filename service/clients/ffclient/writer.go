@@ -50,7 +50,7 @@ func (inst *FlowClient) EditWriter(uuid string, body *model.Writer, updateProduc
 }
 
 // CreateWriter edit an object
-func (inst *FlowClient) CreateWriter(body model.Writer) (*model.Writer, error) {
+func (inst *FlowClient) CreateWriter(body *model.Writer) (*model.Writer, error) {
 	name := uuid.ShortUUID()
 	name = fmt.Sprintf("sub_name_%s", name)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
