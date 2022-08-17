@@ -51,39 +51,16 @@ func NewLocalClient(conn *Connection) *FlowClient {
 	}
 
 	url := fmt.Sprintf("%s://%s:%d", getSchema(port), ip, port)
-	//if flowClient, found := flowClients[url]; found {
-	//	flowClient.client.SetHeader("Authorization", auth.GetInternalToken(true))
-	//	return flowClient
-	//}
-	client := resty.New()
-	client.SetDebug(false)
-	client.SetBaseURL(url)
-	client.SetError(&nresty.Error{})
-	client.SetTransport(&transport)
-	//client.SetHeader("Authorization", auth.GetInternalToken(true))
-	flowClient := &FlowClient{client: client}
-	flowClients[url] = flowClient
-	return flowClient
-}
-
-func newSessionWithToken(ip string, port int, token string, isTokenAuth bool) *FlowClient {
-	mutex.RLock()
-	defer mutex.RUnlock()
-	url := fmt.Sprintf("%s://%s:%d/ff", getSchema(port), ip, port)
-	if isTokenAuth {
-		url = fmt.Sprintf("%s://%s:%d", getSchema(port), ip, port)
-		token = fmt.Sprintf("External %s", token)
-	}
 	if flowClient, found := flowClients[url]; found {
-		flowClient.client.SetHeader("Authorization", token)
+		// flowClient.client.SetHeader("Authorization", internaltoken.GetInternalToken(true))
 		return flowClient
 	}
 	client := resty.New()
 	client.SetDebug(false)
 	client.SetBaseURL(url)
 	client.SetError(&nresty.Error{})
-	client.SetHeader("Authorization", token)
 	client.SetTransport(&transport)
+	// client.SetHeader("Authorization", internaltoken.GetInternalToken(true))
 	flowClient := &FlowClient{client: client}
 	flowClients[url] = flowClient
 	return flowClient
