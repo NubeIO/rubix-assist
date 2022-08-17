@@ -35,7 +35,7 @@ func (inst *FlowClient) GetWriter(uuid string) (*model.Writer, error) {
 }
 
 // EditWriter edit an object
-func (inst *FlowClient) EditWriter(uuid string, body model.Writer, updateProducer bool) (*model.Writer, error) {
+func (inst *FlowClient) EditWriter(uuid string, body *model.Writer, updateProducer bool) (*model.Writer, error) {
 	param := strconv.FormatBool(updateProducer)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Writer{}).
