@@ -1,10 +1,25 @@
 package ffclient
 
 import (
+	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-models-go/pkg/v1/model"
 	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
 	"strconv"
 )
+
+// GetWriterClones all objects
+func (inst *FlowClient) GetWriterClones() ([]model.WriterClone, error) {
+	url := fmt.Sprintf("/api/producers/writer_clones")
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&[]model.WriterClone{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	var out []model.WriterClone
+	out = *resp.Result().(*[]model.WriterClone)
+	return out, nil
+}
 
 // GetWriterClone an object
 func (inst *FlowClient) GetWriterClone(uuid string) (*model.WriterClone, error) {
@@ -43,4 +58,15 @@ func (inst *FlowClient) CreateWriterClone(body model.WriterClone) (*model.Writer
 		return nil, err
 	}
 	return resp.Result().(*model.WriterClone), nil
+}
+
+// DeleteWriterClone delete
+func (inst *FlowClient) DeleteWriterClone(uuid string) (bool, error) {
+	_, err := nresty.FormatRestyResponse(inst.client.R().
+		SetPathParams(map[string]string{"uuid": uuid}).
+		Delete("/api/producers/writer_clones/{uuid}"))
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

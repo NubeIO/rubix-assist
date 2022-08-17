@@ -8,6 +8,20 @@ import (
 	"strconv"
 )
 
+// GetWriters all objects
+func (inst *FlowClient) GetWriters() ([]model.Writer, error) {
+	url := fmt.Sprintf("/api/consumers/writers")
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&[]model.Writer{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	var out []model.Writer
+	out = *resp.Result().(*[]model.Writer)
+	return out, nil
+}
+
 // GetWriter an object
 func (inst *FlowClient) GetWriter(uuid string) (*model.Writer, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -47,4 +61,15 @@ func (inst *FlowClient) CreateWriter(body model.Writer) (*model.Writer, error) {
 		return nil, err
 	}
 	return resp.Result().(*model.Writer), nil
+}
+
+// DeleteWriter delete
+func (inst *FlowClient) DeleteWriter(uuid string) (bool, error) {
+	_, err := nresty.FormatRestyResponse(inst.client.R().
+		SetPathParams(map[string]string{"uuid": uuid}).
+		Delete("/api/consumers/writers/{uuid}"))
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
