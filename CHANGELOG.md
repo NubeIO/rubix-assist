@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v0.3.8](https://github.com/NubeIO/rubix-assist/tree/v0.3.8) (2022-08-19)
+
+- add auth to apis
+
 ## [v0.2.7](https://github.com/NubeIO/rubix-assist/tree/v0.2.7) (2022-08-12)
 
 - add plugins apis
