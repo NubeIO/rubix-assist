@@ -60,28 +60,29 @@ type SSHPort struct {
 }
 
 type HostSchema struct {
-	UUID        schema.UUID        `json:"uuid"`
-	Name        schema.Name        `json:"name"`
-	Description schema.Description `json:"description"`
-	Enable      schema.Enable      `json:"enable"`
-	Product     schema.Product     `json:"product_type"`
-	NetworkUUID NetworkUUID        `json:"network_uuid"`
-	IP          schema.IP          `json:"ip"`
-	Port        schema.Port        `json:"port"`
-	HTTPS       schema.HTTPS       `json:"https"`
-	Username    schema.Username    `json:"username"`
-	Password    schema.Password    `json:"password"`
-	SSHPort     SSHPort            `json:"ssh_port"`
-	SSHUsername SSHUsername        `json:"ssh_username"`
-	SSHPassword SSHPassword        `json:"ssh_password" `
-	Required    []string           `json:"required"`
+	UUID               schema.UUID               `json:"uuid"`
+	Name               schema.Name               `json:"name"`
+	Description        schema.Description        `json:"description"`
+	Enable             schema.Enable             `json:"enable"`
+	Product            schema.Product            `json:"product_type"`
+	NetworkUUID        NetworkUUID               `json:"network_uuid"`
+	IP                 schema.Host               `json:"host"`
+	Port               schema.Port               `json:"port"`
+	HTTPS              schema.HTTPS              `json:"https"`
+	Username           schema.Username           `json:"username"`
+	Password           schema.Password           `json:"password"`
+	RubixEdgeToken     schema.RubixEdgeToken     `json:"rubix_edge_token"`
+	FlowFrameworkToken schema.FlowFrameworkToken `json:"flow_framework_token"`
+	Required           []string                  `json:"required"`
 }
 
 func GetHostSchema() *HostSchema {
 	m := &HostSchema{
-		Required: []string{"name", "ip", "port"},
+		Required: []string{"ip", "port"},
 	}
 	m.IP.Default = "0.0.0.0"
+	m.Port.Default = 1661
+	m.Port.ReadOnly = true
 	m.NetworkUUID.Title = "network uuid"
 	schema.Set(m)
 	return m

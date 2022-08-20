@@ -6,36 +6,36 @@ import (
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 )
 
-func (d *DB) GetToken(uuid string) (*model.Token, error) {
+func (inst *DB) GetToken(uuid string) (*model.Token, error) {
 	m := new(model.Token)
-	if err := d.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
+	if err := inst.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
 		logger.Errorf("GetHost error: %v", err)
 		return nil, err
 	}
 	return m, nil
 }
 
-func (d *DB) GetTokens() ([]*model.Token, error) {
+func (inst *DB) GetTokens() ([]*model.Token, error) {
 	var m []*model.Token
-	if err := d.DB.Find(&m).Error; err != nil {
+	if err := inst.DB.Find(&m).Error; err != nil {
 		return nil, err
 	} else {
 		return m, nil
 	}
 }
 
-func (d *DB) CreateToken(Token *model.Token) (*model.Token, error) {
+func (inst *DB) CreateToken(Token *model.Token) (*model.Token, error) {
 	Token.UUID = uuid.ShortUUID("tok")
-	if err := d.DB.Create(&Token).Error; err != nil {
+	if err := inst.DB.Create(&Token).Error; err != nil {
 		return nil, err
 	} else {
 		return Token, nil
 	}
 }
 
-func (d *DB) UpdateToken(uuid string, Token *model.Token) (*model.Token, error) {
+func (inst *DB) UpdateToken(uuid string, Token *model.Token) (*model.Token, error) {
 	m := new(model.Token)
-	query := d.DB.Where("uuid = ?", uuid).Find(&m).Updates(Token)
+	query := inst.DB.Where("uuid = ?", uuid).Find(&m).Updates(Token)
 	if query.Error != nil {
 		return nil, query.Error
 	} else {
@@ -43,16 +43,16 @@ func (d *DB) UpdateToken(uuid string, Token *model.Token) (*model.Token, error) 
 	}
 }
 
-func (d *DB) DeleteToken(uuid string) (*DeleteMessage, error) {
+func (inst *DB) DeleteToken(uuid string) (*DeleteMessage, error) {
 	m := new(model.Token)
-	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
+	query := inst.DB.Where("uuid = ? ", uuid).Delete(&m)
 	return deleteResponse(query)
 }
 
 // DropTokens delete all.
-func (d *DB) DropTokens() (*DeleteMessage, error) {
+func (inst *DB) DropTokens() (*DeleteMessage, error) {
 	var m *model.Token
-	query := d.DB.Where("1 = 1")
+	query := inst.DB.Where("1 = 1")
 	query.Delete(&m)
 	return deleteResponse(query)
 }

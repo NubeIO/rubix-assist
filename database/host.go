@@ -11,8 +11,8 @@ import (
 
 const hostName = "host"
 
-func (d *DB) GetHostByLocationName(hostName, networkName, locationName string) (*model.Host, error) {
-	location, err := d.GetLocationsByName(locationName, false)
+func (inst *DB) GetHostByLocationName(hostName, networkName, locationName string) (*model.Host, error) {
+	location, err := inst.GetLocationsByName(locationName, false)
 	if err != nil {
 		return nil, err
 	}
@@ -28,39 +28,65 @@ func (d *DB) GetHostByLocationName(hostName, networkName, locationName string) (
 	return nil, errors.New("no host was found")
 }
 
-func (d *DB) GetHost(uuid string) (*model.Host, error) {
+func (inst *DB) getHost(uuid string) (*model.Host, error) {
 	m := new(model.Host)
-	if err := d.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
+	if err := inst.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
 		return nil, errors.New(fmt.Sprintf("no host was found with uuid:%s", uuid))
 	}
 	return m, nil
 }
 
-func (d *DB) GetHostByName(name string) (*model.Host, error) {
+func matchUUID(uuid string) bool {
+	if len(uuid) == 16 {
+		if uuid[0:4] == "hos_" {
+			return true
+		}
+	}
+	return false
+}
+
+func (inst *DB) GetHost(uuid string) (*model.Host, error) {
+	match := matchUUID(uuid)
+	var host *model.Host
+	if match {
+		host, _ = inst.getHost(uuid)
+		if host != nil {
+			return host, nil
+		}
+	} else {
+		host, _ = inst.GetHostByName(uuid)
+		if host != nil {
+			return host, nil
+		}
+	}
+	return host, nil
+}
+
+func (inst *DB) GetHostByName(name string) (*model.Host, error) {
 	m := new(model.Host)
-	if err := d.DB.Where("name = ? ", name).First(&m).Error; err != nil {
+	if err := inst.DB.Where("name = ? ", name).First(&m).Error; err != nil {
 		return nil, errors.New(fmt.Sprintf("no host was found with name:%s", name))
 	}
 	return m, nil
 }
 
-func (d *DB) GetHosts() ([]*model.Host, error) {
+func (inst *DB) GetHosts() ([]*model.Host, error) {
 	var m []*model.Host
-	if err := d.DB.Find(&m).Error; err != nil {
+	if err := inst.DB.Find(&m).Error; err != nil {
 		return nil, err
 	} else {
 		return m, nil
 	}
 }
 
-func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
+func (inst *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if host.Name == "" {
 		host.Name = "rc"
 	}
 	if len(host.Name) < 1 {
 		return nil, errors.New("host name length must be grater then two")
 	}
-	existingHost, _ := d.GetHostByName(host.Name)
+	existingHost, _ := inst.GetHostByName(host.Name)
 	if existingHost != nil {
 		return nil, errors.New("an existing host with this name exists")
 	}
@@ -97,16 +123,16 @@ func (d *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if err != nil {
 		return nil, fmt.Errorf("invaild rubix ip:port:%s", err.Error())
 	}
-	if err := d.DB.Create(&host).Error; err != nil {
+	if err := inst.DB.Create(&host).Error; err != nil {
 		return nil, err
 	} else {
 		return host, nil
 	}
 }
 
-func (d *DB) UpdateHostByName(name string, host *model.Host) (*model.Host, error) {
+func (inst *DB) UpdateHostByName(name string, host *model.Host) (*model.Host, error) {
 	m := new(model.Host)
-	query := d.DB.Where("name = ?", name).Find(&m).Updates(host)
+	query := inst.DB.Where("name = ?", name).Find(&m).Updates(host)
 	if query.Error != nil {
 		return nil, handelNotFound(hostName)
 	} else {
@@ -114,9 +140,9 @@ func (d *DB) UpdateHostByName(name string, host *model.Host) (*model.Host, error
 	}
 }
 
-func (d *DB) UpdateHost(uuid string, host *model.Host) (*model.Host, error) {
+func (inst *DB) UpdateHost(uuid string, host *model.Host) (*model.Host, error) {
 	m := new(model.Host)
-	query := d.DB.Where("uuid = ?", uuid).Find(&m).Updates(host)
+	query := inst.DB.Where("uuid = ?", uuid).Find(&m).Updates(host)
 	if query.Error != nil {
 		return nil, handelNotFound(hostName)
 	} else {
@@ -124,16 +150,16 @@ func (d *DB) UpdateHost(uuid string, host *model.Host) (*model.Host, error) {
 	}
 }
 
-func (d *DB) DeleteHost(uuid string) (*DeleteMessage, error) {
+func (inst *DB) DeleteHost(uuid string) (*DeleteMessage, error) {
 	var m *model.Host
-	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
+	query := inst.DB.Where("uuid = ? ", uuid).Delete(&m)
 	return deleteResponse(query)
 }
 
 // DropHosts delete all.
-func (d *DB) DropHosts() (*DeleteMessage, error) {
+func (inst *DB) DropHosts() (*DeleteMessage, error) {
 	var m *model.Host
-	query := d.DB.Where("1 = 1")
+	query := inst.DB.Where("1 = 1")
 	query.Delete(&m)
 	return deleteResponse(query)
 }

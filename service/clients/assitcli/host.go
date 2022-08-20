@@ -52,12 +52,12 @@ func (inst *Client) DeleteHost(uuid string) (response *Response) {
 	return response.buildResponse(resp, err)
 }
 
-func (inst *Client) GetHostSchema() (data interface{}, response *Response) {
+func (inst *Client) GetHostSchema() (data *model.HostSchema, response *Response) {
 	path := fmt.Sprintf("%s/%s", Paths.Hosts.Path, "schema")
 	response = &Response{}
 	resp, err := inst.Rest.R().
 		Get(path)
-	var result interface{}
+	var result *model.HostSchema
 	err = json.Unmarshal(resp.Body(), &result)
 	return result, response.buildResponse(resp, err)
 }

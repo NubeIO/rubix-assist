@@ -248,6 +248,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	r.Any("/proxy/*proxyPath", api.Proxy)
+	r.Any("/ff/*proxyPath", api.FFProxy)
 
 	return r
 }

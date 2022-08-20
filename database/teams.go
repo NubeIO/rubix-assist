@@ -6,36 +6,36 @@ import (
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 )
 
-func (d *DB) GetTeam(uuid string) (*model.Team, error) {
+func (inst *DB) GetTeam(uuid string) (*model.Team, error) {
 	m := new(model.Team)
-	if err := d.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
+	if err := inst.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
 		logger.Errorf("GetTeam error: %v", err)
 		return nil, err
 	}
 	return m, nil
 }
 
-func (d *DB) GetTeams() ([]*model.Team, error) {
+func (inst *DB) GetTeams() ([]*model.Team, error) {
 	var m []*model.Team
-	if err := d.DB.Find(&m).Error; err != nil {
+	if err := inst.DB.Find(&m).Error; err != nil {
 		return nil, err
 	} else {
 		return m, nil
 	}
 }
 
-func (d *DB) CreateTeam(body *model.Team) (*model.Team, error) {
+func (inst *DB) CreateTeam(body *model.Team) (*model.Team, error) {
 	body.UUID = uuid.ShortUUID("tea")
-	if err := d.DB.Create(&body).Error; err != nil {
+	if err := inst.DB.Create(&body).Error; err != nil {
 		return nil, err
 	} else {
 		return body, nil
 	}
 }
 
-func (d *DB) UpdateTeam(uuid string, Team *model.Team) (*model.Team, error) {
+func (inst *DB) UpdateTeam(uuid string, Team *model.Team) (*model.Team, error) {
 	m := new(model.Team)
-	query := d.DB.Where("uuid = ?", uuid).Find(&m).Updates(Team)
+	query := inst.DB.Where("uuid = ?", uuid).Find(&m).Updates(Team)
 	if query.Error != nil {
 		return nil, query.Error
 	} else {
@@ -43,16 +43,16 @@ func (d *DB) UpdateTeam(uuid string, Team *model.Team) (*model.Team, error) {
 	}
 }
 
-func (d *DB) DeleteTeam(uuid string) (*DeleteMessage, error) {
+func (inst *DB) DeleteTeam(uuid string) (*DeleteMessage, error) {
 	m := new(model.Team)
-	query := d.DB.Where("uuid = ? ", uuid).Delete(&m)
+	query := inst.DB.Where("uuid = ? ", uuid).Delete(&m)
 	return deleteResponse(query)
 }
 
 // DropTeams delete all.
-func (d *DB) DropTeams() (*DeleteMessage, error) {
+func (inst *DB) DropTeams() (*DeleteMessage, error) {
 	var m *model.Team
-	query := d.DB.Where("1 = 1")
+	query := inst.DB.Where("1 = 1")
 	query.Delete(&m)
 	return deleteResponse(query)
 }
