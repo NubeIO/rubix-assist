@@ -2,6 +2,7 @@ module github.com/NubeIO/rubix-assist
 
 go 1.17
 
+
 //replace github.com/NubeIO/lib-rubix-installer => /home/aidan/code/go/nube/lib/lib-rubix-installer
 //replace github.com/NubeIO/lib-schema => /home/aidan/code/go/nube/lib/lib-schema
 
