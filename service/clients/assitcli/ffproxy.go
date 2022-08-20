@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-func (inst *Client) ProxyGET(hostIDName, path string) (*resty.Response, error) {
-	path = fmt.Sprintf("proxy/%s", path)
+func (inst *Client) FFProxyGET(hostIDName, path string) (*resty.Response, error) {
+	path = fmt.Sprintf("ff/%s", path)
 	path = strings.Replace(path, "//", "/", -1) // makes this /api//host/123 => /api/host/123
 	resp, err := inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -19,9 +19,10 @@ func (inst *Client) ProxyGET(hostIDName, path string) (*resty.Response, error) {
 	return resp, err
 }
 
-func (inst *Client) ProxyPOST(hostIDName, path string, body interface{}) (*resty.Response, error) {
-	path = fmt.Sprintf("proxy/%s", path)
+func (inst *Client) FFProxyPOST(hostIDName, path string, body interface{}) (*resty.Response, error) {
+	path = fmt.Sprintf("ff/%s", path)
 	path = strings.Replace(path, "//", "/", -1) // makes this /api//host/123 => /api/host/123
+	fmt.Println(path)
 	resp, err := inst.Rest.R().
 		SetBody(body).
 		SetHeader("host_uuid", hostIDName).
@@ -33,22 +34,19 @@ func (inst *Client) ProxyPOST(hostIDName, path string, body interface{}) (*resty
 	return resp, err
 }
 
-func (inst *Client) ProxyPATCH(hostIDName, path string, body interface{}) (*resty.Response, error) {
-	path = fmt.Sprintf("proxy/%s", path)
+func (inst *Client) FFProxyPATCH(hostIDName, path string, body interface{}) (*resty.Response, error) {
+	path = fmt.Sprintf("ff/%s", path)
 	path = strings.Replace(path, "//", "/", -1) // makes this /api//host/123 => /api/host/123
 	resp, err := inst.Rest.R().
 		SetBody(body).
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
 		Patch(path)
-	if err != nil {
-		return nil, err
-	}
 	return resp, err
 }
 
-func (inst *Client) ProxyPUT(hostIDName, path string, body interface{}) (*resty.Response, error) {
-	path = fmt.Sprintf("proxy/%s", path)
+func (inst *Client) FFProxyPUT(hostIDName, path string, body interface{}) (*resty.Response, error) {
+	path = fmt.Sprintf("ff/%s", path)
 	path = strings.Replace(path, "//", "/", -1) // makes this /api//host/123 => /api/host/123
 	resp, err := inst.Rest.R().
 		SetBody(body).
@@ -61,8 +59,8 @@ func (inst *Client) ProxyPUT(hostIDName, path string, body interface{}) (*resty.
 	return resp, err
 }
 
-func (inst *Client) ProxyDELETE(hostIDName, path string) (*resty.Response, error) {
-	path = fmt.Sprintf("proxy/%s", path)
+func (inst *Client) FFProxyDELETE(hostIDName, path string) (*resty.Response, error) {
+	path = fmt.Sprintf("ff/%s", path)
 	path = strings.Replace(path, "//", "/", -1) // makes this /api//host/123 => /api/host/123
 	resp, err := inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).

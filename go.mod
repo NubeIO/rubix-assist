@@ -2,7 +2,9 @@ module github.com/NubeIO/rubix-assist
 
 go 1.17
 
+
 //replace github.com/NubeIO/lib-rubix-installer => /home/aidan/code/go/nube/lib/lib-rubix-installer
+//replace github.com/NubeIO/lib-schema => /home/aidan/code/go/nube/lib/lib-schema
 
 require (
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7
@@ -64,9 +66,9 @@ require (
 require (
 	github.com/NubeIO/lib-date v0.0.1
 	github.com/NubeIO/lib-dirs v0.0.5
-	github.com/NubeIO/lib-networking v0.0.4
+	github.com/NubeIO/lib-networking v0.0.6
 	github.com/NubeIO/lib-rubix-installer v0.1.3
-	github.com/NubeIO/lib-schema v0.0.9
+	github.com/NubeIO/lib-schema v0.1.3
 	github.com/NubeIO/lib-systemctl-go v0.1.0
 	github.com/NubeIO/lib-uuid v0.0.2
 	github.com/NubeIO/nubeio-rubix-lib-auth-go v1.0.3

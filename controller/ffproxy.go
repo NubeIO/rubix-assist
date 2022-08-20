@@ -7,13 +7,13 @@ import (
 	"net/http/httputil"
 )
 
-func (inst *Controller) Proxy(c *gin.Context) {
+func (inst *Controller) FFProxy(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
 	}
-	remote, err := ip.Builder(host.IP, host.Port)
+	remote, err := ip.Builder(host.IP, 1660)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return

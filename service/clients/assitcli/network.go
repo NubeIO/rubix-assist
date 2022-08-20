@@ -53,12 +53,12 @@ func (inst *Client) DeleteHostNetwork(uuid string) (response *Response) {
 	return response.buildResponse(resp, err)
 }
 
-func (inst *Client) GetNetworkSchema() (data interface{}, response *Response) {
+func (inst *Client) GetNetworkSchema() (data *model.NetworkSchema, response *Response) {
 	path := fmt.Sprintf("%s/%s", Paths.HostNetwork.Path, "schema")
 	response = &Response{}
 	resp, err := inst.Rest.R().
 		Get(path)
-	var result interface{}
+	var result *model.NetworkSchema
 	err = json.Unmarshal(resp.Body(), &result)
 	return result, response.buildResponse(resp, err)
 }
