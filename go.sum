@@ -80,8 +80,8 @@ github.com/NubeIO/lib-schema v0.1.3/go.mod h1:TGKDA6IIWHDwr5Aabawj6FF7NXUWXqu4oz
 github.com/NubeIO/lib-systemctl-go v0.0.9/go.mod h1:gpVy2jcgc8AiCBf3k+sSDwDoxYtdNzd3hEeK3ygJz+c=
 github.com/NubeIO/lib-systemctl-go v0.1.0 h1:v+XaQUul18vH14Nw39gZ2weM8diqbGt/JSfOv+wno8E=
 github.com/NubeIO/lib-systemctl-go v0.1.0/go.mod h1:gpVy2jcgc8AiCBf3k+sSDwDoxYtdNzd3hEeK3ygJz+c=
-github.com/NubeIO/lib-ufw v0.0.1 h1:YhMqRiQB5zdkD2zgwXbItW9olkuRF3NbG5Qgf5AIyxM=
-github.com/NubeIO/lib-ufw v0.0.1/go.mod h1:DC6oevpW1CH8WrJJm0trAKWonGUvV/wKrxAp3Y/peYI=
+github.com/NubeIO/lib-ufw v0.0.2 h1:BLQwmocMnBLsgmKTt/LhheRHgJAPuMax+I9V5xP5JBA=
+github.com/NubeIO/lib-ufw v0.0.2/go.mod h1:DC6oevpW1CH8WrJJm0trAKWonGUvV/wKrxAp3Y/peYI=
 github.com/NubeIO/lib-uuid v0.0.2 h1:6Ihw3jvg5aEGIXJXFmRozfWK4+Szo96lbdCv6gFIqRs=
 github.com/NubeIO/lib-uuid v0.0.2/go.mod h1:lLx2E+mqNntnVsgnA44rEVQXoXzKTcZDYTQdNacJLDg=
 github.com/NubeIO/nubeio-rubix-lib-auth-go v1.0.3 h1:BG93vRFMgL+b7BDX0IgTot8S9eE9GPbj40nb8qzHy1Y=
@@ -94,6 +94,8 @@ github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.4 h1:tpFaNnr4YqyWnp1gYaWWo36mx
 github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.4/go.mod h1:J0Xy/dX/f/xIhEnW6ZhkE2LiyuRk2H9gCb0Uk+2SSSk=
 github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.8 h1:Ri5k9eTM03rUGpgfs2+qL4IS+csvK6TrH3QgBJx6CBM=
 github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.8/go.mod h1:MU13rBQBD1xc/n2aRvNyCr8HZ5NNTsPhiZSUFhIgrT4=
+github.com/NubeIO/rubix-edge v0.1.5 h1:zNkIBqMZb9S62fBtGIRHyjyAKpDCpR1SMjQdX24f4/I=
+github.com/NubeIO/rubix-edge v0.1.5/go.mod h1:k5SVT3c+UalnyspHo4vX3sfP4fllOciJpvN6wLz1to4=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/PuerkitoBio/goquery v1.6.0/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
 github.com/PuerkitoBio/purell v1.1.1/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbtSwDGJws/X0=
