@@ -12,6 +12,10 @@ func setExternalToken(token string) string {
 	return fmt.Sprintf("External %s", token)
 }
 
+// first login to assist and get an JWT token to generate the assist-token, store this token is the UI DB ("/api/users/login")
+// first login to edge and get an JWT token to generate the edge-token ("/api/users/login")
+// store that token in the host as EdgeToken
+
 func (inst *Controller) Proxy(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {
@@ -23,7 +27,8 @@ func (inst *Controller) Proxy(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	token := host.RubixToken
+
+	token := host.RubixToken // rubix-ui must first get and store the token (by using the uname/pass)
 	if token == "" {
 		//reposeHandler(nil, errors.New("rubix-edge token is empty"), c)
 		//return

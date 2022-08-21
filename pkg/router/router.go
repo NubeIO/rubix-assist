@@ -50,9 +50,11 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	handleAuth := func(c *gin.Context) { c.Next() }
 	if config.Config.Auth() {
-		//handleAuth = api.HandleAuth() // TODO add back in auth
+		handleAuth = api.HandleAuth() // TODO add back in auth
 	}
 	admin := r.Group("/api", handleAuth)
+	proxy := r.Group("/proxy", handleAuth)
+	proxy.Any("/*proxyPath", api.Proxy)
 
 	appStore := admin.Group("/store/apps")
 	{
@@ -246,9 +248,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		token.PUT("/:uuid/regenerate", api.RegenerateToken)
 		token.DELETE("/:uuid", api.DeleteToken)
 	}
-
-	r.Any("/proxy/*proxyPath", api.Proxy)
-	r.Any("/ff/*proxyPath", api.FFProxy)
 
 	return r
 }
