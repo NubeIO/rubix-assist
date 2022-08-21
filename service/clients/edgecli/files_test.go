@@ -8,7 +8,7 @@ import (
 )
 
 func TestClient_ListFiles(t *testing.T) {
-	cli := New("", 0)
+	cli := New(&Client{})
 	apps, err := cli.ListFiles("/data")
 	if err != nil {
 		fmt.Println(err)
@@ -18,7 +18,7 @@ func TestClient_ListFiles(t *testing.T) {
 }
 
 func TestClient_RenameFile(t *testing.T) {
-	cli := New("", 0)
+	cli := New(&Client{})
 	dir, err := fileutils.HomeDir()
 	if err != nil {
 		return
@@ -35,7 +35,7 @@ func TestClient_RenameFile(t *testing.T) {
 }
 
 func TestClient_CopyFile(t *testing.T) {
-	cli := New("", 0)
+	cli := New(&Client{})
 	dir, err := fileutils.HomeDir()
 	if err != nil {
 		return
@@ -52,7 +52,7 @@ func TestClient_CopyFile(t *testing.T) {
 }
 
 func TestClient_MoveFile(t *testing.T) {
-	cli := New("", 0)
+	cli := New(&Client{})
 	dir, err := fileutils.HomeDir()
 	if err != nil {
 		return
@@ -69,7 +69,7 @@ func TestClient_MoveFile(t *testing.T) {
 }
 
 func TestClient_DownloadFile(t *testing.T) {
-	cli := New("", 0)
+	cli := New(&Client{})
 	dir, err := fileutils.HomeDir()
 	if err != nil {
 		return
@@ -87,7 +87,7 @@ func TestClient_DownloadFile(t *testing.T) {
 }
 
 func TestClient_DeleteAllFiles(t *testing.T) {
-	cli := New("", 0)
+	cli := New(&Client{})
 	dir, err := fileutils.HomeDir()
 	if err != nil {
 		return

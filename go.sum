@@ -88,11 +88,8 @@ github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.8 h1:Ri5k9eTM03rUGpgfs2+qL4IS+cs
 github.com/NubeIO/nubeio-rubix-lib-rest-go v1.0.8/go.mod h1:MU13rBQBD1xc/n2aRvNyCr8HZ5NNTsPhiZSUFhIgrT4=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/PuerkitoBio/goquery v1.6.0/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
-github.com/PuerkitoBio/purell v1.1.1 h1:WEQqlqaGbrPkxLJWfBwQmfEAE1Z7ONdDLqrN38tNFfI=
 github.com/PuerkitoBio/purell v1.1.1/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbtSwDGJws/X0=
-github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 h1:d+Bc7a5rLufV/sSk/8dngufqelfh6jnri85riMAaF/M=
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
-github.com/THREATINT/go-net v1.2.10 h1:JlbWIYTqHWIQQEOmz2AtR8rQJgW2TWv5ozM6y5xfC9I=
 github.com/THREATINT/go-net v1.2.10/go.mod h1:4n3ITWyUUfaEp8JNAompTT+PuPANXL9i9TyOUijGnwk=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
@@ -433,7 +430,6 @@ github.com/mattn/go-sqlite3 v1.14.9/go.mod h1:NyWgC/yNuGj7Q9rpYnZvas74GogHl5/Z4A
 github.com/mattn/go-sqlite3 v1.14.12 h1:TJ1bhYJPV44phC+IMu1u2K/i5RriLTPe+yc68XDJ1Z0=
 github.com/mattn/go-sqlite3 v1.14.12/go.mod h1:NyWgC/yNuGj7Q9rpYnZvas74GogHl5/Z4A/KQRfk6bU=
 github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5Ld7szi9bcBfOoFv/3dc6xSMkL2PC0=
-github.com/mcnijman/go-emailaddress v1.1.0 h1:7/Uxgn9pXwXmvXsFSgORo6XoRTrttj7AGmmB2yFArAg=
 github.com/mcnijman/go-emailaddress v1.1.0/go.mod h1:m+aauxGmv31sB5zZ1I8ICcMoa9ZHOA9RiurCijfvkhI=
 github.com/melbahja/goph v1.3.0 h1:RAIS7eL2tew/UrNmBpY2NZMxw6fWtOxki9nkrzw8mZY=
 github.com/melbahja/goph v1.3.0/go.mod h1:04M6J+mKmwzAOWhO0ABTweHGU3cizOp90WdCoxrn9gQ=

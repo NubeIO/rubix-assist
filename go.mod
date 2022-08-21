@@ -2,7 +2,6 @@ module github.com/NubeIO/rubix-assist
 
 go 1.17
 
-
 //replace github.com/NubeIO/lib-rubix-installer => /home/aidan/code/go/nube/lib/lib-rubix-installer
 //replace github.com/NubeIO/lib-schema => /home/aidan/code/go/nube/lib/lib-schema
 
@@ -23,8 +22,6 @@ require (
 )
 
 require (
-	github.com/PuerkitoBio/purell v1.1.1 // indirect
-	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect; indirect``
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -33,7 +30,7 @@ require (
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/helloyi/go-sshclient v1.1.0
+	github.com/helloyi/go-sshclient v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -79,11 +76,9 @@ require (
 )
 
 require (
-	github.com/THREATINT/go-net v1.2.10 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/mcnijman/go-emailaddress v1.1.0 // indirect
 	gorm.io/driver/mysql v1.3.2 // indirect
 )

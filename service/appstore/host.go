@@ -18,7 +18,12 @@ func (inst *Store) getClient(hostUUID, hostName string) (*edgecli.Client, error)
 }
 
 func (inst *Store) newClient(ip, user, password string, port int) (*edgecli.Client, error) {
-	cli := edgecli.New(ip, port)
+	cli := edgecli.New(&edgecli.Client{
+		Rest:  nil,
+		URL:   ip,
+		Port:  port,
+		HTTPS: false,
+	})
 	return cli, nil
 }
 
@@ -53,10 +58,7 @@ func (inst *Store) getHost(hostUUID, hostName string) (*model.Host, error) {
 			return nil, err
 		}
 	} else {
-		fmt.Println(111111, hostName)
 		host, err = inst.DB.GetHostByName(hostName)
-		fmt.Println(111111, host)
-		fmt.Println(111111, err)
 		if err != nil {
 			var hostNames []string
 			var hostUUIDs []string

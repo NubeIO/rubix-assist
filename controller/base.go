@@ -4,14 +4,13 @@ import (
 	"errors"
 	"fmt"
 	fileutils "github.com/NubeIO/lib-dirs/dirs"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/networking/ssh"
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"net/http"
 
 	dbase "github.com/NubeIO/rubix-assist/database"
 	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
-	"github.com/NubeIO/rubix-assist/service/remote"
-	"github.com/NubeIO/rubix-assist/service/remote/ssh"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"github.com/melbahja/goph"
@@ -62,31 +61,6 @@ func (inst *Controller) resolveHost(c *gin.Context) (*model.Host, error) {
 		count++
 	}
 	return nil, errors.New(fmt.Sprintf("no valid host was found: host count:%d, host names found:%v uuids:%v", count, hostNames, hostUUIDs))
-}
-
-func (inst *Controller) getHost(c *gin.Context) (host *model.Host, session *remote.Admin, err error) {
-	host, err = inst.resolveHost(c)
-	rs := &remote.Admin{
-		SSH: &ssh.Host{
-			Host: &model.Host{
-				IP:       host.IP,
-				Port:     host.Port,
-				Username: host.SSHUsername,
-				Password: host.SSHPassword,
-			},
-		},
-	}
-	session = remote.New(rs)
-	return host, session, err
-}
-
-func bodyAsJSON(ctx *gin.Context) (interface{}, error) {
-	var body interface{} //get the body and put it into an interface
-	err = ctx.ShouldBindJSON(&body)
-	if err != nil {
-		return nil, err
-	}
-	return body, err
 }
 
 func matchUUID(uuid string) bool {
