@@ -1,24 +1,10 @@
-package edgecli
+package rsclient
 
 import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
-	log "github.com/sirupsen/logrus"
+	"log"
 )
-
-type path struct {
-	path string
-}
-
-var paths = struct {
-	Apps   path
-	Store  path
-	System path
-}{
-	Apps:   path{path: "/api/apps"},
-	Store:  path{path: "/api/appstore"},
-	System: path{path: "/api/system"},
-}
 
 type Client struct {
 	Rest  *resty.Client
@@ -30,7 +16,7 @@ type Client struct {
 // New returns a new instance of the nube common apis
 func New(cli *Client) *Client {
 	if cli == nil {
-		log.Fatal("rubix-service-rest-client can not be empty")
+		log.Fatal("rubix-edge-rest-client can not be empty")
 	}
 	var url = cli.URL
 	var port = cli.Port
@@ -39,7 +25,7 @@ func New(cli *Client) *Client {
 		url = "0.0.0.0"
 	}
 	if port == 0 {
-		port = 1661
+		port = 1660
 	}
 	if cli.HTTPS {
 		cli.Rest.SetBaseURL(fmt.Sprintf("https://%s:%d", url, port))
