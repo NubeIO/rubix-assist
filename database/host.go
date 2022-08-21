@@ -94,9 +94,6 @@ func (inst *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if host.PingEnable == nil {
 		host.PingEnable = nils.NewFalse()
 	}
-	if host.IsLocalhost == nil {
-		host.IsLocalhost = nils.NewFalse()
-	}
 	if host.HTTPS == nil {
 		host.HTTPS = nils.NewFalse()
 	}

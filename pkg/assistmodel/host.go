@@ -2,33 +2,27 @@ package assistmodel
 
 import (
 	"github.com/NubeIO/lib-schema/schema"
-	"time"
 )
 
 type Host struct {
-	UUID                 string    `json:"uuid" gorm:"primaryKey" `
-	Name                 string    `json:"name"  gorm:"type:varchar(255);not null"  `
-	NetworkUUID          string    `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null"`
-	Enable               *bool     `json:"enable"`
-	ProductType          string    `json:"product_type"` //edge28, rubix-compute
-	IP                   string    `json:"ip"`
-	Port                 int       `json:"port"`
-	HTTPS                *bool     `json:"https"`
-	Username             string    `json:"username"`
-	Password             string    `json:"password"`
-	WiresPort            int       `json:"wires_port"`
-	SSHPort              int       `json:"ssh_port"`
-	SSHUsername          string    `json:"ssh_username"`
-	SSHPassword          string    `json:"ssh_password" `
-	RubixHTTPS           *bool     `json:"rubix_https" `
-	IsLocalhost          *bool     `json:"is_localhost" `
-	PingEnable           *bool     `json:"ping_enable"`
-	PingFrequency        int       `json:"ping_frequency"`
-	IsOffline            bool      `json:"is_offline"`
-	OfflineCount         uint      `json:"offline_count"`
-	RubixToken           string    `json:"-"`
-	RubixTokenLastUpdate time.Time `json:"-"`
-	BiosToken            string    `json:"-"`
+	UUID           string `json:"uuid" gorm:"primaryKey" `
+	Name           string `json:"name"  gorm:"type:varchar(255);not null"  `
+	NetworkUUID    string `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null"`
+	Enable         *bool  `json:"enable"`
+	ProductType    string `json:"product_type"` //edge28, rubix-compute
+	IP             string `json:"ip"`
+	Port           int    `json:"port"`
+	HTTPS          *bool  `json:"https"`
+	Username       string `json:"username"`
+	Password       string `json:"password"`
+	WiresPort      int    `json:"wires_port"`
+	PingEnable     *bool  `json:"ping_enable"`
+	PingFrequency  int    `json:"ping_frequency"`
+	IsOffline      bool   `json:"is_offline"`
+	OfflineCount   uint   `json:"offline_count"`
+	RubixEdgeToken string `json:"-"`
+	RubixToken     string `json:"-"`
+	BiosToken      string `json:"-"`
 }
 
 type NetworkUUID struct {
@@ -60,20 +54,20 @@ type SSHPort struct {
 }
 
 type HostSchema struct {
-	UUID               schema.UUID               `json:"uuid"`
-	Name               schema.Name               `json:"name"`
-	Description        schema.Description        `json:"description"`
-	Enable             schema.Enable             `json:"enable"`
-	Product            schema.Product            `json:"product_type"`
-	NetworkUUID        NetworkUUID               `json:"network_uuid"`
-	IP                 schema.Host               `json:"host"`
-	Port               schema.Port               `json:"port"`
-	HTTPS              schema.HTTPS              `json:"https"`
-	Username           schema.Username           `json:"username"`
-	Password           schema.Password           `json:"password"`
-	RubixEdgeToken     schema.RubixEdgeToken     `json:"rubix_edge_token"`
-	FlowFrameworkToken schema.FlowFrameworkToken `json:"flow_framework_token"`
-	Required           []string                  `json:"required"`
+	UUID        schema.UUID        `json:"uuid"`
+	Name        schema.Name        `json:"name"`
+	Description schema.Description `json:"description"`
+	Enable      schema.Enable      `json:"enable"`
+	Product     schema.Product     `json:"product_type"`
+	NetworkUUID NetworkUUID        `json:"network_uuid"`
+	IP          schema.Host        `json:"host"`
+	Port        schema.Port        `json:"port"`
+	HTTPS       schema.HTTPS       `json:"https"`
+	Username    schema.Username    `json:"username"`
+	Password    schema.Password    `json:"password"`
+	//RubixEdgeToken     schema.RubixEdgeToken     `json:"rubix_edge_token"`
+	//FlowFrameworkToken schema.FlowFrameworkToken `json:"flow_framework_token"`
+	Required []string `json:"required"`
 }
 
 func GetHostSchema() *HostSchema {

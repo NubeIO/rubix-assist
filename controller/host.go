@@ -52,7 +52,6 @@ func (inst *Controller) UpdateHost(c *gin.Context) {
 		return
 	}
 	host.Password = "***"
-	host.SSHPassword = "***"
 	reposeHandler(host, err, c)
 }
 
