@@ -6,18 +6,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type path struct {
-	path string
-}
-
-var paths = struct {
-	Apps   path
-	Store  path
-	System path
-}{
-	Apps:   path{path: "/api/apps"},
-	Store:  path{path: "/api/appstore"},
-	System: path{path: "/api/system"},
+type Message struct {
+	Message interface{} `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 type Client struct {
