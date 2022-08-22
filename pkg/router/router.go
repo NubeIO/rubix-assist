@@ -50,7 +50,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	handleAuth := func(c *gin.Context) { c.Next() }
 	if config.Config.Auth() {
-		handleAuth = api.HandleAuth() // TODO add back in auth
+		//handleAuth = api.HandleAuth() // TODO add back in auth
 	}
 	admin := r.Group("/api", handleAuth)
 	proxy := r.Group("/proxy", handleAuth)
