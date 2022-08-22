@@ -1,4 +1,10 @@
 # CHANGELOG
+## [v0.4.1](https://github.com/NubeIO/rubix-assist/tree/v0.4.1) (2022-08-22)
+
+- add ff proxy
+- added basic client for the users
+- edge client for date, time and networking
+
 ## [v0.3.8](https://github.com/NubeIO/rubix-assist/tree/v0.3.8) (2022-08-19)
 
 - add auth to apis
