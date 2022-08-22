@@ -60,7 +60,7 @@ type HostSchema struct {
 	Enable      schema.Enable      `json:"enable"`
 	Product     schema.Product     `json:"product_type"`
 	NetworkUUID NetworkUUID        `json:"network_uuid"`
-	IP          schema.Host        `json:"host"`
+	IP          schema.Host        `json:"ip"`
 	Port        schema.Port        `json:"port"`
 	HTTPS       schema.HTTPS       `json:"https"`
 	Username    schema.Username    `json:"username"`
