@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v0.4.4](https://github.com/NubeIO/rubix-assist/tree/v0.4.4) (2022-08-22)
+
+- added new edge api
+
 ## [v0.4.3](https://github.com/NubeIO/rubix-assist/tree/v0.4.3) (2022-08-22)
 
 - fix bug on host ip
