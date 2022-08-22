@@ -53,7 +53,7 @@ func TestClient_DHCPSetStaticIP(t *testing.T) {
 	})
 
 	exists, err := cli.DHCPSetStaticIP(&dhcpd.SetStaticIP{
-		Ip:                   "192.168.15.191",
+		Ip:                   "192.168.15.192",
 		NetMask:              "255.255.255.0",
 		IFaceName:            deviceIface,
 		GatewayIP:            "192.168.15.1",
