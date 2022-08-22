@@ -24,6 +24,8 @@ func (inst *Client) WiresBackup(hostID string) (data interface{}, err error) {
 		SetHeader("host_uuid", hostID).
 		SetHeader("host_name", hostID).
 		Get(path)
+	fmt.Println(resp.Status())
+	fmt.Println(resp.String())
 	if resp.IsSuccess() {
 		r := &wirescli.WiresExport{}
 		json.Unmarshal(resp.Body(), r)
