@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v0.4.3](https://github.com/NubeIO/rubix-assist/tree/v0.4.3) (2022-08-22)
+
+- fix bug on host ip
+
+
 ## [v0.4.1](https://github.com/NubeIO/rubix-assist/tree/v0.4.1) (2022-08-22)
 
 - add ff proxy
