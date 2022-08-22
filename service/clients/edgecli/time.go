@@ -63,11 +63,3 @@ func (inst *Client) UpdateTimezone(body system.DateBody) (*system.Message, error
 	}
 	return resp.Result().(*system.Message), nil
 }
-
-//systemTimeZone := apiRoutes.Group("/timezone")
-//{
-//systemTimeZone.GET("/", api.GetHardwareTZ)
-//systemTimeZone.POST("/", api.UpdateTimezone)
-//systemTimeZone.GET("/list", api.GetTimeZoneList)
-//systemTimeZone.POST("/config", api.GenerateTimeSyncConfig)
-//}

@@ -15,9 +15,19 @@ func TestClient_WiresUpload(t *testing.T) {
 
 	client := New("0.0.0.0", 1662)
 
-	r, _ := client.WiresUpload("rc", data)
+	r, _ := client.WiresUpload("hos_7DC861C92923", data)
 	fmt.Println(r)
 	b, err := client.WiresBackup("rc")
+
+	fmt.Println(b, err)
+
+}
+
+func TestClient_WiresBackup(t *testing.T) {
+
+	client := New("0.0.0.0", 1662)
+
+	b, err := client.WiresBackup("hos_7DC861C92923")
 
 	fmt.Println(b, err)
 

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"errors"
 	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/service/clients/wirescli"
 	"github.com/gin-gonic/gin"
@@ -34,8 +35,8 @@ func (inst *Controller) WiresUpload(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	if token == nil {
-		reposeHandler("failed to get wires token", err, c)
+	if token.Token == "" {
+		reposeHandler(nil, errors.New("failed to get wires token"), c)
 		return
 	}
 	ok, res := wirescli.New(host.IP, host.WiresPort).Upload(body, token.Token)
@@ -52,9 +53,12 @@ func (inst *Controller) WiresBackup(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	if token == nil {
-		reposeHandler("failed to get wires token", err, c)
+	if token.Token == "" {
+		reposeHandler(nil, errors.New("failed to get wires token"), c)
 		return
+	}
+	if host.WiresPort == 0 {
+		host.WiresPort = 1313
 	}
 	data, err := wirescli.New(host.IP, host.WiresPort).Backup(token.Token)
 	if err != nil {
