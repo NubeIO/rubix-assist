@@ -9,6 +9,8 @@ import (
 const nonRoot = 0700
 const root = 0777
 const flowFramework = "flow-framework"
+const rubixWires = "rubix-wires"
+const wiresBuilds = "wires-builds"
 
 var FilePerm = root
 
