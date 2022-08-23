@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
+	log "github.com/sirupsen/logrus"
 	"os"
 )
 
@@ -35,24 +36,22 @@ func (inst *Store) AddUploadEdgeApp(hostUUID, hostName string, app *EdgeApp) (*i
 	if archType == "" {
 		return nil, errors.New("upload app to edge arch type can not be empty, try armv7 amd64")
 	}
-	var fileName string
+	var dontCheckArch bool
+	if appName == rubixWires {
+		dontCheckArch = true
+	}
 	path := inst.getAppStorePathAndVersion(appName, version)
-	fileNames, err := inst.App.GetBuildZipNames(path)
-	if err != nil {
-		err = errors.New(fmt.Sprintf("failed to find zip build err:%s", err.Error()))
-		return nil, err
+	buildDetails, err := inst.App.GetBuildZipNameByArch(path, archType, dontCheckArch)
+	if buildDetails == nil {
+		return nil, errors.New(fmt.Sprintf("failed to match build zip name app:%s version:%s arch:%s", appName, version, archType))
 	}
-	if len(fileNames) > 0 {
-		fileName = fileNames[0].ZipName
-	} else {
-		err := errors.New(fmt.Sprintf("no zip builds found in path:%s", path))
-		return nil, err
-	}
+	var fileName = buildDetails.ZipName
 	fileAndPath := filePath(fmt.Sprintf("%s/%s", path, fileName))
 	reader, err := os.Open(fileAndPath)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("error open build for app:%s fileName:%s  err:%s", appName, fileName, err.Error()))
 	}
+	log.Infof(fmt.Sprintf("error open build for app:%s version:%s  arch:%s, fileAndPath:%s", appName, version, archType, fileName))
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
