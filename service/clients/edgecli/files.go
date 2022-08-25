@@ -9,6 +9,72 @@ import (
 	"path/filepath"
 )
 
+// ReadFile read a files content
+func (inst *Client) ReadFile(path string) ([]byte, error) {
+	url := fmt.Sprintf("/api/files/read/?path=%s", path)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Body(), nil
+}
+
+type WriteFile struct {
+	FilePath     string      `json:"path"`
+	Body         interface{} `json:"body"`
+	BodyAsString string      `json:"body_as_string"`
+	Perm         int         `json:"perm"`
+}
+
+func (inst *Client) WriteFile(body *WriteFile) (*Message, error) {
+	url := fmt.Sprintf("/api/files/write/string")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&Message{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
+func (inst *Client) WriteFileJson(body *WriteFile) (*Message, error) {
+	url := fmt.Sprintf("/api/files/write/json")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&Message{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
+func (inst *Client) WriteFileYml(body *WriteFile) (*Message, error) {
+	url := fmt.Sprintf("/api/files/write/yml")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&Message{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
+func (inst *Client) CreateFile(body *WriteFile) (*Message, error) {
+	url := fmt.Sprintf("/api/files/create")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&Message{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
 // Walk list all files/dirs in a dir
 func (inst *Client) Walk(path string) ([]string, error) {
 	url := fmt.Sprintf("/api/files/walk/?path=%s", path)
