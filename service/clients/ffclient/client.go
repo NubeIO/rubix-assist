@@ -39,8 +39,8 @@ type Connection struct {
 }
 
 func NewLocalClient(conn *Connection) *FlowClient {
-	mutex.RLock()
-	defer mutex.RUnlock()
+	mutex.Lock()
+	defer mutex.Unlock()
 	ip := conn.Ip
 	port := conn.Port
 	if ip == "" {
