@@ -87,7 +87,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	edgeConfig := admin.Group("/edge/config")
 	{
+		edgeConfig.GET("/", api.EdgeReadConfig)
 		edgeConfig.POST("/", api.EdgeReplaceConfig)
+
 	}
 
 	edgePlugins := admin.Group("/edge/plugins")
