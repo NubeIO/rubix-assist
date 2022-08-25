@@ -9,10 +9,6 @@ type Client struct {
 	Rest *resty.Client
 }
 
-type FlowClient struct {
-	client *resty.Client
-}
-
 // New returns a new instance of the nube common apis
 func New(url string, port int) *Client {
 	rest := &Client{
