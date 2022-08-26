@@ -3,19 +3,44 @@ package assitcli
 import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
+	log "github.com/sirupsen/logrus"
 )
 
 type Client struct {
-	Rest *resty.Client
+	Rest        *resty.Client
+	URL         string `json:"url"`
+	Port        int    `json:"port"`
+	HTTPS       bool   `json:"https"`
+	AssistToken string `json:"assist_token"`
+}
+
+func setExternalToken(token string) string {
+	return fmt.Sprintf("External %s", token)
 }
 
 // New returns a new instance of the nube common apis
-func New(url string, port int) *Client {
-	rest := &Client{
-		Rest: resty.New(),
+func New(cli *Client) *Client {
+	if cli == nil {
+		log.Fatal("rubix-service-rest-client can not be empty")
 	}
-	rest.Rest.SetBaseURL(fmt.Sprintf("http://%s:%d", url, port))
-	return rest
+	var url = cli.URL
+	var port = cli.Port
+	cli.Rest = resty.New()
+	if url == "" {
+		url = "0.0.0.0"
+	}
+	if port == 0 {
+		port = 1662
+	}
+	if cli.HTTPS {
+		cli.Rest.SetBaseURL(fmt.Sprintf("https://%s:%d", url, port))
+	} else {
+		cli.Rest.SetBaseURL(fmt.Sprintf("http://%s:%d", url, port))
+	}
+	if cli.AssistToken != "" {
+		cli.Rest.SetHeader("Authorization", setExternalToken(cli.AssistToken))
+	}
+	return cli
 }
 
 type Path struct {

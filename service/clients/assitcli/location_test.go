@@ -8,8 +8,6 @@ import (
 
 func TestHostLocation(*testing.T) {
 
-	client := New("0.0.0.0", 8080)
-
 	hosts, res := client.GetHostSchema()
 	fmt.Println(hosts)
 	uuid := ""

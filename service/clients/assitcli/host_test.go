@@ -7,9 +7,6 @@ import (
 )
 
 func TestHost(*testing.T) {
-
-	client := New("0.0.0.0", 1662)
-
 	hosts, _ := client.GetHosts()
 	uuid := ""
 	for _, host := range hosts {
