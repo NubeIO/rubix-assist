@@ -14,6 +14,17 @@ type Client struct {
 	AssistToken string `json:"assist_token"`
 }
 
+type ResponseBody struct {
+	Response ResponseCommon `json:"response"`
+	Status   string         `json:"status"`
+	Count    string         `json:"count"`
+}
+
+type ResponseCommon struct {
+	UUID string `json:"uuid"`
+	// Name        string `json:"name"`
+}
+
 func setExternalToken(token string) string {
 	return fmt.Sprintf("External %s", token)
 }

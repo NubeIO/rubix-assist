@@ -1,6 +1,8 @@
 package ffclient
 
-import "github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
+import (
+	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
+)
 
 func (inst *FlowClient) GetQuery(url string) (*[]byte, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().

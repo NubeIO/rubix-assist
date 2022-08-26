@@ -2,7 +2,7 @@ package ffclient
 
 import (
 	"github.com/NubeIO/nubeio-rubix-lib-models-go/pkg/v1/model"
-	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
 func (inst *FlowClient) SyncStream(body *model.SyncStream) (*model.StreamClone, error) {

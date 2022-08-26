@@ -2,7 +2,7 @@ package edgecli
 
 import (
 	"fmt"
-	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
 func (inst *Client) RestartNetworking() (string, error) {

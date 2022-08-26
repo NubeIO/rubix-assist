@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-dhcpd/dhcpd"
 	"github.com/NubeIO/lib-networking/networking"
-	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 	"github.com/NubeIO/rubix-edge/service/system"
 )
 

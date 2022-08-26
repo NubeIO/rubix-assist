@@ -3,7 +3,7 @@ package ffclient
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
 // AsJson return as body as blank interface
