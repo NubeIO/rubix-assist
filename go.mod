@@ -80,6 +80,7 @@ require (
 )
 
 require (
+	github.com/NubeIO/lib-command v0.0.2 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect

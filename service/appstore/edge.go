@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/lib-systemctl-go/systemctl"
+	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 	log "github.com/sirupsen/logrus"
 	"os"
 )
@@ -66,6 +68,14 @@ func (inst *Store) EdgeProductInfo(hostUUID, hostName string) (*installer.Produc
 	return client.EdgeProductInfo()
 }
 
+func (inst *Store) EdgePublicInfo(hostUUID, hostName string) (*edgecli.DeviceProduct, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.EdgePublicInfo()
+}
+
 func (inst *Store) EdgeUnInstallApp(hostUUID, hostName, appName string, deleteApp bool) (*installer.RemoveRes, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
@@ -98,35 +108,34 @@ func (inst *Store) EdgeListNubeServices(hostUUID, hostName string) ([]installer.
 	return client.ListAppsAndService()
 }
 
-//func (inst *Store) EdgeCtlAction(hostUUID, hostName string, body *installer.CtlBody) (*systemctl.SystemResponse, error) {
-//	client, err := inst.getClient(hostUUID, hostName)
-//	if err != nil {
-//		return nil, err
-//	}
-//	return client.EdgeCtlAction(body)
-//}
-//
-//func (inst *Store) EdgeCtlStatus(hostUUID, hostName string, body *installer.CtlBody) (*systemctl.SystemState, error) {
-//	client, err := inst.getClient(hostUUID, hostName)
-//	if err != nil {
-//		return nil, err
-//	}
-//	return client.EdgeCtlStatus(body)
-//}
-//
-//func (inst *Store) EdgeServiceMassAction(hostUUID, hostName string, body *installer.CtlBody) ([]systemctl.MassSystemResponse, error) {
-//	client, err := inst.getClient(hostUUID, hostName)
-//	if err != nil {
-//		return nil, err
-//	}
-//	return client.EdgeServiceMassAction(body)
-//}
-//
-//func (inst *Store) EdgeServiceMassStatus(hostUUID, hostName string, body *installer.CtlBody) ([]systemctl.SystemState, error) {
-//	client, err := inst.getClient(hostUUID, hostName)
-//	if err != nil {
-//		return nil, err
-//	}
-//	return client.EdgeServiceMassStatus(body)
-//}
-//
+func (inst *Store) EdgeCtlAction(hostUUID, hostName string, body *installer.CtlBody) (*systemctl.SystemResponse, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.EdgeCtlAction(body)
+}
+
+func (inst *Store) EdgeCtlStatus(hostUUID, hostName string, body *installer.CtlBody) (*systemctl.SystemState, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.EdgeCtlStatus(body)
+}
+
+func (inst *Store) EdgeServiceMassAction(hostUUID, hostName string, body *installer.CtlBody) ([]systemctl.MassSystemResponse, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.EdgeServiceMassAction(body)
+}
+
+func (inst *Store) EdgeServiceMassStatus(hostUUID, hostName string, body *installer.CtlBody) ([]systemctl.SystemState, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.EdgeServiceMassStatus(body)
+}
