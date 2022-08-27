@@ -25,6 +25,15 @@ type ResponseCommon struct {
 	// Name        string `json:"name"`
 }
 
+func buildUrl(overrideUrl ...string) string {
+	if len(overrideUrl) > 0 {
+		if overrideUrl[0] != "" {
+			return overrideUrl[0]
+		}
+	}
+	return ""
+}
+
 func setExternalToken(token string) string {
 	return fmt.Sprintf("External %s", token)
 }
