@@ -6,18 +6,43 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// AddStream an object
-func (inst *Client) AddStream(hostIDName string, body *model.Stream) (*model.Stream, error) {
+// AddStreamToExistingFlow add a stream to an existing flow
+func (inst *Client) AddStreamToExistingFlow(hostIDName, flowNetworkUUID string, body *model.Stream) (*model.Stream, error) {
+
+	flowNetwork := &model.FlowNetwork{
+		CommonFlowNetwork: model.CommonFlowNetwork{
+			CommonUUID: model.CommonUUID{
+				UUID: flowNetworkUUID,
+			},
+		},
+	}
+	body.FlowNetworks = append(body.FlowNetworks, flowNetwork)
+
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
 		SetResult(&model.Stream{}).
 		SetBody(body).
-		Post("proxy/ff/api/streams"))
+		Post("proxy/ff/api/streams/"))
 	if err != nil {
 		return nil, err
 	}
 	return resp.Result().(*model.Stream), nil
+}
+
+// GetStreamsByFlowNetwork all stream under a flow network
+func (inst *Client) GetStreamsByFlowNetwork(hostIDName, flowUUID string) ([]*model.Stream, error) {
+	url := fmt.Sprintf("proxy/ff/api/flow_networks/%s?with_streams=true", flowUUID)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&model.FlowNetwork{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	streams := resp.Result().(*model.FlowNetwork)
+	return streams.Streams, nil
 }
 
 // EditStream edit an object
@@ -53,7 +78,7 @@ func (inst *Client) GetStreamClones(hostIDName string) ([]model.StreamClone, err
 
 // GetStreams an object
 func (inst *Client) GetStreams(hostIDName string) ([]model.Stream, error) {
-	url := fmt.Sprintf("proxy/ff/api/streams")
+	url := fmt.Sprintf("proxy/ff/api/streams/")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).

@@ -57,9 +57,9 @@ func (inst *Client) GetFlowNetwork(hostIDName, uuid string, withStreams bool, ov
 
 // GetFlowNetworks an objects
 func (inst *Client) GetFlowNetworks(hostIDName string, withStreams bool, overrideUrl ...string) ([]model.FlowNetwork, error) {
-	url := fmt.Sprintf("proxy/ffproxy/ff/api/flow_networks")
+	url := fmt.Sprintf("proxy/ff/api/flow_networks")
 	if withStreams == true {
-		url = fmt.Sprintf("proxy/ff/api/flow_networks/?with_streams=true")
+		url = fmt.Sprintf("proxy/ff/api/flow_networks?with_streams=true")
 	}
 	if buildUrl(overrideUrl...) != "" {
 		url = buildUrl(overrideUrl...)
@@ -95,7 +95,7 @@ func (inst *Client) GetFlowNetworksWithChild(hostIDName string) ([]model.FlowNet
 
 // GetFlowNetworkWithChild an object
 func (inst *Client) GetFlowNetworkWithChild(hostIDName, uuid string) (*model.FlowNetwork, error) {
-	url := fmt.Sprintf("proxy/ff/api/flow_networks/%s?with_streams=true&with_producers=true&with_consumers=true&with_writers=true&with_tags=true", uuid)
+	url := fmt.Sprintf("proxy/ff/api/flow_networks%s?with_streams=true&with_producers=true&with_consumers=true&with_writers=true&with_tags=true", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
