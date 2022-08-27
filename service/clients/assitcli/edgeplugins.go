@@ -3,8 +3,8 @@ package assitcli
 import (
 	"fmt"
 	"github.com/NubeIO/rubix-assist/service/appstore"
+	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
-	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
 )
 
 type EdgeUploadResponse struct {
@@ -14,8 +14,8 @@ type EdgeUploadResponse struct {
 	UploadTime  string `json:"upload_time"`
 }
 
-// EdgeUploadPlugin upload a plugin to the edge device
-func (inst *Client) EdgeUploadPlugin(hostIDName string, body *appstore.Plugin) (*EdgeUploadResponse, error) {
+// UploadPlugin upload a plugin to the edge device
+func (inst *Client) UploadPlugin(hostIDName string, body *appstore.Plugin) (*EdgeUploadResponse, error) {
 	url := fmt.Sprintf("/api/edge/plugins")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -29,8 +29,8 @@ func (inst *Client) EdgeUploadPlugin(hostIDName string, body *appstore.Plugin) (
 	return resp.Result().(*EdgeUploadResponse), nil
 }
 
-// EdgeListPlugins list all the plugin in the dir /flow-framework/data/plugins
-func (inst *Client) EdgeListPlugins(hostIDName string) ([]appstore.Plugin, error) {
+// ListPlugins list all the plugin in the dir /flow-framework/data/plugins
+func (inst *Client) ListPlugins(hostIDName string) ([]appstore.Plugin, error) {
 	url := fmt.Sprintf("/api/edge/plugins")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -44,8 +44,8 @@ func (inst *Client) EdgeListPlugins(hostIDName string) ([]appstore.Plugin, error
 	return *data, nil
 }
 
-// EdgeDeletePlugin delete one
-func (inst *Client) EdgeDeletePlugin(hostIDName string, body *appstore.Plugin) (*edgecli.Message, error) {
+// DeletePlugin delete one
+func (inst *Client) DeletePlugin(hostIDName string, body *appstore.Plugin) (*edgecli.Message, error) {
 	url := fmt.Sprintf("/api/edge/plugins")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -59,8 +59,8 @@ func (inst *Client) EdgeDeletePlugin(hostIDName string, body *appstore.Plugin) (
 	return resp.Result().(*edgecli.Message), nil
 }
 
-// EdgeDeleteAllPlugins delete all
-func (inst *Client) EdgeDeleteAllPlugins(hostIDName string) (*edgecli.Message, error) {
+// DeleteAllPlugins delete all
+func (inst *Client) DeleteAllPlugins(hostIDName string) (*edgecli.Message, error) {
 	url := fmt.Sprintf("/api/edge/plugins/all")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).

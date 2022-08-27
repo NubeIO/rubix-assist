@@ -20,6 +20,21 @@ func (inst *Controller) EdgeProductInfo(c *gin.Context) {
 	reposeHandler(data, nil, c)
 }
 
+// EdgePublicInfo get edge details
+func (inst *Controller) EdgePublicInfo(c *gin.Context) {
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	data, err := inst.Store.EdgePublicInfo(host.UUID, host.Name)
+	if err != nil {
+		reposeHandler(nil, err, c)
+		return
+	}
+	reposeHandler(data, nil, c)
+}
+
 // EdgeCtlAction start, stop, enable, disable a service
 func (inst *Controller) EdgeCtlAction(c *gin.Context) {
 	host, err := inst.resolveHost(c)

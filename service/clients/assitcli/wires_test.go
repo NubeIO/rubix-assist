@@ -13,8 +13,6 @@ func TestClient_WiresUpload(t *testing.T) {
 	err := json.Unmarshal(plan, &data)
 	fmt.Println(err)
 
-	client := New("0.0.0.0", 1662)
-
 	r, _ := client.WiresUpload("hos_7DC861C92923", data)
 	fmt.Println(r)
 	b, err := client.WiresBackup("rc")
@@ -24,8 +22,6 @@ func TestClient_WiresUpload(t *testing.T) {
 }
 
 func TestClient_WiresBackup(t *testing.T) {
-
-	client := New("0.0.0.0", 1662)
 
 	b, err := client.WiresBackup("hos_7DC861C92923")
 

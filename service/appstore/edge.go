@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
+	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 	log "github.com/sirupsen/logrus"
 	"os"
 )
@@ -57,6 +58,22 @@ func (inst *Store) AddUploadEdgeApp(hostUUID, hostName string, app *EdgeApp) (*i
 		return nil, err
 	}
 	return client.UploadApp(appName, version, productType, archType, fileName, reader)
+}
+
+func (inst *Store) EdgeProductInfo(hostUUID, hostName string) (*installer.Product, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.EdgeProductInfo()
+}
+
+func (inst *Store) EdgePublicInfo(hostUUID, hostName string) (*edgecli.DeviceProduct, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.EdgePublicInfo()
 }
 
 func (inst *Store) EdgeUnInstallApp(hostUUID, hostName, appName string, deleteApp bool) (*installer.RemoveRes, error) {
@@ -121,12 +138,4 @@ func (inst *Store) EdgeServiceMassStatus(hostUUID, hostName string, body *instal
 		return nil, err
 	}
 	return client.EdgeServiceMassStatus(body)
-}
-
-func (inst *Store) EdgeProductInfo(hostUUID, hostName string) (*installer.Product, error) {
-	client, err := inst.getClient(hostUUID, hostName)
-	if err != nil {
-		return nil, err
-	}
-	return client.EdgeProductInfo()
 }

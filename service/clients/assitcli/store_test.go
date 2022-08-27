@@ -7,7 +7,6 @@ import (
 )
 
 func TestClient_ListAppsWithVersions(t *testing.T) {
-	client := New("0.0.0.0", 1662)
 	store, err := client.ListAppsWithVersions()
 	fmt.Println(err)
 
@@ -19,7 +18,6 @@ func TestClient_ListAppsWithVersions(t *testing.T) {
 }
 
 func TestClient_ListAppsBuildDetails(t *testing.T) {
-	client := New("0.0.0.0", 1662)
 	store, err := client.ListAppsBuildDetails()
 	fmt.Println(err)
 	if err != nil {

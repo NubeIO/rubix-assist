@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
-	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 )
 
 // EdgeProductInfo get edge product info
@@ -19,6 +20,20 @@ func (inst *Client) EdgeProductInfo(hostIDName string) (*installer.Product, erro
 		return nil, err
 	}
 	return resp.Result().(*installer.Product), nil
+}
+
+// EdgePublicInfo get edge product info
+func (inst *Client) EdgePublicInfo(hostIDName string) (*edgecli.DeviceProduct, error) {
+	url := fmt.Sprintf("/api/edge/public/device")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&edgecli.DeviceProduct{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*edgecli.DeviceProduct), nil
 }
 
 func (inst *Client) EdgeCtlAction(hostIDName string, body *installer.CtlBody) (*systemctl.SystemResponse, error) {

@@ -1,14 +1,29 @@
 package appstore
 
-import (
-	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
-)
+import "github.com/NubeIO/rubix-assist/service/clients/edgecli"
 
 type EdgeUploadResponse struct {
 	Destination string `json:"destination"`
 	File        string `json:"file"`
 	Size        string `json:"size"`
 	UploadTime  string `json:"upload_time"`
+}
+
+func (inst *Store) EdgeUploadLocalFile(hostUUID, hostName, path, fileName, destination string) (*EdgeUploadResponse, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := client.UploadLocalFile(path, fileName, destination)
+	if err != nil {
+		return nil, err
+	}
+	return &EdgeUploadResponse{
+		Destination: resp.Destination,
+		File:        resp.File,
+		Size:        resp.Size,
+		UploadTime:  resp.UploadTime,
+	}, nil
 }
 
 func (inst *Store) EdgeListFiles(hostUUID, hostName, path string) ([]string, error) {
@@ -73,23 +88,6 @@ func (inst *Store) EdgeDeleteFolder(hostUUID, hostName, path string, recursively
 		return nil, err
 	}
 	return client.DeleteDir(path, recursively)
-}
-
-func (inst *Store) EdgeUploadLocalFile(hostUUID, hostName, path, fileName, destination string) (*EdgeUploadResponse, error) {
-	client, err := inst.getClient(hostUUID, hostName)
-	if err != nil {
-		return nil, err
-	}
-	resp, err := client.UploadLocalFile(path, fileName, destination)
-	if err != nil {
-		return nil, err
-	}
-	return &EdgeUploadResponse{
-		Destination: resp.Destination,
-		File:        resp.File,
-		Size:        resp.Size,
-		UploadTime:  resp.UploadTime,
-	}, nil
 }
 
 func (inst *Store) EdgeDownloadFile(hostUUID, hostName, path, file, destination string) (*edgecli.DownloadResponse, error) {

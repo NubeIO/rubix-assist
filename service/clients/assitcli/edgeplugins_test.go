@@ -8,8 +8,7 @@ import (
 )
 
 func TestClient_EdgeUploadPlugin(t *testing.T) {
-	client := New("0.0.0.0", 1662)
-	data, err := client.EdgeUploadPlugin("rc", &appstore.Plugin{
+	data, err := client.UploadPlugin("rc", &appstore.Plugin{
 		PluginName: "bacnetserver",
 		Arch:       "amd64",
 		Version:    "v0.6.6",
@@ -19,15 +18,11 @@ func TestClient_EdgeUploadPlugin(t *testing.T) {
 }
 
 func TestClient_EdgeListPlugins(t *testing.T) {
-	client := New("0.0.0.0", 1662)
-	data, err := client.EdgeListPlugins("rc")
-	fmt.Println(err)
-	pprint.PrintJOSN(data)
+
 }
 
 func TestClient_EdgeDeletePlugin(t *testing.T) {
-	client := New("0.0.0.0", 1662)
-	data, err := client.EdgeDeletePlugin("rc", &appstore.Plugin{
+	data, err := client.DeletePlugin("rc", &appstore.Plugin{
 		PluginName: "bacnetserver",
 		Arch:       "amd64",
 	})

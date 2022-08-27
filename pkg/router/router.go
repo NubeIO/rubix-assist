@@ -72,6 +72,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	edge := admin.Group("/edge")
 	{
 		edge.GET("/system/product", api.EdgeProductInfo)
+		edge.GET("/public/device", api.EdgePublicInfo)
 	}
 
 	edgeApps := admin.Group("/edge/apps")
@@ -185,11 +186,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	//	tools.POST("/edgeapi/ip/dhcp", api.EdgeSetIP)
 	//
 	// }
-
-	git := r.Group("/api/git")
-	{
-		git.GET("/:uuid", api.GitGetRelease)
-	}
 
 	wires := admin.Group("/wires")
 	{

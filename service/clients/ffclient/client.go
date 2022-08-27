@@ -3,7 +3,7 @@ package ffclient
 import (
 	"context"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/service/clients/ffclient/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 	"github.com/go-resty/resty/v2"
 	"net"
 	"net/http"
