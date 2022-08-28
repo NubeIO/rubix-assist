@@ -124,6 +124,7 @@ func TestClient_ReadFileToYml(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
+	fmt.Println(string(message))
 	data := testYml{}
 	err = yaml.Unmarshal(message, &data)
 	fmt.Println(err)
@@ -193,7 +194,7 @@ SECRET_KEY=__SECRET_KEY__
 `
 	cli := New(&Client{})
 	body := &WriteFile{
-		FilePath:     "/data/flow-framework/config/.env",
+		FilePath:     "/data/rubix-wires/config/.env",
 		BodyAsString: data,
 		Perm:         0,
 	}

@@ -49,6 +49,13 @@ func Setup(db *gorm.DB) *gin.Engine {
 	r.POST("/api/users/login", api.Login)
 
 	handleAuth := func(c *gin.Context) { c.Next() }
+
+	apiPublicRoutes := r.Group("/api", handleAuth)
+	public := apiPublicRoutes.Group("/public") // THESE ARE PUBLIC APIs
+	{
+		public.POST("/ping", api.AssistPing)
+	}
+
 	if config.Config.Auth() {
 		//handleAuth = api.HandleAuth() // TODO add back in auth
 	}
@@ -71,6 +78,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	edge := admin.Group("/edge")
 	{
+		edge.GET("/public/ping", api.EdgePing)
 		edge.GET("/system/product", api.EdgeProductInfo)
 		edge.GET("/public/device", api.EdgePublicInfo)
 	}
@@ -89,8 +97,27 @@ func Setup(db *gorm.DB) *gin.Engine {
 	edgeConfig := admin.Group("/edge/config")
 	{
 		edgeConfig.GET("/", api.EdgeReadConfig)
-		edgeConfig.POST("/", api.EdgeReplaceConfig)
+		edgeConfig.POST("/write", api.EdgeWriteConfig)
+	}
 
+	edgeFiles := admin.Group("/edge/files")
+
+	{
+
+		edgeFiles.GET("/exists", api.EdgeFileExists)
+		edgeFiles.GET("/read", api.EdgeReadFile)
+		edgeFiles.POST("/write", api.EdgeWriteFile)
+		edgeFiles.POST("/write/json", api.EdgeWriteFileJson)
+		edgeFiles.POST("/write/yml", api.EdgeWriteFileYml)
+		edgeFiles.POST("/create", api.EdgeCreateFile)
+
+	}
+
+	edgeDirs := admin.Group("/edge/dirs")
+
+	{
+
+		edgeDirs.GET("/exists", api.EdgeDirExists)
 	}
 
 	edgePlugins := admin.Group("/edge/plugins")
@@ -195,7 +222,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	system := admin.Group("/system")
 	{
-		system.GET("/ping", api.Ping)
+		system.GET("/ping", api.SystemPing)
 		system.GET("/time", api.HostTime)
 	}
 
