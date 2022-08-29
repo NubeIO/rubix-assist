@@ -7,16 +7,16 @@ import (
 	"github.com/NubeIO/rubix-edge/service/system"
 )
 
-func (inst *Client) DHCPPortExists(body *system.NetworkingBody) (*system.Message, error) {
+func (inst *Client) DHCPPortExists(body *system.NetworkingBody) (*system.DHCPPortExists, error) {
 	url := fmt.Sprintf("/api/networking/interfaces/exists")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&system.Message{}).
+		SetResult(&system.DHCPPortExists{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*system.Message), nil
+	return resp.Result().(*system.DHCPPortExists), nil
 }
 
 func (inst *Client) DHCPSetAsAuto(body *system.NetworkingBody) (*system.Message, error) {

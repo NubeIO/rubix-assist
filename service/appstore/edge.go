@@ -6,7 +6,6 @@ import (
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
 	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
-	log "github.com/sirupsen/logrus"
 	"os"
 )
 
@@ -52,7 +51,6 @@ func (inst *Store) AddUploadEdgeApp(hostUUID, hostName string, app *EdgeApp) (*i
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("error open build for app:%s fileName:%s  err:%s", appName, fileName, err.Error()))
 	}
-	log.Infof(fmt.Sprintf("error open build for app:%s version:%s  arch:%s, fileAndPath:%s", appName, version, archType, fileName))
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
