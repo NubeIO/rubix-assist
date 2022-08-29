@@ -29,7 +29,7 @@ func (inst *Client) WritePointValue(hostIDName, uuid string, value *model.Priori
 	body := &pointPriority{
 		Priority: value,
 	}
-	url := fmt.Sprintf("ff/api/points/write/%s", uuid)
+	url := fmt.Sprintf("proxy/ff/api/points/write/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
