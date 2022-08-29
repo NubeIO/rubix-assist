@@ -4,7 +4,6 @@ go 1.17
 
 //replace github.com/NubeIO/lib-rubix-installer => /home/aidan/code/go/nube/lib/lib-rubix-installer
 //replace github.com/NubeIO/lib-schema => /home/aidan/code/go/nube/lib/lib-schema
-
 //replace github.com/NubeIO/rubix-edge => /home/aidan/code/go/nube/rubix-edge
 
 require (
@@ -67,14 +66,14 @@ require (
 	github.com/NubeIO/lib-dhcpd v0.0.2
 	github.com/NubeIO/lib-dirs v0.0.8
 	github.com/NubeIO/lib-networking v0.0.7
-	github.com/NubeIO/lib-rubix-installer v0.1.8
+	github.com/NubeIO/lib-rubix-installer v0.1.9
 	github.com/NubeIO/lib-schema v0.1.4
 	github.com/NubeIO/lib-systemctl-go v0.1.0
 	github.com/NubeIO/lib-ufw v0.0.3
 	github.com/NubeIO/lib-uuid v0.0.2
 	github.com/NubeIO/nubeio-rubix-lib-auth-go v1.0.3
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.4
-	github.com/NubeIO/rubix-edge v0.1.8
+	github.com/NubeIO/rubix-edge v0.1.9
 	github.com/google/uuid v1.1.2
 	github.com/sergeymakinen/go-systemdconf/v2 v2.0.2
 	gorm.io/datatypes v1.0.6

@@ -6,6 +6,8 @@ import (
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 	"github.com/NubeIO/rubix-edge/pkg/model"
+	"strconv"
+	"time"
 )
 
 // EdgeProductInfo get edge product info
@@ -36,4 +38,26 @@ func (inst *Client) EdgePublicInfo() (*DeviceProduct, error) {
 		return nil, err
 	}
 	return resp.Result().(*DeviceProduct), nil
+}
+
+type PingBody struct {
+	Ip      string        `json:"ip"`
+	Port    int           `json:"port"`
+	TimeOut time.Duration `json:"time_out"`
+}
+
+// Ping ping a device
+func (inst *Client) Ping(body *PingBody) (bool, error) {
+	url := fmt.Sprintf("/api/public/ping")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return false, err
+	}
+	found, err := strconv.ParseBool(resp.String())
+	if err != nil {
+		return false, err
+	}
+	return found, nil
 }

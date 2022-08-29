@@ -7,7 +7,128 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strconv"
 )
+
+type WriteFile struct {
+	FilePath     string      `json:"path"`
+	Body         interface{} `json:"body"`
+	BodyAsString string      `json:"body_as_string"`
+	Perm         int         `json:"perm"`
+}
+
+// EdgeReadFile read a files content
+func (inst *Client) EdgeReadFile(hostIDName, path string) ([]byte, error) {
+	url := fmt.Sprintf("api/edge/files/read?path=%s", path)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Body(), nil
+}
+
+func (inst *Client) EdgeWriteFile(hostIDName string, body *WriteFile) (*Message, error) {
+	url := fmt.Sprintf("/api/edge/files/write/string")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&Message{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
+func (inst *Client) EdgeWriteFileJson(hostIDName string, body *WriteFile) (*Message, error) {
+	url := fmt.Sprintf("/api/edge/files/write/json")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&Message{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
+func (inst *Client) EdgeWriteFileYml(hostIDName string, body *WriteFile) (*Message, error) {
+	url := fmt.Sprintf("/api/edge/files/write/yml")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&Message{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
+func (inst *Client) EdgeCreateFile(hostIDName string, body *WriteFile) (*Message, error) {
+	url := fmt.Sprintf("/api/edge/files/create")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&Message{}).
+		SetBody(body).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
+func (inst *Client) EdgeCreateDir(hostIDName, path string) (*Message, error) {
+	url := fmt.Sprintf("/api/edge/dir/create/?path=%s", path)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&Message{}).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
+// EdgeFileExists check if file exists
+func (inst *Client) EdgeFileExists(hostIDName, path string) (bool, error) {
+	url := fmt.Sprintf("/api/edge/files/exists/?path=%s", path)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		Get(url))
+	found, err := strconv.ParseBool(resp.String())
+	if err != nil {
+		return false, err
+	}
+	return found, nil
+}
+
+// EdgeDirExists check if dir exists
+func (inst *Client) EdgeDirExists(hostIDName, path string) (bool, error) {
+	url := fmt.Sprintf("/api/edge/dirs/exists/?path=%s", path)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		Get(url))
+	if err != nil {
+		return false, err
+	}
+	found, err := strconv.ParseBool(resp.String())
+	if err != nil {
+		return false, err
+	}
+	return found, nil
+}
 
 // EdgeWalk list all files/dirs in a dir
 func (inst *Client) EdgeWalk(hostIDName, path string) ([]string, error) {

@@ -1,6 +1,71 @@
 package appstore
 
-import "github.com/NubeIO/rubix-assist/service/clients/edgecli"
+import (
+	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
+)
+
+func (inst *Store) EdgeReadFile(hostUUID, hostName, path string) ([]byte, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.ReadFile(path)
+}
+
+func (inst *Store) EdgeWriteFile(hostUUID, hostName string, body *edgecli.WriteFile) (*edgecli.Message, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.WriteFile(body)
+}
+
+func (inst *Store) EdgeWriteFileJson(hostUUID, hostName string, body *edgecli.WriteFile) (*edgecli.Message, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.WriteFileJson(body)
+}
+
+func (inst *Store) EdgeWriteFileYml(hostUUID, hostName string, body *edgecli.WriteFile) (*edgecli.Message, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.WriteFileYml(body)
+}
+
+func (inst *Store) EdgeFileExists(hostUUID, hostName, path string) (bool, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return false, err
+	}
+	return client.FileExists(path)
+}
+
+func (inst *Store) EdgeDirExists(hostUUID, hostName, path string) (bool, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return false, err
+	}
+	return client.DirExists(path)
+}
+
+func (inst *Store) EdgeCreateFile(hostUUID, hostName string, body *edgecli.WriteFile) (*edgecli.Message, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.CreateFile(body)
+}
+func (inst *Store) EdgeCreateDir(hostUUID, hostName, path string) (*edgecli.Message, error) {
+	client, err := inst.getClient(hostUUID, hostName)
+	if err != nil {
+		return nil, err
+	}
+	return client.CreateDir(path)
+}
 
 type EdgeUploadResponse struct {
 	Destination string `json:"destination"`

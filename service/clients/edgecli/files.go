@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strconv"
 )
 
 // ReadFile read a files content
@@ -73,6 +74,46 @@ func (inst *Client) CreateFile(body *WriteFile) (*Message, error) {
 		return nil, err
 	}
 	return resp.Result().(*Message), nil
+}
+func (inst *Client) CreateDir(path string) (*Message, error) {
+	url := fmt.Sprintf("/api/dir/create/?path=%s", path)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&Message{}).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*Message), nil
+}
+
+// FileExists check if file exists
+func (inst *Client) FileExists(path string) (bool, error) {
+	url := fmt.Sprintf("/api/files/exists/?path=%s", path)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		Get(url))
+	if err != nil {
+		return false, err
+	}
+	found, err := strconv.ParseBool(resp.String())
+	if err != nil {
+		return false, err
+	}
+	return found, nil
+}
+
+// DirExists check if dir exists
+func (inst *Client) DirExists(path string) (bool, error) {
+	url := fmt.Sprintf("/api/dirs/exists/?path=%s", path)
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		Get(url))
+	if err != nil {
+		return false, err
+	}
+	found, err := strconv.ParseBool(resp.String())
+	if err != nil {
+		return false, err
+	}
+	return found, nil
 }
 
 // Walk list all files/dirs in a dir
