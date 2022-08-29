@@ -1,4 +1,8 @@
 # CHANGELOG
+## [v0.4.6](https://github.com/NubeIO/rubix-assist/tree/v0.4.6) (2022-08-22)
+
+- updates to get networking
+
 ## [v0.4.4](https://github.com/NubeIO/rubix-assist/tree/v0.4.4) (2022-08-22)
 
 - added new edge api
