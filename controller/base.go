@@ -3,7 +3,6 @@ package controller
 import (
 	"errors"
 	"fmt"
-	fileutils "github.com/NubeIO/lib-dirs/dirs"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/networking/ssh"
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
 	"github.com/NubeIO/rubix-assist/service/appstore"
@@ -16,10 +15,8 @@ import (
 	"github.com/melbahja/goph"
 )
 
-const nonRoot = 0700
-const root = 0777
+const root = 0755
 
-var fileUtils = fileutils.New()
 var filePerm = root
 var err error
 
@@ -122,7 +119,7 @@ type Message struct {
 	Message interface{} `json:"message"`
 }
 
-//hostCopy copy same types from this host to the host needed for ssh.Host
+// hostCopy copy same types from this host to the host needed for ssh.Host
 func (inst *Controller) hostCopy(host *model.Host) (ssh.Host, error) {
 	h := new(ssh.Host)
 	err = copier.Copy(&h, &host)

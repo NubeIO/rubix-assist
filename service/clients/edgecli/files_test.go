@@ -3,7 +3,7 @@ package edgecli
 import (
 	"encoding/json"
 	"fmt"
-	fileutils "github.com/NubeIO/lib-dirs/dirs"
+	"github.com/NubeIO/lib-files/fileutils"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"gopkg.in/yaml.v3"
 	"testing"
