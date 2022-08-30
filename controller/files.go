@@ -3,7 +3,7 @@ package controller
 import (
 	"errors"
 	"fmt"
-	fileutils "github.com/NubeIO/lib-dirs/dirs"
+	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/gin-gonic/gin"
 	"io/fs"
 	"io/ioutil"
@@ -62,7 +62,7 @@ func (inst *Controller) RenameFile(c *gin.Context) {
 		reposeHandler(nil, errors.New("directory, from and to files name can not be empty"), c)
 		return
 	}
-	err = fileUtils.Rename(oldName, newName)
+	err = fileutils.Rename(oldName, newName)
 	reposeHandler(Message{Message: "renaming is successfully done"}, err, c)
 }
 
@@ -77,7 +77,7 @@ func (inst *Controller) CopyFile(c *gin.Context) {
 		reposeHandler(nil, errors.New("from and to files name can not be empty"), c)
 		return
 	}
-	err = fileUtils.Copy(from, to)
+	err = fileutils.Copy(from, to)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -96,7 +96,7 @@ func (inst *Controller) MoveFile(c *gin.Context) {
 		reposeHandler(nil, errors.New("from and to files name can not be empty"), c)
 		return
 	}
-	err = fileUtils.MoveFile(from, to)
+	err = fileutils.MoveFile(from, to)
 	if err != nil {
 		reposeHandler(nil, err, c)
 		return
@@ -127,7 +127,7 @@ func (inst *Controller) UploadFile(c *gin.Context) {
 		reposeHandler(resp, err, c)
 		return
 	}
-	if found := fileutils.New().DirExists(destination); !found {
+	if found := fileutils.DirExists(destination); !found {
 		reposeHandler(nil, errors.New(fmt.Sprintf("path not found %s", destination)), c)
 		return
 	}
@@ -156,11 +156,11 @@ func (inst *Controller) DeleteFile(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	if !fileUtils.FileExists(filePath) {
+	if !fileutils.FileExists(filePath) {
 		reposeHandler(nil, errors.New(fmt.Sprintf("file doesn't exist: %s", filePath)), c)
 		return
 	}
-	err = fileUtils.Rm(filePath)
+	err = fileutils.Rm(filePath)
 	reposeHandler(Message{Message: fmt.Sprintf("deleted: %s", filePath)}, err, c)
 }
 
@@ -170,11 +170,11 @@ func (inst *Controller) DeleteAllFiles(c *gin.Context) {
 		reposeHandler(nil, err, c)
 		return
 	}
-	if !fileUtils.DirExists(filePath) {
+	if !fileutils.DirExists(filePath) {
 		reposeHandler(nil, errors.New(fmt.Sprintf("dir doesn't exist: %s", filePath)), c)
 		return
 	}
-	err = fileUtils.RemoveAllFiles(filePath)
+	err = fileutils.RemoveAllFiles(filePath)
 	reposeHandler(Message{Message: fmt.Sprintf("deleted: %s", filePath)}, err, c)
 }
 

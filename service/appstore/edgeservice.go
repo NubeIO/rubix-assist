@@ -3,7 +3,7 @@ package appstore
 import (
 	"errors"
 	"fmt"
-	fileutils "github.com/NubeIO/lib-dirs/dirs"
+	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/sergeymakinen/go-systemdconf/v2"
 	"github.com/sergeymakinen/go-systemdconf/v2/unit"
@@ -145,8 +145,7 @@ func (inst *Store) generateServiceFile(app *ServiceFile) (tmpDir, serviceFile, f
 	}
 	b, _ := systemdconf.Marshal(service)
 	servicePath := fmt.Sprintf("%s/%s", tmpFilePath, serviceFileName)
-	file := fileutils.New()
-	err = file.WriteFile(servicePath, string(b), os.FileMode(FilePerm))
+	err = fileutils.WriteFile(servicePath, string(b), os.FileMode(FilePerm))
 	if err != nil {
 		log.Errorf("write service file error %s", err.Error())
 	}
@@ -170,7 +169,7 @@ func (inst *Store) generateUploadEdgeService(hostUUID, hostName string, app *Ser
 	if err != nil {
 		return nil, err
 	}
-	err = fileutils.New().RmRF(tmpDir)
+	err = fileutils.RmRF(tmpDir)
 	if err != nil {
 		log.Errorf("assist: delete tmp dir after generating service file%s", fileAndPath)
 	}

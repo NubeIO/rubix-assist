@@ -64,16 +64,16 @@ require (
 require (
 	github.com/NubeIO/lib-date v0.0.6
 	github.com/NubeIO/lib-dhcpd v0.0.2
-	github.com/NubeIO/lib-dirs v0.0.8
+	github.com/NubeIO/lib-files v0.1.1
 	github.com/NubeIO/lib-networking v0.0.7
-	github.com/NubeIO/lib-rubix-installer v0.1.9
+	github.com/NubeIO/lib-rubix-installer v0.2.2
 	github.com/NubeIO/lib-schema v0.1.4
-	github.com/NubeIO/lib-systemctl-go v0.1.0
+	github.com/NubeIO/lib-systemctl-go v0.1.2
 	github.com/NubeIO/lib-ufw v0.0.3
-	github.com/NubeIO/lib-uuid v0.0.2
+	github.com/NubeIO/lib-uuid v0.0.3
 	github.com/NubeIO/nubeio-rubix-lib-auth-go v1.0.3
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.4
-	github.com/NubeIO/rubix-edge v0.1.9
+	github.com/NubeIO/rubix-edge v0.2.0
 	github.com/google/uuid v1.1.2
 	github.com/sergeymakinen/go-systemdconf/v2 v2.0.2
 	gorm.io/datatypes v1.0.6
@@ -81,6 +81,7 @@ require (
 
 require (
 	github.com/NubeIO/lib-command v0.0.2 // indirect
+	github.com/NubeIO/lib-dirs v0.0.8 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
