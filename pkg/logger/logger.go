@@ -15,12 +15,12 @@ import (
 var logger = logrus.New()
 
 func Init() {
-	//logger = logrus.New()
-	//logger.Out = getWriter()
-	//logger.Level = logrus.InfoLevel
-	//logger.Formatter = &formatter{}
+	// logger = logrus.New()
+	// logger.Out = getWriter()
+	// logger.Level = logrus.InfoLevel
+	// logger.Formatter = &formatter{}
 	//
-	//logger.SetReportCaller(true)
+	// logger.SetReportCaller(true)
 }
 
 func SetLogLevel(level logrus.Level) {
@@ -56,7 +56,7 @@ func InfoLn(args ...interface{}) {
 		entry := logger.WithFields(logrus.Fields{})
 		entry.Data["file"] = fileInfo(2)
 		entry.Infoln(args...)
-		//logrus.Info(args)
+		// logrus.Info(args)
 	}
 }
 
@@ -65,7 +65,7 @@ func Infof(format string, args ...interface{}) {
 	if logger.Level >= logrus.InfoLevel {
 		entry := logger.WithFields(logrus.Fields{})
 		entry.Infof(format, args...)
-		//logrus.Info(args)
+		// logrus.Info(args)
 	}
 }
 

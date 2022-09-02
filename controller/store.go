@@ -8,26 +8,26 @@ import (
 func (inst *Controller) ListAppsWithVersions(c *gin.Context) {
 	data, err := inst.Store.ListAppsWithVersions()
 	if err != nil {
-		reposeHandler(data, err, c)
+		responseHandler(data, err, c)
 		return
 	}
-	reposeHandler(data, err, c)
+	responseHandler(data, err, c)
 }
 
 func (inst *Controller) ListAppsBuildDetails(c *gin.Context) {
 	data, err := inst.Store.ListAppsBuildDetails()
 	if err != nil {
-		reposeHandler(data, err, c)
+		responseHandler(data, err, c)
 		return
 	}
-	reposeHandler(data, err, c)
+	responseHandler(data, err, c)
 }
 
 // AddUploadStoreApp *
 func (inst *Controller) AddUploadStoreApp(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
 	m := &installer.Upload{
@@ -39,27 +39,27 @@ func (inst *Controller) AddUploadStoreApp(c *gin.Context) {
 	}
 	data, err := inst.Store.AddUploadStoreApp(m)
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(data, nil, c)
+	responseHandler(data, nil, c)
 }
 
 // StoreListPlugins list all the plugins
 func (inst *Controller) StoreListPlugins(c *gin.Context) {
 	data, err := inst.Store.StoreListPlugins()
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(data, nil, c)
+	responseHandler(data, nil, c)
 }
 
 // StoreUploadPlugin upload a plugin
 func (inst *Controller) StoreUploadPlugin(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
 	m := &installer.Upload{
@@ -67,8 +67,8 @@ func (inst *Controller) StoreUploadPlugin(c *gin.Context) {
 	}
 	data, err := inst.Store.StoreUploadPlugin(m)
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(data, nil, c)
+	responseHandler(data, nil, c)
 }

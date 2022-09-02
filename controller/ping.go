@@ -3,5 +3,5 @@ package controller
 import "github.com/gin-gonic/gin"
 
 func (inst *Controller) SystemPing(c *gin.Context) {
-	reposeHandler(Message{Message: "boo-ya"}, err, c)
+	responseHandler(Message{Message: "boo-ya"}, err, c)
 }

@@ -16,7 +16,7 @@ var arch = "amd64"
 var product = "Server"
 
 func addUploadApp() error {
-	client := assitcli.New("0.0.0.0", 1662)
+	client := assitcli.New(&assitcli.Client{})
 	listStore, err := client.ListAppsBuildDetails()
 	fmt.Println(err)
 	if err != nil {
@@ -24,12 +24,9 @@ func addUploadApp() error {
 	}
 
 	if len(listStore) == 0 {
-
-		if err != nil {
-			return errors.New("no apps are added")
-		}
+		return errors.New("no apps are added")
 	}
-	pprint.PrintJOSN(listStore)
+	pprint.PrintJSON(listStore)
 
 	app, err := client.AddUploadEdgeApp("rc", &appstore.EdgeApp{
 		Name:    appName,
@@ -40,12 +37,12 @@ func addUploadApp() error {
 	if err != nil {
 		return err
 	}
-	pprint.PrintJOSN(app)
+	pprint.PrintJSON(app)
 	return nil
 }
 
 func uploadService() error {
-	client := assitcli.New("0.0.0.0", 1662)
+	client := assitcli.New(&assitcli.Client{})
 	service, err := client.UploadEdgeService("rc", &appstore.ServiceFile{
 		Name:                    appName,
 		Version:                 appVersion,
@@ -57,13 +54,13 @@ func uploadService() error {
 	if err != nil {
 		return err
 	}
-	pprint.PrintJOSN(service)
+	pprint.PrintJSON(service)
 	source = service.UploadedFile
 	return nil
 }
 
 func installService() error {
-	client := assitcli.New("0.0.0.0", 1662)
+	client := assitcli.New(&assitcli.Client{})
 	service, err := client.InstallEdgeService("rc", &installer.Install{
 		Name:        appName,
 		Version:     appVersion,
@@ -74,7 +71,7 @@ func installService() error {
 	if err != nil {
 		return err
 	}
-	pprint.PrintJOSN(service)
+	pprint.PrintJSON(service)
 	return nil
 }
 

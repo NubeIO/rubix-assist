@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-//EdgeUploadPlugin to edge device
+// EdgeUploadPlugin to edge device
 // rubix-ui to pass in a plugin RA and then unzip it to tmp dir and check its arch
 // then upload it to edge
 // restart FF if as an option
@@ -89,7 +89,6 @@ func (inst *Store) EdgeListPlugins(hostUUID, hostName string) ([]Plugin, error) 
 		pluginDetails = append(pluginDetails, *inst.PluginDetail(file))
 	}
 	return pluginDetails, nil
-
 }
 
 func (inst *Store) EdgeDeletePlugin(hostUUID, hostName string, plugin *Plugin) (*edgecli.Message, error) {

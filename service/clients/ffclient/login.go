@@ -1,6 +1,6 @@
 package ffclient
 
-//func (a *FlowClient) Login(body *model.LoginBody) (*model.TokenResponse, error) {
+// func (a *FlowClient) Login(body *model.LoginBody) (*model.TokenResponse, error) {
 //	resp, err := nresty.FormatRestyResponse(a.client.R().
 //		SetBody(body).
 //		SetResult(&model.TokenResponse{}).
@@ -9,4 +9,4 @@ package ffclient
 //		return nil, err
 //	}
 //	return resp.Result().(*model.TokenResponse), nil
-//}
+// }

@@ -22,7 +22,7 @@ func (inst *Client) EdgeGetNetworks(hostIDName string) ([]networking.NetworkInte
 	return *data, nil
 }
 
-//EdgeDHCPPortExists check if the interface is a staic or fixed ip, will return true if port is a set to dhcp
+// EdgeDHCPPortExists check if the interface is a staic or fixed ip, will return true if port is a set to dhcp
 func (inst *Client) EdgeDHCPPortExists(hostIDName string, body *system.NetworkingBody) (*system.DHCPPortExists, error) {
 	url := fmt.Sprintf("proxy/api/networking/interfaces/exists")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().

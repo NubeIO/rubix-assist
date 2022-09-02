@@ -13,12 +13,11 @@ func TestClient_ProxyPOST(t *testing.T) {
 	err := json.Unmarshal(plan, &data)
 	fmt.Println(err)
 
-	//post, err := client.ProxyGET("rc", "/api/networking/networks")
+	// post, err := client.ProxyGET("rc", "/api/networking/networks")
 	post, err := client.ProxyPOST("rc", "/api/system/scanner", data)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	fmt.Println(post)
-
 }

@@ -7,7 +7,7 @@ import (
 )
 
 func TestClient_AddFlowNetwork(t *testing.T) {
-	//fln_cd7d562b1fa04c1e
+	// fln_cd7d562b1fa04c1e
 
 	cli := New(&Client{
 		Rest:        nil,
@@ -16,24 +16,24 @@ func TestClient_AddFlowNetwork(t *testing.T) {
 		HTTPS:       false,
 		AssistToken: "",
 	})
-	//stream := &model.Stream{
+	// stream := &model.Stream{
 	//	CommonStream: model.CommonStream{
 	//		CommonName: model.CommonName{
 	//			Name: fmt.Sprintf("%d", time.Now().Unix()),
 	//		},
 	//	},
-	//}
-	//flow, err := cli.AddStreamToExistingFlow("rc", "fln_cd7d562b1fa04c1e", stream)
-	//fmt.Println(err)
-	//if err != nil {
+	// }
+	// flow, err := cli.AddStreamToExistingFlow("rc", "fln_cd7d562b1fa04c1e", stream)
+	// fmt.Println(err)
+	// if err != nil {
 	//	return
-	//}
-	//pprint.PrintJOSN(flow)
+	// }
+	// pprint.PrintJSON(flow)
 
 	network, err := cli.GetStreamsByFlowNetwork("rc", "fln_cd7d562b1fa04c1e")
 	fmt.Println(err)
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(network)
+	pprint.PrintJSON(network)
 }

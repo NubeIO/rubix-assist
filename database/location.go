@@ -34,7 +34,6 @@ func (inst *DB) CreateLocationWizard(body *model.Location) (*model.Location, err
 	}
 
 	return location, nil
-
 }
 
 func (inst *DB) GetLocationsByName(name string, isUUID bool) (*model.Location, error) {

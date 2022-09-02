@@ -10,7 +10,6 @@ import (
 var token string
 
 func TestClient_FFLogin(t *testing.T) {
-
 	cli := New(&Client{
 		Rest:        nil,
 		URL:         "0.0.0.0",
@@ -28,12 +27,10 @@ func TestClient_FFLogin(t *testing.T) {
 		return
 	}
 
-	//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjQ0MjA2MjMsImlhdCI6MTY2MTgyODYyMywic3ViIjoiYWRtaW4ifQ.6UY_BPw-7m_gJVys_Toj6vyJw-XvoomqfJ-gIRvm8wA
-
+	// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjQ0MjA2MjMsImlhdCI6MTY2MTgyODYyMywic3ViIjoiYWRtaW4ifQ.6UY_BPw-7m_gJVys_Toj6vyJw-XvoomqfJ-gIRvm8wA
 }
 
 func TestClient_FFGenerateToken(t *testing.T) {
-
 	cli := New(&Client{
 		Rest:        nil,
 		URL:         "",
@@ -48,7 +45,4 @@ func TestClient_FFGenerateToken(t *testing.T) {
 	if err != nil {
 		return
 	}
-
-	//
-
 }

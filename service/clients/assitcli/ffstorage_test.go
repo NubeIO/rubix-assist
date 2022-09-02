@@ -20,7 +20,7 @@ func TestClient_GetLocalStorage(t *testing.T) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(storage)
+	pprint.PrintJSON(storage)
 }
 
 func TestClient_UpdateLocalStorage(t *testing.T) {
@@ -44,5 +44,5 @@ func TestClient_UpdateLocalStorage(t *testing.T) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(storage)
+	pprint.PrintJSON(storage)
 }

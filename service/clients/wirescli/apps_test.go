@@ -6,7 +6,6 @@ import (
 )
 
 func TestClient_InstallApp(t *testing.T) {
-
 	client := New("192.168.15.171", 1313)
 
 	body := &WiresTokenBody{
@@ -14,7 +13,7 @@ func TestClient_InstallApp(t *testing.T) {
 		Password: "N00BWire",
 	}
 	token, _ := client.GetToken(body)
-	pprint.PrintJOSN(token)
-	//data, _ := client.Backup(token.Token)
-	//pprint.PrintJOSN(data.Objects)
+	pprint.PrintJSON(token)
+	// data, _ := client.Backup(token.Token)
+	// pprint.PrintJSON(data.Objects)
 }

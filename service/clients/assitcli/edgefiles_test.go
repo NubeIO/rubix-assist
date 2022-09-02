@@ -13,10 +13,8 @@ type testYml struct {
 
 func TestClient_EdgeFileExists(t *testing.T) {
 	message, err := client.EdgeFileExists("rc", "/data/flow-framework/config/config.yml")
-
 	fmt.Println(message)
 	fmt.Println(err)
-
 }
 
 func TestClient_EdgeReadFile(t *testing.T) {
@@ -24,5 +22,5 @@ func TestClient_EdgeReadFile(t *testing.T) {
 	dataFile := testYml{}
 	err = yaml.Unmarshal(message, &dataFile)
 	fmt.Println(err)
-	pprint.PrintJOSN(dataFile)
+	pprint.PrintJSON(dataFile)
 }

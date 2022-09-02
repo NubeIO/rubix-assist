@@ -23,9 +23,7 @@ func TestStore_addApp(t *testing.T) {
 	if err != nil {
 		return
 	}
-
-	pprint.PrintJOSN(app)
-
+	pprint.PrintJSON(app)
 }
 
 func TestStore_listAppsWithVersions(t *testing.T) {
@@ -41,11 +39,10 @@ func TestStore_listAppsWithVersions(t *testing.T) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(app)
+	pprint.PrintJSON(app)
 }
 
 func TestStore_listAppsWithArch(t *testing.T) {
-
 	appStore, err := New(&Store{
 		App: &installer.App{
 			DataDir:  "/data",
@@ -58,7 +55,7 @@ func TestStore_listAppsWithArch(t *testing.T) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(app)
+	pprint.PrintJSON(app)
 }
 
 func TestStore_ListAppsFlow(t *testing.T) {
@@ -72,20 +69,19 @@ func TestStore_ListAppsFlow(t *testing.T) {
 
 	path, err := appStore.ListApps()
 	fmt.Println(err)
-	pprint.PrintJOSN(path)
+	pprint.PrintJSON(path)
 	app, err := appStore.ListAppVersions("flow-framework")
 	fmt.Println(err)
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(app)
+	pprint.PrintJSON(app)
 	appDetails, err := appStore.ListAppArchTypes("flow-framework", "v0.6.0")
 	fmt.Println(err)
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(appDetails)
-
+	pprint.PrintJSON(appDetails)
 }
 
 func TestStore_ListAppsWires(t *testing.T) {
@@ -99,24 +95,23 @@ func TestStore_ListAppsWires(t *testing.T) {
 
 	path, err := appStore.ListApps()
 	fmt.Println(err, "ListApps")
-	pprint.PrintJOSN(path)
+	pprint.PrintJSON(path)
 	app, err := appStore.listAppBuilds("rubix-wires", "v2.7.3")
 	fmt.Println(err, "listAppsBuilds")
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(app)
+	pprint.PrintJSON(app)
 	app, err = appStore.ListAppVersions("rubix-wires")
 	fmt.Println(err, "ListAppsVersions")
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(app)
+	pprint.PrintJSON(app)
 	appDetails, err := appStore.ListAppArchTypes("rubix-wires", "v2.7.3")
 	fmt.Println(err, "ListAppsArchTypes")
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(appDetails)
-
+	pprint.PrintJSON(appDetails)
 }

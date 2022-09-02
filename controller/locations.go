@@ -7,7 +7,7 @@ import (
 
 func (inst *Controller) GetLocationSchema(ctx *gin.Context) {
 	mod := model.GetLocationSchema()
-	reposeHandler(mod, nil, ctx)
+	responseHandler(mod, nil, ctx)
 }
 
 func getLocationBody(ctx *gin.Context) (dto *model.Location, err error) {
@@ -18,19 +18,19 @@ func getLocationBody(ctx *gin.Context) (dto *model.Location, err error) {
 func (inst *Controller) GetLocation(c *gin.Context) {
 	host, err := inst.DB.GetLocationsByName(c.Params.ByName("uuid"), true)
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(host, err, c)
+	responseHandler(host, err, c)
 }
 
 func (inst *Controller) GetLocations(c *gin.Context) {
 	hosts, err := inst.DB.GetLocations()
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(hosts, err, c)
+	responseHandler(hosts, err, c)
 }
 
 func (inst *Controller) CreateLocationWizard(c *gin.Context) {
@@ -38,10 +38,10 @@ func (inst *Controller) CreateLocationWizard(c *gin.Context) {
 	err = c.ShouldBindJSON(&m)
 	host, err := inst.DB.CreateLocationWizard(m)
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(host, err, c)
+	responseHandler(host, err, c)
 }
 
 func (inst *Controller) CreateLocation(c *gin.Context) {
@@ -49,36 +49,36 @@ func (inst *Controller) CreateLocation(c *gin.Context) {
 	err = c.ShouldBindJSON(&m)
 	host, err := inst.DB.CreateLocation(m)
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(host, err, c)
+	responseHandler(host, err, c)
 }
 
 func (inst *Controller) UpdateLocation(c *gin.Context) {
 	body, _ := getLocationBody(c)
 	host, err := inst.DB.UpdateLocation(c.Params.ByName("uuid"), body)
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(host, err, c)
+	responseHandler(host, err, c)
 }
 
 func (inst *Controller) DeleteLocation(c *gin.Context) {
 	q, err := inst.DB.DeleteLocation(c.Params.ByName("uuid"))
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 	} else {
-		reposeHandler(q, err, c)
+		responseHandler(q, err, c)
 	}
 }
 
 func (inst *Controller) DropLocations(c *gin.Context) {
 	host, err := inst.DB.DropLocations()
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(host, err, c)
+	responseHandler(host, err, c)
 }

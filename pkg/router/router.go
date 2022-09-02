@@ -57,7 +57,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	if config.Config.Auth() {
-		//handleAuth = api.HandleAuth() // TODO add back in auth
+		// handleAuth = api.HandleAuth() // TODO add back in auth
 	}
 	admin := r.Group("/api", handleAuth)
 	proxy := r.Group("/proxy", handleAuth)
@@ -103,7 +103,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	edgeFiles := admin.Group("/edge/files")
 
 	{
-
 		edgeFiles.GET("/exists", api.EdgeFileExists)
 		edgeFiles.GET("/read", api.EdgeReadFile)
 		edgeFiles.POST("/write", api.EdgeWriteFile)
@@ -114,9 +113,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	edgeDirs := admin.Group("/edge/dirs")
-
 	{
-
 		edgeDirs.GET("/exists", api.EdgeDirExists)
 	}
 
@@ -137,7 +134,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	locations := admin.Group("/locations")
-
 	{
 		locations.GET("/schema", api.GetLocationSchema)
 		locations.GET("/", api.GetLocations)

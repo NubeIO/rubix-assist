@@ -8,7 +8,6 @@ import (
 )
 
 func TestClient_GetHardwareTZ(t *testing.T) {
-
 	cli := New(&Client{
 		URL:   deviceIP,
 		Port:  0,
@@ -18,11 +17,9 @@ func TestClient_GetHardwareTZ(t *testing.T) {
 	resp, err := cli.GetHardwareTZ()
 	fmt.Println(err)
 	fmt.Println(resp)
-
 }
 
 func TestClient_GetTimeZoneList(t *testing.T) {
-
 	cli := New(&Client{
 		URL:   deviceIP,
 		Port:  0,
@@ -32,7 +29,6 @@ func TestClient_GetTimeZoneList(t *testing.T) {
 	resp, err := cli.GetTimeZoneList()
 	fmt.Println(err)
 	fmt.Println(resp)
-
 }
 
 func TestClient_SetSystemTime(t *testing.T) {
@@ -48,7 +44,6 @@ func TestClient_SetSystemTime(t *testing.T) {
 	})
 	fmt.Println(err)
 	fmt.Println(resp)
-
 }
 
 func TestClient_SystemTime(t *testing.T) {
@@ -64,7 +59,6 @@ func TestClient_SystemTime(t *testing.T) {
 }
 
 func TestClient_UpdateTimezone(t *testing.T) {
-
 	cli := New(&Client{
 		URL:   deviceIP,
 		Port:  0,
@@ -77,5 +71,4 @@ func TestClient_UpdateTimezone(t *testing.T) {
 	})
 	fmt.Println(err)
 	fmt.Println(resp)
-
 }

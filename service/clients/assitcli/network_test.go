@@ -7,7 +7,6 @@ import (
 )
 
 func TestHostNetwork(*testing.T) {
-
 	hosts, _ := client.GetHostNetworks()
 	fmt.Println(222, hosts)
 	uuid := ""
@@ -22,23 +21,22 @@ func TestHostNetwork(*testing.T) {
 	host, res := client.GetHostNetwork(uuid)
 	fmt.Println(res.StatusCode)
 	if res.StatusCode != 200 {
-		//return
+		// return
 	}
 	fmt.Println(host)
 	host.Name = fmt.Sprintf("name_%d", time.Now().Unix())
 	host, res = client.AddHostNetwork(host)
 	host.Name = "get fucked_" + fmt.Sprintf("name_%d", time.Now().Unix())
 	if res.StatusCode != 200 {
-		//return
+		// return
 	}
 	fmt.Println("NEW host", host.Name)
 	host, res = client.UpdateHostNetwork(host.UUID, host)
 	if res.StatusCode != 200 {
-		//return
+		// return
 	}
 	fmt.Println(host.Name, host.UUID)
 
 	res = client.DeleteHostNetwork(host.UUID)
 	fmt.Println(res.Message)
-
 }

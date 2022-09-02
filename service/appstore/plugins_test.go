@@ -8,8 +8,7 @@ import (
 )
 
 func Test_pluginDetails(t *testing.T) {
-
-	//fmt.Println(PluginDetails("influx-amd64.so"))
+	// fmt.Println(PluginDetails("influx-amd64.so"))
 }
 func Test_PluginZipDetails(t *testing.T) {
 	appStore, err := New(&Store{
@@ -23,7 +22,7 @@ func Test_PluginZipDetails(t *testing.T) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(details)
+	pprint.PrintJSON(details)
 }
 
 func Test_ListPlugins(t *testing.T) {
@@ -36,7 +35,7 @@ func Test_ListPlugins(t *testing.T) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(details)
+	pprint.PrintJSON(details)
 }
 
 func Test_getPluginPath(t *testing.T) {

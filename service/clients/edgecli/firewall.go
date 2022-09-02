@@ -44,9 +44,9 @@ func (inst *Client) UWFDisable() (*system.Message, error) {
 	return resp.Result().(*system.Message), nil
 }
 
-//func (inst *System) UWFOpenPort(body UFWBody) (*ufw.Message, error) {
+// func (inst *System) UWFOpenPort(body UFWBody) (*ufw.Message, error) {
 //	return inst.ufw.UWFOpenPort(body.Port)
-//}
+// }
 
 func (inst *Client) UWFOpenPort(body system.UFWBody) (*ufw.Message, error) {
 	url := fmt.Sprintf("/api/networking/firewall/port/open")
@@ -72,14 +72,14 @@ func (inst *Client) UWFClosePort(body system.UFWBody) (*ufw.Message, error) {
 	return resp.Result().(*ufw.Message), nil
 }
 
-//networkFirewall := apiRoutes.Group("/networking/firewall")
-//{
-//networkFirewall.GET("/", api.UWFStatusList)
-//networkFirewall.GET("/status", api.UWFStatus)
-//networkFirewall.GET("/active", api.UWFActive)
-//networkFirewall.GET("/enable", api.UWFEnable)
-//networkFirewall.GET("/disable", api.UWFDisable)
-//networkFirewall.GET("/port/open", api.UWFOpenPort)
-//networkFirewall.GET("/port/close", api.UWFClosePort)
-//}
+// networkFirewall := apiRoutes.Group("/networking/firewall")
+// {
+// networkFirewall.GET("/", api.UWFStatusList)
+// networkFirewall.GET("/status", api.UWFStatus)
+// networkFirewall.GET("/active", api.UWFActive)
+// networkFirewall.GET("/enable", api.UWFEnable)
+// networkFirewall.GET("/disable", api.UWFDisable)
+// networkFirewall.GET("/port/open", api.UWFOpenPort)
+// networkFirewall.GET("/port/close", api.UWFClosePort)
+// }
 //

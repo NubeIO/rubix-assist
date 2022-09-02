@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-//PluginDetails influx-amd64.so
+// PluginDetails influx-amd64.so
 func (inst *Store) PluginDetails(pluginName string) (appName, arch, fileExtension string) {
 	parts := strings.Split(pluginName, "-")
 	for _, part := range parts {
@@ -27,7 +27,7 @@ func (inst *Store) PluginDetails(pluginName string) (appName, arch, fileExtensio
 	return appName, arch, fileExtension
 }
 
-//PluginDetail takes in the name (influx-amd64.so) and returns the info
+// PluginDetail takes in the name (influx-amd64.so) and returns the info
 func (inst *Store) PluginDetail(pluginName string) *Plugin {
 	appName, arch, _ := inst.PluginDetails(pluginName)
 	return &Plugin{
@@ -36,7 +36,7 @@ func (inst *Store) PluginDetail(pluginName string) *Plugin {
 	}
 }
 
-//CheckBinaryPlugin check if all the details of a binary name is correct (influx-amd64.so)
+// CheckBinaryPlugin check if all the details of a binary name is correct (influx-amd64.so)
 func (inst *Store) CheckBinaryPlugin(pluginName string) error {
 	appName, arch, fileExtension := inst.PluginDetails(pluginName)
 	if appName == "" {

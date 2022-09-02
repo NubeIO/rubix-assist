@@ -13,8 +13,7 @@ func TestClient_ListAppsWithVersions(t *testing.T) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(store)
-
+	pprint.PrintJSON(store)
 }
 
 func TestClient_ListAppsBuildDetails(t *testing.T) {
@@ -23,6 +22,5 @@ func TestClient_ListAppsBuildDetails(t *testing.T) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(store)
-
+	pprint.PrintJSON(store)
 }

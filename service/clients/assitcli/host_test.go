@@ -19,7 +19,7 @@ func TestHost(*testing.T) {
 	host, res := client.GetHost(uuid)
 	fmt.Println(res.StatusCode)
 	if res.StatusCode != 200 {
-		//return
+		// return
 	}
 	fmt.Println(host)
 	host.Name = fmt.Sprintf("name_%d", time.Now().Unix())
@@ -40,5 +40,4 @@ func TestHost(*testing.T) {
 	if res.StatusCode != 200 {
 		return
 	}
-
 }

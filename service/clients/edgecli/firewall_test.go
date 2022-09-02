@@ -15,7 +15,7 @@ func TestClient_UWFStatusList(t *testing.T) {
 	})
 
 	resp, err := cli.UWFStatusList()
-	pprint.PrintJOSN(resp)
+	pprint.PrintJSON(resp)
 	fmt.Println(err)
 	if err != nil {
 		return
@@ -30,7 +30,7 @@ func TestClient_UWFDisable(t *testing.T) {
 	})
 
 	resp, err := cli.UWFDisable()
-	pprint.PrintJOSN(resp)
+	pprint.PrintJSON(resp)
 	fmt.Println(err)
 	if err != nil {
 		return
@@ -45,7 +45,7 @@ func TestClient_UWFEnable(t *testing.T) {
 	})
 
 	resp, err := cli.UWFEnable()
-	pprint.PrintJOSN(resp)
+	pprint.PrintJSON(resp)
 	fmt.Println(err)
 	if err != nil {
 		return
@@ -60,7 +60,7 @@ func TestClient_UWFOpenPort(t *testing.T) {
 	})
 
 	resp, err := cli.UWFOpenPort(system.UFWBody{Port: 1884})
-	pprint.PrintJOSN(resp)
+	pprint.PrintJSON(resp)
 	fmt.Println(err)
 	if err != nil {
 		return
@@ -75,7 +75,7 @@ func TestClient_UWFClosePort(t *testing.T) {
 	})
 
 	resp, err := cli.UWFClosePort(system.UFWBody{Port: 1884})
-	pprint.PrintJOSN(resp)
+	pprint.PrintJSON(resp)
 	fmt.Println(err)
 	if err != nil {
 		return

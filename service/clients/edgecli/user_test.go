@@ -18,7 +18,7 @@ func TestClient_Login(t *testing.T) {
 		Password: "N00BWires",
 	})
 	fmt.Println(err)
-	pprint.PrintJOSN(login)
+	pprint.PrintJSON(login)
 	if err != nil {
 		return
 	}
@@ -30,7 +30,7 @@ func TestClient_GenerateToken(t *testing.T) {
 	jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjM1NzMyMzEsImlhdCI6MTY2MDk4MTIzMSwic3ViIjoiYWRtaW4ifQ.2E71U_B47bphYjB5AZDVDXJr0SYtXPXWVytO4jg6-Wk"
 	login, err := cli.GenerateToken(jwt, &TokenCreate{Name: "test", Blocked: nils.NewFalse()})
 	fmt.Println(err)
-	pprint.PrintJOSN(login)
+	pprint.PrintJSON(login)
 	if err != nil {
 		return
 	}
@@ -40,7 +40,7 @@ func TestClient_GetTokens(t *testing.T) {
 	cli.SetTokenHeader(token)
 	login, err := cli.GetTokens()
 	fmt.Println(err)
-	pprint.PrintJOSN(login)
+	pprint.PrintJSON(login)
 	if err != nil {
 		return
 	}
@@ -50,7 +50,7 @@ func TestClient_GetUser(t *testing.T) {
 	cli := New(&Client{})
 	cli.SetTokenHeader(token)
 	login, err := cli.GetUser()
-	pprint.PrintJOSN(login)
+	pprint.PrintJSON(login)
 	if err != nil {
 		return
 	}

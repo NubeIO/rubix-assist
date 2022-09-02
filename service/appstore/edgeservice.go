@@ -151,7 +151,6 @@ func (inst *Store) generateServiceFile(app *ServiceFile) (tmpDir, serviceFile, f
 	}
 	log.Infof("generate service file name:%s", serviceName)
 	return tmpFilePath, serviceFileName, servicePath, nil
-
 }
 
 // GenerateUploadEdgeService this will generate and upload the service file to the edge device
@@ -174,5 +173,4 @@ func (inst *Store) generateUploadEdgeService(hostUUID, hostName string, app *Ser
 		log.Errorf("assist: delete tmp dir after generating service file%s", fileAndPath)
 	}
 	return client.UploadServiceFile(app.Name, app.Version, serviceFile, reader)
-
 }

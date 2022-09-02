@@ -40,7 +40,6 @@ func (inst *Client) WritePointValue(hostIDName, uuid string, value *model.Priori
 		return nil, err
 	}
 	return resp.Result().(*model.Point), nil
-
 }
 
 // AddPoint an object

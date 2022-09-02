@@ -92,7 +92,7 @@ func resolveHeaderHostName(ctx *gin.Context) string {
 	return ctx.GetHeader("host_name")
 }
 
-func reposeHandler(body interface{}, err error, c *gin.Context, statusCode ...int) {
+func responseHandler(body interface{}, err error, c *gin.Context, statusCode ...int) {
 	var code int
 	if err != nil {
 		if len(statusCode) > 0 {
