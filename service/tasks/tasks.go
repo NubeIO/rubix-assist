@@ -64,5 +64,4 @@ func CheckTask(s string) error {
 		return nil
 	}
 	return errors.New("invalid action type, try InstallApp or PingHost")
-
 }

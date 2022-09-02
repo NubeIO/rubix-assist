@@ -11,7 +11,6 @@ type Scan struct {
 }
 
 func (s *Scan) Scan(ip string, count int, interfaceName string) {
-
 	if ip == "" {
 		ip = "192.168.15.1-254"
 	}
@@ -26,6 +25,5 @@ func (s *Scan) Scan(ip string, count int, interfaceName string) {
 		return
 	}
 	scanner.New().IPScanner(address, ports, true)
-
 	return
 }

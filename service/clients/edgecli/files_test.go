@@ -16,7 +16,7 @@ func TestClient_ListFiles(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(apps)
+	pprint.PrintJSON(apps)
 }
 
 func TestClient_RenameFile(t *testing.T) {
@@ -33,7 +33,7 @@ func TestClient_RenameFile(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(apps)
+	pprint.PrintJSON(apps)
 }
 
 func TestClient_CopyFile(t *testing.T) {
@@ -50,7 +50,7 @@ func TestClient_CopyFile(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(apps)
+	pprint.PrintJSON(apps)
 }
 
 func TestClient_MoveFile(t *testing.T) {
@@ -67,7 +67,7 @@ func TestClient_MoveFile(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(apps)
+	pprint.PrintJSON(apps)
 }
 
 func TestClient_DownloadFile(t *testing.T) {
@@ -84,8 +84,7 @@ func TestClient_DownloadFile(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(message)
-
+	pprint.PrintJSON(message)
 }
 
 func TestClient_DeleteAllFiles(t *testing.T) {
@@ -100,7 +99,7 @@ func TestClient_DeleteAllFiles(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(message)
+	pprint.PrintJSON(message)
 }
 
 type testYml struct {
@@ -128,7 +127,7 @@ func TestClient_ReadFileToYml(t *testing.T) {
 	data := testYml{}
 	err = yaml.Unmarshal(message, &data)
 	fmt.Println(err)
-	pprint.PrintJOSN(data)
+	pprint.PrintJSON(data)
 }
 
 type testJson struct {
@@ -167,7 +166,7 @@ func TestClient_WriteFileJson(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(message)
+	pprint.PrintJSON(message)
 }
 
 func TestClient_WriteFileYml(t *testing.T) {
@@ -185,8 +184,9 @@ func TestClient_WriteFileYml(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(message)
+	pprint.PrintJSON(message)
 }
+
 func TestClient_WriteFile(t *testing.T) {
 	data := `
 PORT=1313
@@ -203,5 +203,5 @@ SECRET_KEY=__SECRET_KEY__
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(message)
+	pprint.PrintJSON(message)
 }

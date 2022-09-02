@@ -31,6 +31,5 @@ func TestStore_GenerateUploadEdgeService(t *testing.T) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(resp)
-
+	pprint.PrintJSON(resp)
 }

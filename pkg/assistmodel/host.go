@@ -9,7 +9,7 @@ type Host struct {
 	Name           string `json:"name"  gorm:"type:varchar(255);not null"  `
 	NetworkUUID    string `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null"`
 	Enable         *bool  `json:"enable"`
-	ProductType    string `json:"product_type"` //edge28, rubix-compute
+	ProductType    string `json:"product_type"` // edge28, rubix-compute
 	IP             string `json:"ip"`
 	Port           int    `json:"port"`
 	HTTPS          *bool  `json:"https"`
@@ -65,8 +65,8 @@ type HostSchema struct {
 	HTTPS       schema.HTTPS       `json:"https"`
 	Username    schema.Username    `json:"username"`
 	Password    schema.Password    `json:"password"`
-	//RubixEdgeToken     schema.RubixEdgeToken     `json:"rubix_edge_token"`
-	//FlowFrameworkToken schema.FlowFrameworkToken `json:"flow_framework_token"`
+	// RubixEdgeToken     schema.RubixEdgeToken     `json:"rubix_edge_token"`
+	// FlowFrameworkToken schema.FlowFrameworkToken `json:"flow_framework_token"`
 	Required []string `json:"required"`
 }
 

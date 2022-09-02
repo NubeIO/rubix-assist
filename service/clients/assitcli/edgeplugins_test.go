@@ -14,7 +14,7 @@ func TestClient_EdgeUploadPlugin(t *testing.T) {
 		Version:    "v0.6.6",
 	})
 	fmt.Println(err)
-	pprint.PrintJOSN(data)
+	pprint.PrintJSON(data)
 }
 
 func TestClient_EdgeListPlugins(t *testing.T) {
@@ -27,5 +27,5 @@ func TestClient_EdgeDeletePlugin(t *testing.T) {
 		Arch:       "amd64",
 	})
 	fmt.Println(err)
-	pprint.PrintJOSN(data)
+	pprint.PrintJSON(data)
 }

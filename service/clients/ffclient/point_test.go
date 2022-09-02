@@ -29,5 +29,5 @@ func TestFlowClient_GetPoints(t *testing.T) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(points)
+	pprint.PrintJSON(points)
 }

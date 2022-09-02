@@ -30,8 +30,8 @@ func (inst *Controller) Proxy(c *gin.Context) {
 
 	token := host.RubixToken // rubix-ui must first get and store the token (by using the uname/pass)
 	if token == "" {
-		//reposeHandler(nil, errors.New("rubix-edge token is empty"), c)
-		//return
+		// reposeHandler(nil, errors.New("rubix-edge token is empty"), c)
+		// return
 	}
 	proxy := httputil.NewSingleHostReverseProxy(remote)
 	proxy.Director = func(req *http.Request) {

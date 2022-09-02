@@ -14,7 +14,7 @@ func TestFlowClient_GetPlugins(t *testing.T) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(p)
+	pprint.PrintJSON(p)
 
 	e, err := cli.GetPlugin("plg_892ec6f5d4044d4a")
 	fmt.Println(e, err)

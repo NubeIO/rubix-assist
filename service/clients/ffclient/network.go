@@ -74,9 +74,6 @@ func (inst *FlowClient) GetNetworksWithPoints() ([]model.Network, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err != nil {
-		return nil, err
-	}
 	var out []model.Network
 	out = *resp.Result().(*[]model.Network)
 	return out, nil

@@ -18,13 +18,10 @@ func TestClient_WiresUpload(t *testing.T) {
 	b, err := client.WiresBackup("rc")
 
 	fmt.Println(b, err)
-
 }
 
 func TestClient_WiresBackup(t *testing.T) {
-
 	b, err := client.WiresBackup("hos_7DC861C92923")
 
 	fmt.Println(b, err)
-
 }

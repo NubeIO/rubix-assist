@@ -19,8 +19,7 @@ func Test_EdgeProductInfo(*testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(apps)
-
+	pprint.PrintJSON(apps)
 }
 
 func Test_ListApps(*testing.T) {
@@ -30,8 +29,7 @@ func Test_ListApps(*testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(apps)
-
+	pprint.PrintJSON(apps)
 }
 
 func Test_ListAppsAndService(*testing.T) {
@@ -41,8 +39,7 @@ func Test_ListAppsAndService(*testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(apps)
-
+	pprint.PrintJSON(apps)
 }
 
 func Test_ListNubeServices(*testing.T) {
@@ -52,12 +49,10 @@ func Test_ListNubeServices(*testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(apps)
-
+	pprint.PrintJSON(apps)
 }
 
 func Test_InstallApp(*testing.T) {
-
 	cli := New(&Client{})
 	file, err := cli.InstallApp(&installer.Install{
 		Name: appName,
@@ -69,6 +64,5 @@ func Test_InstallApp(*testing.T) {
 		fmt.Println(err)
 		return
 	}
-	pprint.PrintJOSN(file)
-
+	pprint.PrintJSON(file)
 }

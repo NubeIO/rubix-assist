@@ -21,19 +21,19 @@ var client = New(&Client{
 func TestClient_EdgeListApps(t *testing.T) {
 	data, err := client.EdgeListApps("rc")
 	fmt.Println(err)
-	pprint.PrintJOSN(data)
+	pprint.PrintJSON(data)
 }
 
 func TestClient_EdgeListAppsAndService(t *testing.T) {
 	data, err := client.EdgeListAppsAndService("rc")
 	fmt.Println(err)
-	pprint.PrintJOSN(data)
+	pprint.PrintJSON(data)
 }
 
 func TestClient_EdgeProductInfo(t *testing.T) {
 	data, err := client.EdgeProductInfo("rc")
 	fmt.Println(err)
-	pprint.PrintJOSN(data)
+	pprint.PrintJSON(data)
 }
 
 func TestClient_EdgeCtlAction(t *testing.T) {
@@ -43,7 +43,7 @@ func TestClient_EdgeCtlAction(t *testing.T) {
 		Action:  "start",
 	})
 	fmt.Println(err)
-	pprint.PrintJOSN(data)
+	pprint.PrintJSON(data)
 }
 
 func TestClient_EdgeCtlStatus(t *testing.T) {
@@ -53,7 +53,7 @@ func TestClient_EdgeCtlStatus(t *testing.T) {
 		Action:  "isInstalled",
 	})
 	fmt.Println(err)
-	pprint.PrintJOSN(data)
+	pprint.PrintJSON(data)
 }
 
 func TestClient_EdgeServiceMassStatus(t *testing.T) {
@@ -63,5 +63,5 @@ func TestClient_EdgeServiceMassStatus(t *testing.T) {
 		Action:   "isInstalled",
 	})
 	fmt.Println(err)
-	pprint.PrintJOSN(data)
+	pprint.PrintJSON(data)
 }

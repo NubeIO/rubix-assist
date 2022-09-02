@@ -161,5 +161,4 @@ func (inst *Store) EdgeDownloadFile(hostUUID, hostName, path, file, destination 
 		return nil, err
 	}
 	return client.DownloadFile(path, file, destination)
-
 }

@@ -46,8 +46,7 @@ func runApps(cmd *cobra.Command, args []string) {
 	if err != nil {
 		return
 	}
-	pprint.PrintJOSN(locations)
-
+	pprint.PrintJSON(locations)
 }
 
 var flgLocation struct {
@@ -58,5 +57,4 @@ func init() {
 	RootCmd.AddCommand(appsCmd)
 	flagSet := appsCmd.Flags()
 	flagSet.StringVar(&flgLocation.name, "name", "", "name of the location")
-
 }

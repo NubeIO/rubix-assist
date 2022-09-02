@@ -17,13 +17,12 @@ func TestFlowClient_GetNetworksWithPoints(t *testing.T) {
 	}
 	fmt.Println(nets.UUID)
 
-	network, err := cli.GetNetwork(nets.UUID, true)
-	if err != nil {
-		return
-	}
-	fmt.Println(network.Devices)
-	for _, d := range network.Devices {
-		fmt.Println(d)
-	}
-
+	// network, err := cli.GetNetwork(nets.UUID, true)
+	// if err != nil {
+	// 	return
+	// }
+	// fmt.Println(network.Devices)
+	// for _, d := range network.Devices {
+	// 	fmt.Println(d)
+	// }
 }

@@ -110,7 +110,6 @@ func (inst *Client) InstallService(body *installer.Install) (*installer.InstallR
 		return nil, err
 	}
 	return resp.Result().(*installer.InstallResp), nil
-
 }
 
 func (inst *Client) EdgeCtlAction(body *installer.CtlBody) (*systemctl.SystemResponse, error) {

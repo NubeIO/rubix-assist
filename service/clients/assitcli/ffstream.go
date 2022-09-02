@@ -8,7 +8,6 @@ import (
 
 // AddStreamToExistingFlow add a stream to an existing flow
 func (inst *Client) AddStreamToExistingFlow(hostIDName, flowNetworkUUID string, body *model.Stream) (*model.Stream, error) {
-
 	flowNetwork := &model.FlowNetwork{
 		CommonFlowNetwork: model.CommonFlowNetwork{
 			CommonUUID: model.CommonUUID{

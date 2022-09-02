@@ -35,19 +35,25 @@ go run main.go hosts --new=true --name=test --ip=192.178.12.1
 update a host ip (will up by the host name)
 
 ````
+
 go run main.go hosts --update-ip=true --name=RC --ip=192.168.15.11
+
 ````
 
 update a host ssh port (will up by the host name)
 
 ````
+
 go run main.go hosts --update-port=true --name=RC --port=2022
+
 ````
 
 delete all hosts
 
 ````
+
 go run main.go hosts --drop=true
+
 ````
 
 ## flow network
@@ -57,7 +63,9 @@ go run main.go hosts --drop=true
 look for all devices on a local network with ports like 1616, 1313, 502, 22
 
 ````
+
 go run main.go flow --scan=true --ip-range=192.168.15.1-12
+
 ````
 
 ## modbus
@@ -65,7 +73,9 @@ go run main.go flow --scan=true --ip-range=192.168.15.1-12
 ### example
 
 ````
+
 (cd modbus && go run main.go reg --ip=192.168.15.202 --type=writeCoil --value=0)
+
 ````
 
 ### docs
@@ -77,7 +87,9 @@ https://github.com/NubeDev/bacnet#examples
 ### example
 
 ````
+
 (cd bacnet && go run main.go whois --interface=wlp3s0)
+
 ````
 
 ### docs
@@ -89,7 +101,9 @@ https://github.com/NubeDev/bacnet#examples
 ### example
 
 ````
+
 (cd rubixio && go run main.go read --ip=192.168.15.10 --port=5001)
+
 ````
 
 ### docs
@@ -100,7 +114,9 @@ https://github.com/NubeDev/bacnet#examples
 
 `this will run as sudo`
 ````
-(cd systemctl && go build ctl.go && sudo  ./ctl service --status=true --service=myservice)
+
+(cd systemctl && go build ctl.go && sudo ./ctl service --status=true --service=myservice)
+
 ````
 
 ### docs

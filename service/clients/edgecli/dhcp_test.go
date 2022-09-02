@@ -25,7 +25,6 @@ func TestClient_DHCPPortExists(t *testing.T) {
 	if err != nil {
 		return
 	}
-
 }
 func TestClient_DHCPSetAsAuto(t *testing.T) {
 	cli := New(&Client{
@@ -42,7 +41,6 @@ func TestClient_DHCPSetAsAuto(t *testing.T) {
 	if err != nil {
 		return
 	}
-
 }
 
 func TestClient_DHCPSetStaticIP(t *testing.T) {
@@ -66,5 +64,4 @@ func TestClient_DHCPSetStaticIP(t *testing.T) {
 	if err != nil {
 		return
 	}
-
 }

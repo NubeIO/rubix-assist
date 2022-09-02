@@ -12,5 +12,5 @@ func TestClient_EdgeReadConfig(t *testing.T) {
 	dataFile := testYml{}
 	err = yaml.Unmarshal(resp.Data, &dataFile)
 	fmt.Println(err)
-	pprint.PrintJOSN(dataFile)
+	pprint.PrintJSON(dataFile)
 }

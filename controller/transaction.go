@@ -11,7 +11,7 @@ func getTransactionBody(ctx *gin.Context) (dto *model.Transaction, err error) {
 }
 
 func (inst *Controller) TransactionsSchema(ctx *gin.Context) {
-	//reposeHandler(schema.GetTransactionSchema(), nil, ctx)
+	// reposeHandler(schema.GetTransactionSchema(), nil, ctx)
 }
 
 func (inst *Controller) GetTransaction(c *gin.Context) {

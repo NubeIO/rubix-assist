@@ -7,7 +7,6 @@ import (
 )
 
 func TestStore_generateServiceFile(t *testing.T) {
-
 	var err error
 	appName := "flow-framework"
 	appVersion := "v0.6.0"
@@ -37,9 +36,4 @@ func TestStore_generateServiceFile(t *testing.T) {
 	if err != nil {
 		return
 	}
-
-	if err != nil {
-		return
-	}
-
 }

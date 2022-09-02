@@ -7,7 +7,6 @@ import (
 )
 
 func TestHostLocation(*testing.T) {
-
 	hosts, res := client.GetHostSchema()
 	fmt.Println(hosts)
 	uuid := ""
@@ -16,7 +15,7 @@ func TestHostLocation(*testing.T) {
 	host, res := client.GetLocation(uuid)
 	fmt.Println(res.StatusCode)
 	if res.StatusCode != 200 {
-		//return
+		// return
 	}
 	fmt.Println(host)
 	host.Name = fmt.Sprintf("name_%d", time.Now().Unix())
@@ -30,6 +29,6 @@ func TestHostLocation(*testing.T) {
 	fmt.Println("NEW host", host.Name)
 	host, res = client.UpdateLocation(host.UUID, host)
 	if res.StatusCode != 200 {
-		//return
+		// return
 	}
 }
