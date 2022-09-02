@@ -12,25 +12,25 @@ func getNetworkBody(ctx *gin.Context) (dto *model.Network, err error) {
 
 func (inst *Controller) GetNetworkSchema(ctx *gin.Context) {
 	mod := model.GetNetworkSchema()
-	reposeHandler(mod, nil, ctx)
+	responseHandler(mod, nil, ctx)
 }
 
 func (inst *Controller) GetHostNetwork(c *gin.Context) {
 	host, err := inst.DB.GetHostNetworkByName(c.Params.ByName("uuid"), true)
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(host, err, c)
+	responseHandler(host, err, c)
 }
 
 func (inst *Controller) GetHostNetworks(c *gin.Context) {
 	hosts, err := inst.DB.GetHostNetworks()
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(hosts, err, c)
+	responseHandler(hosts, err, c)
 }
 
 func (inst *Controller) CreateHostNetwork(c *gin.Context) {
@@ -38,36 +38,36 @@ func (inst *Controller) CreateHostNetwork(c *gin.Context) {
 	err = c.ShouldBindJSON(&m)
 	host, err := inst.DB.CreateHostNetwork(m)
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(host, err, c)
+	responseHandler(host, err, c)
 }
 
 func (inst *Controller) UpdateHostNetwork(c *gin.Context) {
 	body, _ := getNetworkBody(c)
 	host, err := inst.DB.UpdateHostNetwork(c.Params.ByName("uuid"), body)
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(host, err, c)
+	responseHandler(host, err, c)
 }
 
 func (inst *Controller) DeleteHostNetwork(c *gin.Context) {
 	q, err := inst.DB.DeleteHostNetwork(c.Params.ByName("uuid"))
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 	} else {
-		reposeHandler(q, err, c)
+		responseHandler(q, err, c)
 	}
 }
 
 func (inst *Controller) DropHostNetworks(c *gin.Context) {
 	host, err := inst.DB.DropHostNetworks()
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(host, err, c)
+	responseHandler(host, err, c)
 }

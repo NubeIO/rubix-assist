@@ -26,17 +26,17 @@ func (inst *Controller) WiresUpload(c *gin.Context) {
 	var nodes interface{}
 	data, _ := c.GetRawData()
 	if err := json.Unmarshal(data, &nodes); err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 	}
 	body.Nodes = nodes
 	body.Pos = []float64{-1250, -1600}
 	token, host, err := inst.wiresToken(c)
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
 	if token.Token == "" {
-		reposeHandler(nil, errors.New("failed to get wires token"), c)
+		responseHandler(nil, errors.New("failed to get wires token"), c)
 		return
 	}
 	ok, res := wirescli.New(host.IP, host.WiresPort).Upload(body, token.Token)
@@ -44,17 +44,17 @@ func (inst *Controller) WiresUpload(c *gin.Context) {
 		"imported": ok,
 		"code":     res.StatusCode,
 	}
-	reposeHandler(r, err, c)
+	responseHandler(r, err, c)
 }
 
 func (inst *Controller) WiresBackup(c *gin.Context) {
 	token, host, err := inst.wiresToken(c)
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
 	if token.Token == "" {
-		reposeHandler(nil, errors.New("failed to get wires token"), c)
+		responseHandler(nil, errors.New("failed to get wires token"), c)
 		return
 	}
 	if host.WiresPort == 0 {
@@ -62,8 +62,8 @@ func (inst *Controller) WiresBackup(c *gin.Context) {
 	}
 	data, err := wirescli.New(host.IP, host.WiresPort).Backup(token.Token)
 	if err != nil {
-		reposeHandler(nil, err, c)
+		responseHandler(nil, err, c)
 		return
 	}
-	reposeHandler(data, err, c)
+	responseHandler(data, err, c)
 }
