@@ -5,76 +5,38 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// EdgeProductInfo get edge details
-func (inst *Controller) EdgeProductInfo(c *gin.Context) {
+// EdgeSystemCtlAction start, stop, enable, disable a service
+func (inst *Controller) EdgeSystemCtlAction(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	data, err := inst.Store.EdgeProductInfo(host.UUID, host.Name)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
-}
-
-// EdgePublicInfo get edge details
-func (inst *Controller) EdgePublicInfo(c *gin.Context) {
-	host, err := inst.resolveHost(c)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	data, err := inst.Store.EdgePublicInfo(host.UUID, host.Name)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
-}
-
-// EdgeCtlAction start, stop, enable, disable a service
-func (inst *Controller) EdgeCtlAction(c *gin.Context) {
-	host, err := inst.resolveHost(c)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	var m *installer.CtlBody
+	var m *installer.SystemCtlBody
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
 	data, err := inst.Store.EdgeCtlAction(host.UUID, host.Name, m)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
+	responseHandler(data, err, c)
 }
 
-// EdgeCtlStatus check isRunning, isInstalled, isEnabled, isActive, isFailed for a service
-func (inst *Controller) EdgeCtlStatus(c *gin.Context) {
+// EdgeSystemCtlStatus check isRunning, isInstalled, isEnabled, isActive, isFailed for a service
+func (inst *Controller) EdgeSystemCtlStatus(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *installer.CtlBody
+	var m *installer.SystemCtlBody
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
 	data, err := inst.Store.EdgeCtlStatus(host.UUID, host.Name, m)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
+	responseHandler(data, err, c)
 }
 
 // EdgeServiceMassAction start, stop, enable, disable a service
@@ -84,18 +46,14 @@ func (inst *Controller) EdgeServiceMassAction(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *installer.CtlBody
+	var m *installer.SystemCtlBody
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
 	data, err := inst.Store.EdgeServiceMassAction(host.UUID, host.Name, m)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
+	responseHandler(data, err, c)
 }
 
 // EdgeServiceMassStatus on mass check isRunning, isInstalled, isEnabled, isActive, isFailed for a service
@@ -105,16 +63,12 @@ func (inst *Controller) EdgeServiceMassStatus(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *installer.CtlBody
+	var m *installer.SystemCtlBody
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
 	data, err := inst.Store.EdgeServiceMassStatus(host.UUID, host.Name, m)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
+	responseHandler(data, err, c)
 }

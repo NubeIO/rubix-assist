@@ -78,9 +78,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	edge := admin.Group("/edge")
 	{
-		edge.GET("/public/ping", api.EdgePing)
+		edge.GET("/system/ping", api.EdgePing)
+		edge.GET("/system/device", api.EdgeGetDeviceInfo)
 		edge.GET("/system/product", api.EdgeProductInfo)
-		edge.GET("/public/device", api.EdgePublicInfo)
 	}
 
 	edgeApps := admin.Group("/edge/apps")
@@ -127,10 +127,10 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	edgeAppsControl := admin.Group("/edge/control")
 	{
-		edgeAppsControl.POST("/action", api.EdgeCtlAction)              // start, stop
-		edgeAppsControl.POST("/action/mass", api.EdgeServiceMassAction) // mass operation start, stop
-		edgeAppsControl.POST("/status", api.EdgeCtlStatus)              // isRunning, isInstalled and so on
-		edgeAppsControl.POST("/status/mass", api.EdgeServiceMassStatus) // mass isRunning, isInstalled and so on
+		edgeAppsControl.POST("/action", api.EdgeSystemCtlAction)
+		edgeAppsControl.POST("/action/mass", api.EdgeServiceMassAction)
+		edgeAppsControl.POST("/status", api.EdgeSystemCtlStatus)
+		edgeAppsControl.POST("/status/mass", api.EdgeServiceMassStatus)
 	}
 
 	locations := admin.Group("/locations")

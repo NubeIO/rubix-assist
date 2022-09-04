@@ -18,7 +18,6 @@ import (
 const root = 0755
 
 var filePerm = root
-var err error
 
 type Controller struct {
 	SSH   *goph.Client
@@ -122,7 +121,7 @@ type Message struct {
 // hostCopy copy same types from this host to the host needed for ssh.Host
 func (inst *Controller) hostCopy(host *model.Host) (ssh.Host, error) {
 	h := new(ssh.Host)
-	err = copier.Copy(&h, &host)
+	err := copier.Copy(&h, &host)
 	if err != nil {
 		fmt.Println(err)
 		return *h, err

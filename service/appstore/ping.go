@@ -2,7 +2,6 @@ package appstore
 
 import (
 	"fmt"
-	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 	"net"
 	"time"
 )
@@ -20,13 +19,4 @@ func (inst *Store) AssistPing(hostUUID, hostName string) bool {
 		return true
 	}
 	return false
-}
-
-// EdgePing ping from the edge device
-func (inst *Store) EdgePing(hostUUID, hostName string, body *edgecli.PingBody) (bool, error) {
-	client, err := inst.getClient(hostUUID, hostName)
-	if err != nil {
-		return false, err
-	}
-	return client.Ping(body)
 }
