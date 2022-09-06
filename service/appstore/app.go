@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"io/ioutil"
-	"os"
-	"path/filepath"
 )
 
 // Making an app
@@ -152,71 +150,4 @@ func (inst *Store) listAppBuilds(appName, version string) ([]ListApps, error) {
 		apps = append(apps, app)
 	}
 	return apps, err
-}
-
-// getAppStorePathAndVersion get the full app install path and version
-func (inst *Store) getAppStorePath(appName string) string {
-	path := fmt.Sprintf("%s/apps/%s", inst.App.GetStoreDir(), appName)
-	return filePath(path)
-}
-
-// getAppStorePathAndVersion get the full app install path and version
-func (inst *Store) getAppStorePathAndVersion(appName, version string) string {
-	path := fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
-	return filePath(path)
-}
-
-// MakeAppDir  => /data/appstore/
-func (inst *Store) makeStoreDir() error {
-	return inst.App.MakeDirectoryIfNotExists(inst.App.GetStoreDir(), os.FileMode(FilePerm))
-}
-
-// MakeAppDir  => /data/appstore/apps/
-func (inst *Store) makeAppDir() error {
-	path := fmt.Sprintf("%s/%s", inst.App.GetStoreDir(), "/apps")
-	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(FilePerm))
-}
-
-// MakeApp  => /data/appstore/apps/flow-framework
-func (inst *Store) makeApp(appName string) error {
-	if err := emptyPath(appName); err != nil {
-		return err
-	}
-	path := fmt.Sprintf("%s/apps/%s", inst.App.GetStoreDir(), appName)
-	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(FilePerm))
-}
-
-// MakeAppVersionDir  => /data/appstore/apps/flow-framework/v1.1.1
-func (inst *Store) makeAppVersionDir(appName, version string) error {
-	if err := emptyPath(appName); err != nil {
-		return err
-	}
-	if err := checkVersion(version); err != nil {
-		return err
-	}
-	path := fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
-	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(FilePerm))
-}
-
-type fileDetails struct {
-	Name      string `json:"name"`
-	Extension string `json:"extension"`
-	IsDir     bool   `json:"is_dir"`
-}
-
-func getFileDetails(dir string) ([]fileDetails, error) {
-	files, err := ioutil.ReadDir(dir)
-	if err != nil {
-		return nil, err
-	}
-	var out []fileDetails
-	var f fileDetails
-	for _, file := range files {
-		var extension = filepath.Ext(file.Name())
-		f.Extension = extension
-		f.Name = file.Name()
-		f.IsDir = file.IsDir()
-		out = append(out, f)
-	}
-	return out, nil
 }

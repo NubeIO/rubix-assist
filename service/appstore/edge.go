@@ -5,66 +5,46 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
-	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
-	"github.com/NubeIO/rubix-registry-go/rubixregistry"
 	"os"
 )
 
-type EdgeApp struct {
-	Name              string `json:"name"`
-	Version           string `json:"version"`
-	Product           string `json:"product"`
-	Arch              string `json:"arch"`
-	ServiceDependency string `json:"service_dependency"` // nodejs
-}
-
-// AddUploadEdgeApp
-// upload the build
-func (inst *Store) AddUploadEdgeApp(hostUUID, hostName string, app *EdgeApp) (*installer.AppResponse, error) {
-	appName := app.Name
-	version := app.Version
-	archType := app.Arch
-	productType := app.Product
-	if appName == "" {
-		return nil, errors.New("upload app to edge app name can not be empty")
+// EdgeUploadApp uploads the build
+func (inst *Store) EdgeUploadApp(hostUUID, hostName string, app *installer.Upload) (*installer.AppResponse, error) {
+	if app.Name == "" {
+		return nil, errors.New("upload app to edge: app name can not be empty")
 	}
-	if version == "" {
-		return nil, errors.New("upload app to edge  app version can not be empty")
+	if app.Version == "" {
+		return nil, errors.New("upload app to edge: app version can not be empty")
 	}
-	if productType == "" {
-		return nil, errors.New("upload app to edge  product type can not be empty, try RubixCompute, RubixComputeIO, RubixCompute5, Server, Edge28, Nuc")
+	if app.Product == "" {
+		return nil, errors.New("upload app to edge: product type can not be empty, try RubixCompute, RubixComputeIO, RubixCompute5, Server, Edge28, Nuc")
 	}
-	if archType == "" {
+	if app.Arch == "" {
 		return nil, errors.New("upload app to edge arch type can not be empty, try armv7 amd64")
 	}
-	var dontCheckArch bool
-	if appName == rubixWires {
-		dontCheckArch = true
-	}
-	path := inst.getAppStorePathAndVersion(appName, version)
-	buildDetails, err := inst.App.GetBuildZipNameByArch(path, archType, dontCheckArch)
+	path := inst.getAppStorePathAndVersion(app.Name, app.Version)
+	buildDetails, err := inst.App.GetBuildZipNameByArch(path, app.Arch, app.DoNotValidateArch)
 	if buildDetails == nil {
-		return nil, errors.New(fmt.Sprintf("failed to match build zip name app:%s version:%s arch:%s", appName, version, archType))
+		return nil, errors.New(fmt.Sprintf("failed to match build zip name app:%s version:%s arch:%s", app.Name, app.Version, app.Arch))
 	}
-	var fileName = buildDetails.ZipName
-	fileAndPath := filePath(fmt.Sprintf("%s/%s", path, fileName))
+	fileAndPath := filePath(fmt.Sprintf("%s/%s", path, buildDetails.ZipName))
 	reader, err := os.Open(fileAndPath)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error open build for app:%s fileName:%s  err:%s", appName, fileName, err.Error()))
+		return nil, errors.New(fmt.Sprintf("error open build for app:%s zip file_name:%s  err:%s", app.Name, buildDetails.ZipName, err.Error()))
 	}
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
 	}
-	return client.UploadApp(appName, version, productType, archType, fileName, reader)
+	return client.UploadApp(app, buildDetails.ZipName, reader)
 }
 
-func (inst *Store) EdgeUnInstallApp(hostUUID, hostName, appName string, deleteApp bool) (*installer.RemoveRes, error) {
+func (inst *Store) EdgeUninstallApp(hostUUID, hostName, appName, serviceName string, deleteApp bool) (*installer.UninstallResponse, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
 	}
-	return client.EdgeUnInstallApp(appName, deleteApp)
+	return client.EdgeUninstallApp(appName, serviceName, deleteApp)
 }
 
 func (inst *Store) EdgeListApps(hostUUID, hostName string) ([]installer.Apps, error) {
@@ -75,12 +55,12 @@ func (inst *Store) EdgeListApps(hostUUID, hostName string) ([]installer.Apps, er
 	return client.ListApps()
 }
 
-func (inst *Store) EdgeListAppsAndService(hostUUID, hostName string) ([]installer.InstalledServices, error) {
+func (inst *Store) EdgeListAppsStatus(hostUUID, hostName string) ([]installer.AppsStatus, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
 	}
-	return client.ListAppsAndService()
+	return client.ListAppsStatus()
 }
 
 func (inst *Store) EdgeListNubeServices(hostUUID, hostName string) ([]installer.InstalledServices, error) {
@@ -88,7 +68,7 @@ func (inst *Store) EdgeListNubeServices(hostUUID, hostName string) ([]installer.
 	if err != nil {
 		return nil, err
 	}
-	return client.ListAppsAndService()
+	return client.ListAppsStatus()
 }
 
 func (inst *Store) EdgeCtlAction(hostUUID, hostName string, body *installer.SystemCtlBody) (*systemctl.SystemResponse, error) {

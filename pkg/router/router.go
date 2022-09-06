@@ -86,11 +86,10 @@ func Setup(db *gorm.DB) *gin.Engine {
 	edgeApps := admin.Group("/edge/apps")
 	{
 		edgeApps.GET("/", api.EdgeListApps)
-		edgeApps.GET("/services", api.EdgeListAppsAndService)
-		edgeApps.GET("/services/nube", api.EdgeListNubeServices)
-		edgeApps.POST("/add", api.AddUploadEdgeApp)
-		edgeApps.POST("/service/upload", api.GenerateUploadEdgeService)
-		edgeApps.POST("/service/install", api.InstallEdgeService)
+		edgeApps.GET("/status", api.EdgeListAppsStatus)
+		edgeApps.POST("/upload", api.EdgeUploadApp)
+		edgeApps.POST("/service/upload", api.GenerateServiceFileAndEdgeUpload)
+		edgeApps.POST("/service/install", api.EdgeInstallService)
 		edgeApps.DELETE("/", api.EdgeUninstallApp)
 	}
 

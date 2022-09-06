@@ -49,7 +49,7 @@ func uploadService() error {
 		ServiceDescription:      "",
 		RunAsUser:               "",
 		ServiceWorkingDirectory: "",
-		AppSpecficExecStart:     "app -p 1660 -g /data/flow-framework -d data -prod",
+		AppSpecificExecStart:    "app -p 1660 -g /data/flow-framework -d data -prod",
 	})
 	if err != nil {
 		return err

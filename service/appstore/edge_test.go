@@ -12,8 +12,7 @@ func TestStore_generateServiceFile(t *testing.T) {
 	appVersion := "v0.6.0"
 	appStore, err := New(&Store{
 		App: &installer.App{
-			DataDir:  "/data",
-			FilePerm: nonRoot,
+			DataDir: "/data",
 		},
 		Perm: nonRoot,
 	})
@@ -21,18 +20,17 @@ func TestStore_generateServiceFile(t *testing.T) {
 
 	exe := []string{"g=/data/bacnet-server-c", "a=/data"}
 
-	file, s, s2, err := appStore.generateServiceFile(&ServiceFile{
+	tmpDir, absoluteServiceFileName, err := appStore.generateServiceFile(&ServiceFile{
 		Name:                    appName,
 		Version:                 appVersion,
-		ServiceDependency:       "",
 		ServiceDescription:      "",
 		RunAsUser:               "",
 		ServiceWorkingDirectory: "",
-		AppSpecficExecStart:     "app",
+		AppSpecificExecStart:    "app",
 		CustomServiceExecStart:  "",
 		EnvironmentVars:         exe,
 	})
-	fmt.Println(file, s, s2)
+	fmt.Println(tmpDir, absoluteServiceFileName, err)
 	if err != nil {
 		return
 	}
