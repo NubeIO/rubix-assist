@@ -93,6 +93,14 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgeApps.DELETE("/", api.EdgeUninstallApp)
 	}
 
+	edgeAppsControl := admin.Group("/edge/control")
+	{
+		edgeAppsControl.POST("/action", api.EdgeSystemCtlAction)
+		edgeAppsControl.POST("/status", api.EdgeSystemCtlStatus)
+		edgeAppsControl.POST("/action/mass", api.EdgeServiceMassAction)
+		edgeAppsControl.POST("/status/mass", api.EdgeServiceMassStatus)
+	}
+
 	edgeConfig := admin.Group("/edge/config")
 	{
 		edgeConfig.GET("/", api.EdgeReadConfig)
@@ -100,7 +108,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 
 	edgeFiles := admin.Group("/edge/files")
-
 	{
 		edgeFiles.GET("/exists", api.EdgeFileExists)
 		edgeFiles.GET("/read", api.EdgeReadFile)
@@ -122,14 +129,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgePlugins.POST("/", api.EdgeUploadPlugin)
 		edgePlugins.DELETE("/", api.EdgeDeletePlugin)
 		edgePlugins.DELETE("/all", api.EdgeDeleteAllPlugins)
-	}
-
-	edgeAppsControl := admin.Group("/edge/control")
-	{
-		edgeAppsControl.POST("/action", api.EdgeSystemCtlAction)
-		edgeAppsControl.POST("/action/mass", api.EdgeServiceMassAction)
-		edgeAppsControl.POST("/status", api.EdgeSystemCtlStatus)
-		edgeAppsControl.POST("/status/mass", api.EdgeServiceMassStatus)
 	}
 
 	locations := admin.Group("/locations")

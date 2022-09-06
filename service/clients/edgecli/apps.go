@@ -3,7 +3,6 @@ package edgecli
 import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
-	"github.com/NubeIO/lib-systemctl-go/systemctl"
 	"github.com/NubeIO/lib-systemctl-go/systemd"
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 	"io"
@@ -86,54 +85,4 @@ func (inst *Client) EdgeUninstallApp(appName, serviceName string, deleteApp bool
 		return nil, err
 	}
 	return resp.Result().(*installer.UninstallResponse), nil
-}
-
-func (inst *Client) EdgeCtlAction(body *installer.CtlBody) (*systemctl.SystemResponse, error) {
-	url := fmt.Sprintf("/api/apps/control/action")
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&systemctl.SystemResponse{}).
-		SetBody(body).
-		Post(url))
-	if err != nil {
-		return nil, err
-	}
-	return resp.Result().(*systemctl.SystemResponse), nil
-}
-
-func (inst *Client) EdgeServiceMassAction(body *installer.CtlBody) ([]systemctl.MassSystemResponse, error) {
-	url := fmt.Sprintf("/api/apps/control/action/mass")
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&[]systemctl.MassSystemResponse{}).
-		SetBody(body).
-		Post(url))
-	if err != nil {
-		return nil, err
-	}
-	data := resp.Result().(*[]systemctl.MassSystemResponse)
-	return *data, nil
-}
-
-func (inst *Client) EdgeCtlStatus(body *installer.CtlBody) (*systemctl.SystemState, error) {
-	url := fmt.Sprintf("/api/apps/control/status")
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&systemctl.SystemState{}).
-		SetBody(body).
-		Post(url))
-	if err != nil {
-		return nil, err
-	}
-	return resp.Result().(*systemctl.SystemState), nil
-}
-
-func (inst *Client) EdgeServiceMassStatus(body *installer.CtlBody) ([]systemctl.SystemState, error) {
-	url := fmt.Sprintf("/api/apps/control/status/mass")
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&[]systemctl.SystemState{}).
-		SetBody(body).
-		Post(url))
-	if err != nil {
-		return nil, err
-	}
-	data := resp.Result().(*[]systemctl.SystemState)
-	return *data, nil
 }

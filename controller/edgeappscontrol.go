@@ -18,7 +18,7 @@ func (inst *Controller) EdgeSystemCtlAction(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	data, err := inst.Store.EdgeCtlAction(host.UUID, host.Name, m)
+	data, err := inst.Store.EdgeSystemCtlAction(host.UUID, host.Name, m)
 	responseHandler(data, err, c)
 }
 
@@ -35,7 +35,7 @@ func (inst *Controller) EdgeSystemCtlStatus(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	data, err := inst.Store.EdgeCtlStatus(host.UUID, host.Name, m)
+	data, err := inst.Store.EdgeSystemCtlStatus(host.UUID, host.Name, m)
 	responseHandler(data, err, c)
 }
 
