@@ -111,10 +111,10 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		edgeFiles.GET("/exists", api.EdgeFileExists)
 		edgeFiles.GET("/read", api.EdgeReadFile)
-		edgeFiles.POST("/write", api.EdgeWriteFile)
+		edgeFiles.POST("/create", api.EdgeCreateFile)
+		edgeFiles.POST("/write/string", api.EdgeWriteString)
 		edgeFiles.POST("/write/json", api.EdgeWriteFileJson)
 		edgeFiles.POST("/write/yml", api.EdgeWriteFileYml)
-		edgeFiles.POST("/create", api.EdgeCreateFile)
 	}
 
 	edgeDirs := admin.Group("/edge/dirs")

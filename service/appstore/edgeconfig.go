@@ -4,11 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
-	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 	log "github.com/sirupsen/logrus"
 )
 
-func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.EdgeConfig) (*edgecli.Message, error) {
+func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.EdgeConfig) (*assistmodel.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -34,7 +33,7 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.
 	}
 	absoluteConfigName := fmt.Sprintf("%s/%s", appConfigPath, configName)
 
-	writeFile := &edgecli.WriteFile{
+	writeFile := &assistmodel.WriteFile{
 		FilePath:     absoluteConfigName,
 		Body:         body.Body,
 		BodyAsString: body.BodyAsString,
@@ -42,7 +41,7 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.
 	if configName == "config.yml" {
 		return client.WriteFileYml(writeFile)
 	} else if configName == ".env" {
-		return client.WriteFile(writeFile)
+		return client.WriteString(writeFile)
 	} else if configName == "config.json" {
 		return client.WriteFileJson(writeFile)
 	}

@@ -6,11 +6,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type Message struct {
-	Message interface{} `json:"message"`
-	Data    interface{} `json:"data,omitempty"`
-}
-
 type Client struct {
 	Rest  *resty.Client
 	URL   string `json:"url"`

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
+	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"gopkg.in/yaml.v3"
 	"testing"
@@ -156,10 +157,9 @@ func TestClient_WriteFileJson(t *testing.T) {
 		Product:      "Server",
 	}
 	cli := New(&Client{})
-	body := &WriteFile{
+	body := &assistmodel.WriteFile{
 		FilePath: "/data/product.json",
 		Body:     data,
-		Perm:     0,
 	}
 	message, err := cli.WriteFileJson(body)
 	if err != nil {
@@ -174,10 +174,9 @@ func TestClient_WriteFileYml(t *testing.T) {
 		Auth: false,
 	}
 	cli := New(&Client{})
-	body := &WriteFile{
+	body := &assistmodel.WriteFile{
 		FilePath: "/data/flow-framework/config/config.yml",
 		Body:     data,
-		Perm:     0,
 	}
 	message, err := cli.WriteFileYml(body)
 	if err != nil {
@@ -193,12 +192,11 @@ PORT=1313
 SECRET_KEY=__SECRET_KEY__
 `
 	cli := New(&Client{})
-	body := &WriteFile{
+	body := &assistmodel.WriteFile{
 		FilePath:     "/data/rubix-wires/config/.env",
 		BodyAsString: data,
-		Perm:         0,
 	}
-	message, err := cli.WriteFile(body)
+	message, err := cli.WriteString(body)
 	if err != nil {
 		fmt.Println(err)
 		return

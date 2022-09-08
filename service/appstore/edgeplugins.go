@@ -4,15 +4,16 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
+	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"os"
+	"path"
 )
 
 // EdgeUploadPlugin to edge device
 // rubix-ui to pass in a plugin RA and then unzip it to tmp dir and check its arch
 // then upload it to edge
 // restart FF if as an option
-func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (*EdgeUploadResponse, error) {
+func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (*assistmodel.EdgeUploadResponse, error) {
 	pluginPath, pluginName, err := inst.GetPluginPath(plugin)
 	if err != nil {
 		return nil, err
@@ -38,7 +39,7 @@ func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (
 	if err != nil {
 		return nil, err
 	}
-	flowPath := inst.App.GetAppPath(flowFramework)
+	flowPath := inst.App.GetAppDataPath(flowFramework)
 	err = fileutils.DirExistsErr(flowPath)
 	if err != nil {
 		return nil, errors.New("flow-framework has not be installed yet")
@@ -51,7 +52,8 @@ func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (
 			return nil, err
 		}
 	}
-	uploadResp, err := inst.EdgeUploadLocalFile(hostUUID, hostName, tmpDir, binaryName, flowPathPluginPath)
+	file := path.Join(tmpDir, binaryName)
+	uploadResp, err := inst.EdgeUploadLocalFile(hostUUID, hostName, file, flowPathPluginPath)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +65,7 @@ func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (
 }
 
 func (inst *Store) EdgeGetPluginPath() (string, error) {
-	flowPath := inst.App.GetAppPath(flowFramework)
+	flowPath := inst.App.GetAppDataPath(flowFramework)
 	err := fileutils.DirExistsErr(flowPath)
 	if err != nil {
 		return "", errors.New("flow-framework has not be installed yet")
@@ -91,7 +93,7 @@ func (inst *Store) EdgeListPlugins(hostUUID, hostName string) ([]Plugin, error) 
 	return pluginDetails, nil
 }
 
-func (inst *Store) EdgeDeletePlugin(hostUUID, hostName string, plugin *Plugin) (*edgecli.Message, error) {
+func (inst *Store) EdgeDeletePlugin(hostUUID, hostName string, plugin *Plugin) (*assistmodel.Message, error) {
 	if plugin == nil {
 		return nil, errors.New("plugin is nil, cant not be empty")
 	}
@@ -114,7 +116,7 @@ func (inst *Store) EdgeDeletePlugin(hostUUID, hostName string, plugin *Plugin) (
 	return client.DeleteFile(path)
 }
 
-func (inst *Store) EdgeDeleteAllPlugins(hostUUID, hostName string) (*edgecli.Message, error) {
+func (inst *Store) EdgeDeleteAllPlugins(hostUUID, hostName string) (*assistmodel.Message, error) {
 	path, err := inst.EdgeGetPluginPath()
 	if err != nil {
 		return nil, err
