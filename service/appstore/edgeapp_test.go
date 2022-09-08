@@ -14,7 +14,6 @@ func TestStore_generateServiceFile(t *testing.T) {
 		App: &installer.App{
 			DataDir: "/data",
 		},
-		Perm: nonRoot,
 	})
 	fmt.Println(err)
 

@@ -19,13 +19,13 @@ func (inst *Store) getAppStorePathAndVersion(appName, version string) string {
 
 // MakeAppDir  => /data/appstore/
 func (inst *Store) makeStoreDir() error {
-	return inst.App.MakeDirectoryIfNotExists(inst.App.GetStoreDir(), os.FileMode(FilePerm))
+	return inst.App.MakeDirectoryIfNotExists(inst.App.GetStoreDir(), os.FileMode(inst.App.FileMode))
 }
 
 // MakeAppDir  => /data/appstore/apps/
 func (inst *Store) makeAppDir() error {
 	path := fmt.Sprintf("%s/%s", inst.App.GetStoreDir(), "/apps")
-	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(FilePerm))
+	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(inst.App.FileMode))
 }
 
 // MakeApp  => /data/appstore/apps/flow-framework
@@ -34,7 +34,7 @@ func (inst *Store) makeApp(appName string) error {
 		return err
 	}
 	path := fmt.Sprintf("%s/apps/%s", inst.App.GetStoreDir(), appName)
-	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(FilePerm))
+	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(inst.App.FileMode))
 }
 
 // MakeAppVersionDir  => /data/appstore/apps/flow-framework/v1.1.1
@@ -46,7 +46,7 @@ func (inst *Store) makeAppVersionDir(appName, version string) error {
 		return err
 	}
 	path := fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
-	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(FilePerm))
+	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(inst.App.FileMode))
 }
 
 func (inst *Store) getServiceWorkingDir(appName, appVersion string) string {

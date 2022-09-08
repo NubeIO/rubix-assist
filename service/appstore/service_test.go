@@ -13,10 +13,8 @@ func TestStore_GenerateUploadEdgeService(t *testing.T) {
 	appVersion := "v0.6.0"
 	appStore, err := New(&Store{
 		App: &installer.App{
-			DataDir:  "/data",
-			FilePerm: nonRoot,
+			DataDir: "/data",
 		},
-		Perm: nonRoot,
 	})
 	fmt.Println(err)
 	resp, err := appStore.GenerateServiceFileAndEdgeUpload("", "rc", &ServiceFile{

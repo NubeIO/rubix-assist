@@ -13,10 +13,8 @@ func Test_pluginDetails(t *testing.T) {
 func Test_PluginZipDetails(t *testing.T) {
 	appStore, err := New(&Store{
 		App: &installer.App{
-			DataDir:  "/data",
-			FilePerm: nonRoot,
+			DataDir: "/data",
 		},
-		Perm: nonRoot,
 	})
 	details := appStore.PluginZipDetails("bacnetserver-0.6.6-a79d6c29.armv7.zip")
 	if err != nil {
@@ -27,8 +25,7 @@ func Test_PluginZipDetails(t *testing.T) {
 
 func Test_ListPlugins(t *testing.T) {
 	appStore, err := New(&Store{
-		App:  &installer.App{},
-		Perm: nonRoot,
+		App: &installer.App{},
 	})
 	details, err := appStore.StoreListPlugins()
 	fmt.Println(err)
@@ -41,10 +38,8 @@ func Test_ListPlugins(t *testing.T) {
 func Test_getPluginPath(t *testing.T) {
 	appStore, err := New(&Store{
 		App: &installer.App{
-			DataDir:  "/data",
-			FilePerm: nonRoot,
+			DataDir: "/data",
 		},
-		Perm: nonRoot,
 	})
 	details, name, err := appStore.GetPluginPath(&Plugin{
 		PluginName: "bacnetserver",

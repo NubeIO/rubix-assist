@@ -13,10 +13,8 @@ func TestStore_addApp(t *testing.T) {
 
 	appStore, err := New(&Store{
 		App: &installer.App{
-			DataDir:  "/data",
-			FilePerm: nonRoot,
+			DataDir: "/data",
 		},
-		Perm: nonRoot,
 	})
 	app, err := appStore.AddApp(&App{Name: appName, Version: appVersion})
 	fmt.Println(err)
@@ -29,10 +27,8 @@ func TestStore_addApp(t *testing.T) {
 func TestStore_listAppsWithVersions(t *testing.T) {
 	appStore, err := New(&Store{
 		App: &installer.App{
-			DataDir:  "/data",
-			FilePerm: nonRoot,
+			DataDir: "/data",
 		},
-		Perm: nonRoot,
 	})
 	app, err := appStore.ListAppsWithVersions()
 	fmt.Println(err)
@@ -45,10 +41,8 @@ func TestStore_listAppsWithVersions(t *testing.T) {
 func TestStore_listAppsWithArch(t *testing.T) {
 	appStore, err := New(&Store{
 		App: &installer.App{
-			DataDir:  "/data",
-			FilePerm: nonRoot,
+			DataDir: "/data",
 		},
-		Perm: nonRoot,
 	})
 	app, err := appStore.ListAppsBuildDetails()
 	fmt.Println(err)
@@ -61,10 +55,8 @@ func TestStore_listAppsWithArch(t *testing.T) {
 func TestStore_ListAppsFlow(t *testing.T) {
 	appStore, err := New(&Store{
 		App: &installer.App{
-			DataDir:  "/data",
-			FilePerm: nonRoot,
+			DataDir: "/data",
 		},
-		Perm: nonRoot,
 	})
 
 	path, err := appStore.ListApps()
@@ -87,10 +79,8 @@ func TestStore_ListAppsFlow(t *testing.T) {
 func TestStore_ListAppsWires(t *testing.T) {
 	appStore, err := New(&Store{
 		App: &installer.App{
-			DataDir:  "/data",
-			FilePerm: nonRoot,
+			DataDir: "/data",
 		},
-		Perm: nonRoot,
 	})
 
 	path, err := appStore.ListApps()

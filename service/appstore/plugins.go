@@ -113,7 +113,7 @@ func (inst *Store) StoreUploadPlugin(app *installer.Upload) (*UploadResponse, er
 		return nil, errors.New(fmt.Sprintf("upload plugin:%s", err.Error()))
 	}
 	pluginStore := fmt.Sprintf("%s/plugins", inst.App.GetStoreDir())
-	err = inst.App.MakeDirectoryIfNotExists(pluginStore, os.FileMode(FilePerm))
+	err = inst.App.MakeDirectoryIfNotExists(pluginStore, os.FileMode(inst.App.FileMode))
 	if err != nil {
 		return nil, err
 	}

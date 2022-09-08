@@ -22,7 +22,7 @@ func (inst *Store) makeUserRubixHome() error {
 		return err
 	}
 	path := fmt.Sprintf("%s/%s", userHomeDir(), inst.App.UserRubixHome)
-	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(FilePerm))
+	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(inst.App.FileMode))
 }
 
 func userHomeDir() string {

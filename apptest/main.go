@@ -9,11 +9,15 @@ import (
 	"github.com/pkg/errors"
 )
 
-var appName = "flow-framework"
-var appVersion = "v0.6.1"
-var source = ""
-var arch = "amd64"
-var product = "Server"
+const (
+	appName     = "flow-framework"
+	serviceName = "nubeio-flow-framework.service"
+	appVersion  = "v0.6.1"
+	arch        = "amd64"
+	product     = "Server"
+)
+
+// TODO: have this on rubix-ui
 
 func addUploadApp() error {
 	client := assitcli.New(&assitcli.Client{})
@@ -27,12 +31,12 @@ func addUploadApp() error {
 		return errors.New("no apps are added")
 	}
 	pprint.PrintJSON(listStore)
-
-	app, err := client.AddUploadEdgeApp("rc", &appstore.EdgeApp{
-		Name:    appName,
-		Version: appVersion,
-		Product: product,
-		Arch:    arch,
+	app, err := client.EdgeUploadApp("rc", &installer.Upload{
+		Name:        appName,
+		ServiceName: serviceName,
+		Version:     appVersion,
+		Product:     product,
+		Arch:        arch,
 	})
 	if err != nil {
 		return err
@@ -41,9 +45,9 @@ func addUploadApp() error {
 	return nil
 }
 
-func uploadService() error {
+func uploadService() (string, error) {
 	client := assitcli.New(&assitcli.Client{})
-	service, err := client.UploadEdgeService("rc", &appstore.ServiceFile{
+	service, err := client.EdgeUploadService("rc", &appstore.ServiceFile{
 		Name:                    appName,
 		Version:                 appVersion,
 		ServiceDescription:      "",
@@ -52,14 +56,13 @@ func uploadService() error {
 		AppSpecificExecStart:    "app -p 1660 -g /data/flow-framework -d data -prod",
 	})
 	if err != nil {
-		return err
+		return "", err
 	}
 	pprint.PrintJSON(service)
-	source = service.UploadedFile
-	return nil
+	return service.UploadedFile, nil
 }
 
-func installService() error {
+func installService(source string) error {
 	client := assitcli.New(&assitcli.Client{})
 	service, err := client.InstallEdgeService("rc", &installer.Install{
 		Name:        appName,
@@ -82,13 +85,13 @@ func main() {
 	if err != nil {
 		return
 	}
-	err = uploadService()
+	source, err := uploadService()
 	fmt.Println("uploadService")
 	fmt.Println(err)
 	if err != nil {
 		return
 	}
-	err = installService()
+	err = installService(source)
 	fmt.Println("installService")
 	fmt.Println(err)
 	if err != nil {

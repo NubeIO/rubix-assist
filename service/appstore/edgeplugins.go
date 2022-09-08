@@ -26,7 +26,7 @@ func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (
 	if err != nil {
 		return nil, err
 	}
-	zip, err := fileutils.UnZip(pluginPathName, tmpDir, os.FileMode(FilePerm))
+	zip, err := fileutils.UnZip(pluginPathName, tmpDir, os.FileMode(inst.App.FileMode))
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (
 	flowPathPluginPath := fmt.Sprintf("%s/data/plugins", flowPath)
 	err = fileutils.DirExistsErr(flowPathPluginPath)
 	if err != nil {
-		err := inst.App.MakeDirectoryIfNotExists(flowPathPluginPath, os.FileMode(FilePerm))
+		err := inst.App.MakeDirectoryIfNotExists(flowPathPluginPath, os.FileMode(inst.App.FileMode))
 		if err != nil {
 			return nil, err
 		}

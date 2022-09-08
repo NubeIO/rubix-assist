@@ -18,18 +18,6 @@ var client = New(&Client{
 	Port: 1662,
 })
 
-func TestClient_EdgeListApps(t *testing.T) {
-	data, err := client.EdgeListApps("rc")
-	fmt.Println(err)
-	pprint.PrintJSON(data)
-}
-
-func TestClient_EdgeListAppsAndService(t *testing.T) {
-	data, err := client.EdgeListAppsAndService("rc")
-	fmt.Println(err)
-	pprint.PrintJSON(data)
-}
-
 func TestClient_EdgeProductInfo(t *testing.T) {
 	data, err := client.EdgeProductInfo("rc")
 	fmt.Println(err)

@@ -137,7 +137,7 @@ func (inst *Store) generateServiceFile(app *ServiceFile) (tmpDir, absoluteServic
 	}
 	b, _ := systemdconf.Marshal(service)
 	absoluteServiceFileName = fmt.Sprintf("%s/%s", tmpFilePath, app.ServiceName)
-	err = fileutils.WriteFile(absoluteServiceFileName, string(b), os.FileMode(FilePerm))
+	err = fileutils.WriteFile(absoluteServiceFileName, string(b), os.FileMode(inst.App.FileMode))
 	if err != nil {
 		log.Errorf("write service file error %s", err.Error())
 	}
