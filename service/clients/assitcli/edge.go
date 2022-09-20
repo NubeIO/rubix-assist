@@ -3,7 +3,7 @@ package assitcli
 import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
-	model2 "github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
@@ -22,14 +22,17 @@ func (inst *Client) EdgeProductInfo(hostIDName string) (*installer.Product, erro
 }
 
 // EdgePing ping a device
-func (inst *Client) EdgePing() (*model2.Message, error) {
+func (inst *Client) EdgePing(hostIDName string) (*model.Message, error) {
 	url := fmt.Sprintf("/api/edge/system/ping")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		Post(url))
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&model.Message{}).
+		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*model2.Message), nil
+	return resp.Result().(*model.Message), nil
 }
 
 func (inst *Client) EdgeSystemCtlAction(hostIDName string, body *installer.SystemCtlBody) (*installer.SystemResponse, error) {

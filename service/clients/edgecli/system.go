@@ -36,6 +36,7 @@ func (inst *Client) EdgeGetDeviceInfo() (*rubixregistry.DeviceInfo, error) {
 func (inst *Client) Ping() (*model.Message, error) {
 	url := fmt.Sprintf("/api/system/ping")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&model.Message{}).
 		Get(url))
 	if err != nil {
 		return nil, err

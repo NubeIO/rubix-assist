@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"os"
+	"path"
 )
 
 // EdgeUploadApp uploads the build
@@ -21,15 +22,15 @@ func (inst *Store) EdgeUploadApp(hostUUID, hostName string, app *installer.Uploa
 	if app.Arch == "" {
 		return nil, errors.New("upload app to edge arch type can not be empty, try armv7 amd64")
 	}
-	path := inst.getAppsStoreAppWithVersionPath(app.Name, app.Version)
-	buildDetails, err := inst.App.GetBuildZipNameByArch(path, app.Arch, app.DoNotValidateArch)
+	p := inst.getAppsStoreAppWithVersionPath(app.Name, app.Version)
+	buildDetails, err := inst.App.GetBuildZipNameByArch(p, app.Arch, app.DoNotValidateArch)
 	if buildDetails == nil {
 		return nil, errors.New(fmt.Sprintf("failed to match build zip name app:%s version:%s arch:%s", app.Name, app.Version, app.Arch))
 	}
-	fileAndPath := fmt.Sprintf("%s/%s", path, buildDetails.ZipName)
+	fileAndPath := path.Join(p, buildDetails.ZipName)
 	reader, err := os.Open(fileAndPath)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error open build for app:%s zip file_name:%s  err:%s", app.Name, buildDetails.ZipName, err.Error()))
+		return nil, errors.New(fmt.Sprintf("error open build for app: %s zip file_name: %s  err: %s", app.Name, buildDetails.ZipName, err.Error()))
 	}
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {

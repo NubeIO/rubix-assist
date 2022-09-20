@@ -77,7 +77,7 @@ func (inst *Client) InstallService(body *installer.Install) (*systemd.InstallRes
 
 // EdgeUninstallApp remove/delete an app and its service
 func (inst *Client) EdgeUninstallApp(appName string, deleteApp bool) (*installer.UninstallResponse, error) {
-	url := fmt.Sprintf("/api/apps/?name=%s&delete=%v", appName, deleteApp)
+	url := fmt.Sprintf("/api/apps?name=%s&delete=%v", appName, deleteApp)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&installer.UninstallResponse{}).
 		Delete(url))

@@ -6,12 +6,10 @@ import (
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli"
-	"github.com/pkg/errors"
 )
 
 const (
 	appName     = "flow-framework"
-	serviceName = "nubeio-flow-framework.service"
 	appVersion  = "v0.6.1"
 	arch        = "amd64"
 	product     = "Server"
@@ -21,19 +19,18 @@ const (
 
 func addUploadApp() error {
 	client := assitcli.New(&assitcli.Client{})
-	listStore, err := client.ListAppsBuildDetails()
-	fmt.Println(err)
-	if err != nil {
-		return err
-	}
-
-	if len(listStore) == 0 {
-		return errors.New("no apps are added")
-	}
-	pprint.PrintJSON(listStore)
+	// listStore, err := client.ListAppsBuildDetails()
+	// fmt.Println(err)
+	// if err != nil {
+	// 	return err
+	// }
+	//
+	// if len(listStore) == 0 {
+	// 	return errors.New("no apps are added")
+	// }
+	// pprint.PrintJSON(listStore)
 	app, err := client.EdgeUploadApp("rc", &installer.Upload{
 		Name:        appName,
-		ServiceName: serviceName,
 		Version:     appVersion,
 		Product:     product,
 		Arch:        arch,
@@ -67,7 +64,6 @@ func installService(source string) error {
 	service, err := client.InstallEdgeService("rc", &installer.Install{
 		Name:        appName,
 		Version:     appVersion,
-		ServiceName: "",
 		Source:      source,
 	})
 

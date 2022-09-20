@@ -58,7 +58,7 @@ func (inst *Client) InstallEdgeService(hostIDName string, body *installer.Instal
 
 // EdgeUninstallApp remove/delete an app and its service
 func (inst *Client) EdgeUninstallApp(hostIDName, appName string, deleteApp bool) (*systemd.UninstallResponse, error) {
-	url := fmt.Sprintf("/api/edge/apps/?name=%s&delete=%s", appName, strconv.FormatBool(deleteApp))
+	url := fmt.Sprintf("/api/edge/apps?name=%s&delete=%s", appName, strconv.FormatBool(deleteApp))
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
@@ -85,7 +85,17 @@ func (inst *Client) EdgeListApps(hostIDName string) ([]installer.Apps, error) {
 	return *data, nil
 }
 
-// EdgeAppStatus get all the apps with its status
-// func (inst *Client) EdgeAppStatus(hostIDName string, ) ([]installer.AppsStatus, error) {
-//
-// }
+// EdgeListAppsStatus get all the apps with its status
+func (inst *Client) EdgeListAppsStatus(hostIDName string) ([]installer.AppsStatus, error) {
+	url := fmt.Sprintf("/api/edge/apps/status")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetResult(&[]installer.AppsStatus{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	data := resp.Result().(*[]installer.AppsStatus)
+	return *data, nil
+}

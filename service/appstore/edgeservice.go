@@ -28,7 +28,6 @@ func (inst *Store) checkServiceExecStart(service, appName, appVersion string) er
 
 type ServiceFile struct {
 	Name                    string   `json:"name"`
-	ServiceName             string   `json:"service_name"`
 	Version                 string   `json:"version"`
 	ServiceDescription      string   `json:"service_description"`
 	RunAsUser               string   `json:"run_as_user"`
@@ -49,12 +48,13 @@ func (inst *Store) EdgeInstallService(hostUUID, hostName string, body *installer
 
 func (inst *Store) GenerateServiceFileAndEdgeUpload(hostUUID, hostName string, app *ServiceFile) (*installer.UploadResponse, error) {
 	tmpDir, absoluteServiceFileName, err := inst.generateServiceFile(app)
+	serviceName := inst.App.GetServiceNameFromAppName(app.Name)
 	if err != nil {
 		return nil, err
 	}
 	reader, err := os.Open(absoluteServiceFileName)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error open service_file: %s err: %s", app.ServiceName, err.Error()))
+		return nil, errors.New(fmt.Sprintf("error open service_file: %s err: %s", serviceName, err.Error()))
 	}
 
 	client, err := inst.getClient(hostUUID, hostName)
@@ -65,7 +65,7 @@ func (inst *Store) GenerateServiceFileAndEdgeUpload(hostUUID, hostName string, a
 	if err != nil {
 		log.Errorf("delete tmp dir after generating service file %s", absoluteServiceFileName)
 	}
-	return client.UploadServiceFile(app.Name, app.Version, app.ServiceName, reader)
+	return client.UploadServiceFile(app.Name, app.Version, serviceName, reader)
 }
 
 func (inst *Store) generateServiceFile(app *ServiceFile) (tmpDir, absoluteServiceFileName string, err error) {
@@ -137,11 +137,12 @@ func (inst *Store) generateServiceFile(app *ServiceFile) (tmpDir, absoluteServic
 		},
 	}
 	b, _ := systemdconf.Marshal(service)
-	absoluteServiceFileName = fmt.Sprintf("%s/%s", tmpFilePath, app.ServiceName)
+	serviceName := inst.App.GetServiceNameFromAppName(app.Name)
+	absoluteServiceFileName = fmt.Sprintf("%s/%s", tmpFilePath, serviceName)
 	err = fileutils.WriteFile(absoluteServiceFileName, string(b), os.FileMode(inst.App.FileMode))
 	if err != nil {
 		log.Errorf("write service file error %s", err.Error())
 	}
-	log.Infof("generate service file name: %s", app.ServiceName)
+	log.Infof("generate service file name: %s", serviceName)
 	return tmpFilePath, absoluteServiceFileName, nil
 }
