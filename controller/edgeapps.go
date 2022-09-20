@@ -74,6 +74,6 @@ func (inst *Controller) EdgeUninstallApp(c *gin.Context) {
 		return
 	}
 	deleteApp, _ := strconv.ParseBool(c.Query("delete"))
-	data, err := inst.Store.EdgeUninstallApp(host.UUID, host.Name, c.Query("name"), c.Query("service_name"), deleteApp)
+	data, err := inst.Store.EdgeUninstallApp(host.UUID, host.Name, c.Query("name"), deleteApp)
 	responseHandler(data, err, c)
 }

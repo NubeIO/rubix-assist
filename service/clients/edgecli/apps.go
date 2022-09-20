@@ -37,8 +37,8 @@ func (inst *Client) ListAppsStatus() ([]installer.AppsStatus, error) {
 // UploadApp uploads an app
 func (inst *Client) UploadApp(app *installer.Upload, zipFileName string, reader io.Reader) (*installer.AppResponse, error) {
 	url := fmt.Sprintf(
-		"/api/apps/add/?name=%s&service_name=%s&version=%s&product=%s&arch=%s&do_not_validate_arch=%v",
-		app.Name, app.ServiceName, app.Version, app.Product, app.Arch, app.DoNotValidateArch)
+		"/api/apps/upload?name=%s&version=%s&product=%s&arch=%s&do_not_validate_arch=%v",
+		app.Name, app.Version, app.Product, app.Arch, app.DoNotValidateArch)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&installer.AppResponse{}).
 		SetFileReader("file", zipFileName, reader).
@@ -51,7 +51,7 @@ func (inst *Client) UploadApp(app *installer.Upload, zipFileName string, reader 
 
 // UploadServiceFile add/install a new an app service (service file needs to be needs the build on the edge device)
 func (inst *Client) UploadServiceFile(appName, version, fileName string, reader io.Reader) (*installer.UploadResponse, error) {
-	url := fmt.Sprintf("/api/apps/service/upload/?name=%s&version=%s", appName, version)
+	url := fmt.Sprintf("/api/apps/service/upload?name=%s&version=%s", appName, version)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&installer.UploadResponse{}).
 		SetFileReader("file", fileName, reader).
@@ -76,8 +76,8 @@ func (inst *Client) InstallService(body *installer.Install) (*systemd.InstallRes
 }
 
 // EdgeUninstallApp remove/delete an app and its service
-func (inst *Client) EdgeUninstallApp(appName, serviceName string, deleteApp bool) (*installer.UninstallResponse, error) {
-	url := fmt.Sprintf("/api/apps/?name=%s&service_name%s&delete=%v", appName, serviceName, deleteApp)
+func (inst *Client) EdgeUninstallApp(appName string, deleteApp bool) (*installer.UninstallResponse, error) {
+	url := fmt.Sprintf("/api/apps/?name=%s&delete=%v", appName, deleteApp)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&installer.UninstallResponse{}).
 		Delete(url))

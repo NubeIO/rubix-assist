@@ -38,12 +38,12 @@ func (inst *Store) EdgeUploadApp(hostUUID, hostName string, app *installer.Uploa
 	return client.UploadApp(app, buildDetails.ZipName, reader)
 }
 
-func (inst *Store) EdgeUninstallApp(hostUUID, hostName, appName, serviceName string, deleteApp bool) (*installer.UninstallResponse, error) {
+func (inst *Store) EdgeUninstallApp(hostUUID, hostName, appName string, deleteApp bool) (*installer.UninstallResponse, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
 	}
-	return client.EdgeUninstallApp(appName, serviceName, deleteApp)
+	return client.EdgeUninstallApp(appName, deleteApp)
 }
 
 func (inst *Store) EdgeListApps(hostUUID, hostName string) ([]installer.Apps, error) {
