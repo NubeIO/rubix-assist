@@ -3,11 +3,12 @@ package appstore
 import (
 	"errors"
 	"fmt"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	log "github.com/sirupsen/logrus"
 )
 
-func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.EdgeConfig) (*assistmodel.Message, error) {
+func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.EdgeConfig) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err

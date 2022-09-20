@@ -5,6 +5,7 @@ import (
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/rubix-assist/controller"
 	dbase "github.com/NubeIO/rubix-assist/database"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/gin-contrib/cors"
@@ -17,7 +18,7 @@ import (
 func NotFound() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		message := fmt.Sprintf("%s %s [%d]: %s", ctx.Request.Method, ctx.Request.URL, 404, "rubix-assist: api not found")
-		ctx.JSON(http.StatusNotFound, controller.Message{Message: message})
+		ctx.JSON(http.StatusNotFound, model.Message{Message: message})
 	}
 }
 
@@ -47,43 +48,40 @@ func Setup(db *gorm.DB) *gin.Engine {
 	api := controller.Controller{DB: appDB, Store: makeStore}
 
 	r.POST("/api/users/login", api.Login)
-
-	handleAuth := func(c *gin.Context) { c.Next() }
-
-	apiPublicRoutes := r.Group("/api", handleAuth)
-	public := apiPublicRoutes.Group("/public") // THESE ARE PUBLIC APIs
+	publicSystemApi := r.Group("/api/system")
 	{
-		public.POST("/ping", api.AssistPing)
+		publicSystemApi.GET("/ping", api.SystemPing)
 	}
 
+	handleAuth := func(c *gin.Context) { c.Next() }
 	if config.Config.Auth() {
 		// handleAuth = api.HandleAuth() // TODO add back in auth
 	}
-	admin := r.Group("/api", handleAuth)
-	proxy := r.Group("/proxy", handleAuth)
-	proxy.Any("/*proxyPath", api.Proxy)
 
-	appStore := admin.Group("/store/apps")
+	apiRoutes := r.Group("/api", handleAuth)
+	apiProxyRoutes := r.Group("/proxy", handleAuth)
+	apiProxyRoutes.Any("/*proxyPath", api.Proxy)
+
+	appStore := apiRoutes.Group("/store/apps")
 	{
 		appStore.GET("/", api.ListAppsWithVersions)
-		appStore.GET("/details", api.ListAppsBuildDetails)
-		appStore.POST("/", api.AddUploadStoreApp)
+		appStore.POST("/", api.UploadAddOnAppStore)
 	}
 
-	storePlugins := admin.Group("/store/plugins")
+	storePlugins := apiRoutes.Group("/store/plugins")
 	{
-		storePlugins.GET("/", api.StoreListPlugins)
-		storePlugins.POST("/", api.StoreUploadPlugin)
+		storePlugins.GET("/", api.GetPluginsStorePlugins)
+		storePlugins.POST("/", api.UploadPluginStorePlugin)
 	}
 
-	edge := admin.Group("/edge")
+	edge := apiRoutes.Group("/edge")
 	{
 		edge.GET("/system/ping", api.EdgePing)
 		edge.GET("/system/device", api.EdgeGetDeviceInfo)
 		edge.GET("/system/product", api.EdgeProductInfo)
 	}
 
-	edgeApps := admin.Group("/edge/apps")
+	edgeApps := apiRoutes.Group("/edge/apps")
 	{
 		edgeApps.GET("/", api.EdgeListApps)
 		edgeApps.GET("/status", api.EdgeListAppsStatus)
@@ -93,7 +91,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgeApps.DELETE("/", api.EdgeUninstallApp)
 	}
 
-	edgeAppsControl := admin.Group("/edge/control")
+	edgeAppsControl := apiRoutes.Group("/edge/control")
 	{
 		edgeAppsControl.POST("/action", api.EdgeSystemCtlAction)
 		edgeAppsControl.POST("/status", api.EdgeSystemCtlStatus)
@@ -101,13 +99,13 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgeAppsControl.POST("/status/mass", api.EdgeServiceMassStatus)
 	}
 
-	edgeConfig := admin.Group("/edge/config")
+	edgeConfig := apiRoutes.Group("/edge/config")
 	{
 		edgeConfig.GET("/", api.EdgeReadConfig)
 		edgeConfig.POST("/", api.EdgeWriteConfig)
 	}
 
-	edgeFiles := admin.Group("/edge/files")
+	edgeFiles := apiRoutes.Group("/edge/files")
 	{
 		edgeFiles.GET("/exists", api.EdgeFileExists)
 		edgeFiles.GET("/read", api.EdgeReadFile)
@@ -117,12 +115,12 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgeFiles.POST("/write/yml", api.EdgeWriteFileYml)
 	}
 
-	edgeDirs := admin.Group("/edge/dirs")
+	edgeDirs := apiRoutes.Group("/edge/dirs")
 	{
 		edgeDirs.GET("/exists", api.EdgeDirExists)
 	}
 
-	edgePlugins := admin.Group("/edge/plugins")
+	edgePlugins := apiRoutes.Group("/edge/plugins")
 	{
 		edgePlugins.GET("/", api.EdgeListPlugins)
 		edgePlugins.POST("/", api.EdgeUploadPlugin)
@@ -130,7 +128,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgePlugins.DELETE("/all", api.EdgeDeleteAllPlugins)
 	}
 
-	locations := admin.Group("/locations")
+	locations := apiRoutes.Group("/locations")
 	{
 		locations.GET("/schema", api.GetLocationSchema)
 		locations.GET("/", api.GetLocations)
@@ -142,7 +140,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		locations.DELETE("/drop", api.DropLocations)
 	}
 
-	hostNetworks := admin.Group("/networks")
+	hostNetworks := apiRoutes.Group("/networks")
 	{
 		hostNetworks.GET("/schema", api.GetNetworkSchema)
 		hostNetworks.GET("/", api.GetHostNetworks)
@@ -153,7 +151,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hostNetworks.DELETE("/drop", api.DropHostNetworks)
 	}
 
-	hosts := admin.Group("/hosts")
+	hosts := apiRoutes.Group("/hosts")
 	{
 		hosts.GET("/schema", api.GetHostSchema)
 		hosts.GET("/", api.GetHosts)
@@ -164,7 +162,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hosts.DELETE("/drop", api.DropHosts)
 	}
 
-	teams := admin.Group("/teams")
+	teams := apiRoutes.Group("/teams")
 	{
 		teams.GET("/schema", api.TeamsSchema)
 		teams.GET("/", api.GetTeams)
@@ -175,7 +173,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		teams.DELETE("/drop", api.DropTeams)
 	}
 
-	Tasks := admin.Group("/tasks")
+	Tasks := apiRoutes.Group("/tasks")
 	{
 		Tasks.GET("/schema", api.TasksSchema)
 		Tasks.GET("/", api.GetTasks)
@@ -186,7 +184,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		Tasks.DELETE("/drop", api.DropTasks)
 	}
 
-	messages := admin.Group("/transactions")
+	messages := apiRoutes.Group("/transactions")
 	{
 		messages.GET("/schema", api.TransactionsSchema)
 		messages.GET("/", api.GetTransactions)
@@ -197,7 +195,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		messages.DELETE("/drop", api.DropTransactions)
 	}
 
-	// tools := admin.Group("/tools")
+	// tools := apiRoutes.Group("/tools")
 	// //tools.Use(authMiddleware.MiddlewareFunc())
 	// {
 	//
@@ -207,26 +205,25 @@ func Setup(db *gorm.DB) *gin.Engine {
 	//
 	// }
 
-	wires := admin.Group("/wires")
+	wires := apiRoutes.Group("/wires")
 	{
 		wires.POST("/upload", api.WiresUpload)
 		wires.GET("/backup", api.WiresBackup)
 	}
 
-	system := admin.Group("/system")
+	system := apiRoutes.Group("/system")
 	{
-		system.GET("/ping", api.SystemPing)
 		system.GET("/time", api.HostTime)
 	}
 
-	networking := admin.Group("/networking")
+	networking := apiRoutes.Group("/networking")
 	{
 		networking.GET("/networks", api.Networking)
 		networking.GET("/interfaces", api.GetInterfacesNames)
 		networking.GET("/internet", api.InternetIP)
 	}
 
-	files := admin.Group("/files")
+	files := apiRoutes.Group("/files")
 	{
 		files.GET("/walk", api.WalkFile)
 		files.GET("/list", api.ListFiles) // /api/files/list?file=/data
@@ -239,26 +236,26 @@ func Setup(db *gorm.DB) *gin.Engine {
 		files.DELETE("/delete/all", api.DeleteAllFiles)
 	}
 
-	dirs := admin.Group("/dirs")
+	dirs := apiRoutes.Group("/dirs")
 	{
 		dirs.POST("/create", api.CreateDir)
 		dirs.POST("/copy", api.CopyDir)
 		dirs.DELETE("/delete", api.DeleteDir)
 	}
 
-	zip := admin.Group("/zip")
+	zip := apiRoutes.Group("/zip")
 	{
 		zip.POST("/unzip", api.Unzip)
 		zip.POST("/zip", api.ZipDir)
 	}
 
-	user := admin.Group("/users")
+	user := apiRoutes.Group("/users")
 	{
 		user.PUT("", api.UpdateUser)
 		user.GET("", api.GetUser)
 	}
 
-	token := admin.Group("/tokens")
+	token := apiRoutes.Group("/tokens")
 	{
 		token.GET("", api.GetTokens)
 		token.POST("/generate", api.GenerateToken)

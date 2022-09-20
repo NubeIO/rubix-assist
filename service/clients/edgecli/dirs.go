@@ -2,20 +2,20 @@ package edgecli
 
 import (
 	"fmt"
-	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 	"strconv"
 )
 
-func (inst *Client) CreateDir(path string) (*assistmodel.Message, error) {
+func (inst *Client) CreateDir(path string) (*model.Message, error) {
 	url := fmt.Sprintf("/api/dir/create/?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&assistmodel.Message{}).
+		SetResult(&model.Message{}).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*assistmodel.Message), nil
+	return resp.Result().(*model.Message), nil
 }
 
 // DirExists check if dir exists
@@ -34,16 +34,16 @@ func (inst *Client) DirExists(path string) (bool, error) {
 }
 
 // DeleteDir delete a dir - use the full name of file and path
-func (inst *Client) DeleteDir(path string, recursively bool) (*assistmodel.Message, error) {
+func (inst *Client) DeleteDir(path string, recursively bool) (*model.Message, error) {
 	url := fmt.Sprintf("/api/files/delete/?path=%s&recursively=%s", path, "false")
 	if recursively {
 		url = fmt.Sprintf("/api/files/delete/?path=%s&recursively=%s", path, "true")
 	}
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&assistmodel.Message{}).
+		SetResult(&model.Message{}).
 		Delete(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*assistmodel.Message), nil
+	return resp.Result().(*model.Message), nil
 }

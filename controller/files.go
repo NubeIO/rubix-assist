@@ -4,10 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 	"io/fs"
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -32,15 +34,15 @@ func (inst *Controller) WalkFile(c *gin.Context) {
 }
 
 func (inst *Controller) ListFiles(c *gin.Context) {
-	path := c.Query("path")
-	fileInfo, err := os.Stat(path)
+	p := c.Query("path")
+	fileInfo, err := os.Stat(p)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
 	var dirContent []string
 	if fileInfo.IsDir() {
-		files, err := ioutil.ReadDir(path)
+		files, err := ioutil.ReadDir(p)
 		if err != nil {
 			responseHandler(nil, err, c)
 			return
@@ -62,56 +64,44 @@ func (inst *Controller) RenameFile(c *gin.Context) {
 		responseHandler(nil, errors.New("directory, from and to files name can not be empty"), c)
 		return
 	}
-	err = fileutils.Rename(oldName, newName)
-	responseHandler(Message{Message: "renaming is successfully done"}, err, c)
+	err := fileutils.Rename(oldName, newName)
+	responseHandler(model.Message{Message: "renaming is successfully done"}, err, c)
 }
 
 func (inst *Controller) CopyFile(c *gin.Context) {
 	from := c.Query("from")
 	to := c.Query("to")
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
 	if from == "" || to == "" {
 		responseHandler(nil, errors.New("from and to files name can not be empty"), c)
 		return
 	}
-	err = fileutils.Copy(from, to)
+	err := fileutils.Copy(from, to)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	responseHandler(Message{Message: "copying is successfully done"}, err, c)
+	responseHandler(model.Message{Message: "copying is successfully done"}, err, c)
 }
 
 func (inst *Controller) MoveFile(c *gin.Context) {
 	from := c.Query("from")
 	to := c.Query("to")
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
 	if from == "" || to == "" {
 		responseHandler(nil, errors.New("from and to files name can not be empty"), c)
 		return
 	}
-	err = fileutils.MoveFile(from, to)
+	err := fileutils.MoveFile(from, to)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	responseHandler(Message{Message: "moving is successfully done"}, err, c)
+	responseHandler(model.Message{Message: "moving is successfully done"}, err, c)
 }
 
 func (inst *Controller) DownloadFile(c *gin.Context) {
-	path := c.Query("path")
+	p := c.Query("path")
 	fileName := c.Query("file")
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	c.FileAttachment(fmt.Sprintf("%s/%s", path, fileName), fileName)
+	c.FileAttachment(path.Join(p, fileName), fileName)
 }
 
 /*
@@ -152,30 +142,22 @@ func (inst *Controller) UploadFile(c *gin.Context) {
 
 func (inst *Controller) DeleteFile(c *gin.Context) {
 	filePath := c.Query("path")
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
 	if !fileutils.FileExists(filePath) {
 		responseHandler(nil, errors.New(fmt.Sprintf("file doesn't exist: %s", filePath)), c)
 		return
 	}
-	err = fileutils.Rm(filePath)
-	responseHandler(Message{Message: fmt.Sprintf("deleted: %s", filePath)}, err, c)
+	err := fileutils.Rm(filePath)
+	responseHandler(model.Message{Message: fmt.Sprintf("deleted: %s", filePath)}, err, c)
 }
 
 func (inst *Controller) DeleteAllFiles(c *gin.Context) {
 	filePath := c.Query("path")
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
 	if !fileutils.DirExists(filePath) {
 		responseHandler(nil, errors.New(fmt.Sprintf("dir doesn't exist: %s", filePath)), c)
 		return
 	}
-	err = fileutils.RemoveAllFiles(filePath)
-	responseHandler(Message{Message: fmt.Sprintf("deleted: %s", filePath)}, err, c)
+	err := fileutils.RemoveAllFiles(filePath)
+	responseHandler(model.Message{Message: fmt.Sprintf("deleted: %s", filePath)}, err, c)
 }
 
 func TimeTrack(start time.Time) (out string) {

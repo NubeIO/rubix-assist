@@ -9,7 +9,7 @@ import (
 
 func TestClient_UWFStatusList(t *testing.T) {
 	cli := New(&Client{
-		URL:   deviceIP,
+		Ip:    deviceIP,
 		Port:  0,
 		HTTPS: false,
 	})
@@ -24,7 +24,7 @@ func TestClient_UWFStatusList(t *testing.T) {
 
 func TestClient_UWFDisable(t *testing.T) {
 	cli := New(&Client{
-		URL:   deviceIP,
+		Ip:    deviceIP,
 		Port:  0,
 		HTTPS: false,
 	})
@@ -39,7 +39,7 @@ func TestClient_UWFDisable(t *testing.T) {
 
 func TestClient_UWFEnable(t *testing.T) {
 	cli := New(&Client{
-		URL:   deviceIP,
+		Ip:    deviceIP,
 		Port:  0,
 		HTTPS: false,
 	})
@@ -54,7 +54,7 @@ func TestClient_UWFEnable(t *testing.T) {
 
 func TestClient_UWFOpenPort(t *testing.T) {
 	cli := New(&Client{
-		URL:   deviceIP,
+		Ip:    deviceIP,
 		Port:  0,
 		HTTPS: false,
 	})
@@ -69,7 +69,7 @@ func TestClient_UWFOpenPort(t *testing.T) {
 
 func TestClient_UWFClosePort(t *testing.T) {
 	cli := New(&Client{
-		URL:   deviceIP,
+		Ip:    deviceIP,
 		Port:  0,
 		HTTPS: false,
 	})

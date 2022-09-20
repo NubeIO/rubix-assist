@@ -3,7 +3,9 @@ package appstore
 import (
 	"errors"
 	"fmt"
+	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/lib-rubix-installer/installer"
+	"path"
 )
 
 type UploadResponse struct {
@@ -14,25 +16,17 @@ type UploadResponse struct {
 	UploadedFile string `json:"uploaded_file,omitempty"`
 }
 
-func (inst *Store) AddUploadStoreApp(app *installer.Upload) (*UploadResponse, error) {
-	var archType = app.Arch
-	var productType = app.Product
+func (inst *Store) UploadAddOnAppStore(app *installer.Upload) (*UploadResponse, error) {
 	if app.Name == "" {
-		return nil, errors.New("app name can not be empty")
+		return nil, errors.New("app_name can not be empty")
 	}
 	if app.Version == "" {
-		return nil, errors.New("app name can not be empty")
+		return nil, errors.New("app_version can not be empty")
 	}
-	if archType == "" {
-		return nil, errors.New("arch type can not be empty, try armv7 amd64")
+	if app.Arch == "" {
+		return nil, errors.New("arch_type can not be empty, try armv7 amd64")
 	}
-	if productType == "" {
-		return nil, errors.New("product type can not be empty, try RubixCompute, RubixComputeIO, RubixCompute5, Server, Edge28, Nuc")
-	}
-	_, err := inst.AddApp(&App{
-		Name:    app.Name,
-		Version: app.Version,
-	})
+	err := inst.makeAppsStoreAppWithVersionDir(app.Name, app.Version)
 	if err != nil {
 		return nil, err
 	}
@@ -48,19 +42,19 @@ func (inst *Store) AddUploadStoreApp(app *installer.Upload) (*UploadResponse, er
 	}
 	resp, err := inst.App.Upload(file)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("upload app:%s", err.Error()))
+		return nil, errors.New(fmt.Sprintf("upload app: %s", err.Error()))
 	}
 	uploadResp.TmpFile = resp.TmpFile
 	source := resp.UploadedFile
-	dest := fmt.Sprintf("%s/apps/%s/%s/%s", inst.App.GetStoreDir(), appName, version, resp.FileName)
-	check := inst.App.FileExists(source)
+	destination := path.Join(inst.getAppsStoreAppWithVersionPath(appName, version), resp.FileName)
+	check := fileutils.FileExists(source)
 	if !check {
 		return nil, errors.New(fmt.Sprintf("upload file tmp dir not found:%s", source))
 	}
-	uploadResp.UploadedFile = dest
-	err = inst.App.MoveFile(source, dest, true)
+	uploadResp.UploadedFile = destination
+	err = fileutils.MoveFile(source, destination)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("move build error:%s", err.Error()))
+		return nil, errors.New(fmt.Sprintf("move build error: %s", err.Error()))
 	}
 	uploadResp.UploadedOk = true
 	return uploadResp, nil

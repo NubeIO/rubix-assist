@@ -3,10 +3,9 @@ package edgecli
 import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
-	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 	"github.com/NubeIO/rubix-registry-go/rubixregistry"
-	"strconv"
 )
 
 // EdgeProductInfo get edge product info
@@ -34,17 +33,12 @@ func (inst *Client) EdgeGetDeviceInfo() (*rubixregistry.DeviceInfo, error) {
 }
 
 // Ping ping a edge device
-func (inst *Client) Ping(body *assistmodel.PingBody) (bool, error) {
-	url := fmt.Sprintf("/api/public/ping")
+func (inst *Client) Ping() (*model.Message, error) {
+	url := fmt.Sprintf("/api/system/ping")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetBody(body).
-		Post(url))
+		Get(url))
 	if err != nil {
-		return false, err
+		return nil, err
 	}
-	found, err := strconv.ParseBool(resp.String())
-	if err != nil {
-		return false, err
-	}
-	return found, nil
+	return resp.Result().(*model.Message), nil
 }

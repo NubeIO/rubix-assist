@@ -1,54 +1,69 @@
 package appstore
 
 import (
-	"fmt"
 	"os"
+	"path"
 )
 
-// getAppStorePathAndVersion get the full app install path and version
-func (inst *Store) getAppStorePath(appName string) string {
-	path := fmt.Sprintf("%s/apps/%s", inst.App.GetStoreDir(), appName)
-	return filePath(path)
+// getAppsStorePath => /data/appstore/apps
+func (inst *Store) getAppsStorePath() string {
+	p := path.Join(inst.App.StoreDir, "apps")
+	return p
 }
 
-// getAppStorePathAndVersion get the full app install path and version
-func (inst *Store) getAppStorePathAndVersion(appName, version string) string {
-	path := fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
-	return filePath(path)
+// getAppsStoreAppPath => /data/appstore/apps/<app_name>
+func (inst *Store) getAppsStoreAppPath(appName string) string {
+	p := path.Join(inst.getAppsStorePath(), appName)
+	return p
 }
 
-// MakeAppDir  => /data/appstore/
+// getAppsStoreAppWithVersionPath get the full app install path and version
+func (inst *Store) getAppsStoreAppWithVersionPath(appName, version string) string {
+	p := path.Join(inst.getAppsStoreAppPath(appName), version)
+	return p
+}
+
+// getAppsStoreAppWithVersionPath get the full app install path and version
+func (inst *Store) getAppsStoreAppWithVersionAndFile(appName, version, file string) string {
+	p := path.Join(inst.getAppsStoreAppPath(appName), version, file)
+	return p
+}
+
+// MakeAppDir  => /data/appstore
 func (inst *Store) makeStoreDir() error {
-	return inst.App.MakeDirectoryIfNotExists(inst.App.GetStoreDir(), os.FileMode(inst.App.FileMode))
+	return os.MkdirAll(inst.App.StoreDir, os.FileMode(inst.App.FileMode))
 }
 
-// MakeAppDir  => /data/appstore/apps/
-func (inst *Store) makeAppDir() error {
-	path := fmt.Sprintf("%s/%s", inst.App.GetStoreDir(), "/apps")
-	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(inst.App.FileMode))
+// MakeAppDir  => /data/appstore/apps
+func (inst *Store) makeAppsStoreDir() error {
+	p := inst.getAppsStorePath()
+	return os.MkdirAll(p, os.FileMode(inst.App.FileMode))
 }
 
 // MakeApp  => /data/appstore/apps/flow-framework
-func (inst *Store) makeApp(appName string) error {
-	if err := emptyPath(appName); err != nil {
-		return err
-	}
-	path := fmt.Sprintf("%s/apps/%s", inst.App.GetStoreDir(), appName)
-	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(inst.App.FileMode))
+func (inst *Store) makeAppsStoreAppDir(appName string) error {
+	p := inst.getAppsStoreAppPath(appName)
+	return os.MkdirAll(p, os.FileMode(inst.App.FileMode))
 }
 
 // MakeAppVersionDir  => /data/appstore/apps/flow-framework/v1.1.1
-func (inst *Store) makeAppVersionDir(appName, version string) error {
-	if err := emptyPath(appName); err != nil {
-		return err
-	}
-	if err := checkVersion(version); err != nil {
-		return err
-	}
-	path := fmt.Sprintf("%s/apps/%s/%s", inst.App.GetStoreDir(), appName, version)
-	return inst.App.MakeDirectoryIfNotExists(path, os.FileMode(inst.App.FileMode))
+func (inst *Store) makeAppsStoreAppWithVersionDir(appName, version string) error {
+	p := inst.getAppsStoreAppWithVersionPath(appName, version)
+	return os.MkdirAll(p, os.FileMode(inst.App.FileMode))
 }
 
-func (inst *Store) getServiceWorkingDir(appName, appVersion string) string {
-	return inst.App.GetAppInstallPathAndVersion(appName, appVersion)
+func (inst *Store) getAppWorkingDir(appName, appVersion string) string {
+	return inst.App.GetAppInstallPathWithVersionPath(appName, appVersion)
+}
+
+// getPluginsStorePath => /data/appstore/plugins
+func (inst *Store) getPluginsStorePath() string {
+	p := path.Join(inst.App.StoreDir, "plugins")
+	return p
+}
+
+// getPluginsStorePath => /data/appstore/plugins
+func (inst *Store) getPluginsStoreWithFile(fileName string) string {
+	p := path.Join(inst.getPluginsStorePath(), fileName)
+	return p
 }

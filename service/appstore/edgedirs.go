@@ -1,6 +1,8 @@
 package appstore
 
-import "github.com/NubeIO/rubix-assist/pkg/assistmodel"
+import (
+	"github.com/NubeIO/rubix-assist/model"
+)
 
 func (inst *Store) EdgeDirExists(hostUUID, hostName, path string) (bool, error) {
 	client, err := inst.getClient(hostUUID, hostName)
@@ -10,7 +12,7 @@ func (inst *Store) EdgeDirExists(hostUUID, hostName, path string) (bool, error) 
 	return client.DirExists(path)
 }
 
-func (inst *Store) EdgeCreateDir(hostUUID, hostName, path string) (*assistmodel.Message, error) {
+func (inst *Store) EdgeCreateDir(hostUUID, hostName, path string) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -18,7 +20,7 @@ func (inst *Store) EdgeCreateDir(hostUUID, hostName, path string) (*assistmodel.
 	return client.CreateDir(path)
 }
 
-func (inst *Store) EdgeDeleteFolder(hostUUID, hostName, path string, recursively bool) (*assistmodel.Message, error) {
+func (inst *Store) EdgeDeleteFolder(hostUUID, hostName, path string, recursively bool) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err

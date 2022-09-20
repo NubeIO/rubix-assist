@@ -1,7 +1,10 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/NubeIO/rubix-assist/model"
+	"github.com/gin-gonic/gin"
+)
 
 func (inst *Controller) SystemPing(c *gin.Context) {
-	responseHandler(Message{Message: "boo-ya"}, err, c)
+	responseHandler(model.Message{Message: "pong"}, nil, c)
 }

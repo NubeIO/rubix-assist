@@ -7,27 +7,11 @@ import (
 	"testing"
 )
 
-func Test_pluginDetails(t *testing.T) {
-	// fmt.Println(PluginDetails("influx-amd64.so"))
-}
-func Test_PluginZipDetails(t *testing.T) {
-	appStore, err := New(&Store{
-		App: &installer.App{
-			DataDir: "/data",
-		},
-	})
-	details := appStore.PluginZipDetails("bacnetserver-0.6.6-a79d6c29.armv7.zip")
-	if err != nil {
-		return
-	}
-	pprint.PrintJSON(details)
-}
-
 func Test_ListPlugins(t *testing.T) {
 	appStore, err := New(&Store{
 		App: &installer.App{},
 	})
-	details, err := appStore.StoreListPlugins()
+	details, err := appStore.GetPluginsStorePlugins()
 	fmt.Println(err)
 	if err != nil {
 		return
@@ -41,15 +25,14 @@ func Test_getPluginPath(t *testing.T) {
 			DataDir: "/data",
 		},
 	})
-	details, name, err := appStore.GetPluginPath(&Plugin{
-		PluginName: "bacnetserver",
-		Arch:       "amd64",
-		Version:    "v0.6.6",
+	pluginPath, err := appStore.GetPluginsStorePluginFile(&Plugin{
+		Name:    "bacnetserver",
+		Arch:    "amd64",
+		Version: "v0.6.6",
 	})
 	fmt.Println(err)
 	if err != nil {
 		return
 	}
-	fmt.Println(details)
-	fmt.Println(name)
+	fmt.Println(pluginPath)
 }

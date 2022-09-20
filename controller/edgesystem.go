@@ -13,7 +13,7 @@ func (inst *Controller) EdgePing(c *gin.Context) {
 	}
 	var m *assistmodel.PingBody
 	err = c.ShouldBindJSON(&m)
-	data, err := inst.Store.EdgePing(host.UUID, host.Name, m)
+	data, err := inst.Store.EdgePing(host.UUID, host.Name)
 	responseHandler(data, err, c)
 }
 

@@ -7,7 +7,7 @@ import (
 
 func TestClient_RestartNetworking(t *testing.T) {
 	cli := New(&Client{
-		URL:   deviceIP,
+		Ip:    deviceIP,
 		Port:  0,
 		HTTPS: false,
 	})

@@ -4,21 +4,18 @@ import (
 	"errors"
 	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/system/files"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 )
 
 func (inst *Controller) CreateDir(c *gin.Context) {
 	path := c.Query("path")
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
 	if path == "" {
 		responseHandler(nil, errors.New("path can not be empty"), c)
 		return
 	}
-	err = files.MakeDirectoryIfNotExists(path)
-	responseHandler(Message{Message: "directory creation is successfully executed"}, err, c)
+	err := files.MakeDirectoryIfNotExists(path)
+	responseHandler(model.Message{Message: "directory creation is successfully executed"}, err, c)
 }
 
 func (inst *Controller) CopyDir(c *gin.Context) {
@@ -33,12 +30,12 @@ func (inst *Controller) CopyDir(c *gin.Context) {
 		responseHandler(nil, errors.New("from dir not found"), c)
 		return
 	}
-	err = fileutils.Copy(from, to)
+	err := fileutils.Copy(from, to)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	responseHandler(Message{Message: "copying directory is successfully executed"}, err, c)
+	responseHandler(model.Message{Message: "copying directory is successfully executed"}, err, c)
 }
 
 func (inst *Controller) DeleteDir(c *gin.Context) {
@@ -49,7 +46,7 @@ func (inst *Controller) DeleteDir(c *gin.Context) {
 		return
 	}
 	if !fileutils.DirExists(path) {
-		responseHandler(nil, err, c)
+		responseHandler(nil, errors.New("path does not exist"), c)
 		return
 	}
 	if recursively {
@@ -65,6 +62,6 @@ func (inst *Controller) DeleteDir(c *gin.Context) {
 			return
 		}
 	}
-	responseHandler(Message{Message: "deletion of directory is successfully executed"}, nil, c)
+	responseHandler(model.Message{Message: "deletion of directory is successfully executed"}, nil, c)
 	return
 }

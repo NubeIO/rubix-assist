@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/networking/ssh"
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
+	model2 "github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"net/http"
 
@@ -99,7 +100,7 @@ func responseHandler(body interface{}, err error, c *gin.Context, statusCode ...
 		} else {
 			code = http.StatusNotFound
 		}
-		msg := Message{
+		msg := model2.Message{
 			Message: err.Error(),
 		}
 		c.JSON(code, msg)
@@ -112,10 +113,6 @@ func responseHandler(body interface{}, err error, c *gin.Context, statusCode ...
 		c.JSON(code, body)
 
 	}
-}
-
-type Message struct {
-	Message interface{} `json:"message"`
 }
 
 // hostCopy copy same types from this host to the host needed for ssh.Host

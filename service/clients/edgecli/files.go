@@ -3,6 +3,7 @@ package edgecli
 import (
 	"errors"
 	"fmt"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 	"os"
@@ -59,112 +60,112 @@ func (inst *Client) ReadFile(path string) ([]byte, error) {
 	return resp.Body(), nil
 }
 
-func (inst *Client) CreateFile(body *assistmodel.WriteFile) (*assistmodel.Message, error) {
+func (inst *Client) CreateFile(body *assistmodel.WriteFile) (*model.Message, error) {
 	url := fmt.Sprintf("/api/files/create")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&assistmodel.Message{}).
+		SetResult(&model.Message{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*assistmodel.Message), nil
+	return resp.Result().(*model.Message), nil
 }
 
-func (inst *Client) WriteString(body *assistmodel.WriteFile) (*assistmodel.Message, error) {
+func (inst *Client) WriteString(body *assistmodel.WriteFile) (*model.Message, error) {
 	url := fmt.Sprintf("/api/files/write/string")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&assistmodel.Message{}).
+		SetResult(&model.Message{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*assistmodel.Message), nil
+	return resp.Result().(*model.Message), nil
 }
 
-func (inst *Client) WriteFileJson(body *assistmodel.WriteFile) (*assistmodel.Message, error) {
+func (inst *Client) WriteFileJson(body *assistmodel.WriteFile) (*model.Message, error) {
 	url := fmt.Sprintf("/api/files/write/json")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&assistmodel.Message{}).
+		SetResult(&model.Message{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*assistmodel.Message), nil
+	return resp.Result().(*model.Message), nil
 }
 
-func (inst *Client) WriteFileYml(body *assistmodel.WriteFile) (*assistmodel.Message, error) {
+func (inst *Client) WriteFileYml(body *assistmodel.WriteFile) (*model.Message, error) {
 	url := fmt.Sprintf("/api/files/write/yml")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&assistmodel.Message{}).
+		SetResult(&model.Message{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*assistmodel.Message), nil
+	return resp.Result().(*model.Message), nil
 }
 
 // RenameFile rename a file - use the full name of file and path
-func (inst *Client) RenameFile(oldNameAndPath, newNameAndPath string) (*assistmodel.Message, error) {
+func (inst *Client) RenameFile(oldNameAndPath, newNameAndPath string) (*model.Message, error) {
 	url := fmt.Sprintf("/api/files/rename/?old=%s&new=%s", oldNameAndPath, newNameAndPath)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&assistmodel.Message{}).
+		SetResult(&model.Message{}).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*assistmodel.Message), nil
+	return resp.Result().(*model.Message), nil
 }
 
 // CopyFile copy a file - use the full name of file and path
-func (inst *Client) CopyFile(from, to string) (*assistmodel.Message, error) {
+func (inst *Client) CopyFile(from, to string) (*model.Message, error) {
 	url := fmt.Sprintf("/api/files/copy/?from=%s&to=%s", from, to)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&assistmodel.Message{}).
+		SetResult(&model.Message{}).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*assistmodel.Message), nil
+	return resp.Result().(*model.Message), nil
 }
 
 // MoveFile move a file - use the full name of file and path
-func (inst *Client) MoveFile(from, to string) (*assistmodel.Message, error) {
+func (inst *Client) MoveFile(from, to string) (*model.Message, error) {
 	url := fmt.Sprintf("/api/files/move/?from=%s&to=%s", from, to)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&assistmodel.Message{}).
+		SetResult(&model.Message{}).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*assistmodel.Message), nil
+	return resp.Result().(*model.Message), nil
 }
 
 // DeleteFile delete a file - use the full name of file and path
-func (inst *Client) DeleteFile(path string) (*assistmodel.Message, error) {
+func (inst *Client) DeleteFile(path string) (*model.Message, error) {
 	url := fmt.Sprintf("/api/files/delete/?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&assistmodel.Message{}).
+		SetResult(&model.Message{}).
 		Delete(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*assistmodel.Message), nil
+	return resp.Result().(*model.Message), nil
 }
 
 // DeleteAllFiles delete all file's in a dir - use the full name of file and path
-func (inst *Client) DeleteAllFiles(path string) (*assistmodel.Message, error) {
+func (inst *Client) DeleteAllFiles(path string) (*model.Message, error) {
 	url := fmt.Sprintf("/api/files/delete/all/?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&assistmodel.Message{}).
+		SetResult(&model.Message{}).
 		Delete(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*assistmodel.Message), nil
+	return resp.Result().(*model.Message), nil
 }
 
 func (inst *Client) UploadLocalFile(file, destination string) (*assistmodel.EdgeUploadResponse, error) {

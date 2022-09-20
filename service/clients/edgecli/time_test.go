@@ -9,7 +9,7 @@ import (
 
 func TestClient_GetHardwareTZ(t *testing.T) {
 	cli := New(&Client{
-		URL:   deviceIP,
+		Ip:    deviceIP,
 		Port:  0,
 		HTTPS: false,
 	})
@@ -21,7 +21,7 @@ func TestClient_GetHardwareTZ(t *testing.T) {
 
 func TestClient_GetTimeZoneList(t *testing.T) {
 	cli := New(&Client{
-		URL:   deviceIP,
+		Ip:    deviceIP,
 		Port:  0,
 		HTTPS: false,
 	})
@@ -33,7 +33,7 @@ func TestClient_GetTimeZoneList(t *testing.T) {
 
 func TestClient_SetSystemTime(t *testing.T) {
 	cli := New(&Client{
-		URL:   deviceIP,
+		Ip:    deviceIP,
 		Port:  0,
 		HTTPS: false,
 	})
@@ -48,7 +48,7 @@ func TestClient_SetSystemTime(t *testing.T) {
 
 func TestClient_SystemTime(t *testing.T) {
 	cli := New(&Client{
-		URL:   deviceIP,
+		Ip:    deviceIP,
 		Port:  0,
 		HTTPS: false,
 	})
@@ -60,7 +60,7 @@ func TestClient_SystemTime(t *testing.T) {
 
 func TestClient_UpdateTimezone(t *testing.T) {
 	cli := New(&Client{
-		URL:   deviceIP,
+		Ip:    deviceIP,
 		Port:  0,
 		HTTPS: false,
 	})

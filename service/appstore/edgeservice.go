@@ -10,16 +10,17 @@ import (
 	"github.com/sergeymakinen/go-systemdconf/v2/unit"
 	log "github.com/sirupsen/logrus"
 	"os"
+	"path"
 	"strings"
 )
 
 func (inst *Store) getServiceExecStart(appName, appVersion, appSpecificExecStart string) string {
-	workingDir := inst.App.GetAppInstallPathAndVersion(appName, appVersion)
-	return fmt.Sprintf("%s/%s", workingDir, appSpecificExecStart)
+	workingDir := inst.App.GetAppInstallPathWithVersionPath(appName, appVersion)
+	return path.Join(workingDir, appSpecificExecStart)
 }
 
 func (inst *Store) checkServiceExecStart(service, appName, appVersion string) error {
-	if strings.Contains(service, inst.App.GetAppInstallPathAndVersion(appName, appVersion)) {
+	if strings.Contains(service, inst.App.GetAppInstallPathWithVersionPath(appName, appVersion)) {
 		return nil
 	}
 	return errors.New(fmt.Sprintf("ExecStart command is not matching app_name: %s & app_version: %s", appName, appVersion))
@@ -78,12 +79,12 @@ func (inst *Store) generateServiceFile(app *ServiceFile) (tmpDir, absoluteServic
 	if app.Version == "" {
 		return "", "", errors.New("app version can not be empty, try v0.6.0")
 	}
-	if err = checkVersion(app.Version); err != nil {
+	if err = installer.CheckVersion(app.Version); err != nil {
 		return "", "", err
 	}
 	workingDirectory := app.ServiceWorkingDirectory
 	if workingDirectory == "" {
-		workingDirectory = inst.getServiceWorkingDir(app.Name, app.Version)
+		workingDirectory = inst.getAppWorkingDir(app.Name, app.Version)
 	}
 	log.Infof("generate service working dir: %s", workingDirectory)
 	user := app.RunAsUser

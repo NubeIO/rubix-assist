@@ -1,6 +1,7 @@
 package appstore
 
 import (
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
 )
 
@@ -36,7 +37,7 @@ func (inst *Store) EdgeReadFile(hostUUID, hostName, path string) ([]byte, error)
 	return client.ReadFile(path)
 }
 
-func (inst *Store) EdgeCreateFile(hostUUID, hostName string, body *assistmodel.WriteFile) (*assistmodel.Message, error) {
+func (inst *Store) EdgeCreateFile(hostUUID, hostName string, body *assistmodel.WriteFile) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -44,7 +45,7 @@ func (inst *Store) EdgeCreateFile(hostUUID, hostName string, body *assistmodel.W
 	return client.CreateFile(body)
 }
 
-func (inst *Store) EdgeWriteString(hostUUID, hostName string, body *assistmodel.WriteFile) (*assistmodel.Message, error) {
+func (inst *Store) EdgeWriteString(hostUUID, hostName string, body *assistmodel.WriteFile) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -52,7 +53,7 @@ func (inst *Store) EdgeWriteString(hostUUID, hostName string, body *assistmodel.
 	return client.WriteString(body)
 }
 
-func (inst *Store) EdgeWriteFileJson(hostUUID, hostName string, body *assistmodel.WriteFile) (*assistmodel.Message, error) {
+func (inst *Store) EdgeWriteFileJson(hostUUID, hostName string, body *assistmodel.WriteFile) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -60,7 +61,7 @@ func (inst *Store) EdgeWriteFileJson(hostUUID, hostName string, body *assistmode
 	return client.WriteFileJson(body)
 }
 
-func (inst *Store) EdgeWriteFileYml(hostUUID, hostName string, body *assistmodel.WriteFile) (*assistmodel.Message, error) {
+func (inst *Store) EdgeWriteFileYml(hostUUID, hostName string, body *assistmodel.WriteFile) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -68,7 +69,7 @@ func (inst *Store) EdgeWriteFileYml(hostUUID, hostName string, body *assistmodel
 	return client.WriteFileYml(body)
 }
 
-func (inst *Store) EdgeRenameFile(hostUUID, hostName, oldNameAndPath, newNameAndPath string) (*assistmodel.Message, error) {
+func (inst *Store) EdgeRenameFile(hostUUID, hostName, oldNameAndPath, newNameAndPath string) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -76,7 +77,7 @@ func (inst *Store) EdgeRenameFile(hostUUID, hostName, oldNameAndPath, newNameAnd
 	return client.RenameFile(oldNameAndPath, newNameAndPath)
 }
 
-func (inst *Store) EdgeCopyFile(hostUUID, hostName, from, to string) (*assistmodel.Message, error) {
+func (inst *Store) EdgeCopyFile(hostUUID, hostName, from, to string) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -84,7 +85,7 @@ func (inst *Store) EdgeCopyFile(hostUUID, hostName, from, to string) (*assistmod
 	return client.CopyFile(from, to)
 }
 
-func (inst *Store) EdgeMoveFile(hostUUID, hostName, from, to string) (*assistmodel.Message, error) {
+func (inst *Store) EdgeMoveFile(hostUUID, hostName, from, to string) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -117,7 +118,7 @@ func (inst *Store) EdgeDownloadFile(hostUUID, hostName, path, file, destination 
 	return client.DownloadFile(path, file, destination)
 }
 
-func (inst *Store) EdgeDeleteFile(hostUUID, hostName, path string) (*assistmodel.Message, error) {
+func (inst *Store) EdgeDeleteFile(hostUUID, hostName, path string) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -125,7 +126,7 @@ func (inst *Store) EdgeDeleteFile(hostUUID, hostName, path string) (*assistmodel
 	return client.DeleteFile(path)
 }
 
-func (inst *Store) EdgeDeleteAllFiles(hostUUID, hostName, path string) (*assistmodel.Message, error) {
+func (inst *Store) EdgeDeleteAllFiles(hostUUID, hostName, path string) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
