@@ -4,7 +4,7 @@ type EdgeConfig struct {
 	AppName      string      `json:"app_name,omitempty"`
 	Body         interface{} `json:"body"`                  // used when writing JSON, YML data
 	BodyAsString string      `json:"body_as_string"`        // used when writing string data
-	ConfigType   string      `json:"config_type,omitempty"` // config.yml
+	ConfigName   string      `json:"config_name,omitempty"` // config.yml
 }
 
 type EdgeConfigResponse struct {

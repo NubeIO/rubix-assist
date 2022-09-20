@@ -6,17 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (inst *Controller) EdgeWriteConfig(c *gin.Context) {
-	host, err := inst.resolveHost(c)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	var m *assistmodel.EdgeConfig
-	err = c.ShouldBindJSON(&m)
-	data, err := inst.Store.EdgeWriteConfig(host.UUID, host.Name, m)
-	responseHandler(data, err, c)
-}
 func (inst *Controller) EdgeReadConfig(c *gin.Context) {
 	appName := c.Query("app_name")
 	configName := c.Query("config_name")
@@ -33,5 +22,17 @@ func (inst *Controller) EdgeReadConfig(c *gin.Context) {
 		return
 	}
 	data, err := inst.Store.EdgeReadConfig(host.UUID, host.Name, appName, configName)
+	responseHandler(data, err, c)
+}
+
+func (inst *Controller) EdgeWriteConfig(c *gin.Context) {
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
+	var m *assistmodel.EdgeConfig
+	err = c.ShouldBindJSON(&m)
+	data, err := inst.Store.EdgeWriteConfig(host.UUID, host.Name, m)
 	responseHandler(data, err, c)
 }

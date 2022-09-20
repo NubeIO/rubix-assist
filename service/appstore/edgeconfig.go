@@ -16,7 +16,7 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.
 	if body.AppName == "" {
 		return nil, errors.New("app_name can not be empty")
 	}
-	configName := body.ConfigType
+	configName := body.ConfigName
 	if configName == "" {
 		configName = "config.yml"
 	}
@@ -47,7 +47,7 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.
 		return client.WriteFileJson(writeFile)
 	}
 
-	return nil, errors.New("no valid config type, config.yml or .env or config.json")
+	return nil, errors.New("no valid config_name, config.yml or .env or config.json")
 }
 
 func (inst *Store) EdgeReadConfig(hostUUID, hostName, appName, configName string) (*assistmodel.EdgeConfigResponse, error) {
