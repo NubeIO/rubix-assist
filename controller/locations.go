@@ -35,7 +35,7 @@ func (inst *Controller) GetLocations(c *gin.Context) {
 
 func (inst *Controller) CreateLocationWizard(c *gin.Context) {
 	m := new(model.Location)
-	err = c.ShouldBindJSON(&m)
+	err := c.ShouldBindJSON(&m)
 	host, err := inst.DB.CreateLocationWizard(m)
 	if err != nil {
 		responseHandler(nil, err, c)
@@ -46,7 +46,7 @@ func (inst *Controller) CreateLocationWizard(c *gin.Context) {
 
 func (inst *Controller) CreateLocation(c *gin.Context) {
 	m := new(model.Location)
-	err = c.ShouldBindJSON(&m)
+	err := c.ShouldBindJSON(&m)
 	host, err := inst.DB.CreateLocation(m)
 	if err != nil {
 		responseHandler(nil, err, c)

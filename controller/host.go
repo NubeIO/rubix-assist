@@ -35,7 +35,7 @@ func (inst *Controller) GetHosts(c *gin.Context) {
 
 func (inst *Controller) CreateHost(c *gin.Context) {
 	m := new(model.Host)
-	err = c.ShouldBindJSON(&m)
+	err := c.ShouldBindJSON(&m)
 	host, err := inst.DB.CreateHost(m)
 	if err != nil {
 		responseHandler(nil, err, c)

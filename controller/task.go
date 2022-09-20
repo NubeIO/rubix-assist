@@ -33,7 +33,7 @@ func (inst *Controller) GetTasks(c *gin.Context) {
 
 func (inst *Controller) CreateTask(c *gin.Context) {
 	m := new(model.Task)
-	err = c.ShouldBindJSON(&m)
+	err := c.ShouldBindJSON(&m)
 	res, err := inst.DB.CreateTask(m)
 	if err != nil {
 		responseHandler(nil, err, c)

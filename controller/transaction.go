@@ -34,7 +34,7 @@ func (inst *Controller) GetTransactions(c *gin.Context) {
 
 func (inst *Controller) CreateTransaction(c *gin.Context) {
 	m := new(model.Transaction)
-	err = c.ShouldBindJSON(&m)
+	err := c.ShouldBindJSON(&m)
 	team, err := inst.DB.CreateTransaction(m)
 	if err != nil {
 		responseHandler(nil, err, c)

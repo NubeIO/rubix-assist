@@ -33,7 +33,7 @@ func (inst *Controller) GetTeams(c *gin.Context) {
 
 func (inst *Controller) CreateTeam(c *gin.Context) {
 	m := new(model.Team)
-	err = c.ShouldBindJSON(&m)
+	err := c.ShouldBindJSON(&m)
 	team, err := inst.DB.CreateTeam(m)
 	if err != nil {
 		responseHandler(nil, err, c)

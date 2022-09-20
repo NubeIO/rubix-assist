@@ -2,10 +2,10 @@ package appstore
 
 import (
 	"errors"
-	"fmt"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	log "github.com/sirupsen/logrus"
+	"path"
 )
 
 func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.EdgeConfig) (*model.Message, error) {
@@ -20,22 +20,22 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.
 	if configName == "" {
 		configName = "config.yml"
 	}
-	appConfigPath := inst.App.GetAppConfigPath(body.AppName)
-	exists, err := inst.EdgeDirExists(hostUUID, hostName, appConfigPath)
+	appDataConfigPath := inst.App.GetAppDataConfigPath(body.AppName)
+	exists, err := inst.EdgeDirExists(hostUUID, hostName, appDataConfigPath)
 	if err != nil {
 		return nil, err
 	}
 	if !exists {
-		dir, err := inst.EdgeCreateDir(hostUUID, hostName, appConfigPath)
+		dir, err := inst.EdgeCreateDir(hostUUID, hostName, appDataConfigPath)
 		if err != nil {
 			return nil, err
 		}
 		log.Infof("made config dir as was not existing:%s", dir.Message)
 	}
-	absoluteConfigName := fmt.Sprintf("%s/%s", appConfigPath, configName)
+	absoluteAppDataConfigName := path.Join(appDataConfigPath, configName)
 
 	writeFile := &assistmodel.WriteFile{
-		FilePath:     absoluteConfigName,
+		FilePath:     absoluteAppDataConfigName,
 		Body:         body.Body,
 		BodyAsString: body.BodyAsString,
 	}
@@ -55,14 +55,14 @@ func (inst *Store) EdgeReadConfig(hostUUID, hostName, appName, configName string
 	if err != nil {
 		return nil, err
 	}
-	appConfigPath := inst.App.GetAppConfigPath(appName)
-	absoluteConfigName := fmt.Sprintf("%s/%s", appConfigPath, configName)
-	file, err := client.ReadFile(absoluteConfigName)
+	appDataConfigPath := inst.App.GetAppDataConfigPath(appName)
+	absoluteAppDataConfigName := path.Join(appDataConfigPath, configName)
+	file, err := client.ReadFile(absoluteAppDataConfigName)
 	if err != nil {
 		return nil, err
 	}
 	return &assistmodel.EdgeConfigResponse{
 		Data:     file,
-		FilePath: absoluteConfigName,
+		FilePath: absoluteAppDataConfigName,
 	}, nil
 }
