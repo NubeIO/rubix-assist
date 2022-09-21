@@ -50,6 +50,7 @@ func (inst *Controller) GenerateServiceFileAndEdgeUpload(c *gin.Context) {
 	}
 	var m *appstore.ServiceFile
 	err = c.ShouldBindJSON(&m)
+
 	data, err := inst.Store.GenerateServiceFileAndEdgeUpload(host.UUID, host.Name, m)
 	responseHandler(data, err, c)
 }

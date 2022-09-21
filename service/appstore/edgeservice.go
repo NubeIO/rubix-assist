@@ -27,14 +27,14 @@ func (inst *Store) checkServiceExecStart(service, appName, appVersion string) er
 }
 
 type ServiceFile struct {
-	Name                    string   `json:"name"`
-	Version                 string   `json:"version"`
-	ServiceDescription      string   `json:"service_description"`
-	RunAsUser               string   `json:"run_as_user"`
-	ServiceWorkingDirectory string   `json:"service_working_directory"` // /data/rubix-service/apps/install/flow-framework/v0.6.1/
-	AppSpecificExecStart    string   `json:"app_specific_exec_start"`   // app -p 1660 -g /data/flow-framework -d data -prod
-	CustomServiceExecStart  string   `json:"custom_service_exec_start"` // npm run prod:start --prod --datadir /data/rubix-wires/data --envFile /data/rubix-wires/config/.env
-	EnvironmentVars         []string `json:"environment_vars"`          // Environment="g=/data/bacnet-server-c"
+	Name                        string   `json:"name"`
+	Version                     string   `json:"version"`
+	ServiceDescription          string   `json:"service_description"`
+	RunAsUser                   string   `json:"run_as_user"`
+	ServiceWorkingDirectory     string   `json:"service_working_directory"`        // /data/rubix-service/apps/install/flow-framework/v0.6.1/
+	ExecStart                   string   `json:"exec_start"`                       // app -p 1660 -g <data_dir> -d data -prod
+	AttachWorkingDirOnExecStart bool     `json:"attach_working_dir_on_exec_start"` // true, false
+	EnvironmentVars             []string `json:"environment_vars"`                 // Environment="g=/data/bacnet-server-c"
 }
 
 // EdgeInstallService this assumes that the service file and app already exists on the edge device
@@ -91,15 +91,18 @@ func (inst *Store) generateServiceFile(app *ServiceFile) (tmpDir, absoluteServic
 	if user == "" {
 		user = "root"
 	}
-	execCmd := app.AppSpecificExecStart // example use would be in wires
-	if app.CustomServiceExecStart == "" {
-		if execCmd == "" {
-			return "", "", errors.New("app service AppSpecificExecStart cant not be empty")
-		}
-		execCmd = inst.getServiceExecStart(app.Name, app.Version, app.AppSpecificExecStart)
+	execCmd := app.ExecStart
+	if app.AttachWorkingDirOnExecStart {
+		execCmd = inst.getServiceExecStart(app.Name, app.Version, execCmd)
 		if err := inst.checkServiceExecStart(execCmd, app.Name, app.Version); err != nil {
 			return "", "", err
 		}
+	}
+	if strings.Contains(execCmd, "<data_dir>") {
+		execCmd = strings.ReplaceAll(execCmd, "<data_dir>", inst.App.GetAppDataPath(app.Name))
+	}
+	if strings.Contains(execCmd, "<data_dir_name>") {
+		execCmd = strings.ReplaceAll(execCmd, "<data_dir_name>", inst.App.GetDataDirNameFromAppName(app.Name))
 	}
 	log.Infof("generate service exec_cmd: %s", execCmd)
 	description := app.ServiceDescription

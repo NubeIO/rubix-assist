@@ -25,8 +25,7 @@ func TestStore_generateServiceFile(t *testing.T) {
 		ServiceDescription:      "",
 		RunAsUser:               "",
 		ServiceWorkingDirectory: "",
-		AppSpecificExecStart:    "app",
-		CustomServiceExecStart:  "",
+		ExecStart:               "app",
 		EnvironmentVars:         exe,
 	})
 	fmt.Println(tmpDir, absoluteServiceFileName, err)
