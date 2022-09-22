@@ -44,7 +44,6 @@ func (inst *Client) ListPlugins(hostIDName string) ([]appstore.Plugin, error) {
 	return *data, nil
 }
 
-// DeletePlugin delete one
 func (inst *Client) DeletePlugin(hostIDName string, body *appstore.Plugin) (*model.Message, error) {
 	url := fmt.Sprintf("/api/edge/plugins")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -59,7 +58,6 @@ func (inst *Client) DeletePlugin(hostIDName string, body *appstore.Plugin) (*mod
 	return resp.Result().(*model.Message), nil
 }
 
-// DeleteAllPlugins delete all
 func (inst *Client) DeleteAllPlugins(hostIDName string) (*model.Message, error) {
 	url := fmt.Sprintf("/api/edge/plugins/all")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().

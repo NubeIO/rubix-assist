@@ -143,7 +143,6 @@ func (inst *DB) DeleteTask(uuid string) (*DeleteMessage, error) {
 	return deleteResponse(query)
 }
 
-// DropTasks delete all.
 func (inst *DB) DropTasks() (*DeleteMessage, error) {
 	var m *model.Task
 	query := inst.DB.Where("1 = 1")

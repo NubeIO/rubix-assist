@@ -6,7 +6,6 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// AddConsumer an object
 func (inst *FlowClient) AddConsumer(body *model.Consumer) (*model.Consumer, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Consumer{}).
@@ -18,7 +17,6 @@ func (inst *FlowClient) AddConsumer(body *model.Consumer) (*model.Consumer, erro
 	return resp.Result().(*model.Consumer), nil
 }
 
-// EditConsumer edit an object
 func (inst *FlowClient) EditConsumer(uuid string, body *model.Consumer) (*model.Consumer, error) {
 	url := fmt.Sprintf("/api/consumers/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -31,7 +29,6 @@ func (inst *FlowClient) EditConsumer(uuid string, body *model.Consumer) (*model.
 	return resp.Result().(*model.Consumer), nil
 }
 
-// GetConsumers an object
 func (inst *FlowClient) GetConsumers() ([]model.Consumer, error) {
 	url := fmt.Sprintf("/api/consumers")
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -45,7 +42,6 @@ func (inst *FlowClient) GetConsumers() ([]model.Consumer, error) {
 	return out, nil
 }
 
-// GetConsumer an object
 func (inst *FlowClient) GetConsumer(uuid string) (*model.Consumer, error) {
 	url := fmt.Sprintf("/api/consumers/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -57,7 +53,6 @@ func (inst *FlowClient) GetConsumer(uuid string) (*model.Consumer, error) {
 	return resp.Result().(*model.Consumer), nil
 }
 
-// DeleteConsumer an object
 func (inst *FlowClient) DeleteConsumer(uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.client.R().
 		SetPathParams(map[string]string{"uuid": uuid}).

@@ -7,7 +7,6 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// GetPlugins an object
 func (inst *Client) GetPlugins(hostIDName string) ([]model.PluginConf, error) {
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -22,7 +21,6 @@ func (inst *Client) GetPlugins(hostIDName string) ([]model.PluginConf, error) {
 	return out, nil
 }
 
-// GetPlugin an object
 func (inst *Client) GetPlugin(hostIDName, uuid string) (*model.PluginConf, error) {
 	url := fmt.Sprintf("proxy/ff/api/plugins/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().

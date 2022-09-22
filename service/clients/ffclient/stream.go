@@ -6,7 +6,6 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// AddStream an object
 func (inst *FlowClient) AddStream(body *model.Stream) (*model.Stream, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Stream{}).
@@ -18,7 +17,6 @@ func (inst *FlowClient) AddStream(body *model.Stream) (*model.Stream, error) {
 	return resp.Result().(*model.Stream), nil
 }
 
-// EditStream edit an object
 func (inst *FlowClient) EditStream(uuid string, body *model.Stream) (*model.Stream, error) {
 	url := fmt.Sprintf("/api/streams/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -31,7 +29,6 @@ func (inst *FlowClient) EditStream(uuid string, body *model.Stream) (*model.Stre
 	return resp.Result().(*model.Stream), nil
 }
 
-// GetStreamClones an object
 func (inst *FlowClient) GetStreamClones() ([]model.StreamClone, error) {
 	url := fmt.Sprintf("/api/stream_clones")
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -45,7 +42,6 @@ func (inst *FlowClient) GetStreamClones() ([]model.StreamClone, error) {
 	return out, nil
 }
 
-// GetStreams an object
 func (inst *FlowClient) GetStreams() ([]model.Stream, error) {
 	url := fmt.Sprintf("/api/streams")
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -59,7 +55,6 @@ func (inst *FlowClient) GetStreams() ([]model.Stream, error) {
 	return out, nil
 }
 
-// GetStream an object
 func (inst *FlowClient) GetStream(uuid string) (*model.Stream, error) {
 	url := fmt.Sprintf("/api/streams/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -71,7 +66,6 @@ func (inst *FlowClient) GetStream(uuid string) (*model.Stream, error) {
 	return resp.Result().(*model.Stream), nil
 }
 
-// GetStreamsWithChild an object
 func (inst *FlowClient) GetStreamsWithChild() ([]model.Stream, error) {
 	url := fmt.Sprintf("/api/streams?flow_networks=true&producers=true&consumers=true&command_groups=false&writers=true&tags=true")
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -85,7 +79,6 @@ func (inst *FlowClient) GetStreamsWithChild() ([]model.Stream, error) {
 	return out, nil
 }
 
-// GetStreamWithChild an object
 func (inst *FlowClient) GetStreamWithChild(uuid string) (*model.Stream, error) {
 	url := fmt.Sprintf("/api/streams/%s?flow_networks=true&producers=true&consumers=true&command_groups=false&writers=true&tags=true", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -97,7 +90,6 @@ func (inst *FlowClient) GetStreamWithChild(uuid string) (*model.Stream, error) {
 	return resp.Result().(*model.Stream), nil
 }
 
-// DeleteStream an object
 func (inst *FlowClient) DeleteStream(uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.client.R().
 		SetPathParams(map[string]string{"uuid": uuid}).
@@ -108,7 +100,6 @@ func (inst *FlowClient) DeleteStream(uuid string) (bool, error) {
 	return true, nil
 }
 
-// DeleteStreamClone an object
 func (inst *FlowClient) DeleteStreamClone(uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.client.R().
 		SetPathParams(map[string]string{"uuid": uuid}).

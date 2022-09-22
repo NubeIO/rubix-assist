@@ -49,7 +49,6 @@ func (inst *DB) DeleteTeam(uuid string) (*DeleteMessage, error) {
 	return deleteResponse(query)
 }
 
-// DropTeams delete all.
 func (inst *DB) DropTeams() (*DeleteMessage, error) {
 	var m *model.Team
 	query := inst.DB.Where("1 = 1")

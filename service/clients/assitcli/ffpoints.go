@@ -6,7 +6,6 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// EdgeGetPoints an objects
 func (inst *Client) EdgeGetPoints(hostIDName string) ([]model.Point, error) {
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -42,7 +41,6 @@ func (inst *Client) WritePointValue(hostIDName, uuid string, value *model.Priori
 	return resp.Result().(*model.Point), nil
 }
 
-// AddPoint an object
 func (inst *Client) AddPoint(hostIDName string, body *model.Point) (*model.Point, error) {
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -56,7 +54,6 @@ func (inst *Client) AddPoint(hostIDName string, body *model.Point) (*model.Point
 	return resp.Result().(*model.Point), nil
 }
 
-// GetPoints an objects
 func (inst *Client) GetPoints(hostIDName string) ([]model.Point, error) {
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -71,7 +68,6 @@ func (inst *Client) GetPoints(hostIDName string) ([]model.Point, error) {
 	return out, nil
 }
 
-// GetPoint an object
 func (inst *Client) GetPoint(hostIDName, uuid string) (*model.Point, error) {
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -85,7 +81,6 @@ func (inst *Client) GetPoint(hostIDName, uuid string) (*model.Point, error) {
 	return resp.Result().(*model.Point), nil
 }
 
-// DeletePoint an object
 func (inst *Client) DeletePoint(hostIDName, uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -98,7 +93,6 @@ func (inst *Client) DeletePoint(hostIDName, uuid string) (bool, error) {
 	return true, nil
 }
 
-// EditPoint an object
 func (inst *Client) EditPoint(hostIDName, uuid string, body *model.Point) (*model.Point, error) {
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).

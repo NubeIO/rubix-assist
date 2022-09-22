@@ -153,7 +153,6 @@ func (inst *DB) DeleteHost(uuid string) (*DeleteMessage, error) {
 	return deleteResponse(query)
 }
 
-// DropHosts delete all.
 func (inst *DB) DropHosts() (*DeleteMessage, error) {
 	var m *model.Host
 	query := inst.DB.Where("1 = 1")

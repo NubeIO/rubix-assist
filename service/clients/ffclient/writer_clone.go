@@ -7,7 +7,6 @@ import (
 	"strconv"
 )
 
-// GetWriterClones all objects
 func (inst *FlowClient) GetWriterClones() ([]model.WriterClone, error) {
 	url := fmt.Sprintf("/api/producers/writer_clones")
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -21,7 +20,6 @@ func (inst *FlowClient) GetWriterClones() ([]model.WriterClone, error) {
 	return out, nil
 }
 
-// GetWriterClone an object
 func (inst *FlowClient) GetWriterClone(uuid string) (*model.WriterClone, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.WriterClone{}).
@@ -33,7 +31,6 @@ func (inst *FlowClient) GetWriterClone(uuid string) (*model.WriterClone, error) 
 	return resp.Result().(*model.WriterClone), nil
 }
 
-// EditWriterClone edit an object
 func (inst *FlowClient) EditWriterClone(uuid string, body model.WriterClone, updateProducer bool) (*model.WriterClone, error) {
 	param := strconv.FormatBool(updateProducer)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -48,7 +45,6 @@ func (inst *FlowClient) EditWriterClone(uuid string, body model.WriterClone, upd
 	return resp.Result().(*model.WriterClone), nil
 }
 
-// CreateWriterClone edit an object
 func (inst *FlowClient) CreateWriterClone(body model.WriterClone) (*model.WriterClone, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.WriterClone{}).
@@ -60,7 +56,6 @@ func (inst *FlowClient) CreateWriterClone(body model.WriterClone) (*model.Writer
 	return resp.Result().(*model.WriterClone), nil
 }
 
-// DeleteWriterClone delete
 func (inst *FlowClient) DeleteWriterClone(uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.client.R().
 		SetPathParams(map[string]string{"uuid": uuid}).

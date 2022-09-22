@@ -8,7 +8,6 @@ import (
 	"strconv"
 )
 
-// GetWriters all objects
 func (inst *FlowClient) GetWriters() ([]model.Writer, error) {
 	url := fmt.Sprintf("/api/consumers/writers")
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -22,7 +21,6 @@ func (inst *FlowClient) GetWriters() ([]model.Writer, error) {
 	return out, nil
 }
 
-// GetWriter an object
 func (inst *FlowClient) GetWriter(uuid string) (*model.Writer, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Writer{}).
@@ -34,7 +32,6 @@ func (inst *FlowClient) GetWriter(uuid string) (*model.Writer, error) {
 	return resp.Result().(*model.Writer), nil
 }
 
-// EditWriter edit an object
 func (inst *FlowClient) EditWriter(uuid string, body *model.Writer, updateProducer bool) (*model.Writer, error) {
 	param := strconv.FormatBool(updateProducer)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -49,7 +46,6 @@ func (inst *FlowClient) EditWriter(uuid string, body *model.Writer, updateProduc
 	return resp.Result().(*model.Writer), nil
 }
 
-// CreateWriter edit an object
 func (inst *FlowClient) CreateWriter(body *model.Writer) (*model.Writer, error) {
 	name := uuid.ShortUUID()
 	name = fmt.Sprintf("sub_name_%s", name)
@@ -63,7 +59,6 @@ func (inst *FlowClient) CreateWriter(body *model.Writer) (*model.Writer, error) 
 	return resp.Result().(*model.Writer), nil
 }
 
-// DeleteWriter delete
 func (inst *FlowClient) DeleteWriter(uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.client.R().
 		SetPathParams(map[string]string{"uuid": uuid}).

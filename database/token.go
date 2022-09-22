@@ -49,7 +49,6 @@ func (inst *DB) DeleteToken(uuid string) (*DeleteMessage, error) {
 	return deleteResponse(query)
 }
 
-// DropTokens delete all.
 func (inst *DB) DropTokens() (*DeleteMessage, error) {
 	var m *model.Token
 	query := inst.DB.Where("1 = 1")
