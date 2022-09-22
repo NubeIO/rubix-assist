@@ -31,7 +31,7 @@ func (inst *DB) GetHostByLocationName(hostName, networkName, locationName string
 func (inst *DB) getHost(uuid string) (*model.Host, error) {
 	m := new(model.Host)
 	if err := inst.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
-		return nil, errors.New(fmt.Sprintf("no host was found with uuid:%s", uuid))
+		return nil, errors.New(fmt.Sprintf("no host was found with uuid: %s", uuid))
 	}
 	return m, nil
 }
@@ -65,7 +65,7 @@ func (inst *DB) GetHost(uuid string) (*model.Host, error) {
 func (inst *DB) GetHostByName(name string) (*model.Host, error) {
 	m := new(model.Host)
 	if err := inst.DB.Where("name = ? ", name).First(&m).Error; err != nil {
-		return nil, errors.New(fmt.Sprintf("no host was found with name:%s", name))
+		return nil, errors.New(fmt.Sprintf("no host was found with name: %s", name))
 	}
 	return m, nil
 }
@@ -114,11 +114,11 @@ func (inst *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	}
 	err := ip.CheckURL(host.IP, host.Port)
 	if err != nil {
-		return nil, fmt.Errorf("invaild ssh ip:port:%s", err.Error())
+		return nil, fmt.Errorf("invaild ssh ip:port: %s", err.Error())
 	}
 	err = ip.CheckURL(host.IP, host.Port)
 	if err != nil {
-		return nil, fmt.Errorf("invaild rubix ip:port:%s", err.Error())
+		return nil, fmt.Errorf("invaild rubix ip:port: %s", err.Error())
 	}
 	if err := inst.DB.Create(&host).Error; err != nil {
 		return nil, err

@@ -49,7 +49,7 @@ func (inst *Store) UploadAddOnAppStore(app *installer.Upload) (*UploadResponse, 
 	destination := path.Join(inst.getAppsStoreAppWithVersionPath(appName, version), resp.FileName)
 	check := fileutils.FileExists(source)
 	if !check {
-		return nil, errors.New(fmt.Sprintf("upload file tmp dir not found:%s", source))
+		return nil, errors.New(fmt.Sprintf("upload file tmp dir not found: %s", source))
 	}
 	uploadResp.UploadedFile = destination
 	err = fileutils.MoveFile(source, destination)

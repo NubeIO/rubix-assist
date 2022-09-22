@@ -57,7 +57,7 @@ func (inst *Controller) resolveHost(c *gin.Context) (*model.Host, error) {
 		hostUUIDs = append(hostUUIDs, h.UUID)
 		count++
 	}
-	return nil, errors.New(fmt.Sprintf("no valid host was found: host count:%d, host names found:%v uuids:%v", count, hostNames, hostUUIDs))
+	return nil, errors.New(fmt.Sprintf("no valid host was found: host count: %d, host names found: %v uuids: %v", count, hostNames, hostUUIDs))
 }
 
 func matchUUID(uuid string) bool {

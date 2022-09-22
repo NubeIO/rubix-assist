@@ -270,7 +270,7 @@ func (inst *Client) EdgeUploadLocalFile(hostIDName, path, fileName, destination 
 	fileAndPath := filepath.FromSlash(fmt.Sprintf("%s/%s", path, fileName))
 	reader, err := os.Open(fileAndPath)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error open file:%s err:%s", fileAndPath, err.Error()))
+		return nil, errors.New(fmt.Sprintf("error open file: %s err: %s", fileAndPath, err.Error()))
 	}
 	resp, err := inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).

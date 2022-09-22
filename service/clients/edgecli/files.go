@@ -171,7 +171,7 @@ func (inst *Client) DeleteAllFiles(path string) (*model.Message, error) {
 func (inst *Client) UploadLocalFile(file, destination string) (*assistmodel.EdgeUploadResponse, error) {
 	reader, err := os.Open(file)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error open file:%s err:%s", file, err.Error()))
+		return nil, errors.New(fmt.Sprintf("error open file: %s err: %s", file, err.Error()))
 	}
 	resp, err := inst.Rest.R().
 		SetResult(&assistmodel.EdgeUploadResponse{}).

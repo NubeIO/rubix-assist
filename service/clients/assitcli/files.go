@@ -131,7 +131,7 @@ func (inst *Client) UploadLocalFile(path, fileName, destination string) (*EdgeUp
 	fileAndPath := filepath.FromSlash(fmt.Sprintf("%s/%s", path, fileName))
 	reader, err := os.Open(fileAndPath)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error open file:%s err:%s", fileAndPath, err.Error()))
+		return nil, errors.New(fmt.Sprintf("error open file: %s err: %s", fileAndPath, err.Error()))
 	}
 	resp, err := inst.Rest.R().
 		SetResult(&EdgeUploadResponse{}).

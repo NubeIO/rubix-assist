@@ -25,7 +25,7 @@ func (inst *Store) EdgeUploadApp(hostUUID, hostName string, app *installer.Uploa
 	p := inst.getAppsStoreAppWithVersionPath(app.Name, app.Version)
 	buildDetails, err := inst.App.GetBuildZipNameByArch(p, app.Arch, app.DoNotValidateArch)
 	if buildDetails == nil {
-		return nil, errors.New(fmt.Sprintf("failed to match build zip name app:%s version:%s arch:%s", app.Name, app.Version, app.Arch))
+		return nil, errors.New(fmt.Sprintf("failed to match build zip name app: %s version: %s arch: %s", app.Name, app.Version, app.Arch))
 	}
 	fileAndPath := path.Join(p, buildDetails.ZipName)
 	reader, err := os.Open(fileAndPath)
