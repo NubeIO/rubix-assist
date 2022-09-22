@@ -8,7 +8,7 @@ import (
 )
 
 func (inst *Client) CreateDir(path string) (*model.Message, error) {
-	url := fmt.Sprintf("/api/dir/create/?path=%s", path)
+	url := fmt.Sprintf("/api/dirs/create/?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&model.Message{}).
 		Post(url))

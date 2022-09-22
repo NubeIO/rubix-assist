@@ -6,8 +6,8 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// EdgeWriteConfigYml replace the config file of a nube app
-func (inst *Client) EdgeWriteConfigYml(hostIDName string, app *assistmodel.EdgeConfig) (*Message, error) {
+// EdgeWriteConfig replace the config file of a nube app
+func (inst *Client) EdgeWriteConfig(hostIDName string, app *assistmodel.EdgeConfig) (*Message, error) {
 	url := fmt.Sprintf("/api/edge/config")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).

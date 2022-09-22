@@ -37,8 +37,8 @@ func (inst *Client) ListAppsStatus() ([]installer.AppsStatus, error) {
 // UploadApp uploads an app
 func (inst *Client) UploadApp(app *installer.Upload, zipFileName string, reader io.Reader) (*installer.AppResponse, error) {
 	url := fmt.Sprintf(
-		"/api/apps/upload?name=%s&version=%s&product=%s&arch=%s&do_not_validate_arch=%v",
-		app.Name, app.Version, app.Product, app.Arch, app.DoNotValidateArch)
+		"/api/apps/upload?name=%s&version=%s&product=%s&arch=%s&do_not_validate_arch=%v&move_extracted_file_to_name_app=%v&move_one_level_inside_file_to_outside=%v",
+		app.Name, app.Version, app.Product, app.Arch, app.DoNotValidateArch, app.MoveExtractedFileToNameApp, app.MoveOneLevelInsideFileToOutside)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&installer.AppResponse{}).
 		SetFileReader("file", zipFileName, reader).

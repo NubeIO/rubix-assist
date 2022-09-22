@@ -30,7 +30,7 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.
 		if err != nil {
 			return nil, err
 		}
-		log.Infof("made config dir as was not existing:%s", dir.Message)
+		log.Infof("made config dir as was not existing: %s", dir.Message)
 	}
 	absoluteAppDataConfigName := path.Join(appDataConfigPath, configName)
 
