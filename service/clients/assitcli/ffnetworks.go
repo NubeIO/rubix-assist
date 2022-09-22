@@ -6,11 +6,10 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// FFGetNetworks an object
 func (inst *Client) FFGetNetworks(hostIDName string, withDevices bool, overrideUrl ...string) ([]model.Network, error) {
 	url := fmt.Sprintf("proxy/ff/api/networks")
 	if withDevices == true {
-		url = fmt.Sprintf("proxy/ff/api/networks/?with_devices=true")
+		url = fmt.Sprintf("proxy/ff/api/networks?with_devices=true")
 	}
 	if buildUrl(overrideUrl...) != "" {
 		url = buildUrl(overrideUrl...)
@@ -28,7 +27,6 @@ func (inst *Client) FFGetNetworks(hostIDName string, withDevices bool, overrideU
 	return out, nil
 }
 
-// FFGetNetworks an object
 func (inst *Client) FFGetNetworksWithPoints(hostIDName string) ([]model.Network, error) {
 	url := fmt.Sprintf("proxy/ff/api/networks?with_points=true")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -44,7 +42,6 @@ func (inst *Client) FFGetNetworksWithPoints(hostIDName string) ([]model.Network,
 	return out, nil
 }
 
-// FFGetNetwork an object
 func (inst *Client) FFGetNetwork(hostIDName, uuid string, withDevices bool, overrideUrl ...string) (*model.Network, error) {
 	url := fmt.Sprintf("proxy/ff/api/networks/%s", uuid)
 	if withDevices == true {
@@ -78,7 +75,6 @@ func (inst *Client) FFGetNetworkWithPoints(hostIDName, uuid string) (*model.Netw
 	return resp.Result().(*model.Network), nil
 }
 
-// FFDeleteNetwork an object
 func (inst *Client) FFDeleteNetwork(hostIDName, uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -91,7 +87,6 @@ func (inst *Client) FFDeleteNetwork(hostIDName, uuid string) (bool, error) {
 	return true, nil
 }
 
-// FFGetNetworkByPluginName an object
 func (inst *Client) FFGetNetworkByPluginName(hostIDName, pluginName string, withPoints ...bool) (*model.Network, error) {
 	url := fmt.Sprintf("proxy/ff/api/networks/plugin/%s", pluginName)
 	if len(withPoints) > 0 {
@@ -108,7 +103,6 @@ func (inst *Client) FFGetNetworkByPluginName(hostIDName, pluginName string, with
 	return resp.Result().(*model.Network), nil
 }
 
-// FFAddNetwork an object
 func (inst *Client) FFAddNetwork(hostIDName string, body *model.Network, restartPlugin bool) (*model.Network, error) {
 	url := fmt.Sprintf("proxy/ff/api/networks?restart_plugin=%t", restartPlugin)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -123,7 +117,6 @@ func (inst *Client) FFAddNetwork(hostIDName string, body *model.Network, restart
 	return resp.Result().(*model.Network), nil
 }
 
-// FFEditNetwork an object
 func (inst *Client) FFEditNetwork(hostIDName, uuid string, body *model.Network) (*model.Network, error) {
 	url := fmt.Sprintf("proxy/ff/api/networks/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().

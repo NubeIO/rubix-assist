@@ -6,12 +6,11 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// GetFlowNetworkClones an object
 func (inst *FlowClient) GetFlowNetworkClones(withStreams ...bool) ([]model.FlowNetworkClone, error) {
 	url := fmt.Sprintf("/api/flow_network_clones")
 	if len(withStreams) > 0 {
 		if withStreams[0] == true {
-			url = fmt.Sprintf("/api/flow_network_clones/?with_streams=true")
+			url = fmt.Sprintf("/api/flow_network_clones?with_streams=true")
 		}
 	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -25,7 +24,6 @@ func (inst *FlowClient) GetFlowNetworkClones(withStreams ...bool) ([]model.FlowN
 	return out, nil
 }
 
-// GetFlowNetworkClone an object
 func (inst *FlowClient) GetFlowNetworkClone(uuid string, withStreams ...bool) (*model.FlowNetworkClone, error) {
 	url := fmt.Sprintf("/api/flow_network_clones/%s", uuid)
 	if len(withStreams) > 0 {
@@ -42,7 +40,6 @@ func (inst *FlowClient) GetFlowNetworkClone(uuid string, withStreams ...bool) (*
 	return resp.Result().(*model.FlowNetworkClone), nil
 }
 
-// GetFlowNetworkClonesWithChild an object
 func (inst *FlowClient) GetFlowNetworkClonesWithChild() ([]model.FlowNetworkClone, error) {
 	url := fmt.Sprintf("/api/flow_network_clones?with_streams=true&with_producers=true&with_consumers=true&with_writers=true&with_tags=true")
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -56,7 +53,6 @@ func (inst *FlowClient) GetFlowNetworkClonesWithChild() ([]model.FlowNetworkClon
 	return out, nil
 }
 
-// GetFlowNetworkCloneWithChild an object
 func (inst *FlowClient) GetFlowNetworkCloneWithChild(uuid string) (*model.FlowNetworkClone, error) {
 	url := fmt.Sprintf("/api/flow_network_clones/%s?with_streams=true&with_producers=true&with_consumers=true&with_writers=true&with_tags=true", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -68,7 +64,6 @@ func (inst *FlowClient) GetFlowNetworkCloneWithChild(uuid string) (*model.FlowNe
 	return resp.Result().(*model.FlowNetworkClone), nil
 }
 
-// DeleteFlowNetworkClone an object
 func (inst *FlowClient) DeleteFlowNetworkClone(uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.client.R().
 		SetPathParams(map[string]string{"uuid": uuid}).

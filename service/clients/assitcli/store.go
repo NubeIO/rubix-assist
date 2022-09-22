@@ -21,7 +21,7 @@ func (inst *Client) ListAppsWithVersions() ([]appstore.ListApps, error) {
 
 // UploadAddOnAppStore upload an app
 func (inst *Client) UploadAddOnAppStore(appName, version, arch, fileName string, reader io.Reader) (*appstore.UploadResponse, error) {
-	url := fmt.Sprintf("/api/store/apps/?name=%s&version=%s&arch=%s", appName, version, arch)
+	url := fmt.Sprintf("/api/store/apps?name=%s&version=%s&arch=%s", appName, version, arch)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&appstore.UploadResponse{}).
 		SetFileReader("file", fileName, reader).

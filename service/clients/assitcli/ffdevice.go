@@ -6,7 +6,6 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// AddDevice an object
 func (inst *Client) AddDevice(hostIDName string, device *model.Device) (*model.Device, error) {
 	url := fmt.Sprintf("proxy/ff/api/devices")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -21,12 +20,11 @@ func (inst *Client) AddDevice(hostIDName string, device *model.Device) (*model.D
 	return resp.Result().(*model.Device), nil
 }
 
-// GetDevices all objects
 func (inst *Client) GetDevices(hostIDName string, withPoints ...bool) ([]model.Device, error) {
 	url := fmt.Sprintf("proxy/ff/api/devices")
 	if len(withPoints) > 0 {
 		if withPoints[0] == true {
-			url = fmt.Sprintf("proxy/ff/api/devices/?with_points=true")
+			url = fmt.Sprintf("proxy/ff/api/devices?with_points=true")
 		}
 	}
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -42,7 +40,6 @@ func (inst *Client) GetDevices(hostIDName string, withPoints ...bool) ([]model.D
 	return out, nil
 }
 
-// GetDevice an object
 func (inst *Client) GetDevice(hostIDName, uuid string, withPoints ...bool) (*model.Device, error) {
 	url := fmt.Sprintf("proxy/ff/api/devices/%s", uuid)
 	if len(withPoints) > 0 {
@@ -61,7 +58,6 @@ func (inst *Client) GetDevice(hostIDName, uuid string, withPoints ...bool) (*mod
 	return resp.Result().(*model.Device), nil
 }
 
-// EditDevice edit an object
 func (inst *Client) EditDevice(hostIDName, uuid string, device *model.Device) (*model.Device, error) {
 	url := fmt.Sprintf("proxy/ff/api/devices/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -76,7 +72,6 @@ func (inst *Client) EditDevice(hostIDName, uuid string, device *model.Device) (*
 	return resp.Result().(*model.Device), nil
 }
 
-// DeleteDevice an object
 func (inst *Client) DeleteDevice(hostIDName, uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
