@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v0.5.0](https://github.com/NubeIO/rubix-assist/tree/v0.5.0) (2022-09-22)
+
+- Lots of improvements
 
 ## [v0.4.6](https://github.com/NubeIO/rubix-assist/tree/v0.4.6) (2022-08-22)
 
