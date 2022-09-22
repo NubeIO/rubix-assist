@@ -8,7 +8,6 @@ import (
 	"strconv"
 )
 
-// GetWriters all objects
 func (inst *Client) GetWriters(hostIDName string) ([]model.Writer, error) {
 	url := fmt.Sprintf("proxy/ff/api/consumers/writers")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -24,7 +23,6 @@ func (inst *Client) GetWriters(hostIDName string) ([]model.Writer, error) {
 	return out, nil
 }
 
-// GetWriter an object
 func (inst *Client) GetWriter(hostIDName, uuid string) (*model.Writer, error) {
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -38,7 +36,6 @@ func (inst *Client) GetWriter(hostIDName, uuid string) (*model.Writer, error) {
 	return resp.Result().(*model.Writer), nil
 }
 
-// EditWriter edit an object
 func (inst *Client) EditWriter(hostIDName, uuid string, body *model.Writer, updateProducer bool) (*model.Writer, error) {
 	param := strconv.FormatBool(updateProducer)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -55,7 +52,6 @@ func (inst *Client) EditWriter(hostIDName, uuid string, body *model.Writer, upda
 	return resp.Result().(*model.Writer), nil
 }
 
-// CreateWriter edit an object
 func (inst *Client) CreateWriter(hostIDName string, body *model.Writer) (*model.Writer, error) {
 	name := uuid.ShortUUID()
 	name = fmt.Sprintf("sub_name_%s", name)
@@ -71,7 +67,6 @@ func (inst *Client) CreateWriter(hostIDName string, body *model.Writer) (*model.
 	return resp.Result().(*model.Writer), nil
 }
 
-// DeleteWriter delete
 func (inst *Client) DeleteWriter(hostIDName, uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -84,7 +79,6 @@ func (inst *Client) DeleteWriter(hostIDName, uuid string) (bool, error) {
 	return true, nil
 }
 
-// GetWriterClones all objects
 func (inst *Client) GetWriterClones(hostIDName string) ([]model.WriterClone, error) {
 	url := fmt.Sprintf("proxy/ff/api/producers/writer_clones")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -100,7 +94,6 @@ func (inst *Client) GetWriterClones(hostIDName string) ([]model.WriterClone, err
 	return out, nil
 }
 
-// GetWriterClone an object
 func (inst *Client) GetWriterClone(hostIDName, uuid string) (*model.WriterClone, error) {
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -114,7 +107,6 @@ func (inst *Client) GetWriterClone(hostIDName, uuid string) (*model.WriterClone,
 	return resp.Result().(*model.WriterClone), nil
 }
 
-// EditWriterClone edit an object
 func (inst *Client) EditWriterClone(hostIDName, uuid string, body model.WriterClone, updateProducer bool) (*model.WriterClone, error) {
 	param := strconv.FormatBool(updateProducer)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -131,7 +123,6 @@ func (inst *Client) EditWriterClone(hostIDName, uuid string, body model.WriterCl
 	return resp.Result().(*model.WriterClone), nil
 }
 
-// CreateWriterClone edit an object
 func (inst *Client) CreateWriterClone(hostIDName string, body model.WriterClone) (*model.WriterClone, error) {
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -145,7 +136,6 @@ func (inst *Client) CreateWriterClone(hostIDName string, body model.WriterClone)
 	return resp.Result().(*model.WriterClone), nil
 }
 
-// DeleteWriterClone delete
 func (inst *Client) DeleteWriterClone(hostIDName, uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).

@@ -6,7 +6,6 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// AddFlowNetwork an object
 func (inst *FlowClient) AddFlowNetwork(body *model.FlowNetwork) (*model.FlowNetwork, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.FlowNetwork{}).
@@ -18,7 +17,6 @@ func (inst *FlowClient) AddFlowNetwork(body *model.FlowNetwork) (*model.FlowNetw
 	return resp.Result().(*model.FlowNetwork), nil
 }
 
-// EditFlowNetwork edit an object
 func (inst *FlowClient) EditFlowNetwork(uuid string, body *model.FlowNetwork) (*model.FlowNetwork, error) {
 	url := fmt.Sprintf("/api/flow_networks/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -31,12 +29,11 @@ func (inst *FlowClient) EditFlowNetwork(uuid string, body *model.FlowNetwork) (*
 	return resp.Result().(*model.FlowNetwork), nil
 }
 
-// GetFlowNetworks an object
 func (inst *FlowClient) GetFlowNetworks(withStreams ...bool) ([]model.FlowNetwork, error) {
 	url := fmt.Sprintf("/api/flow_networks")
 	if len(withStreams) > 0 {
 		if withStreams[0] == true {
-			url = fmt.Sprintf("/api/flow_networks/?with_streams=true")
+			url = fmt.Sprintf("/api/flow_networks?with_streams=true")
 		}
 	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -50,7 +47,6 @@ func (inst *FlowClient) GetFlowNetworks(withStreams ...bool) ([]model.FlowNetwor
 	return out, nil
 }
 
-// GetFlowNetwork an object
 func (inst *FlowClient) GetFlowNetwork(uuid string, withStreams ...bool) (*model.FlowNetwork, error) {
 	url := fmt.Sprintf("/api/flow_networks/%s", uuid)
 	if len(withStreams) > 0 {
@@ -67,7 +63,6 @@ func (inst *FlowClient) GetFlowNetwork(uuid string, withStreams ...bool) (*model
 	return resp.Result().(*model.FlowNetwork), nil
 }
 
-// GetFlowNetworksWithChild an object
 func (inst *FlowClient) GetFlowNetworksWithChild() ([]model.FlowNetwork, error) {
 	url := fmt.Sprintf("/api/flow_networks?with_streams=true&with_producers=true&with_consumers=true&with_writers=true&with_tags=true")
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -81,7 +76,6 @@ func (inst *FlowClient) GetFlowNetworksWithChild() ([]model.FlowNetwork, error) 
 	return out, nil
 }
 
-// GetFlowNetworkWithChild an object
 func (inst *FlowClient) GetFlowNetworkWithChild(uuid string) (*model.FlowNetwork, error) {
 	url := fmt.Sprintf("/api/flow_networks/%s?with_streams=true&with_producers=true&with_consumers=true&with_writers=true&with_tags=true", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -93,7 +87,6 @@ func (inst *FlowClient) GetFlowNetworkWithChild(uuid string) (*model.FlowNetwork
 	return resp.Result().(*model.FlowNetwork), nil
 }
 
-// DeleteFlowNetwork an object
 func (inst *FlowClient) DeleteFlowNetwork(uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.client.R().
 		SetPathParams(map[string]string{"uuid": uuid}).

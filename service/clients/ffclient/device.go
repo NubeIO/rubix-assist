@@ -6,7 +6,6 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// AddDevice an object
 func (inst *FlowClient) AddDevice(device *model.Device) (*model.Device, error) {
 	url := fmt.Sprintf("/api/devices")
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -31,12 +30,11 @@ func (inst *FlowClient) GetFirstDevice(withPoints ...bool) (*model.Device, error
 	return nil, err
 }
 
-// GetDevices all objects
 func (inst *FlowClient) GetDevices(withPoints ...bool) ([]model.Device, error) {
 	url := fmt.Sprintf("/api/devices")
 	if len(withPoints) > 0 {
 		if withPoints[0] == true {
-			url = fmt.Sprintf("/api/devices/?with_points=true")
+			url = fmt.Sprintf("/api/devices?with_points=true")
 		}
 	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -50,7 +48,6 @@ func (inst *FlowClient) GetDevices(withPoints ...bool) ([]model.Device, error) {
 	return out, nil
 }
 
-// GetDevice an object
 func (inst *FlowClient) GetDevice(uuid string, withPoints ...bool) (*model.Device, error) {
 	url := fmt.Sprintf("/api/devices/%s", uuid)
 	if len(withPoints) > 0 {
@@ -67,7 +64,6 @@ func (inst *FlowClient) GetDevice(uuid string, withPoints ...bool) (*model.Devic
 	return resp.Result().(*model.Device), nil
 }
 
-// EditDevice edit an object
 func (inst *FlowClient) EditDevice(uuid string, device *model.Device) (*model.Device, error) {
 	url := fmt.Sprintf("/api/devices/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -80,7 +76,6 @@ func (inst *FlowClient) EditDevice(uuid string, device *model.Device) (*model.De
 	return resp.Result().(*model.Device), nil
 }
 
-// DeleteDevice an object
 func (inst *FlowClient) DeleteDevice(uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.client.R().
 		SetPathParams(map[string]string{"uuid": uuid}).

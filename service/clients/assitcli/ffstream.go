@@ -44,7 +44,6 @@ func (inst *Client) GetStreamsByFlowNetwork(hostIDName, flowUUID string) ([]*mod
 	return streams.Streams, nil
 }
 
-// EditStream edit an object
 func (inst *Client) EditStream(hostIDName, uuid string, body *model.Stream) (*model.Stream, error) {
 	url := fmt.Sprintf("proxy/ff/api/streams/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -59,7 +58,6 @@ func (inst *Client) EditStream(hostIDName, uuid string, body *model.Stream) (*mo
 	return resp.Result().(*model.Stream), nil
 }
 
-// GetStreamClones an object
 func (inst *Client) GetStreamClones(hostIDName string) ([]model.StreamClone, error) {
 	url := fmt.Sprintf("proxy/ff/api/stream_clones")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -75,7 +73,6 @@ func (inst *Client) GetStreamClones(hostIDName string) ([]model.StreamClone, err
 	return out, nil
 }
 
-// GetStreams an object
 func (inst *Client) GetStreams(hostIDName string) ([]model.Stream, error) {
 	url := fmt.Sprintf("proxy/ff/api/streams/")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -91,7 +88,6 @@ func (inst *Client) GetStreams(hostIDName string) ([]model.Stream, error) {
 	return out, nil
 }
 
-// GetStream an object
 func (inst *Client) GetStream(hostIDName, uuid string) (*model.Stream, error) {
 	url := fmt.Sprintf("proxy/ff/api/streams/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -105,7 +101,6 @@ func (inst *Client) GetStream(hostIDName, uuid string) (*model.Stream, error) {
 	return resp.Result().(*model.Stream), nil
 }
 
-// GetStreamsWithChild an object
 func (inst *Client) GetStreamsWithChild(hostIDName string) ([]model.Stream, error) {
 	url := fmt.Sprintf("proxy/ff/api/streams?flow_networks=true&producers=true&consumers=true&command_groups=false&writers=true&tags=true")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -121,7 +116,6 @@ func (inst *Client) GetStreamsWithChild(hostIDName string) ([]model.Stream, erro
 	return out, nil
 }
 
-// GetStreamWithChild an object
 func (inst *Client) GetStreamWithChild(hostIDName, uuid string) (*model.Stream, error) {
 	url := fmt.Sprintf("proxy/ff/api/streams/%s?flow_networks=true&producers=true&consumers=true&command_groups=false&writers=true&tags=true", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -135,7 +129,6 @@ func (inst *Client) GetStreamWithChild(hostIDName, uuid string) (*model.Stream, 
 	return resp.Result().(*model.Stream), nil
 }
 
-// DeleteStream an object
 func (inst *Client) DeleteStream(hostIDName, uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -148,7 +141,6 @@ func (inst *Client) DeleteStream(hostIDName, uuid string) (bool, error) {
 	return true, nil
 }
 
-// DeleteStreamClone an object
 func (inst *Client) DeleteStreamClone(hostIDName, uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).

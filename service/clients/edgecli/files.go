@@ -12,7 +12,7 @@ import (
 
 // FileExists check if file exists
 func (inst *Client) FileExists(path string) (bool, error) {
-	url := fmt.Sprintf("/api/files/exists/?path=%s", path)
+	url := fmt.Sprintf("/api/files/exists?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		Get(url))
 	if err != nil {
@@ -27,7 +27,7 @@ func (inst *Client) FileExists(path string) (bool, error) {
 
 // ListFiles list all files/dirs in a dir
 func (inst *Client) ListFiles(path string) ([]string, error) {
-	url := fmt.Sprintf("/api/files/list/?path=%s", path)
+	url := fmt.Sprintf("/api/files/list?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&[]string{}).
 		Get(url))
@@ -39,7 +39,7 @@ func (inst *Client) ListFiles(path string) ([]string, error) {
 
 // Walk list all files/dirs in a dir
 func (inst *Client) Walk(path string) ([]string, error) {
-	url := fmt.Sprintf("/api/files/walk/?path=%s", path)
+	url := fmt.Sprintf("/api/files/walk?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&[]string{}).
 		Get(url))
@@ -51,7 +51,7 @@ func (inst *Client) Walk(path string) ([]string, error) {
 
 // ReadFile read a files content
 func (inst *Client) ReadFile(path string) ([]byte, error) {
-	url := fmt.Sprintf("/api/files/read/?path=%s", path)
+	url := fmt.Sprintf("/api/files/read?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		Get(url))
 	if err != nil {
@@ -110,7 +110,7 @@ func (inst *Client) WriteFileYml(body *assistmodel.WriteFile) (*model.Message, e
 
 // RenameFile rename a file - use the full name of file and path
 func (inst *Client) RenameFile(oldNameAndPath, newNameAndPath string) (*model.Message, error) {
-	url := fmt.Sprintf("/api/files/rename/?old=%s&new=%s", oldNameAndPath, newNameAndPath)
+	url := fmt.Sprintf("/api/files/rename?old=%s&new=%s", oldNameAndPath, newNameAndPath)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&model.Message{}).
 		Post(url))
@@ -122,7 +122,7 @@ func (inst *Client) RenameFile(oldNameAndPath, newNameAndPath string) (*model.Me
 
 // CopyFile copy a file - use the full name of file and path
 func (inst *Client) CopyFile(from, to string) (*model.Message, error) {
-	url := fmt.Sprintf("/api/files/copy/?from=%s&to=%s", from, to)
+	url := fmt.Sprintf("/api/files/copy?from=%s&to=%s", from, to)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&model.Message{}).
 		Post(url))
@@ -134,7 +134,7 @@ func (inst *Client) CopyFile(from, to string) (*model.Message, error) {
 
 // MoveFile move a file - use the full name of file and path
 func (inst *Client) MoveFile(from, to string) (*model.Message, error) {
-	url := fmt.Sprintf("/api/files/move/?from=%s&to=%s", from, to)
+	url := fmt.Sprintf("/api/files/move?from=%s&to=%s", from, to)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&model.Message{}).
 		Post(url))
@@ -146,7 +146,7 @@ func (inst *Client) MoveFile(from, to string) (*model.Message, error) {
 
 // DeleteFile delete a file - use the full name of file and path
 func (inst *Client) DeleteFile(path string) (*model.Message, error) {
-	url := fmt.Sprintf("/api/files/delete/?path=%s", path)
+	url := fmt.Sprintf("/api/files/delete?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&model.Message{}).
 		Delete(url))
@@ -158,7 +158,7 @@ func (inst *Client) DeleteFile(path string) (*model.Message, error) {
 
 // DeleteAllFiles delete all file's in a dir - use the full name of file and path
 func (inst *Client) DeleteAllFiles(path string) (*model.Message, error) {
-	url := fmt.Sprintf("/api/files/delete/all/?path=%s", path)
+	url := fmt.Sprintf("/api/files/delete/all?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&model.Message{}).
 		Delete(url))
@@ -171,12 +171,12 @@ func (inst *Client) DeleteAllFiles(path string) (*model.Message, error) {
 func (inst *Client) UploadLocalFile(file, destination string) (*assistmodel.EdgeUploadResponse, error) {
 	reader, err := os.Open(file)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error open file:%s err:%s", file, err.Error()))
+		return nil, errors.New(fmt.Sprintf("error open file: %s err: %s", file, err.Error()))
 	}
 	resp, err := inst.Rest.R().
 		SetResult(&assistmodel.EdgeUploadResponse{}).
 		SetFileReader("file", file, reader).
-		Post(fmt.Sprintf("/api/files/upload/?destination=%s", destination))
+		Post(fmt.Sprintf("/api/files/upload?destination=%s", destination))
 	if err != nil {
 		return nil, err
 	}
@@ -188,7 +188,7 @@ func (inst *Client) UploadLocalFile(file, destination string) (*assistmodel.Edge
 
 // DownloadFile download a file
 func (inst *Client) DownloadFile(path, file, destination string) (*assistmodel.EdgeDownloadResponse, error) {
-	url := fmt.Sprintf("/api/files/download/?path=%s&file=%s", path, file)
+	url := fmt.Sprintf("/api/files/download?path=%s&file=%s", path, file)
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetOutput(destination).
 		Post(url))

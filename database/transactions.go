@@ -61,7 +61,6 @@ func (inst *DB) DeleteTransaction(uuid string) (*DeleteMessage, error) {
 	return deleteResponse(query)
 }
 
-// DropTransactions delete all.
 func (inst *DB) DropTransactions() (*DeleteMessage, error) {
 	var m *model.Transaction
 	query := inst.DB.Where("1 = 1")

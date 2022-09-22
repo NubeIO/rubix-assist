@@ -11,7 +11,7 @@ import (
 
 // Walk list all files/dirs in a dir
 func (inst *Client) Walk(path string) ([]string, error) {
-	url := fmt.Sprintf("/api/files/walk/?path=%s", path)
+	url := fmt.Sprintf("/api/files/walk?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&[]string{}).
 		Get(url))
@@ -23,7 +23,7 @@ func (inst *Client) Walk(path string) ([]string, error) {
 
 // ListFiles list all files/dirs in a dir
 func (inst *Client) ListFiles(path string) ([]string, error) {
-	url := fmt.Sprintf("/api/files/list/?path=%s", path)
+	url := fmt.Sprintf("/api/files/list?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&[]string{}).
 		Get(url))
@@ -33,10 +33,9 @@ func (inst *Client) ListFiles(path string) ([]string, error) {
 	return *resp.Result().(*[]string), nil
 }
 
-// RenameFile rename a file
-// use the full name of file and path
+// RenameFile rename a file - use the full name of file and path
 func (inst *Client) RenameFile(oldNameAndPath, newNameAndPath string) (*Message, error) {
-	url := fmt.Sprintf("/api/files/rename/?old=%s&new=%s", oldNameAndPath, newNameAndPath)
+	url := fmt.Sprintf("/api/files/rename?old=%s&new=%s", oldNameAndPath, newNameAndPath)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&Message{}).
 		Post(url))
@@ -46,10 +45,9 @@ func (inst *Client) RenameFile(oldNameAndPath, newNameAndPath string) (*Message,
 	return resp.Result().(*Message), nil
 }
 
-// CopyFile copy a file
-// use the full name of file and path
+// CopyFile copy a file - use the full name of file and path
 func (inst *Client) CopyFile(from, to string) (*Message, error) {
-	url := fmt.Sprintf("/api/files/copy/?from=%s&to=%s", from, to)
+	url := fmt.Sprintf("/api/files/copy?from=%s&to=%s", from, to)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&Message{}).
 		Post(url))
@@ -59,10 +57,9 @@ func (inst *Client) CopyFile(from, to string) (*Message, error) {
 	return resp.Result().(*Message), nil
 }
 
-// MoveFile move a file
-// use the full name of file and path
+// MoveFile move a file - use the full name of file and path
 func (inst *Client) MoveFile(from, to string) (*Message, error) {
-	url := fmt.Sprintf("/api/files/move/?from=%s&to=%s", from, to)
+	url := fmt.Sprintf("/api/files/move?from=%s&to=%s", from, to)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&Message{}).
 		Post(url))
@@ -72,10 +69,9 @@ func (inst *Client) MoveFile(from, to string) (*Message, error) {
 	return resp.Result().(*Message), nil
 }
 
-// DeleteFile delete a file
-// use the full name of file and path
+// DeleteFile delete a file - use the full name of file and path
 func (inst *Client) DeleteFile(path string) (*Message, error) {
-	url := fmt.Sprintf("/api/files/delete/?path=%s", path)
+	url := fmt.Sprintf("/api/files/delete?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&Message{}).
 		Delete(url))
@@ -85,10 +81,9 @@ func (inst *Client) DeleteFile(path string) (*Message, error) {
 	return resp.Result().(*Message), nil
 }
 
-// DeleteAllFiles delete all file's in a dir
-// use the full name of file and path
+// DeleteAllFiles delete all file's in a dir - use the full name of file and path
 func (inst *Client) DeleteAllFiles(path string) (*Message, error) {
-	url := fmt.Sprintf("/api/files/delete/all/?path=%s", path)
+	url := fmt.Sprintf("/api/files/delete/all?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&Message{}).
 		Delete(url))
@@ -98,12 +93,11 @@ func (inst *Client) DeleteAllFiles(path string) (*Message, error) {
 	return resp.Result().(*Message), nil
 }
 
-// DeleteDir delete a dir
-// use the full name of file and path
+// DeleteDir delete a dir - use the full name of file and path
 func (inst *Client) DeleteDir(path string, recursively bool) (*Message, error) {
-	url := fmt.Sprintf("/api/files/delete/?path=%s&recursively=%s", path, "false")
+	url := fmt.Sprintf("/api/files/delete?path=%s&recursively=%s", path, "false")
 	if recursively {
-		url = fmt.Sprintf("/api/files/delete/?path=%s&recursively=%s", path, "true")
+		url = fmt.Sprintf("/api/files/delete?path=%s&recursively=%s", path, "true")
 	}
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&Message{}).
@@ -116,7 +110,7 @@ func (inst *Client) DeleteDir(path string, recursively bool) (*Message, error) {
 
 // UploadFile upload file
 func (inst *Client) UploadFile(destination, fileName string, file io.Reader) (*EdgeUploadResponse, error) {
-	url := fmt.Sprintf("/api/files/upload/?destination=%s", destination)
+	url := fmt.Sprintf("/api/files/upload?destination=%s", destination)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&EdgeUploadResponse{}).
 		SetFileReader("file", fileName, file).
@@ -131,12 +125,12 @@ func (inst *Client) UploadLocalFile(path, fileName, destination string) (*EdgeUp
 	fileAndPath := filepath.FromSlash(fmt.Sprintf("%s/%s", path, fileName))
 	reader, err := os.Open(fileAndPath)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error open file:%s err:%s", fileAndPath, err.Error()))
+		return nil, errors.New(fmt.Sprintf("error open file: %s err: %s", fileAndPath, err.Error()))
 	}
 	resp, err := inst.Rest.R().
 		SetResult(&EdgeUploadResponse{}).
 		SetFileReader("file", fileName, reader).
-		Post(fmt.Sprintf("/api/files/upload/?destination=%s", destination))
+		Post(fmt.Sprintf("/api/files/upload?destination=%s", destination))
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +148,7 @@ type DownloadResponse struct {
 
 // DownloadFile download a file
 func (inst *Client) DownloadFile(path, file, destination string) (*DownloadResponse, error) {
-	url := fmt.Sprintf("/api/files/download/?path=%s&file=%s", path, file)
+	url := fmt.Sprintf("/api/files/download?path=%s&file=%s", path, file)
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetOutput(destination).
 		Post(url))

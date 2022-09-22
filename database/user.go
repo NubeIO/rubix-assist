@@ -49,7 +49,6 @@ func (inst *DB) DeleteUser(uuid string) (*DeleteMessage, error) {
 	return deleteResponse(query)
 }
 
-// DropUsers delete all.
 func (inst *DB) DropUsers() (*DeleteMessage, error) {
 	var m *model.User
 	query := inst.DB.Where("1 = 1")

@@ -6,7 +6,6 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// AddProducer an object
 func (inst *Client) AddProducer(hostIDName string, body *model.Producer) (*model.Producer, error) {
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -20,7 +19,6 @@ func (inst *Client) AddProducer(hostIDName string, body *model.Producer) (*model
 	return resp.Result().(*model.Producer), nil
 }
 
-// EditProducer edit an object
 func (inst *Client) EditProducer(hostIDName, uuid string, body *model.Producer) (*model.Producer, error) {
 	url := fmt.Sprintf("proxy/ff/api/producers/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -35,7 +33,6 @@ func (inst *Client) EditProducer(hostIDName, uuid string, body *model.Producer) 
 	return resp.Result().(*model.Producer), nil
 }
 
-// GetProducers an object
 func (inst *Client) GetProducers(hostIDName string) ([]model.Producer, error) {
 	url := fmt.Sprintf("proxy/ff/api/producers")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -51,7 +48,6 @@ func (inst *Client) GetProducers(hostIDName string) ([]model.Producer, error) {
 	return out, nil
 }
 
-// GetProducer an object
 func (inst *Client) GetProducer(hostIDName, uuid string) (*model.Producer, error) {
 	url := fmt.Sprintf("proxy/ff/api/producers/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -65,7 +61,6 @@ func (inst *Client) GetProducer(hostIDName, uuid string) (*model.Producer, error
 	return resp.Result().(*model.Producer), nil
 }
 
-// DeleteProducer an object
 func (inst *Client) DeleteProducer(hostIDName, uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).

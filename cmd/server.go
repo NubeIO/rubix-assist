@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/database"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
@@ -28,7 +27,6 @@ func runServer(cmd *cobra.Command, args []string) {
 	host := "0.0.0.0"
 	port := config.Config.GetPort()
 	logger.Infof("Server is starting at %s:%s", host, port)
-	fmt.Printf("server is running at %s:%s Check logs for details\n", host, port)
 	log.Fatalf("%v", r.Run(host+":"+port))
 }
 

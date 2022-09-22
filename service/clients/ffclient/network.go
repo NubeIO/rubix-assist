@@ -6,7 +6,6 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// AddNetwork an object
 func (inst *FlowClient) AddNetwork(body *model.Network) (*model.Network, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Network{}).
@@ -18,7 +17,6 @@ func (inst *FlowClient) AddNetwork(body *model.Network) (*model.Network, error) 
 	return resp.Result().(*model.Network), nil
 }
 
-// EditNetwork edit an object
 func (inst *FlowClient) EditNetwork(uuid string, device *model.Network) (*model.Network, error) {
 	url := fmt.Sprintf("/api/networks/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -31,7 +29,6 @@ func (inst *FlowClient) EditNetwork(uuid string, device *model.Network) (*model.
 	return resp.Result().(*model.Network), nil
 }
 
-// GetNetworkByPluginName an object
 func (inst *FlowClient) GetNetworkByPluginName(pluginName string, withPoints ...bool) (*model.Network, error) {
 	url := fmt.Sprintf("/api/networks/plugin/%s", pluginName)
 	if len(withPoints) > 0 {
@@ -46,12 +43,11 @@ func (inst *FlowClient) GetNetworkByPluginName(pluginName string, withPoints ...
 	return resp.Result().(*model.Network), nil
 }
 
-// GetNetworks an object
 func (inst *FlowClient) GetNetworks(withDevices ...bool) ([]model.Network, error) {
 	url := fmt.Sprintf("/api/networks")
 	if len(withDevices) > 0 {
 		if withDevices[0] == true {
-			url = fmt.Sprintf("/api/networks/?with_devices=true")
+			url = fmt.Sprintf("/api/networks?with_devices=true")
 		}
 
 	}
@@ -66,11 +62,10 @@ func (inst *FlowClient) GetNetworks(withDevices ...bool) ([]model.Network, error
 	return out, nil
 }
 
-// GetNetworksWithPoints an object
 func (inst *FlowClient) GetNetworksWithPoints() ([]model.Network, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&[]model.Network{}).
-		Get("/api/networks/?with_points=true"))
+		Get("/api/networks?with_points=true"))
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +74,6 @@ func (inst *FlowClient) GetNetworksWithPoints() ([]model.Network, error) {
 	return out, nil
 }
 
-// GetNetworkWithPoints an object
 func (inst *FlowClient) GetNetworkWithPoints(uuid string) (*model.Network, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Network{}).
@@ -91,7 +85,6 @@ func (inst *FlowClient) GetNetworkWithPoints(uuid string) (*model.Network, error
 	return resp.Result().(*model.Network), nil
 }
 
-// GetFirstNetwork first object
 func (inst *FlowClient) GetFirstNetwork(withDevices ...bool) (*model.Network, error) {
 	nets, err := inst.GetNetworks(withDevices...)
 	if err != nil {

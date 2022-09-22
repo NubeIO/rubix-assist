@@ -6,7 +6,6 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// AddProducer an object
 func (inst *FlowClient) AddProducer(body *model.Producer) (*model.Producer, error) {
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Producer{}).
@@ -18,7 +17,6 @@ func (inst *FlowClient) AddProducer(body *model.Producer) (*model.Producer, erro
 	return resp.Result().(*model.Producer), nil
 }
 
-// EditProducer edit an object
 func (inst *FlowClient) EditProducer(uuid string, body *model.Producer) (*model.Producer, error) {
 	url := fmt.Sprintf("/api/producers/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -31,7 +29,6 @@ func (inst *FlowClient) EditProducer(uuid string, body *model.Producer) (*model.
 	return resp.Result().(*model.Producer), nil
 }
 
-// GetProducers an object
 func (inst *FlowClient) GetProducers() ([]model.Producer, error) {
 	url := fmt.Sprintf("/api/producers")
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -45,7 +42,6 @@ func (inst *FlowClient) GetProducers() ([]model.Producer, error) {
 	return out, nil
 }
 
-// GetProducer an object
 func (inst *FlowClient) GetProducer(uuid string) (*model.Producer, error) {
 	url := fmt.Sprintf("/api/producers/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
@@ -57,7 +53,6 @@ func (inst *FlowClient) GetProducer(uuid string) (*model.Producer, error) {
 	return resp.Result().(*model.Producer), nil
 }
 
-// DeleteProducer an object
 func (inst *FlowClient) DeleteProducer(uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.client.R().
 		SetPathParams(map[string]string{"uuid": uuid}).

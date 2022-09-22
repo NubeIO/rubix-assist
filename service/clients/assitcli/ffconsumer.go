@@ -6,7 +6,6 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 )
 
-// AddConsumer an object
 func (inst *Client) AddConsumer(hostIDName string, body *model.Consumer) (*model.Consumer, error) {
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -20,7 +19,6 @@ func (inst *Client) AddConsumer(hostIDName string, body *model.Consumer) (*model
 	return resp.Result().(*model.Consumer), nil
 }
 
-// EditConsumer edit an object
 func (inst *Client) EditConsumer(hostIDName, uuid string, body *model.Consumer) (*model.Consumer, error) {
 	url := fmt.Sprintf("proxy/ff/api/consumers/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -35,7 +33,6 @@ func (inst *Client) EditConsumer(hostIDName, uuid string, body *model.Consumer) 
 	return resp.Result().(*model.Consumer), nil
 }
 
-// GetConsumers an object
 func (inst *Client) GetConsumers(hostIDName string) ([]model.Consumer, error) {
 	url := fmt.Sprintf("proxy/ff/api/consumers")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -51,7 +48,6 @@ func (inst *Client) GetConsumers(hostIDName string) ([]model.Consumer, error) {
 	return out, nil
 }
 
-// GetConsumer an object
 func (inst *Client) GetConsumer(hostIDName, uuid string) (*model.Consumer, error) {
 	url := fmt.Sprintf("proxy/ff/api/consumers/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -65,7 +61,6 @@ func (inst *Client) GetConsumer(hostIDName, uuid string) (*model.Consumer, error
 	return resp.Result().(*model.Consumer), nil
 }
 
-// DeleteConsumer an object
 func (inst *Client) DeleteConsumer(hostIDName, uuid string) (bool, error) {
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).

@@ -77,7 +77,6 @@ func (inst *DB) DeleteHostNetwork(uuid string) (*DeleteMessage, error) {
 	return deleteResponse(query)
 }
 
-// DropHostNetworks delete all.
 func (inst *DB) DropHostNetworks() (*DeleteMessage, error) {
 	var m *model.Network
 	query := inst.DB.Where("1 = 1")

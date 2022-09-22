@@ -69,7 +69,7 @@ func (inst *Store) getHost(hostUUID, hostName string) (*model.Host, error) {
 				hostUUIDs = append(hostUUIDs, h.UUID)
 				count++
 			}
-			return nil, errors.New(fmt.Sprintf("no valid host was found: host count:%d, host names found:%v uuids:%v", count, hostNames, hostUUIDs))
+			return nil, errors.New(fmt.Sprintf("no valid host was found: host count: %d, host names found: %v uuids: %v", count, hostNames, hostUUIDs))
 		}
 	}
 	return host, nil

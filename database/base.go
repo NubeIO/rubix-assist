@@ -15,7 +15,7 @@ type DeleteMessage struct {
 
 func deleteResponse(query *gorm.DB) (*DeleteMessage, error) {
 	msg := &DeleteMessage{
-		Message: fmt.Sprintf("no record found, deleted count:%d", 0),
+		Message: fmt.Sprintf("no record found, deleted count: %d", 0),
 	}
 	if query.Error != nil {
 		return msg, query.Error
@@ -24,7 +24,7 @@ func deleteResponse(query *gorm.DB) (*DeleteMessage, error) {
 	if r == 0 {
 		return msg, query.Error
 	}
-	msg.Message = fmt.Sprintf("deleted count:%d", query.RowsAffected)
+	msg.Message = fmt.Sprintf("deleted count: %d", query.RowsAffected)
 	return msg, nil
 }
 
