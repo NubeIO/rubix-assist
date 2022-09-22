@@ -13,19 +13,17 @@ func TestStore_GenerateUploadEdgeService(t *testing.T) {
 	appVersion := "v0.6.0"
 	appStore, err := New(&Store{
 		App: &installer.App{
-			DataDir:  "/data",
-			FilePerm: nonRoot,
+			DataDir: "/data",
 		},
-		Perm: nonRoot,
 	})
 	fmt.Println(err)
-	resp, err := appStore.GenerateUploadEdgeService("", "rc", &ServiceFile{
+	resp, err := appStore.GenerateServiceFileAndEdgeUpload("", "rc", &ServiceFile{
 		Name:                    appName,
 		Version:                 appVersion,
 		ServiceDescription:      "",
 		RunAsUser:               "",
 		ServiceWorkingDirectory: "",
-		AppSpecficExecStart:     "app -p 1660 -g /data/flow-framework -d data -prod",
+		AppSpecificExecStart:    "app -p 1660 -g /data/flow-framework -d data -prod",
 	})
 	fmt.Println(err)
 	if err != nil {

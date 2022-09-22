@@ -2,79 +2,67 @@ package appstore
 
 import (
 	"errors"
-	"fmt"
-	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
+	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	log "github.com/sirupsen/logrus"
+	"path"
 )
 
-func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *EdgeConfig) (*edgecli.Message, error) {
+func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.EdgeConfig) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
 	}
-	appName := body.AppName
-	if appName == "" {
-		return nil, errors.New("app-name can not be empty")
+	if body.AppName == "" {
+		return nil, errors.New("app_name can not be empty")
 	}
-	configName := body.ConfigType
+	configName := body.ConfigName
 	if configName == "" {
 		configName = "config.yml"
 	}
-	path := inst.App.GetAppConfigPath(appName)
-	if path == "" {
-		return nil, errors.New(fmt.Sprintf("not config path for for app:%s", appName))
-	}
-	exists, err := inst.EdgeDirExists(hostUUID, hostName, path)
+	appDataConfigPath := inst.App.GetAppDataConfigPath(body.AppName)
+	exists, err := inst.EdgeDirExists(hostUUID, hostName, appDataConfigPath)
 	if err != nil {
 		return nil, err
 	}
 	if !exists {
-		dir, err := inst.EdgeCreateDir(hostUUID, hostName, path)
+		dir, err := inst.EdgeCreateDir(hostUUID, hostName, appDataConfigPath)
 		if err != nil {
 			return nil, err
 		}
-		log.Infof("made config dir as was not existing:%s", dir.Message)
+		log.Infof("made config dir as was not existing: %s", dir.Message)
 	}
-	fileNamePath := fmt.Sprintf("%s/%s", path, configName)
+	absoluteAppDataConfigName := path.Join(appDataConfigPath, configName)
 
-	writeBody := &edgecli.WriteFile{
-		FilePath: fileNamePath,
-		Body:     body.Body,
+	writeFile := &assistmodel.WriteFile{
+		FilePath:     absoluteAppDataConfigName,
+		Body:         body.Body,
+		BodyAsString: body.BodyAsString,
 	}
 	if configName == "config.yml" {
-		return client.WriteFileYml(writeBody)
+		return client.WriteFileYml(writeFile)
 	} else if configName == ".env" {
-		writeBody.BodyAsString = body.BodyAsString
-		return client.WriteFile(writeBody)
+		return client.WriteString(writeFile)
 	} else if configName == "config.json" {
-		return client.WriteFileJson(writeBody)
+		return client.WriteFileJson(writeFile)
 	}
 
-	return nil, errors.New("no valid config type, config.yml or .env or config.json")
+	return nil, errors.New("no valid config_name, config.yml or .env or config.json")
 }
 
-type EdgeConfig struct {
-	AppName      string      `json:"app_name,omitempty"`
-	Body         interface{} `json:"body"` // used when writing data
-	BodyAsString string      `json:"body_as_string"`
-	Data         []byte      `json:"data"` // used for reading data
-	Path         string      `json:"path,omitempty"`
-	ConfigType   string      `json:"config_type,omitempty"` // config.yml
-}
-
-func (inst *Store) EdgeReadConfig(hostUUID, hostName, appName, configName string) (*EdgeConfig, error) {
+func (inst *Store) EdgeReadConfig(hostUUID, hostName, appName, configName string) (*assistmodel.EdgeConfigResponse, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
 	}
-	path := inst.App.GetAppConfigPath(appName)
-	fileNamePath := fmt.Sprintf("%s/%s", path, configName)
-	file, err := client.ReadFile(fileNamePath)
+	appDataConfigPath := inst.App.GetAppDataConfigPath(appName)
+	absoluteAppDataConfigName := path.Join(appDataConfigPath, configName)
+	file, err := client.ReadFile(absoluteAppDataConfigName)
 	if err != nil {
 		return nil, err
 	}
-	return &EdgeConfig{
-		Data: file,
-		Path: fileNamePath,
+	return &assistmodel.EdgeConfigResponse{
+		Data:     file,
+		FilePath: absoluteAppDataConfigName,
 	}, nil
 }

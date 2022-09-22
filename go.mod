@@ -2,9 +2,10 @@ module github.com/NubeIO/rubix-assist
 
 go 1.17
 
-//replace github.com/NubeIO/lib-rubix-installer => /home/aidan/code/go/nube/lib/lib-rubix-installer
+//replace github.com/NubeIO/lib-rubix-installer => /Users/raibnod/Enviro/lib-rubix-installer
+//replace github.com/NubeIO/lib-systemctl-go => /Users/raibnod/Enviro/lib-systemctl-go
 //replace github.com/NubeIO/lib-schema => /home/aidan/code/go/nube/lib/lib-schema
-//replace github.com/NubeIO/rubix-edge => /home/aidan/code/go/nube/rubix-edge
+//replace github.com/NubeIO/rubix-edge => /Users/raibnod/Enviro/rubix-edge
 
 require (
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7
@@ -45,7 +46,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
-	github.com/pkg/errors v0.9.1
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
@@ -66,22 +67,21 @@ require (
 	github.com/NubeIO/lib-dhcpd v0.0.2
 	github.com/NubeIO/lib-files v0.1.1
 	github.com/NubeIO/lib-networking v0.0.7
-	github.com/NubeIO/lib-rubix-installer v0.2.2
+	github.com/NubeIO/lib-rubix-installer v0.3.0
 	github.com/NubeIO/lib-schema v0.1.4
-	github.com/NubeIO/lib-systemctl-go v0.1.2
+	github.com/NubeIO/lib-systemctl-go v0.2.0
 	github.com/NubeIO/lib-ufw v0.0.3
 	github.com/NubeIO/lib-uuid v0.0.3
 	github.com/NubeIO/nubeio-rubix-lib-auth-go v1.0.3
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.4
-	github.com/NubeIO/rubix-edge v0.2.0
+	github.com/NubeIO/rubix-edge v0.3.0
+	github.com/NubeIO/rubix-registry-go v0.0.1
 	github.com/google/uuid v1.1.2
 	github.com/sergeymakinen/go-systemdconf/v2 v2.0.2
 	gorm.io/datatypes v1.0.6
 )
 
 require (
-	github.com/NubeIO/lib-command v0.0.2 // indirect
-	github.com/NubeIO/lib-dirs v0.0.8 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect

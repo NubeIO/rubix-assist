@@ -1,17 +1,15 @@
 package controller
 
-import (
-	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
-	"github.com/gin-gonic/gin"
-)
+import "github.com/gin-gonic/gin"
 
-func (inst *Controller) AssistPing(c *gin.Context) {
+func (inst *Controller) EdgeDirExists(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	data := inst.Store.AssistPing(host.UUID, host.Name)
+	path := c.Query("path")
+	data, err := inst.Store.EdgeDirExists(host.UUID, host.Name, path)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
@@ -19,15 +17,14 @@ func (inst *Controller) AssistPing(c *gin.Context) {
 	responseHandler(data, nil, c)
 }
 
-func (inst *Controller) EdgePing(c *gin.Context) {
+func (inst *Controller) EdgeCreateDir(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *edgecli.PingBody
-	err = c.ShouldBindJSON(&m)
-	data, err := inst.Store.EdgePing(host.UUID, host.Name, m)
+	path := c.Query("path")
+	data, err := inst.Store.EdgeCreateDir(host.UUID, host.Name, path)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return

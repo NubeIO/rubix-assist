@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/networking/ssh"
 	"github.com/NubeIO/nubeio-rubix-lib-rest-go/pkg/rest"
+	model2 "github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"net/http"
 
@@ -18,7 +19,6 @@ import (
 const root = 0755
 
 var filePerm = root
-var err error
 
 type Controller struct {
 	SSH   *goph.Client
@@ -100,7 +100,7 @@ func responseHandler(body interface{}, err error, c *gin.Context, statusCode ...
 		} else {
 			code = http.StatusNotFound
 		}
-		msg := Message{
+		msg := model2.Message{
 			Message: err.Error(),
 		}
 		c.JSON(code, msg)
@@ -115,14 +115,10 @@ func responseHandler(body interface{}, err error, c *gin.Context, statusCode ...
 	}
 }
 
-type Message struct {
-	Message interface{} `json:"message"`
-}
-
 // hostCopy copy same types from this host to the host needed for ssh.Host
 func (inst *Controller) hostCopy(host *model.Host) (ssh.Host, error) {
 	h := new(ssh.Host)
-	err = copier.Copy(&h, &host)
+	err := copier.Copy(&h, &host)
 	if err != nil {
 		fmt.Println(err)
 		return *h, err

@@ -2,9 +2,9 @@ package assitcli
 
 import (
 	"fmt"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
-	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 )
 
 type EdgeUploadResponse struct {
@@ -45,30 +45,30 @@ func (inst *Client) ListPlugins(hostIDName string) ([]appstore.Plugin, error) {
 }
 
 // DeletePlugin delete one
-func (inst *Client) DeletePlugin(hostIDName string, body *appstore.Plugin) (*edgecli.Message, error) {
+func (inst *Client) DeletePlugin(hostIDName string, body *appstore.Plugin) (*model.Message, error) {
 	url := fmt.Sprintf("/api/edge/plugins")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
-		SetResult(&edgecli.Message{}).
+		SetResult(&model.Message{}).
 		SetBody(body).
 		Delete(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*edgecli.Message), nil
+	return resp.Result().(*model.Message), nil
 }
 
 // DeleteAllPlugins delete all
-func (inst *Client) DeleteAllPlugins(hostIDName string) (*edgecli.Message, error) {
+func (inst *Client) DeleteAllPlugins(hostIDName string) (*model.Message, error) {
 	url := fmt.Sprintf("/api/edge/plugins/all")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
-		SetResult(&edgecli.Message{}).
+		SetResult(&model.Message{}).
 		Delete(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*edgecli.Message), nil
+	return resp.Result().(*model.Message), nil
 }

@@ -35,7 +35,7 @@ func (inst *Controller) GetHostNetworks(c *gin.Context) {
 
 func (inst *Controller) CreateHostNetwork(c *gin.Context) {
 	m := new(model.Network)
-	err = c.ShouldBindJSON(&m)
+	err := c.ShouldBindJSON(&m)
 	host, err := inst.DB.CreateHostNetwork(m)
 	if err != nil {
 		responseHandler(nil, err, c)

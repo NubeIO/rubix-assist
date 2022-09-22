@@ -15,62 +15,34 @@ func (inst *Controller) EdgeListApps(c *gin.Context) {
 		return
 	}
 	data, err := inst.Store.EdgeListApps(host.UUID, host.Name)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
+	responseHandler(data, err, c)
 }
 
-// EdgeListAppsAndService get all the apps by listed in the installation (/data/rubix-service/apps/install) dir and then check the service
-func (inst *Controller) EdgeListAppsAndService(c *gin.Context) {
+// EdgeListAppsStatus get all the apps status
+func (inst *Controller) EdgeListAppsStatus(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	data, err := inst.Store.EdgeListAppsAndService(host.UUID, host.Name)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
+	data, err := inst.Store.EdgeListAppsStatus(host.UUID, host.Name)
+	responseHandler(data, err, c)
 }
 
-// EdgeListNubeServices list all the services by filtering all the service files with name nubeio
-func (inst *Controller) EdgeListNubeServices(c *gin.Context) {
+// EdgeUploadApp uploads the build
+func (inst *Controller) EdgeUploadApp(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	data, err := inst.Store.EdgeListNubeServices(host.UUID, host.Name)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
-}
-
-// AddUploadEdgeApp
-// upload the build
-func (inst *Controller) AddUploadEdgeApp(c *gin.Context) {
-	host, err := inst.resolveHost(c)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	var m *appstore.EdgeApp
+	var m *installer.Upload
 	err = c.ShouldBindJSON(&m)
-	data, err := inst.Store.AddUploadEdgeApp(host.UUID, host.Name, m)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
+	data, err := inst.Store.EdgeUploadApp(host.UUID, host.Name, m)
+	responseHandler(data, err, c)
 }
 
-func (inst *Controller) GenerateUploadEdgeService(c *gin.Context) {
+func (inst *Controller) GenerateServiceFileAndEdgeUpload(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {
 		responseHandler(nil, err, c)
@@ -78,15 +50,12 @@ func (inst *Controller) GenerateUploadEdgeService(c *gin.Context) {
 	}
 	var m *appstore.ServiceFile
 	err = c.ShouldBindJSON(&m)
-	data, err := inst.Store.GenerateUploadEdgeService(host.UUID, host.Name, m)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
+
+	data, err := inst.Store.GenerateServiceFileAndEdgeUpload(host.UUID, host.Name, m)
+	responseHandler(data, err, c)
 }
 
-func (inst *Controller) InstallEdgeService(c *gin.Context) {
+func (inst *Controller) EdgeInstallService(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {
 		responseHandler(nil, err, c)
@@ -94,12 +63,8 @@ func (inst *Controller) InstallEdgeService(c *gin.Context) {
 	}
 	var m *installer.Install
 	err = c.ShouldBindJSON(&m)
-	data, err := inst.Store.InstallEdgeService(host.UUID, host.Name, m)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
+	data, err := inst.Store.EdgeInstallService(host.UUID, host.Name, m)
+	responseHandler(data, err, c)
 }
 
 // EdgeUninstallApp full uninstallation of an app
@@ -110,10 +75,6 @@ func (inst *Controller) EdgeUninstallApp(c *gin.Context) {
 		return
 	}
 	deleteApp, _ := strconv.ParseBool(c.Query("delete"))
-	data, err := inst.Store.EdgeUnInstallApp(host.UUID, host.Name, c.Query("name"), deleteApp)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(data, nil, c)
+	data, err := inst.Store.EdgeUninstallApp(host.UUID, host.Name, c.Query("name"), deleteApp)
+	responseHandler(data, err, c)
 }

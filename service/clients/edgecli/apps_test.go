@@ -2,7 +2,6 @@ package edgecli
 
 import (
 	"fmt"
-	"github.com/NubeIO/lib-rubix-installer/installer"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"testing"
 )
@@ -34,35 +33,10 @@ func Test_ListApps(*testing.T) {
 
 func Test_ListAppsAndService(*testing.T) {
 	cli := New(&Client{})
-	apps, err := cli.ListAppsAndService()
+	apps, err := cli.ListAppsStatus()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	pprint.PrintJSON(apps)
-}
-
-func Test_ListNubeServices(*testing.T) {
-	cli := New(&Client{})
-	apps, err := cli.ListNubeServices()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	pprint.PrintJSON(apps)
-}
-
-func Test_InstallApp(*testing.T) {
-	cli := New(&Client{})
-	file, err := cli.InstallApp(&installer.Install{
-		Name: appName,
-
-		Version: appVersion,
-		Source:  source,
-	})
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	pprint.PrintJSON(file)
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/system/files"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 	"os"
 	"path"
@@ -16,6 +17,7 @@ func (inst *Controller) Unzip(c *gin.Context) {
 	destination := c.Query("destination")
 	perm := c.Query("permission")
 	var permission int
+	var err error
 	if perm == "" {
 		permission = filePerm
 	} else {
@@ -38,16 +40,12 @@ func (inst *Controller) Unzip(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	responseHandler(Message{Message: fmt.Sprintf("unzipped successfully, files count: %d", len(zip))}, err, c)
+	responseHandler(model.Message{Message: fmt.Sprintf("unzipped successfully, files count: %d", len(zip))}, err, c)
 }
 
 func (inst *Controller) ZipDir(c *gin.Context) {
 	source := c.Query("source")
 	destination := c.Query("destination")
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
 	pathToZip := source
 	if source == "" {
 		responseHandler(nil, errors.New("zip source can not be empty, try /data/flow-framework"), c)
@@ -73,5 +71,5 @@ func (inst *Controller) ZipDir(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	responseHandler(Message{Message: fmt.Sprintf("zip file is created on: %s", destination)}, nil, c)
+	responseHandler(model.Message{Message: fmt.Sprintf("zip file is created on: %s", destination)}, nil, c)
 }

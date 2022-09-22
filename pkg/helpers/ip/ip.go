@@ -25,7 +25,7 @@ func checkIPAddress(ip string) bool {
 
 func isValidURL(toCheck string) *Valid {
 	resp := &Valid{}
-	// Check it's an Absolute URL or absolute path
+	// Check it's an Absolute Ip or absolute path
 	uri, err := url.ParseRequestURI(CheckHTTP(toCheck))
 	if err != nil {
 		resp.Error = err

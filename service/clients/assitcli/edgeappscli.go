@@ -3,14 +3,17 @@ package assitcli
 import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/lib-systemctl-go/systemd"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
 	"strconv"
 )
 
-// AddUploadEdgeApp upload an app to the edge device
-func (inst *Client) AddUploadEdgeApp(hostIDName string, app *appstore.EdgeApp) (*installer.AppResponse, error) {
-	url := fmt.Sprintf("/api/edge/apps/add")
+// TODO: have this on rubix-ui
+
+// EdgeUploadApp upload an app to the edge device
+func (inst *Client) EdgeUploadApp(hostIDName string, app *installer.Upload) (*installer.AppResponse, error) {
+	url := fmt.Sprintf("/api/edge/apps/upload")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
@@ -23,8 +26,8 @@ func (inst *Client) AddUploadEdgeApp(hostIDName string, app *appstore.EdgeApp) (
 	return resp.Result().(*installer.AppResponse), nil
 }
 
-// UploadEdgeService generate a service file and upload it to edge device
-func (inst *Client) UploadEdgeService(hostIDName string, app *appstore.ServiceFile) (*appstore.UploadResponse, error) {
+// EdgeUploadService generate a service file and upload it to edge device
+func (inst *Client) EdgeUploadService(hostIDName string, app *appstore.ServiceFile) (*appstore.UploadResponse, error) {
 	url := fmt.Sprintf("/api/edge/apps/service/upload")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
@@ -39,32 +42,32 @@ func (inst *Client) UploadEdgeService(hostIDName string, app *appstore.ServiceFi
 }
 
 // InstallEdgeService this assumes that the service file and app already exists on the edge device
-func (inst *Client) InstallEdgeService(hostIDName string, body *installer.Install) (*installer.InstallResp, error) {
+func (inst *Client) InstallEdgeService(hostIDName string, body *installer.Install) (*systemd.InstallResponse, error) {
 	url := fmt.Sprintf("/api/edge/apps/service/install")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
-		SetResult(&installer.InstallResp{}).
+		SetResult(&systemd.InstallResponse{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*installer.InstallResp), nil
+	return resp.Result().(*systemd.InstallResponse), nil
 }
 
-// EdgeUnInstallApp remove/delete an app and its service
-func (inst *Client) EdgeUnInstallApp(hostIDName, appName string, deleteApp bool) (*installer.RemoveRes, error) {
-	url := fmt.Sprintf("/api/edge/apps/?name=%s&delete=%s", appName, strconv.FormatBool(deleteApp))
+// EdgeUninstallApp remove/delete an app and its service
+func (inst *Client) EdgeUninstallApp(hostIDName, appName string, deleteApp bool) (*systemd.UninstallResponse, error) {
+	url := fmt.Sprintf("/api/edge/apps?name=%s&delete=%s", appName, strconv.FormatBool(deleteApp))
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
-		SetResult(&installer.RemoveRes{}).
+		SetResult(&systemd.UninstallResponse{}).
 		Delete(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*installer.RemoveRes), nil
+	return resp.Result().(*systemd.UninstallResponse), nil
 }
 
 // EdgeListApps apps by listed in the installation (/data/rubix-service/apps/install)
@@ -82,32 +85,17 @@ func (inst *Client) EdgeListApps(hostIDName string) ([]installer.Apps, error) {
 	return *data, nil
 }
 
-// EdgeListAppsAndService get all the apps by listed in the installation (/data/rubix-service/apps/install) dir and then check the service
-func (inst *Client) EdgeListAppsAndService(hostIDName string) ([]installer.InstalledServices, error) {
-	url := fmt.Sprintf("/api/edge/apps/services")
+// EdgeListAppsStatus get all the apps with its status
+func (inst *Client) EdgeListAppsStatus(hostIDName string) ([]installer.AppsStatus, error) {
+	url := fmt.Sprintf("/api/edge/apps/status")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
-		SetResult(&[]installer.InstalledServices{}).
+		SetResult(&[]installer.AppsStatus{}).
 		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	data := resp.Result().(*[]installer.InstalledServices)
-	return *data, nil
-}
-
-// EdgeListNubeServices list all the services by filtering all the service files with name nubeio
-func (inst *Client) EdgeListNubeServices(hostIDName string) ([]installer.InstalledServices, error) {
-	url := fmt.Sprintf("/api/edge/apps/services/nube")
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetHeader("host_uuid", hostIDName).
-		SetHeader("host_name", hostIDName).
-		SetResult(&[]installer.InstalledServices{}).
-		Get(url))
-	if err != nil {
-		return nil, err
-	}
-	data := resp.Result().(*[]installer.InstalledServices)
+	data := resp.Result().(*[]installer.AppsStatus)
 	return *data, nil
 }

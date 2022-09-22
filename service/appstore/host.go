@@ -14,13 +14,13 @@ func (inst *Store) getClient(hostUUID, hostName string) (*edgecli.Client, error)
 	}
 	ip := host.IP
 	port := host.Port
-	return inst.newClient(ip, host.Username, host.Password, port)
+	return inst.newClient(ip, port)
 }
 
-func (inst *Store) newClient(ip, user, password string, port int) (*edgecli.Client, error) {
+func (inst *Store) newClient(ip string, port int) (*edgecli.Client, error) {
 	cli := edgecli.New(&edgecli.Client{
 		Rest:  nil,
-		URL:   ip,
+		Ip:    ip,
 		Port:  port,
 		HTTPS: false,
 	})

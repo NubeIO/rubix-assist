@@ -7,5 +7,5 @@ import (
 
 func (inst *Controller) HostTime(c *gin.Context) {
 	data := datelib.New(&datelib.Date{}).SystemTime()
-	responseHandler(data, err, c)
+	responseHandler(data, nil, c)
 }

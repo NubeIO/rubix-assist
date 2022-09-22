@@ -6,14 +6,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type Message struct {
-	Message interface{} `json:"message"`
-	Data    interface{} `json:"data,omitempty"`
-}
-
 type Client struct {
 	Rest  *resty.Client
-	URL   string `json:"url"`
+	Ip    string `json:"ip"`
 	Port  int    `json:"port"`
 	HTTPS bool   `json:"https"`
 }
@@ -22,20 +17,21 @@ type Client struct {
 func New(cli *Client) *Client {
 	if cli == nil {
 		log.Fatal("rubix-service-rest-client can not be empty")
+		return nil
 	}
-	var url = cli.URL
+	var ip = cli.Ip
 	var port = cli.Port
 	cli.Rest = resty.New()
-	if url == "" {
-		url = "0.0.0.0"
+	if ip == "" {
+		ip = "0.0.0.0"
 	}
 	if port == 0 {
 		port = 1661
 	}
 	if cli.HTTPS {
-		cli.Rest.SetBaseURL(fmt.Sprintf("https://%s:%d", url, port))
+		cli.Rest.SetBaseURL(fmt.Sprintf("https://%s:%d", ip, port))
 	} else {
-		cli.Rest.SetBaseURL(fmt.Sprintf("http://%s:%d", url, port))
+		cli.Rest.SetBaseURL(fmt.Sprintf("http://%s:%d", ip, port))
 	}
 	return cli
 }
