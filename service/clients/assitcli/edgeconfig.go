@@ -21,15 +21,15 @@ func (inst *Client) EdgeWriteConfig(hostIDName string, app *assistmodel.EdgeConf
 	return resp.Result().(*Message), nil
 }
 
-func (inst *Client) EdgeReadConfig(hostIDName, appName, configName string) (*assistmodel.EdgeConfigResponse, error) {
+func (inst *Client) EdgeReadConfig(hostIDName, appName, configName string) (*assistmodel.EdgeConfigResponse, error, error) {
 	url := fmt.Sprintf("/api/edge/config?app_name=%s&config_name=%s", appName, configName)
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+	resp, connectionError, requestErr := nresty.FormatRestyV2Response(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).
 		SetHeader("host_name", hostIDName).
 		SetResult(&assistmodel.EdgeConfigResponse{}).
 		Get(url))
-	if err != nil {
-		return nil, err
+	if connectionError != nil || requestErr != nil {
+		return nil, connectionError, requestErr
 	}
-	return resp.Result().(*assistmodel.EdgeConfigResponse), nil
+	return resp.Result().(*assistmodel.EdgeConfigResponse), nil, nil
 }
