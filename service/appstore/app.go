@@ -5,36 +5,6 @@ import (
 	"io/ioutil"
 )
 
-// Making an app
-// make the app appstore dirs
-
-type App struct {
-	Name    string `json:"name"`    // rubix-wires
-	Version string `json:"version"` // v1.1.1
-}
-
-// AddApp make all the app appstore dirs
-func (inst *Store) AddApp(app *App) (*App, error) {
-	appName := app.Name
-	version := app.Version
-	if err := inst.App.MakeDataDir(); err != nil {
-		return nil, err
-	}
-	if err := inst.makeStoreDir(); err != nil {
-		return nil, err
-	}
-	if err := inst.makeAppsStoreDir(); err != nil {
-		return nil, err
-	}
-	if err := inst.makeAppsStoreAppDir(appName); err != nil {
-		return nil, err
-	}
-	if err := inst.makeAppsStoreAppWithVersionDir(appName, version); err != nil {
-		return nil, err
-	}
-	return app, nil
-}
-
 type ListApps struct {
 	Name     string   `json:"name,omitempty"`
 	Path     string   `json:"path,omitempty"`

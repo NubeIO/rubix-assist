@@ -22,12 +22,12 @@ func (inst *Store) EdgeUploadApp(hostUUID, hostName string, app *installer.Uploa
 	if app.Arch == "" {
 		return nil, errors.New("upload app to edge arch type can not be empty, try armv7 amd64")
 	}
-	p := inst.getAppsStoreAppWithVersionPath(app.Name, app.Version)
-	buildDetails, err := inst.App.GetBuildZipNameByArch(p, app.Arch, app.DoNotValidateArch)
+	_path := inst.getAppsStoreAppWithArchVersionPath(app.Name, app.Arch, app.Version)
+	buildDetails, err := inst.App.GetBuildZipNameByArch(_path, app.Arch, app.DoNotValidateArch)
 	if buildDetails == nil {
 		return nil, errors.New(fmt.Sprintf("failed to match build zip name app: %s version: %s arch: %s", app.Name, app.Version, app.Arch))
 	}
-	fileAndPath := path.Join(p, buildDetails.ZipName)
+	fileAndPath := path.Join(_path, buildDetails.ZipName)
 	reader, err := os.Open(fileAndPath)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("error open build for app: %s zip file_name: %s  err: %s", app.Name, buildDetails.ZipName, err.Error()))
