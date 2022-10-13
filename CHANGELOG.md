@@ -1,4 +1,9 @@
 # CHANGELOG
+## [v0.5.1](https://github.com/NubeIO/rubix-assist/tree/v0.5.1) (2022-10-13)
+
+- FormatRestyV2Response for detecting connection issue
+- Change app store location to support different arch modes
+
 ## [v0.5.0](https://github.com/NubeIO/rubix-assist/tree/v0.5.0) (2022-09-22)
 
 - Lots of improvements
