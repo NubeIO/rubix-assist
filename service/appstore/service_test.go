@@ -23,7 +23,6 @@ func TestStore_GenerateUploadEdgeService(t *testing.T) {
 		ServiceDescription:      "",
 		RunAsUser:               "",
 		ServiceWorkingDirectory: "",
-		AppSpecificExecStart:    "app -p 1660 -g /data/flow-framework -d data -prod",
 	})
 	fmt.Println(err)
 	if err != nil {

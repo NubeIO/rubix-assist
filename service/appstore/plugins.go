@@ -74,5 +74,5 @@ func (inst *Store) GetPluginsStorePluginFile(plugin *Plugin) (pluginsPath string
 	if !matchArch {
 		return "", errors.New(fmt.Sprintf("failed to find plugin arch: %s", plugin.Arch))
 	}
-	return "", errors.New(fmt.Sprintf("failed to find plugin version: %s", plugin.Version))
+	return "", errors.New(fmt.Sprintf("failed to find plugin: %s, version: %s", plugin.Name, plugin.Version))
 }

@@ -14,7 +14,7 @@ func (inst *Store) GetPluginsStorePlugins() ([]installer.BuildDetails, error) {
 	if err != nil {
 		return nil, err
 	}
-	var plugins []installer.BuildDetails
+	plugins := make([]installer.BuildDetails, 0)
 	for _, file := range files {
 		plugins = append(plugins, *inst.App.GetZipBuildDetails(file.Name()))
 	}
