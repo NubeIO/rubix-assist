@@ -3,8 +3,8 @@ package edgebioscli
 import (
 	"fmt"
 	"github.com/NubeIO/rubix-assist/model"
-	"github.com/NubeIO/rubix-assist/service/clients/assistcli/nresty"
 	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli/ebmodel"
+	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 	"io"
 	"path"
 )

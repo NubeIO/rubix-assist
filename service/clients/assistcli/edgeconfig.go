@@ -3,7 +3,7 @@ package assistcli
 import (
 	"fmt"
 	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
-	"github.com/NubeIO/rubix-assist/service/clients/assistcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 )
 
 // EdgeWriteConfig replace the config file of a nube app

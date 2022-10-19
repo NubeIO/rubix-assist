@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-models-go/pkg/v1/model"
-	"github.com/NubeIO/rubix-assist/service/clients/assistcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 )
 
 // GetLocalStorage this api is used for when flow-networks need to talk between each other

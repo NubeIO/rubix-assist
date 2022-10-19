@@ -3,7 +3,7 @@ package edgecli
 import (
 	"fmt"
 	"github.com/NubeIO/lib-ufw/ufw"
-	"github.com/NubeIO/rubix-assist/service/clients/assistcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 	"github.com/NubeIO/rubix-edge/service/system"
 )
 

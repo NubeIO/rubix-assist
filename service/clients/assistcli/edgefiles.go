@@ -3,7 +3,7 @@ package assistcli
 import (
 	"errors"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/service/clients/assistcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 	"io"
 	"os"
 	"path/filepath"

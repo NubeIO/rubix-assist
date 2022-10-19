@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/rubix-assist/service/appstore"
-	"github.com/NubeIO/rubix-assist/service/clients/assistcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 	"io"
 )
 

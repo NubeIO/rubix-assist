@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
-	"github.com/NubeIO/rubix-assist/service/clients/assistcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 )
 
 func (inst *Client) EdgeSystemCtlAction(body *installer.SystemCtlBody) (*installer.SystemResponse, error) {

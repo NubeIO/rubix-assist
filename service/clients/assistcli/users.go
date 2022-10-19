@@ -5,7 +5,7 @@ import (
 	"github.com/NubeIO/nubeio-rubix-lib-auth-go/externaltoken"
 	"github.com/NubeIO/nubeio-rubix-lib-auth-go/user"
 	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
-	"github.com/NubeIO/rubix-assist/service/clients/assistcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 )
 
 func (inst *Client) GetUsers() (data []model.User, response *Response) {

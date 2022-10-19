@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/nubeio-rubix-lib-models-go/pkg/v1/model"
-	"github.com/NubeIO/rubix-assist/service/clients/assistcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 	"strconv"
 )
 
