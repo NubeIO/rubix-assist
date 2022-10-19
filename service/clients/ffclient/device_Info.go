@@ -2,7 +2,7 @@ package ffclient
 
 import (
 	"github.com/NubeIO/nubeio-rubix-lib-models-go/pkg/v1/model"
-	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/assistcli/nresty"
 )
 
 func (inst *FlowClient) DeviceInfo() (*model.DeviceInfo, error) {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-auth-go/externaltoken"
 	"github.com/NubeIO/nubeio-rubix-lib-auth-go/user"
-	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/assistcli/nresty"
 )
 
 type TokenCreate struct {
