@@ -51,7 +51,6 @@ func (inst *Controller) UpdateHost(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	host.Password = "***"
 	responseHandler(host, err, c)
 }
 

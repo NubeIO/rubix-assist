@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,8 +10,6 @@ func (inst *Controller) EdgePing(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *assistmodel.PingBody
-	err = c.ShouldBindJSON(&m)
 	data, err := inst.Store.EdgePing(host.UUID, host.Name)
 	responseHandler(data, err, c)
 }

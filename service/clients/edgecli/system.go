@@ -32,7 +32,7 @@ func (inst *Client) EdgeGetDeviceInfo() (*rubixregistry.DeviceInfo, error) {
 	return resp.Result().(*rubixregistry.DeviceInfo), nil
 }
 
-// Ping ping a edge device
+// Ping ping an edge device
 func (inst *Client) Ping() (*model.Message, error) {
 	url := fmt.Sprintf("/api/system/ping")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().

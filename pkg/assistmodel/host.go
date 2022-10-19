@@ -5,24 +5,21 @@ import (
 )
 
 type Host struct {
-	UUID           string `json:"uuid" gorm:"primaryKey" `
-	Name           string `json:"name"  gorm:"type:varchar(255);not null"  `
-	NetworkUUID    string `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null"`
-	Enable         *bool  `json:"enable"`
-	ProductType    string `json:"product_type"` // edge28, rubix-compute
-	IP             string `json:"ip"`
-	Port           int    `json:"port"`
-	HTTPS          *bool  `json:"https"`
-	Username       string `json:"username"`
-	Password       string `json:"password"`
-	WiresPort      int    `json:"wires_port"`
-	PingEnable     *bool  `json:"ping_enable"`
-	PingFrequency  int    `json:"ping_frequency"`
-	IsOffline      bool   `json:"is_offline"`
-	OfflineCount   uint   `json:"offline_count"`
-	RubixEdgeToken string `json:"-"`
-	RubixToken     string `json:"-"`
-	BiosToken      string `json:"-"`
+	UUID          string  `json:"uuid" gorm:"primaryKey" `
+	NetworkUUID   string  `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null"`
+	Name          string  `json:"name"  gorm:"type:varchar(255);not null"  `
+	Enable        *bool   `json:"enable"`
+	Description   *string `json:"description"`
+	IP            string  `json:"ip"`
+	BiosPort      int     `json:"bios_port"`
+	Port          int     `json:"port"`
+	HTTPS         *bool   `json:"https"`
+	PingEnable    *bool   `json:"ping_enable"`
+	PingFrequency int     `json:"ping_frequency"`
+	IsOffline     bool    `json:"is_offline"`
+	OfflineCount  uint    `json:"offline_count"`
+	Message       *string `json:"message"`
+	ExternalToken string  `json:"external_token"`
 }
 
 type NetworkUUID struct {
@@ -54,20 +51,17 @@ type SSHPort struct {
 }
 
 type HostSchema struct {
-	UUID        schema.UUID        `json:"uuid"`
-	Name        schema.Name        `json:"name"`
-	Description schema.Description `json:"description"`
-	Enable      schema.Enable      `json:"enable"`
-	Product     schema.Product     `json:"product_type"`
-	NetworkUUID NetworkUUID        `json:"network_uuid"`
-	IP          schema.Host        `json:"ip"`
-	Port        schema.Port        `json:"port"`
-	HTTPS       schema.HTTPS       `json:"https"`
-	Username    schema.Username    `json:"username"`
-	Password    schema.Password    `json:"password"`
-	// RubixEdgeToken     schema.RubixEdgeToken     `json:"rubix_edge_token"`
-	// FlowFrameworkToken schema.FlowFrameworkToken `json:"flow_framework_token"`
-	Required []string `json:"required"`
+	UUID          schema.UUID        `json:"uuid"`
+	NetworkUUID   NetworkUUID        `json:"network_uuid"`
+	Name          schema.Name        `json:"name"`
+	Enable        schema.Enable      `json:"enable"`
+	Description   schema.Description `json:"description"`
+	IP            schema.Host        `json:"ip"`
+	BiosPort      schema.Port        `json:"bios_port"`
+	Port          schema.Port        `json:"port"`
+	HTTPS         schema.HTTPS       `json:"https"`
+	ExternalToken schema.Token       `json:"external_token"`
+	Required      []string           `json:"required"`
 }
 
 func GetHostSchema() *HostSchema {
@@ -75,9 +69,13 @@ func GetHostSchema() *HostSchema {
 		Required: []string{"ip", "port"},
 	}
 	m.IP.Default = "0.0.0.0"
+	m.BiosPort.Title = "bios port"
+	m.BiosPort.Default = 1659
+	m.BiosPort.ReadOnly = true
 	m.Port.Default = 1661
 	m.Port.ReadOnly = true
 	m.NetworkUUID.Title = "network uuid"
+	m.ExternalToken.Title = "external token"
 	schema.Set(m)
 	return m
 }

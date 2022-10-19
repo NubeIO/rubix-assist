@@ -1,4 +1,4 @@
-package edgecli
+package edgebioscli
 
 import (
 	"fmt"
@@ -9,10 +9,10 @@ import (
 
 var (
 	mutex   = &sync.RWMutex{}
-	clients = map[string]*Client{}
+	clients = map[string]*BiosClient{}
 )
 
-type Client struct {
+type BiosClient struct {
 	Rest          *resty.Client
 	Ip            string `json:"ip"`
 	Port          int    `json:"port"`
@@ -21,12 +21,12 @@ type Client struct {
 }
 
 // New returns a new instance of the nube common apis
-func New(cli *Client) *Client {
+func New(cli *BiosClient) *BiosClient {
 	mutex.Lock()
 	defer mutex.Unlock()
 
 	if cli == nil {
-		log.Fatal("edge client cli can not be empty")
+		log.Fatal("edge bios client cli can not be empty")
 		return nil
 	}
 	cli.Rest = resty.New()
@@ -34,7 +34,7 @@ func New(cli *Client) *Client {
 		cli.Ip = "0.0.0.0"
 	}
 	if cli.Port == 0 {
-		cli.Port = 1661
+		cli.Port = 1659
 	}
 	var baseURL string
 	if cli.HTTPS != nil && *cli.HTTPS {
@@ -51,7 +51,7 @@ func New(cli *Client) *Client {
 	return cli
 }
 
-func (inst *Client) SetTokenHeader(token string) *Client {
+func (inst *BiosClient) SetTokenHeader(token string) *BiosClient {
 	inst.Rest.Header.Set("Authorization", composeToken(token))
 	return inst
 }
