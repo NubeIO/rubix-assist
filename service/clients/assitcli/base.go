@@ -4,14 +4,20 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	log "github.com/sirupsen/logrus"
+	"sync"
+)
+
+var (
+	mutex   = &sync.RWMutex{}
+	clients = map[string]*Client{}
 )
 
 type Client struct {
-	Rest        *resty.Client
-	URL         string `json:"url"`
-	Port        int    `json:"port"`
-	HTTPS       bool   `json:"https"`
-	AssistToken string `json:"assist_token"`
+	Rest          *resty.Client
+	Ip            string `json:"ip"`
+	Port          int    `json:"port"`
+	HTTPS         *bool  `json:"https"`
+	ExternalToken string `json:"external_token"`
 }
 
 type ResponseBody struct {
@@ -22,7 +28,6 @@ type ResponseBody struct {
 
 type ResponseCommon struct {
 	UUID string `json:"uuid"`
-	// Name        string `json:"name"`
 }
 
 func buildUrl(overrideUrl ...string) string {
@@ -34,33 +39,41 @@ func buildUrl(overrideUrl ...string) string {
 	return ""
 }
 
-func setExternalToken(token string) string {
-	return fmt.Sprintf("External %s", token)
+func New(cli *Client) *Client {
+	mutex.Lock()
+	defer mutex.Unlock()
+	if cli == nil {
+		log.Fatal("assist client cli can not be empty")
+	}
+	cli.Rest = resty.New()
+	if cli.Ip == "" {
+		cli.Ip = "0.0.0.0"
+	}
+	if cli.Port == 0 {
+		cli.Port = 1662
+	}
+	var baseURL string
+	if cli.HTTPS != nil && *cli.HTTPS {
+		baseURL = fmt.Sprintf("https://%s:%d", cli.Ip, cli.Port)
+	} else {
+		baseURL = fmt.Sprintf("http://%s:%d", cli.Ip, cli.Port)
+	}
+	if client, found := clients[baseURL]; found {
+		return client
+	}
+	cli.Rest.SetBaseURL(baseURL)
+	cli.SetTokenHeader(cli.ExternalToken)
+	clients[baseURL] = cli
+	return cli
 }
 
-// New returns a new instance of the nube common apis
-func New(cli *Client) *Client {
-	if cli == nil {
-		log.Fatal("rubix-service-rest-client can not be empty")
-	}
-	var url = cli.URL
-	var port = cli.Port
-	cli.Rest = resty.New()
-	if url == "" {
-		url = "0.0.0.0"
-	}
-	if port == 0 {
-		port = 1662
-	}
-	if cli.HTTPS {
-		cli.Rest.SetBaseURL(fmt.Sprintf("https://%s:%d", url, port))
-	} else {
-		cli.Rest.SetBaseURL(fmt.Sprintf("http://%s:%d", url, port))
-	}
-	if cli.AssistToken != "" {
-		cli.Rest.SetHeader("Authorization", setExternalToken(cli.AssistToken))
-	}
-	return cli
+func (inst *Client) SetTokenHeader(token string) *Client {
+	inst.Rest.Header.Set("Authorization", composeToken(token))
+	return inst
+}
+
+func composeToken(token string) string {
+	return fmt.Sprintf("External %s", token)
 }
 
 type Path struct {

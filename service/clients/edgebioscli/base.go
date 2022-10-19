@@ -20,7 +20,6 @@ type BiosClient struct {
 	ExternalToken string `json:"external_token"`
 }
 
-// New returns a new instance of the nube common apis
 func New(cli *BiosClient) *BiosClient {
 	mutex.Lock()
 	defer mutex.Unlock()
