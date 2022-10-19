@@ -79,6 +79,11 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgeBios.GET("/ping", api.EdgeBiosPing)
 	}
 
+	edgeBiosApps := apiRoutes.Group("/edge-bios/edge")
+	{
+		edgeBiosApps.GET("/upload", api.EdgeBiosEdgeUpload)
+	}
+
 	edge := apiRoutes.Group("/edge/system")
 	{
 		edge.GET("/ping", api.EdgePing)
