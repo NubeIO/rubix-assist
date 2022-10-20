@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/rubix-assist/model"
-	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 	"github.com/NubeIO/rubix-registry-go/rubixregistry"
 )
 
@@ -32,7 +32,7 @@ func (inst *Client) EdgeGetDeviceInfo() (*rubixregistry.DeviceInfo, error) {
 	return resp.Result().(*rubixregistry.DeviceInfo), nil
 }
 
-// Ping ping a edge device
+// Ping ping an edge device
 func (inst *Client) Ping() (*model.Message, error) {
 	url := fmt.Sprintf("/api/system/ping")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().

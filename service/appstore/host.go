@@ -12,31 +12,18 @@ func (inst *Store) getClient(hostUUID, hostName string) (*edgecli.Client, error)
 	if err != nil {
 		return nil, err
 	}
-	ip := host.IP
-	port := host.Port
-	return inst.newClient(ip, port)
+	return inst.newClient(host)
 }
 
-func (inst *Store) newClient(ip string, port int) (*edgecli.Client, error) {
+func (inst *Store) newClient(host *model.Host) (*edgecli.Client, error) {
 	cli := edgecli.New(&edgecli.Client{
-		Rest:  nil,
-		Ip:    ip,
-		Port:  port,
-		HTTPS: false,
+		Rest:          nil,
+		Ip:            host.IP,
+		Port:          host.Port,
+		HTTPS:         host.HTTPS,
+		ExternalToken: host.ExternalToken,
 	})
 	return cli, nil
-}
-
-func (inst *Store) getTokens() (token string, tokens []*model.Token, err error) {
-	tokens = []*model.Token{}
-	tokens, err = inst.DB.GetTokens()
-	if err != nil {
-		return "", nil, errors.New("no token provided")
-	}
-	if len(tokens) == 0 {
-		return "", nil, errors.New("no token provided")
-	}
-	return tokens[0].Token, tokens, nil
 }
 
 func matchUUID(uuid string) bool {
@@ -48,7 +35,6 @@ func matchUUID(uuid string) bool {
 	return false
 }
 
-// getHost returns the host and a GitHub token
 func (inst *Store) getHost(hostUUID, hostName string) (*model.Host, error) {
 	var host *model.Host
 	var err error

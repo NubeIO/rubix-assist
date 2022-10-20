@@ -5,7 +5,7 @@ import (
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"github.com/NubeIO/rubix-assist/service/appstore"
-	"github.com/NubeIO/rubix-assist/service/clients/assitcli"
+	"github.com/NubeIO/rubix-assist/service/clients/assistcli"
 )
 
 const (
@@ -16,7 +16,7 @@ const (
 )
 
 func addUploadApp() error {
-	client := assitcli.New(&assitcli.Client{})
+	client := assistcli.New(&assistcli.Client{})
 	app, err := client.EdgeUploadApp("rc", &installer.Upload{
 		Name:    appName,
 		Version: appVersion,
@@ -31,7 +31,7 @@ func addUploadApp() error {
 }
 
 func uploadService() (string, error) {
-	client := assitcli.New(&assitcli.Client{})
+	client := assistcli.New(&assistcli.Client{})
 	service, err := client.EdgeUploadService("rc", &appstore.ServiceFile{
 		Name:                    appName,
 		Version:                 appVersion,
@@ -47,7 +47,7 @@ func uploadService() (string, error) {
 }
 
 func installService(source string) error {
-	client := assitcli.New(&assitcli.Client{})
+	client := assistcli.New(&assistcli.Client{})
 	service, err := client.InstallEdgeService("rc", &installer.Install{
 		Name:    appName,
 		Version: appVersion,

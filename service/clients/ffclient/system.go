@@ -1,7 +1,7 @@
 package ffclient
 
 import (
-	"github.com/NubeIO/rubix-assist/service/clients/assitcli/nresty"
+	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 )
 
 type Ping struct {

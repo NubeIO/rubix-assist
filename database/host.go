@@ -6,7 +6,8 @@ import (
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
 	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
-	"github.com/NubeIO/rubix-assist/pkg/helpers/ip"
+	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli"
+	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 )
 
 const hostName = "host"
@@ -92,33 +93,16 @@ func (inst *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	}
 	host.UUID = uuid.ShortUUID("hos")
 	if host.PingEnable == nil {
-		host.PingEnable = nils.NewFalse()
+		host.PingEnable = nils.NewTrue()
 	}
 	if host.HTTPS == nil {
 		host.HTTPS = nils.NewFalse()
-	}
-	if host.Username == "" {
-		host.Username = "admin"
-	}
-	if host.Password == "" {
-		host.Password = "admin"
 	}
 	if host.IP == "" {
 		host.IP = "0.0.0.0"
 	}
 	if host.Port == 0 {
 		host.Port = 1661
-	}
-	if host.WiresPort == 0 {
-		host.WiresPort = 1313
-	}
-	err := ip.CheckURL(host.IP, host.Port)
-	if err != nil {
-		return nil, fmt.Errorf("invaild ssh ip:port: %s", err.Error())
-	}
-	err = ip.CheckURL(host.IP, host.Port)
-	if err != nil {
-		return nil, fmt.Errorf("invaild rubix ip:port: %s", err.Error())
 	}
 	if err := inst.DB.Create(&host).Error; err != nil {
 		return nil, err
@@ -143,6 +127,18 @@ func (inst *DB) UpdateHost(uuid string, host *model.Host) (*model.Host, error) {
 	if query.Error != nil {
 		return nil, handelNotFound(hostName)
 	} else {
+		edgecli.New(&edgecli.Client{
+			Ip:            host.IP,
+			Port:          host.Port,
+			HTTPS:         host.HTTPS,
+			ExternalToken: host.ExternalToken,
+		})
+		edgebioscli.New(&edgebioscli.BiosClient{
+			Ip:            host.IP,
+			Port:          host.Port,
+			HTTPS:         host.HTTPS,
+			ExternalToken: host.ExternalToken,
+		})
 		return m, nil
 	}
 }

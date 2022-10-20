@@ -54,11 +54,9 @@ func getHosts(appDB *dbase.DB) {
 
 func addHost(appDB *dbase.DB) {
 	h := &model.Host{
-		Name:     hostName,
-		IP:       hostIP,
-		Port:     hostPort,
-		Username: hostUsername,
-		Password: hostPassword,
+		Name: hostName,
+		IP:   hostIP,
+		Port: hostPort,
 	}
 	host, err := appDB.CreateHost(h)
 	if err == nil {

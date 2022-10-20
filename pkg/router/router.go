@@ -74,11 +74,21 @@ func Setup(db *gorm.DB) *gin.Engine {
 		storePlugins.POST("/", api.UploadPluginStorePlugin)
 	}
 
-	edge := apiRoutes.Group("/edge")
+	edgeBios := apiRoutes.Group("/edge-bios/system")
 	{
-		edge.GET("/system/ping", api.EdgePing)
-		edge.GET("/system/device", api.EdgeGetDeviceInfo)
-		edge.GET("/system/product", api.EdgeProductInfo)
+		edgeBios.GET("/ping", api.EdgeBiosPing)
+	}
+
+	edgeBiosApps := apiRoutes.Group("/edge-bios/edge")
+	{
+		edgeBiosApps.GET("/upload", api.EdgeBiosEdgeUpload)
+	}
+
+	edge := apiRoutes.Group("/edge/system")
+	{
+		edge.GET("/ping", api.EdgePing)
+		edge.GET("/device", api.EdgeGetDeviceInfo)
+		edge.GET("/product", api.EdgeProductInfo)
 	}
 
 	edgeApps := apiRoutes.Group("/edge/apps")

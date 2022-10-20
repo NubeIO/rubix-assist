@@ -21,7 +21,7 @@ func TestFlowClient_GetPoints(t *testing.T) {
 		break
 	}
 	points, err := cli.AddPoint(&model.Point{
-		CommonName: model.CommonName{Name: uuid.ShortUUID("name")},
+		Name:       uuid.ShortUUID("name"),
 		DeviceUUID: dev.UUID,
 		ObjectType: "analogInput",
 	})
