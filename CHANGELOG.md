@@ -1,4 +1,11 @@
 # CHANGELOG
+## [v0.5.2](https://github.com/NubeIO/rubix-assist/tree/v0.5.2) (2022-10-20)
+
+- Integration of edge-bios
+- Ongoing APIs creation for edge-bios
+- CLI improvements
+- Rename typo assitcli to assistcli
+
 ## [v0.5.1](https://github.com/NubeIO/rubix-assist/tree/v0.5.1) (2022-10-13)
 
 - FormatRestyV2Response for detecting connection issue
