@@ -9,12 +9,12 @@ import (
 func TestClient_AddFlowNetwork(t *testing.T) {
 	// fln_cd7d562b1fa04c1e
 
+	https := false
 	cli := New(&Client{
-		Rest:        nil,
-		URL:         "",
-		Port:        0,
-		HTTPS:       false,
-		AssistToken: "",
+		Rest:  nil,
+		Ip:    "",
+		Port:  0,
+		HTTPS: &https,
 	})
 	// stream := &model.Stream{
 	//	CommonStream: model.CommonStream{

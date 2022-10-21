@@ -8,7 +8,7 @@ import (
 )
 
 func TestClient_EdgeReadConfig(t *testing.T) {
-	resp, err := client.EdgeReadConfig("rc", "flow-framework", "config.yml")
+	resp, err, _ := client.EdgeReadConfig("rc", "flow-framework", "config.yml")
 	dataFile := testYml{}
 	err = yaml.Unmarshal(resp.Data, &dataFile)
 	fmt.Println(err)

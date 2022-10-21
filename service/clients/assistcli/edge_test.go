@@ -10,7 +10,7 @@ import (
 
 var client = New(&Client{
 	Rest: &resty.Client{},
-	URL:  "0.0.0.0",
+	Ip:   "0.0.0.0",
 	Port: 1662,
 })
 

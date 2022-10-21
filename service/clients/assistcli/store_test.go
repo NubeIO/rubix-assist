@@ -15,12 +15,3 @@ func TestClient_ListAppsWithVersions(t *testing.T) {
 	}
 	pprint.PrintJSON(store)
 }
-
-func TestClient_ListAppsBuildDetails(t *testing.T) {
-	store, err := client.ListAppsBuildDetails()
-	fmt.Println(err)
-	if err != nil {
-		return
-	}
-	pprint.PrintJSON(store)
-}

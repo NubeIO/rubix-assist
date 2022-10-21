@@ -1,4 +1,9 @@
 # CHANGELOG
+
+## [v0.5.3](https://github.com/NubeIO/rubix-assist/tree/v0.5.3) (2022-10-21)
+
+- Fix: test cases
+
 ## [v0.5.2](https://github.com/NubeIO/rubix-assist/tree/v0.5.2) (2022-10-20)
 
 - Integration of edge-bios
