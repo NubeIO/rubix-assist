@@ -10,12 +10,12 @@ import (
 var token string
 
 func TestClient_FFLogin(t *testing.T) {
+	https := false
 	cli := New(&Client{
-		Rest:        nil,
-		URL:         "0.0.0.0",
-		Port:        0,
-		HTTPS:       false,
-		AssistToken: "",
+		Rest:  nil,
+		Ip:    "0.0.0.0",
+		Port:  0,
+		HTTPS: &https,
 	})
 	login, err := cli.FFLogin("rc", &user.User{
 		Username: "admin",
@@ -26,17 +26,16 @@ func TestClient_FFLogin(t *testing.T) {
 	if err != nil {
 		return
 	}
-
 	// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjQ0MjA2MjMsImlhdCI6MTY2MTgyODYyMywic3ViIjoiYWRtaW4ifQ.6UY_BPw-7m_gJVys_Toj6vyJw-XvoomqfJ-gIRvm8wA
 }
 
 func TestClient_FFGenerateToken(t *testing.T) {
+	https := false
 	cli := New(&Client{
-		Rest:        nil,
-		URL:         "",
-		Port:        0,
-		HTTPS:       false,
-		AssistToken: "",
+		Rest:  nil,
+		Ip:    "",
+		Port:  0,
+		HTTPS: &https,
 	})
 	jwt := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjQ0MjE1MTIsImlhdCI6MTY2MTgyOTUxMiwic3ViIjoiYWRtaW4ifQ.rgJ_300heVLG7dEHM3NwzQzrziIJ6tEVXqJ-bSFxvHw"
 	login, err := cli.FFGenerateToken("rc", jwt, &TokenCreate{Name: "test2", Blocked: nils.NewFalse()})
