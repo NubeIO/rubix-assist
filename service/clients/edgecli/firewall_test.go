@@ -9,9 +9,8 @@ import (
 
 func TestClient_UWFStatusList(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	resp, err := cli.UWFStatusList()
@@ -24,9 +23,8 @@ func TestClient_UWFStatusList(t *testing.T) {
 
 func TestClient_UWFDisable(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	resp, err := cli.UWFDisable()
@@ -39,9 +37,8 @@ func TestClient_UWFDisable(t *testing.T) {
 
 func TestClient_UWFEnable(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	resp, err := cli.UWFEnable()
@@ -54,9 +51,8 @@ func TestClient_UWFEnable(t *testing.T) {
 
 func TestClient_UWFOpenPort(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	resp, err := cli.UWFOpenPort(system.UFWBody{Port: 1884})
@@ -69,9 +65,8 @@ func TestClient_UWFOpenPort(t *testing.T) {
 
 func TestClient_UWFClosePort(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	resp, err := cli.UWFClosePort(system.UFWBody{Port: 1884})

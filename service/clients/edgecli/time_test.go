@@ -9,9 +9,8 @@ import (
 
 func TestClient_GetHardwareTZ(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	resp, err := cli.GetHardwareTZ()
@@ -21,9 +20,8 @@ func TestClient_GetHardwareTZ(t *testing.T) {
 
 func TestClient_GetTimeZoneList(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	resp, err := cli.GetTimeZoneList()
@@ -33,9 +31,8 @@ func TestClient_GetTimeZoneList(t *testing.T) {
 
 func TestClient_SetSystemTime(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 	newTime := time.Now().Format("2006-01-02 15:04:05")
 	fmt.Println(newTime)
@@ -48,9 +45,8 @@ func TestClient_SetSystemTime(t *testing.T) {
 
 func TestClient_SystemTime(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	resp, err := cli.SystemTime()
@@ -60,9 +56,8 @@ func TestClient_SystemTime(t *testing.T) {
 
 func TestClient_UpdateTimezone(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	resp, err := cli.UpdateTimezone(system.DateBody{
