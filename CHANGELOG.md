@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [v0.5.4](https://github.com/NubeIO/rubix-assist/tree/v0.5.4) (2022-10-24)
+
+- Remove External token check on proxy.go
+
 ## [v0.5.3](https://github.com/NubeIO/rubix-assist/tree/v0.5.3) (2022-10-21)
 
 - Fix: test cases

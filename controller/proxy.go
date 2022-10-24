@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"errors"
 	"fmt"
 	"github.com/NubeIO/rubix-assist/pkg/helpers/ip"
 	"github.com/gin-gonic/gin"
@@ -26,10 +25,10 @@ func (inst *Controller) Proxy(c *gin.Context) {
 	}
 
 	token := host.ExternalToken
-	if token == "" {
-		responseHandler(nil, errors.New("rubix-edge token is empty"), c)
-		return
-	}
+	// if token == "" { // TODO: revert it when token implementation is done
+	// 	responseHandler(nil, errors.New("rubix-edge token is empty"), c)
+	// 	return
+	// }
 	proxy := httputil.NewSingleHostReverseProxy(remote)
 	proxy.Director = func(req *http.Request) {
 		req.Header = c.Request.Header
