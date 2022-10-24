@@ -12,9 +12,8 @@ var deviceIface = "eth0"
 
 func TestClient_DHCPPortExists(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	exists, err := cli.DHCPPortExists(&system.NetworkingBody{
@@ -28,9 +27,8 @@ func TestClient_DHCPPortExists(t *testing.T) {
 }
 func TestClient_DHCPSetAsAuto(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	exists, err := cli.DHCPSetAsAuto(&system.NetworkingBody{
@@ -45,9 +43,8 @@ func TestClient_DHCPSetAsAuto(t *testing.T) {
 
 func TestClient_DHCPSetStaticIP(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	exists, err := cli.DHCPSetStaticIP(&dhcpd.SetStaticIP{

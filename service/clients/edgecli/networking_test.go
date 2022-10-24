@@ -7,9 +7,8 @@ import (
 
 func TestClient_RestartNetworking(t *testing.T) {
 	cli := New(&Client{
-		Ip:    deviceIP,
-		Port:  0,
-		HTTPS: false,
+		Ip:   deviceIP,
+		Port: 0,
 	})
 
 	exists, err := cli.RestartNetworking()
