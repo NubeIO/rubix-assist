@@ -1,4 +1,7 @@
 # CHANGELOG
+## [v0.5.5](https://github.com/NubeIO/rubix-assist/tree/v0.5.5) (2022-10-26)
+
+- added edge proxy
 
 ## [v0.5.4](https://github.com/NubeIO/rubix-assist/tree/v0.5.4) (2022-10-24)
 
