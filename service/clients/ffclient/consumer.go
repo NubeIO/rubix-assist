@@ -6,11 +6,15 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 )
 
-func (inst *FlowClient) AddConsumer(body *model.Consumer) (*model.Consumer, error) {
+func (inst *FlowClient) AddConsumer(body *model.Consumer, remote bool, args Remote) (*model.Consumer, error) {
+	url := fmt.Sprintf("/api/consumers")
+	if remote {
+		url = fmt.Sprintf("/api/remote/consumers/?flow_network_uuid=%s", args.FlowNetworkUUID)
+	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Consumer{}).
 		SetBody(body).
-		Post("/api/consumers"))
+		Post(url))
 	if err != nil {
 		return nil, err
 	}

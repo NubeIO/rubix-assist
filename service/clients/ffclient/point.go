@@ -1,15 +1,20 @@
 package ffclient
 
 import (
+	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-models-go/pkg/v1/model"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 )
 
-func (inst *FlowClient) AddPoint(body *model.Point) (*model.Point, error) {
+func (inst *FlowClient) AddPoint(body *model.Point, remote bool, args Remote) (*model.Point, error) {
+	url := fmt.Sprintf("/api/points")
+	if remote {
+		url = fmt.Sprintf("/api/remote/points/?flow_network_uuid=%s", args.FlowNetworkUUID)
+	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Point{}).
 		SetBody(body).
-		Post("/api/points"))
+		Post(url))
 	if err != nil {
 		return nil, err
 	}

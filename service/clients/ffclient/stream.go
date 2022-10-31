@@ -6,11 +6,39 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 )
 
-func (inst *FlowClient) AddStream(body *model.Stream) (*model.Stream, error) {
+// AddStreamToExistingFlow add a stream to an existing flow
+func (inst *FlowClient) AddStreamToExistingFlow(flowNetworkUUID string, body *model.Stream, remote bool, args Remote) (*model.Stream, error) {
+	url := fmt.Sprintf("/api/streams")
+	if remote {
+		url = fmt.Sprintf("/api/remote/streams/?flow_network_uuid=%s", args.FlowNetworkUUID)
+	}
+	flowNetwork := &model.FlowNetwork{
+		CommonFlowNetwork: model.CommonFlowNetwork{
+			CommonUUID: model.CommonUUID{
+				UUID: flowNetworkUUID,
+			},
+		},
+	}
+	body.FlowNetworks = append(body.FlowNetworks, flowNetwork)
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Stream{}).
 		SetBody(body).
-		Post("/api/streams"))
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*model.Stream), nil
+}
+
+func (inst *FlowClient) AddStream(body *model.Stream, remote bool, args Remote) (*model.Stream, error) {
+	url := fmt.Sprintf("/api/streams")
+	if remote {
+		url = fmt.Sprintf("/api/remote/streams/?flow_network_uuid=%s", args.FlowNetworkUUID)
+	}
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&model.Stream{}).
+		SetBody(body).
+		Post(url))
 	if err != nil {
 		return nil, err
 	}

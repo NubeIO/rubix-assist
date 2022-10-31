@@ -2,7 +2,6 @@ package ffclient
 
 import (
 	"fmt"
-	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/nubeio-rubix-lib-models-go/pkg/v1/model"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 	"strconv"
@@ -46,13 +45,15 @@ func (inst *FlowClient) EditWriter(uuid string, body *model.Writer, updateProduc
 	return resp.Result().(*model.Writer), nil
 }
 
-func (inst *FlowClient) CreateWriter(body *model.Writer) (*model.Writer, error) {
-	name := uuid.ShortUUID()
-	name = fmt.Sprintf("sub_name_%s", name)
+func (inst *FlowClient) AddWriter(body *model.Writer, remote bool, args Remote) (*model.Writer, error) {
+	url := fmt.Sprintf("/api/consumers/writers")
+	if remote {
+		url = fmt.Sprintf("/api/remote/writers/?flow_network_uuid=%s", args.FlowNetworkUUID)
+	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Writer{}).
 		SetBody(body).
-		Post("/api/consumers/writers"))
+		Post(url))
 	if err != nil {
 		return nil, err
 	}

@@ -6,11 +6,14 @@ import (
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 )
 
-func (inst *FlowClient) AddDevice(device *model.Device) (*model.Device, error) {
+func (inst *FlowClient) AddDevice(body *model.Device, remote bool, args Remote) (*model.Device, error) {
 	url := fmt.Sprintf("/api/devices")
+	if remote {
+		url = fmt.Sprintf("/api/remote/devices/?flow_network_uuid=%s", args.FlowNetworkUUID)
+	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Device{}).
-		SetBody(device).
+		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err

@@ -11,6 +11,10 @@ import (
 	"time"
 )
 
+type Remote struct {
+	FlowNetworkUUID string
+}
+
 var (
 	mutex       = &sync.RWMutex{}
 	flowClients = map[string]*FlowClient{}
