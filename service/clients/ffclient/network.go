@@ -43,14 +43,18 @@ func (inst *FlowClient) GetNetworkByPluginName(pluginName string, withPoints ...
 	return resp.Result().(*model.Network), nil
 }
 
-func (inst *FlowClient) GetNetworks(withDevices ...bool) ([]model.Network, error) {
+func (inst *FlowClient) GetNetworks(remote bool, args Remote, withDevices bool) ([]model.Network, error) {
 	url := fmt.Sprintf("/api/networks")
-	if len(withDevices) > 0 {
-		if withDevices[0] == true {
-			url = fmt.Sprintf("/api/networks?with_devices=true")
-		}
-
+	if withDevices {
+		url = fmt.Sprintf("/api/networks?with_devices=true")
 	}
+	if remote {
+		url = fmt.Sprintf("/api/remote/networks/?flow_network_uuid=%s", args.FlowNetworkUUID)
+		if withDevices {
+			url = fmt.Sprintf("/api/remote/networks/?with_devices=true&flow_network_uuid=%s", args.FlowNetworkUUID)
+		}
+	}
+
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&[]model.Network{}).
 		Get(url))
@@ -74,24 +78,16 @@ func (inst *FlowClient) GetNetworksWithPoints() ([]model.Network, error) {
 	return out, nil
 }
 
-func (inst *FlowClient) GetNetworkWithPoints(uuid string) (*model.Network, error) {
+func (inst *FlowClient) GetNetworkWithPoints(uuid string, remote bool, args Remote) (*model.Network, error) {
+	url := fmt.Sprintf("/api/networks/%s/?with_points=true", uuid)
+	if remote {
+		url = fmt.Sprintf("/api/remote/networks/%s/?with_points=true&flow_network_uuid=%s", uuid, args.FlowNetworkUUID)
+	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&model.Network{}).
-		SetPathParams(map[string]string{"uuid": uuid}).
-		Get("/api/networks/{uuid}?with_points=true"))
+		Get(url))
 	if err != nil {
 		return nil, err
 	}
 	return resp.Result().(*model.Network), nil
-}
-
-func (inst *FlowClient) GetFirstNetwork(withDevices ...bool) (*model.Network, error) {
-	nets, err := inst.GetNetworks(withDevices...)
-	if err != nil {
-		return nil, err
-	}
-	for _, net := range nets {
-		return &net, err
-	}
-	return nil, err
 }

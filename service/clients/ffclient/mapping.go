@@ -4,17 +4,61 @@ import (
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-models-go/pkg/v1/model"
 	log "github.com/sirupsen/logrus"
+	"strings"
 )
 
 type Mapping struct {
+	EdgeDeviceName    string
 	FlowNetworkUUID   string
 	NetworkUUID       string
 	NetworkUUIDRemote string
 }
 
-func (inst *FlowClient) MakeLocalStreams(args *Mapping) error {
+// get local streams
+// add a new consumer, with this consumer add the writer
 
-	network, err := inst.GetNetworkWithPoints(args.NetworkUUID)
+func (inst *FlowClient) MakeRemoteConsumers(args *Mapping) error {
+	network, err := inst.GetNetworkWithPoints(args.NetworkUUIDRemote, true, Remote{FlowNetworkUUID: args.FlowNetworkUUID})
+	if err != nil {
+		log.Errorf("get network err: %s", err.Error())
+		return err
+	}
+	streamClones, err := inst.GetStreamClones(true, Remote{FlowNetworkUUID: args.FlowNetworkUUID})
+	if err != nil {
+		return err
+	}
+
+	for _, clone := range streamClones {
+		// 0 edge device name
+		// network name
+		// device name
+		parts := strings.Split(clone.Name, ":")
+		if len(parts) == 3 {
+			edgeName := parts[0]
+			networkName := parts[1]
+			deviceName := parts[2]
+			for _, device := range network.Devices {
+				if args.EdgeDeviceName == edgeName {
+					if network.Name == fmt.Sprintf("%s:%s", edgeName, networkName) {
+						if device.Name == deviceName {
+							//for _, point := range device.Points {
+							//
+							//}
+
+							fmt.Println("MATCH", clone.Name)
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (inst *FlowClient) MakeLocalStreams(args *Mapping) error {
+	network, err := inst.GetNetworkWithPoints(args.NetworkUUID, false, Remote{})
 	if err != nil {
 		log.Errorf("get network err: %s", err.Error())
 		return err
@@ -23,7 +67,7 @@ func (inst *FlowClient) MakeLocalStreams(args *Mapping) error {
 		newStream := &model.Stream{
 			CommonStream: model.CommonStream{
 				CommonName: model.CommonName{
-					Name: fmt.Sprintf("%s:%s", network.Name, device.Name),
+					Name: fmt.Sprintf("%s:%s:%s", args.EdgeDeviceName, network.Name, device.Name),
 				},
 			},
 		}
@@ -52,7 +96,6 @@ func (inst *FlowClient) MakeLocalStreams(args *Mapping) error {
 			log.Infof("added new producer %s", producer.Name)
 
 		}
-
 	}
 
 	return nil
@@ -61,7 +104,7 @@ func (inst *FlowClient) MakeLocalStreams(args *Mapping) error {
 
 func (inst *FlowClient) MakeRemoteDevicePoints(args *Mapping) error {
 
-	network, err := inst.GetNetworkWithPoints(args.NetworkUUID)
+	network, err := inst.GetNetworkWithPoints(args.NetworkUUID, false, Remote{})
 	if err != nil {
 		log.Errorf("get network err: %s", err.Error())
 		return err

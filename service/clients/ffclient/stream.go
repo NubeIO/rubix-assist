@@ -57,8 +57,11 @@ func (inst *FlowClient) EditStream(uuid string, body *model.Stream) (*model.Stre
 	return resp.Result().(*model.Stream), nil
 }
 
-func (inst *FlowClient) GetStreamClones() ([]model.StreamClone, error) {
+func (inst *FlowClient) GetStreamClones(remote bool, args Remote) ([]model.StreamClone, error) {
 	url := fmt.Sprintf("/api/stream_clones")
+	if remote {
+		url = fmt.Sprintf("/api/remote/stream_clones/?flow_network_uuid=%s", args.FlowNetworkUUID)
+	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&[]model.StreamClone{}).
 		Get(url))
@@ -70,8 +73,27 @@ func (inst *FlowClient) GetStreamClones() ([]model.StreamClone, error) {
 	return out, nil
 }
 
-func (inst *FlowClient) GetStreams() ([]model.Stream, error) {
+func (inst *FlowClient) GetStreams(remote bool, args Remote) ([]model.Stream, error) {
 	url := fmt.Sprintf("/api/streams")
+	if remote {
+		url = fmt.Sprintf("/api/remote/streams/?flow_network_uuid=%s", args.FlowNetworkUUID)
+	}
+	resp, err := nresty.FormatRestyResponse(inst.client.R().
+		SetResult(&[]model.Stream{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	var out []model.Stream
+	out = *resp.Result().(*[]model.Stream)
+	return out, nil
+}
+
+func (inst *FlowClient) GetStreamsWithChild(remote bool, args Remote) ([]model.Stream, error) {
+	url := fmt.Sprintf("/api/streams?flow_networks=true&producers=true&consumers=true&command_groups=false&writers=true&tags=true")
+	if remote {
+		url = fmt.Sprintf("/api/remote/streams/?flow_networks=true&producers=true&consumers=true&command_groups=false&writers=true&tags=true&flow_network_uuid=%s", args.FlowNetworkUUID)
+	}
 	resp, err := nresty.FormatRestyResponse(inst.client.R().
 		SetResult(&[]model.Stream{}).
 		Get(url))
@@ -92,19 +114,6 @@ func (inst *FlowClient) GetStream(uuid string) (*model.Stream, error) {
 		return nil, err
 	}
 	return resp.Result().(*model.Stream), nil
-}
-
-func (inst *FlowClient) GetStreamsWithChild() ([]model.Stream, error) {
-	url := fmt.Sprintf("/api/streams?flow_networks=true&producers=true&consumers=true&command_groups=false&writers=true&tags=true")
-	resp, err := nresty.FormatRestyResponse(inst.client.R().
-		SetResult(&[]model.Stream{}).
-		Get(url))
-	if err != nil {
-		return nil, err
-	}
-	var out []model.Stream
-	out = *resp.Result().(*[]model.Stream)
-	return out, nil
 }
 
 func (inst *FlowClient) GetStreamWithChild(uuid string) (*model.Stream, error) {
