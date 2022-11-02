@@ -55,6 +55,11 @@ func (inst *BiosClient) SetTokenHeader(token string) *BiosClient {
 	return inst
 }
 
+func (inst *BiosClient) SetJwtTokenHeader(token string) *BiosClient {
+	inst.Rest.Header.Set("Authorization", token)
+	return inst
+}
+
 func composeToken(token string) string {
 	return fmt.Sprintf("External %s", token)
 }
