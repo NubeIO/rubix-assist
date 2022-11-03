@@ -15,6 +15,6 @@ func (inst *Controller) EdgeBiosEdgeUpload(c *gin.Context) {
 	var m *assistmodel.PingBody
 	err = c.ShouldBindJSON(&m)
 	cli := helpers.GetEdgeBiosClient(host)
-	data, err := cli.Ping()
+	data, err := cli.Upload("", "", nil) // TODO
 	responseHandler(data, err, c)
 }

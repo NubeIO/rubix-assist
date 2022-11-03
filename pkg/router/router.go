@@ -74,17 +74,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 		storePlugins.POST("/", api.UploadPluginStorePlugin)
 	}
 
-	edgeBios := apiRoutes.Group("/edge-bios")
+	edgeBiosApps := apiRoutes.Group("/eb")
 	{
-		edgeBios.Any("/*proxyPath", api.EdgeBiosProxy)
-		// edgeBios.POST("/users/login", api.EdgeBiosLogin)
-		// edgeBios.POST("/tokens", api.EdgeTokens)
-		// edgeBios.GET("/system/ping", api.EdgeBiosPing)
-	}
-
-	edgeBiosApps := apiRoutes.Group("/edge-bios/edge")
-	{
-		edgeBiosApps.GET("/upload", api.EdgeBiosEdgeUpload)
+		edgeBiosApps.GET("/edge/upload", api.EdgeBiosEdgeUpload)
 	}
 
 	edge := apiRoutes.Group("/edge/system")

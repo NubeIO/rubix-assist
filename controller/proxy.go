@@ -6,6 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httputil"
+	"net/url"
+	"os"
+	"path"
+	"strings"
 )
 
 func composeExternalToken(token string) string {
@@ -18,26 +22,33 @@ func (inst *Controller) Proxy(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	remote, err := ip.Builder(host.HTTPS, host.IP, host.Port)
+	proxyPath := strings.Trim(c.Param("proxyPath"), string(os.PathSeparator))
+	proxyPathParts := strings.Split(proxyPath, "/")
+	var remote *url.URL = nil
+	if len(proxyPathParts) > 0 && proxyPathParts[0] == "ebp" {
+		remote, err = ip.Builder(host.HTTPS, host.IP, host.BiosPort)
+		proxyPath = path.Join(proxyPathParts[1:]...)
+	} else {
+		remote, err = ip.Builder(host.HTTPS, host.IP, host.Port)
+	}
+	proxyPath = fmt.Sprintf("/%s", proxyPath)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-
-	token := host.ExternalToken
-	// if token == "" { // TODO: revert it when token implementation is done
-	// 	responseHandler(nil, errors.New("rubix-edge token is empty"), c)
-	// 	return
-	// }
 	proxy := httputil.NewSingleHostReverseProxy(remote)
 	proxy.Director = func(req *http.Request) {
 		req.Header = c.Request.Header
 		req.Host = remote.Host
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
-		req.URL.Path = c.Param("proxyPath")
-		req.Header.Set("Authorization", composeExternalToken(token))
+		req.URL.Path = proxyPath
+		jwtToken := c.Param("jwt_token")
+		if jwtToken == "" {
+			req.Header.Set("Authorization", composeExternalToken(host.ExternalToken))
+		} else {
+			req.Header.Set("Authorization", jwtToken)
+		}
 	}
-
 	proxy.ServeHTTP(c.Writer, c.Request)
 }
