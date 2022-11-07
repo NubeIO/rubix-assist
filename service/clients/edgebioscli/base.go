@@ -28,6 +28,32 @@ func New(cli *BiosClient) *BiosClient {
 		log.Fatal("edge bios client cli can not be empty")
 		return nil
 	}
+	baseURL := getBaseUrl(cli)
+	if client, found := clients[baseURL]; found {
+		return client
+	}
+	cli.Rest.SetBaseURL(baseURL)
+	cli.SetTokenHeader(cli.ExternalToken)
+	clients[baseURL] = cli
+	return cli
+}
+
+func NewForce(cli *BiosClient) *BiosClient {
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	if cli == nil {
+		log.Fatal("edge bios client cli can not be empty")
+		return nil
+	}
+	baseURL := getBaseUrl(cli)
+	cli.Rest.SetBaseURL(baseURL)
+	cli.SetTokenHeader(cli.ExternalToken)
+	clients[baseURL] = cli
+	return cli
+}
+
+func getBaseUrl(cli *BiosClient) string {
 	cli.Rest = resty.New()
 	if cli.Ip == "" {
 		cli.Ip = "0.0.0.0"
@@ -41,13 +67,7 @@ func New(cli *BiosClient) *BiosClient {
 	} else {
 		baseURL = fmt.Sprintf("http://%s:%d", cli.Ip, cli.Port)
 	}
-	if client, found := clients[baseURL]; found {
-		return client
-	}
-	cli.Rest.SetBaseURL(baseURL)
-	cli.SetTokenHeader(cli.ExternalToken)
-	clients[baseURL] = cli
-	return cli
+	return baseURL
 }
 
 func (inst *BiosClient) SetTokenHeader(token string) *BiosClient {

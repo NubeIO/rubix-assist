@@ -127,13 +127,13 @@ func (inst *DB) UpdateHost(uuid string, host *model.Host) (*model.Host, error) {
 	if query.Error != nil {
 		return nil, handelNotFound(hostName)
 	} else {
-		edgecli.New(&edgecli.Client{
+		edgecli.NewForce(&edgecli.Client{
 			Ip:            host.IP,
 			Port:          host.Port,
 			HTTPS:         host.HTTPS,
 			ExternalToken: host.ExternalToken,
 		})
-		edgebioscli.New(&edgebioscli.BiosClient{
+		edgebioscli.NewForce(&edgebioscli.BiosClient{
 			Ip:            host.IP,
 			Port:          host.Port,
 			HTTPS:         host.HTTPS,
