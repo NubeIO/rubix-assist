@@ -55,7 +55,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	handleAuth := func(c *gin.Context) { c.Next() }
 	if config.Config.Auth() {
-		// handleAuth = api.HandleAuth() // TODO add back in auth
+		handleAuth = api.HandleAuth()
 	}
 
 	apiRoutes := r.Group("/api", handleAuth)
@@ -263,6 +263,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	token := apiRoutes.Group("/tokens")
 	{
 		token.GET("", api.GetTokens)
+		token.GET("/:uuid", api.GetToken)
 		token.POST("/generate", api.GenerateToken)
 		token.PUT("/:uuid/block", api.BlockToken)
 		token.PUT("/:uuid/regenerate", api.RegenerateToken)

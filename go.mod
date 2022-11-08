@@ -72,7 +72,7 @@ require (
 	github.com/NubeIO/lib-systemctl-go v0.2.0
 	github.com/NubeIO/lib-ufw v0.0.3
 	github.com/NubeIO/lib-uuid v0.0.3
-	github.com/NubeIO/nubeio-rubix-lib-auth-go v1.0.3
+	github.com/NubeIO/nubeio-rubix-lib-auth-go v1.1.0
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.4
 	github.com/NubeIO/rubix-edge v0.3.0
 	github.com/NubeIO/rubix-registry-go v0.0.1
