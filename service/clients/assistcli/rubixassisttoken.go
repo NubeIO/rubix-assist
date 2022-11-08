@@ -23,7 +23,7 @@ func (inst *Client) RubixAssistLogin(body *user.User) (*model.TokenResponse, err
 func (inst *Client) RubixAssistTokens(jwtToken string) (*[]externaltoken.ExternalToken, error) {
 	url := "/api/tokens"
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetQueryParam("jwt_token", jwtToken).
+		SetHeader("Authorization", jwtToken).
 		SetResult(&[]externaltoken.ExternalToken{}).
 		Get(url))
 	if err != nil {
@@ -36,7 +36,7 @@ func (inst *Client) RubixAssistTokens(jwtToken string) (*[]externaltoken.Externa
 func (inst *Client) RubixAssistToken(jwtToken string, uuid string) (*externaltoken.ExternalToken, error) {
 	url := fmt.Sprintf("/api/tokens/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetQueryParam("jwt_token", jwtToken).
+		SetHeader("Authorization", jwtToken).
 		SetResult(&externaltoken.ExternalToken{}).
 		Get(url))
 	if err != nil {
@@ -50,7 +50,7 @@ func (inst *Client) RubixAssistTokenGenerate(jwtToken string, name string) (*ext
 	url := "/api/tokens/generate"
 	body := externaltoken.ExternalToken{Name: name, Blocked: false}
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetQueryParam("jwt_token", jwtToken).
+		SetHeader("Authorization", jwtToken).
 		SetBody(body).
 		SetResult(&externaltoken.ExternalToken{}).
 		Post(url))
@@ -65,7 +65,7 @@ func (inst *Client) RubixAssistTokenBlock(jwtToken string, uuid string, block bo
 	url := fmt.Sprintf("/api/tokens/%s/block", uuid)
 	body := map[string]bool{"blocked": block}
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetQueryParam("jwt_token", jwtToken).
+		SetHeader("Authorization", jwtToken).
 		SetBody(body).
 		SetResult(&externaltoken.ExternalToken{}).
 		Put(url))
@@ -79,7 +79,7 @@ func (inst *Client) RubixAssistTokenBlock(jwtToken string, uuid string, block bo
 func (inst *Client) RubixAssistTokenRegenerate(jwtToken string, uuid string) (*externaltoken.ExternalToken, error) {
 	url := fmt.Sprintf("/api/tokens/%s/regenerate", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetQueryParam("jwt_token", jwtToken).
+		SetHeader("Authorization", jwtToken).
 		SetResult(&externaltoken.ExternalToken{}).
 		Put(url))
 	if err != nil {
@@ -92,7 +92,7 @@ func (inst *Client) RubixAssistTokenRegenerate(jwtToken string, uuid string) (*e
 func (inst *Client) RubixAssistTokenDelete(jwtToken string, uuid string) (bool, error) {
 	url := fmt.Sprintf("/api/tokens/%s", uuid)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetQueryParam("jwt_token", jwtToken).
+		SetHeader("Authorization", jwtToken).
 		Delete(url))
 	if err != nil {
 		return false, err

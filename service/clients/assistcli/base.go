@@ -44,20 +44,10 @@ func New(cli *Client) *Client {
 	defer mutex.Unlock()
 	if cli == nil {
 		log.Fatal("assist client cli can not be empty")
+		return nil
 	}
 	cli.Rest = resty.New()
-	if cli.Ip == "" {
-		cli.Ip = "0.0.0.0"
-	}
-	if cli.Port == 0 {
-		cli.Port = 1662
-	}
-	var baseURL string
-	if cli.HTTPS != nil && *cli.HTTPS {
-		baseURL = fmt.Sprintf("https://%s:%d", cli.Ip, cli.Port)
-	} else {
-		baseURL = fmt.Sprintf("http://%s:%d", cli.Ip, cli.Port)
-	}
+	baseURL := getBaseUrl(cli)
 	if client, found := clients[baseURL]; found {
 		return client
 	}
@@ -65,6 +55,37 @@ func New(cli *Client) *Client {
 	cli.SetTokenHeader(cli.ExternalToken)
 	clients[baseURL] = cli
 	return cli
+}
+
+func ForceNew(cli *Client) *Client {
+	mutex.Lock()
+	defer mutex.Unlock()
+	if cli == nil {
+		log.Fatal("assist client cli can not be empty")
+		return nil
+	}
+	cli.Rest = resty.New()
+	baseURL := getBaseUrl(cli)
+	cli.Rest.SetBaseURL(baseURL)
+	cli.SetTokenHeader(cli.ExternalToken)
+	clients[baseURL] = cli
+	return cli
+}
+
+func getBaseUrl(cli *Client) string {
+	if cli.Ip == "" {
+		cli.Ip = "0.0.0.0"
+	}
+	if cli.Port == 0 {
+		cli.Port = 1661
+	}
+	var baseURL string
+	if cli.HTTPS != nil && *cli.HTTPS {
+		baseURL = fmt.Sprintf("https://%s:%d", cli.Ip, cli.Port)
+	} else {
+		baseURL = fmt.Sprintf("http://%s:%d", cli.Ip, cli.Port)
+	}
+	return baseURL
 }
 
 func (inst *Client) SetTokenHeader(token string) *Client {
