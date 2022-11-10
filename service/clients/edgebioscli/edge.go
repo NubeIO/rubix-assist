@@ -3,18 +3,29 @@ package edgebioscli
 import (
 	"fmt"
 	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli/ebmodel"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
-	"io"
+	"os"
 	"path"
+	"path/filepath"
 )
 
-func (inst *BiosClient) Upload(version, zipFileName string, reader io.Reader) (*model.Message, error) {
-	downloadLocation := fmt.Sprintf("/data/rubix-service/apps/download/rubix-edge/%s", version)
-	url := fmt.Sprintf("/api/files/upload?destination=%s", downloadLocation)
+func (inst *BiosClient) RubixEdgeUpload(body *assistmodel.FileUpload) (*model.Message, error) {
+	downloadLocation := fmt.Sprintf("/data/rubix-service/apps/download/rubix-edge/%s", body.Version)
+	url := fmt.Sprintf("/api/dirs/create?path=%s", downloadLocation)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&model.Message{}).
+		Post(url))
+
+	url = fmt.Sprintf("/api/files/upload?destination=%s", downloadLocation)
+	reader, err := os.Open(body.File)
+	if err != nil {
+		return nil, err
+	}
+	resp, err = nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&ebmodel.UploadResponse{}).
-		SetFileReader("file", zipFileName, reader).
+		SetFileReader("file", filepath.Base(body.File), reader).
 		Post(url))
 	if err != nil {
 		return nil, err

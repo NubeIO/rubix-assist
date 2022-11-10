@@ -76,7 +76,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	edgeBiosApps := apiRoutes.Group("/eb")
 	{
-		edgeBiosApps.GET("/edge/upload", api.EdgeBiosEdgeUpload)
+		edgeBiosApps.POST("/re/upload", api.EdgeBiosRubixEdgeUpload)
 	}
 
 	edge := apiRoutes.Group("/edge/system")

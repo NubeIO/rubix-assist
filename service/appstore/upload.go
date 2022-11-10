@@ -27,7 +27,7 @@ func (inst *Store) UploadAddOnAppStore(app *installer.Upload) (*UploadResponse, 
 	if app.Arch == "" {
 		return nil, errors.New("arch_type can not be empty, try armv7 amd64")
 	}
-	err := os.MkdirAll(inst.getAppsStoreAppWithArchVersionPath(app.Name, app.Arch, app.Version), os.FileMode(inst.App.FileMode))
+	err := os.MkdirAll(inst.GetAppsStoreAppWithArchVersionPath(app.Name, app.Arch, app.Version), os.FileMode(inst.App.FileMode))
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (inst *Store) UploadAddOnAppStore(app *installer.Upload) (*UploadResponse, 
 	}
 	uploadResp.TmpFile = resp.TmpFile
 	source := resp.UploadedFile
-	destination := path.Join(inst.getAppsStoreAppWithArchVersionPath(app.Name, app.Arch, app.Version), resp.FileName)
+	destination := path.Join(inst.GetAppsStoreAppWithArchVersionPath(app.Name, app.Arch, app.Version), resp.FileName)
 	check := fileutils.FileExists(source)
 	if !check {
 		return nil, errors.New(fmt.Sprintf("upload file tmp dir not found: %s", source))

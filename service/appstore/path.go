@@ -16,8 +16,8 @@ func (inst *Store) getAppsStoreAppPath(appName string) string {
 	return p
 }
 
-// getAppsStoreAppWithArchVersionPath /data/store/apps/<app_name>/<arch>/<version>
-func (inst *Store) getAppsStoreAppWithArchVersionPath(appName, arch, version string) string {
+// GetAppsStoreAppWithArchVersionPath /data/store/apps/<app_name>/<arch>/<version>
+func (inst *Store) GetAppsStoreAppWithArchVersionPath(appName, arch, version string) string {
 	p := path.Join(inst.getAppsStoreAppPath(appName), arch, version)
 	return p
 }
