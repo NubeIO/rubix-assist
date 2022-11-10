@@ -62,3 +62,35 @@ func (inst *BiosClient) RubixEdgeUpload(body *assistmodel.FileUpload) (*model.Me
 	}
 	return &model.Message{Message: "successfully uploaded the rubix-edge in edge device"}, nil
 }
+
+func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error) {
+	// delete installed files
+	installationDirectory := "/data/rubix-service/apps/install/rubix-edge"
+	url := fmt.Sprintf("/api/files/delete-all?path=%s", installationDirectory)
+	_, _ = nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&model.Message{}).
+		Delete(url))
+
+	downloadedFile := fmt.Sprintf("/data/rubix-service/apps/download/rubix-edge/%s/app", version)
+	installationFile := fmt.Sprintf("/data/rubix-service/apps/install/rubix-edge/%s/app", version)
+
+	// create installation directory
+	installationDirectoryWithVersion := filepath.Dir(installationFile)
+	url = fmt.Sprintf("/api/dirs/create?path=%s", installationDirectoryWithVersion)
+	_, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&model.Message{}).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+
+	// move downloaded file to installation directory
+	url = fmt.Sprintf("/api/files/move?from=%s&to=%s", downloadedFile, installationFile)
+	_, err = nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&model.Message{}).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return &model.Message{Message: "successfully installed the rubix-edge in edge device"}, nil
+}

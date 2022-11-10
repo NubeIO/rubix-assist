@@ -20,3 +20,17 @@ func (inst *Client) EdgeBiosRubixEdgeUpload(hostIDName string, upload assistmode
 	}
 	return resp.Result().(*model.Message), nil
 }
+
+func (inst *Client) EdgeBiosRubixEdgeInstall(hostIDName string, upload assistmodel.FileUpload) (*model.Message, error) {
+	url := fmt.Sprintf("/api/eb/re/install")
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetHeader("host_uuid", hostIDName).
+		SetHeader("host_name", hostIDName).
+		SetBody(upload).
+		SetResult(&model.Message{}).
+		Post(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*model.Message), nil
+}
