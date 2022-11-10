@@ -7,6 +7,7 @@ import (
 	dbase "github.com/NubeIO/rubix-assist/database"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/config"
+	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -44,7 +45,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 	appDB := &dbase.DB{
 		DB: db,
 	}
-	makeStore, _ := appstore.New(&appstore.Store{App: &installer.App{}, DB: appDB})
+	global.App = installer.New(&installer.App{})
+	makeStore, _ := appstore.New(&appstore.Store{DB: appDB})
 	api := controller.Controller{DB: appDB, Store: makeStore}
 
 	r.POST("/api/users/login", api.Login)

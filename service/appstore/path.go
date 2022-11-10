@@ -1,12 +1,13 @@
 package appstore
 
 import (
+	"github.com/NubeIO/rubix-assist/pkg/global"
 	"path"
 )
 
 // getAppsStorePath => /data/store/apps
 func (inst *Store) getAppsStorePath() string {
-	p := path.Join(inst.App.StoreDir, "apps")
+	p := path.Join(global.App.StoreDir, "apps")
 	return p
 }
 
@@ -22,13 +23,9 @@ func (inst *Store) GetAppsStoreAppWithArchVersionPath(appName, arch, version str
 	return p
 }
 
-func (inst *Store) getAppWorkingDir(appName, appVersion string) string {
-	return inst.App.GetAppInstallPathWithVersionPath(appName, appVersion)
-}
-
 // getPluginsStorePath => /data/store/plugins
 func (inst *Store) getPluginsStorePath() string {
-	p := path.Join(inst.App.StoreDir, "plugins")
+	p := path.Join(global.App.StoreDir, "plugins")
 	return p
 }
 

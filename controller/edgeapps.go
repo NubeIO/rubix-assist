@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/NubeIO/lib-rubix-installer/installer"
-	"github.com/NubeIO/rubix-assist/service/appstore"
+	"github.com/NubeIO/rubix-assist/service/systemctl"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -48,7 +48,7 @@ func (inst *Controller) GenerateServiceFileAndEdgeUpload(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *appstore.ServiceFile
+	var m *systemctl.ServiceFile
 	err = c.ShouldBindJSON(&m)
 
 	data, err := inst.Store.GenerateServiceFileAndEdgeUpload(host.UUID, host.Name, m)

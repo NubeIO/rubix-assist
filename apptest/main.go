@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
-	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/NubeIO/rubix-assist/service/clients/assistcli"
+	"github.com/NubeIO/rubix-assist/service/systemctl"
 )
 
 const (
@@ -32,7 +32,7 @@ func addUploadApp() error {
 
 func uploadService() (string, error) {
 	client := assistcli.New(&assistcli.Client{})
-	service, err := client.EdgeUploadService("rc", &appstore.ServiceFile{
+	service, err := client.EdgeUploadService("rc", &systemctl.ServiceFile{
 		Name:                    appName,
 		Version:                 appVersion,
 		ServiceDescription:      "",

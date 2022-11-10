@@ -6,6 +6,7 @@ import (
 	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/pkg/global"
 	"os"
 	"path"
 )
@@ -19,11 +20,11 @@ func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (
 	if err != nil {
 		return nil, err
 	}
-	tmpDir, err := inst.App.MakeTmpDirUpload()
+	tmpDir, err := global.App.MakeTmpDirUpload()
 	if err != nil {
 		return nil, err
 	}
-	zip, err := fileutils.UnZip(pluginsStorePluginFile, tmpDir, os.FileMode(inst.App.FileMode))
+	zip, err := fileutils.UnZip(pluginsStorePluginFile, tmpDir, os.FileMode(global.App.FileMode))
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +37,7 @@ func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (
 	if err != nil {
 		return nil, err
 	}
-	flowPath := inst.App.GetAppDataPath(flowFramework)
+	flowPath := global.App.GetAppDataPath(flowFramework)
 	err = fileutils.DirExistsErr(flowPath)
 	if err != nil {
 		return nil, errors.New("flow-framework has not be installed yet")
@@ -44,7 +45,7 @@ func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (
 	flowPathPluginPath := fmt.Sprintf("%s/data/plugins", flowPath)
 	err = fileutils.DirExistsErr(flowPathPluginPath)
 	if err != nil {
-		err := os.MkdirAll(flowPathPluginPath, os.FileMode(inst.App.FileMode))
+		err := os.MkdirAll(flowPathPluginPath, os.FileMode(global.App.FileMode))
 		if err != nil {
 			return nil, err
 		}
@@ -62,7 +63,7 @@ func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (
 }
 
 func (inst *Store) EdgeGetPluginPath() (string, error) {
-	flowPath := inst.App.GetAppDataPath(flowFramework)
+	flowPath := global.App.GetAppDataPath(flowFramework)
 	err := fileutils.DirExistsErr(flowPath)
 	if err != nil {
 		return "", errors.New("flow-framework has not be installed yet")

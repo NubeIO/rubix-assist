@@ -6,6 +6,7 @@ import (
 	"github.com/NubeIO/lib-systemctl-go/systemd"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
+	"github.com/NubeIO/rubix-assist/service/systemctl"
 	"strconv"
 )
 
@@ -27,7 +28,7 @@ func (inst *Client) EdgeUploadApp(hostIDName string, app *installer.Upload) (*in
 }
 
 // EdgeUploadService generate a service file and upload it to edge device
-func (inst *Client) EdgeUploadService(hostIDName string, app *appstore.ServiceFile) (*appstore.UploadResponse, error) {
+func (inst *Client) EdgeUploadService(hostIDName string, app *systemctl.ServiceFile) (*appstore.UploadResponse, error) {
 	url := fmt.Sprintf("/api/edge/apps/service/upload")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetHeader("host_uuid", hostIDName).

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/rubix-assist/pkg/global"
 	"os"
 	"path"
 )
@@ -23,7 +24,7 @@ func (inst *Store) EdgeUploadApp(hostUUID, hostName string, app *installer.Uploa
 		return nil, errors.New("upload app to edge arch type can not be empty, try armv7 amd64")
 	}
 	_path := inst.GetAppsStoreAppWithArchVersionPath(app.Name, app.Arch, app.Version)
-	buildDetails, err := inst.App.GetBuildZipNameByArch(_path, app.Arch, app.DoNotValidateArch)
+	buildDetails, err := global.App.GetBuildZipNameByArch(_path, app.Arch, app.DoNotValidateArch)
 	if buildDetails == nil {
 		return nil, errors.New(fmt.Sprintf("failed to match build zip name app: %s version: %s arch: %s", app.Name, app.Version, app.Arch))
 	}
