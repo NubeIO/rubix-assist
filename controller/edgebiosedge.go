@@ -48,6 +48,17 @@ func (inst *Controller) EdgeBiosRubixEdgeInstall(c *gin.Context) {
 	responseHandler(data, err, c)
 }
 
+func (inst *Controller) EdgeBiosGetRubixEdgeVersion(c *gin.Context) {
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
+	cli := helpers.GetEdgeBiosClient(host)
+	data, err := cli.GetRubixEdgeVersion()
+	responseHandler(data, err, c)
+}
+
 func (inst *Controller) attachFileOnModel(m *assistmodel.FileUpload) error {
 	storePath := inst.Store.GetAppsStoreAppWithArchVersionPath("rubix-edge", m.Arch, m.Version)
 	files, err := ioutil.ReadDir(storePath)
