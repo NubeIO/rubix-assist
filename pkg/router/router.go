@@ -7,6 +7,7 @@ import (
 	dbase "github.com/NubeIO/rubix-assist/database"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/config"
+	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -44,7 +45,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 	appDB := &dbase.DB{
 		DB: db,
 	}
-	makeStore, _ := appstore.New(&appstore.Store{App: &installer.App{}, DB: appDB})
+	global.App = installer.New(&installer.App{})
+	makeStore, _ := appstore.New(&appstore.Store{DB: appDB})
 	api := controller.Controller{DB: appDB, Store: makeStore}
 
 	r.POST("/api/users/login", api.Login)
@@ -55,7 +57,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	handleAuth := func(c *gin.Context) { c.Next() }
 	if config.Config.Auth() {
-		// handleAuth = api.HandleAuth() // TODO add back in auth
+		handleAuth = api.HandleAuth()
 	}
 
 	apiRoutes := r.Group("/api", handleAuth)
@@ -74,14 +76,11 @@ func Setup(db *gorm.DB) *gin.Engine {
 		storePlugins.POST("/", api.UploadPluginStorePlugin)
 	}
 
-	edgeBios := apiRoutes.Group("/edge-bios/system")
+	edgeBiosApps := apiRoutes.Group("/eb")
 	{
-		edgeBios.GET("/ping", api.EdgeBiosPing)
-	}
-
-	edgeBiosApps := apiRoutes.Group("/edge-bios/edge")
-	{
-		edgeBiosApps.GET("/upload", api.EdgeBiosEdgeUpload)
+		edgeBiosApps.POST("/re/upload", api.EdgeBiosRubixEdgeUpload)
+		edgeBiosApps.POST("/re/install", api.EdgeBiosRubixEdgeInstall)
+		edgeBiosApps.GET("/re/version", api.EdgeBiosGetRubixEdgeVersion)
 	}
 
 	edge := apiRoutes.Group("/edge/system")
@@ -268,6 +267,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	token := apiRoutes.Group("/tokens")
 	{
 		token.GET("", api.GetTokens)
+		token.GET("/:uuid", api.GetToken)
 		token.POST("/generate", api.GenerateToken)
 		token.PUT("/:uuid/block", api.BlockToken)
 		token.PUT("/:uuid/regenerate", api.RegenerateToken)

@@ -2,15 +2,12 @@ package appstore
 
 import (
 	"fmt"
-	"github.com/NubeIO/lib-rubix-installer/installer"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"testing"
 )
 
 func Test_ListPlugins(t *testing.T) {
-	appStore, err := New(&Store{
-		App: &installer.App{},
-	})
+	appStore, err := New(&Store{})
 	details, err := appStore.GetPluginsStorePlugins()
 	fmt.Println(err)
 	if err != nil {
@@ -20,11 +17,7 @@ func Test_ListPlugins(t *testing.T) {
 }
 
 func Test_getPluginPath(t *testing.T) {
-	appStore, err := New(&Store{
-		App: &installer.App{
-			DataDir: "/data",
-		},
-	})
+	appStore, err := New(&Store{})
 	pluginPath, err := appStore.GetPluginsStorePluginFile(&Plugin{
 		Name:    "bacnetserver",
 		Arch:    "amd64",

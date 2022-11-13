@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/pkg/global"
 	log "github.com/sirupsen/logrus"
 	"path"
 )
@@ -20,7 +21,7 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.
 	if configName == "" {
 		configName = "config.yml"
 	}
-	appDataConfigPath := inst.App.GetAppDataConfigPath(body.AppName)
+	appDataConfigPath := global.App.GetAppDataConfigPath(body.AppName)
 	exists, err := inst.EdgeDirExists(hostUUID, hostName, appDataConfigPath)
 	if err != nil {
 		return nil, err
@@ -55,7 +56,7 @@ func (inst *Store) EdgeReadConfig(hostUUID, hostName, appName, configName string
 	if err != nil {
 		return nil, err
 	}
-	appDataConfigPath := inst.App.GetAppDataConfigPath(appName)
+	appDataConfigPath := global.App.GetAppDataConfigPath(appName)
 	absoluteAppDataConfigName := path.Join(appDataConfigPath, configName)
 	file, err := client.ReadFile(absoluteAppDataConfigName)
 	if err != nil {

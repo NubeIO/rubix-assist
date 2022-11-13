@@ -21,7 +21,7 @@ func GetEdgeBiosClient(host *model.Host) *edgebioscli.BiosClient {
 	cli := edgebioscli.New(&edgebioscli.BiosClient{
 		Rest:          nil,
 		Ip:            host.IP,
-		Port:          host.Port,
+		Port:          host.BiosPort,
 		HTTPS:         host.HTTPS,
 		ExternalToken: host.ExternalToken,
 	})

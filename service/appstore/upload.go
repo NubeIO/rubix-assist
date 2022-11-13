@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/rubix-assist/pkg/global"
 	"os"
 	"path"
 )
@@ -27,7 +28,7 @@ func (inst *Store) UploadAddOnAppStore(app *installer.Upload) (*UploadResponse, 
 	if app.Arch == "" {
 		return nil, errors.New("arch_type can not be empty, try armv7 amd64")
 	}
-	err := os.MkdirAll(inst.getAppsStoreAppWithArchVersionPath(app.Name, app.Arch, app.Version), os.FileMode(inst.App.FileMode))
+	err := os.MkdirAll(inst.GetAppsStoreAppWithArchVersionPath(app.Name, app.Arch, app.Version), os.FileMode(global.App.FileMode))
 	if err != nil {
 		return nil, err
 	}
@@ -39,13 +40,13 @@ func (inst *Store) UploadAddOnAppStore(app *installer.Upload) (*UploadResponse, 
 		TmpFile:      "",
 		UploadedFile: "",
 	}
-	resp, err := inst.App.Upload(file)
+	resp, err := global.App.Upload(file)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("upload app: %s", err.Error()))
 	}
 	uploadResp.TmpFile = resp.TmpFile
 	source := resp.UploadedFile
-	destination := path.Join(inst.getAppsStoreAppWithArchVersionPath(app.Name, app.Arch, app.Version), resp.FileName)
+	destination := path.Join(inst.GetAppsStoreAppWithArchVersionPath(app.Name, app.Arch, app.Version), resp.FileName)
 	check := fileutils.FileExists(source)
 	if !check {
 		return nil, errors.New(fmt.Sprintf("upload file tmp dir not found: %s", source))
