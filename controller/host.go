@@ -2,6 +2,8 @@ package controller
 
 import (
 	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli"
+	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 	"github.com/gin-gonic/gin"
 )
 
@@ -41,6 +43,7 @@ func (inst *Controller) CreateHost(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
+	inst.updateCLIs(host)
 	responseHandler(host, err, c)
 }
 
@@ -51,6 +54,7 @@ func (inst *Controller) UpdateHost(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
+	inst.updateCLIs(host)
 	responseHandler(host, err, c)
 }
 
@@ -70,4 +74,19 @@ func (inst *Controller) DropHosts(c *gin.Context) {
 		return
 	}
 	responseHandler(host, err, c)
+}
+
+func (inst *Controller) updateCLIs(host *model.Host) {
+	edgecli.NewForce(&edgecli.Client{
+		Ip:            host.IP,
+		Port:          host.Port,
+		HTTPS:         host.HTTPS,
+		ExternalToken: host.ExternalToken,
+	})
+	edgebioscli.NewForce(&edgebioscli.BiosClient{
+		Ip:            host.IP,
+		Port:          host.BiosPort,
+		HTTPS:         host.HTTPS,
+		ExternalToken: host.ExternalToken,
+	})
 }

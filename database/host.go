@@ -6,8 +6,6 @@ import (
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
 	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
-	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli"
-	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 )
 
 const hostName = "host"
@@ -75,9 +73,8 @@ func (inst *DB) GetHosts() ([]*model.Host, error) {
 	var m []*model.Host
 	if err := inst.DB.Find(&m).Error; err != nil {
 		return nil, err
-	} else {
-		return m, nil
 	}
+	return m, nil
 }
 
 func (inst *DB) CreateHost(host *model.Host) (*model.Host, error) {
@@ -106,9 +103,8 @@ func (inst *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	}
 	if err := inst.DB.Create(&host).Error; err != nil {
 		return nil, err
-	} else {
-		return host, nil
 	}
+	return host, nil
 }
 
 func (inst *DB) UpdateHostByName(name string, host *model.Host) (*model.Host, error) {
@@ -116,9 +112,8 @@ func (inst *DB) UpdateHostByName(name string, host *model.Host) (*model.Host, er
 	query := inst.DB.Where("name = ?", name).Find(&m).Updates(host)
 	if query.Error != nil {
 		return nil, handelNotFound(hostName)
-	} else {
-		return m, nil
 	}
+	return m, nil
 }
 
 func (inst *DB) UpdateHost(uuid string, host *model.Host) (*model.Host, error) {
@@ -126,21 +121,8 @@ func (inst *DB) UpdateHost(uuid string, host *model.Host) (*model.Host, error) {
 	query := inst.DB.Where("uuid = ?", uuid).Find(&m).Updates(host)
 	if query.Error != nil {
 		return nil, handelNotFound(hostName)
-	} else {
-		edgecli.NewForce(&edgecli.Client{
-			Ip:            host.IP,
-			Port:          host.Port,
-			HTTPS:         host.HTTPS,
-			ExternalToken: host.ExternalToken,
-		})
-		edgebioscli.NewForce(&edgebioscli.BiosClient{
-			Ip:            host.IP,
-			Port:          host.Port,
-			HTTPS:         host.HTTPS,
-			ExternalToken: host.ExternalToken,
-		})
-		return m, nil
 	}
+	return m, nil
 }
 
 func (inst *DB) DeleteHost(uuid string) (*DeleteMessage, error) {
