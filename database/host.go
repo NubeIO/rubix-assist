@@ -107,6 +107,18 @@ func (inst *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	if err := inst.DB.Create(&host).Error; err != nil {
 		return nil, err
 	} else {
+		edgecli.NewForce(&edgecli.Client{
+			Ip:            host.IP,
+			Port:          host.Port,
+			HTTPS:         host.HTTPS,
+			ExternalToken: host.ExternalToken,
+		})
+		edgebioscli.NewForce(&edgebioscli.BiosClient{
+			Ip:            host.IP,
+			Port:          host.Port,
+			HTTPS:         host.HTTPS,
+			ExternalToken: host.ExternalToken,
+		})
 		return host, nil
 	}
 }
