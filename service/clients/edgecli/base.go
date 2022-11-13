@@ -32,8 +32,10 @@ func New(cli *Client) *Client {
 	if client, found := clients[baseURL]; found {
 		return client
 	}
-	cli.Rest.SetBaseURL(baseURL)
-	cli.SetTokenHeader(cli.ExternalToken)
+	rest := resty.New()
+	rest.SetBaseURL(baseURL)
+	rest.Header.Set("Authorization", composeToken(cli.ExternalToken))
+	cli.Rest = rest
 	clients[baseURL] = cli
 	return cli
 }
@@ -47,8 +49,10 @@ func NewForce(cli *Client) *Client {
 		return nil
 	}
 	baseURL := getBaseUrl(cli)
-	cli.Rest.SetBaseURL(baseURL)
-	cli.SetTokenHeader(cli.ExternalToken)
+	rest := resty.New()
+	rest.SetBaseURL(baseURL)
+	rest.Header.Set("Authorization", composeToken(cli.ExternalToken))
+	cli.Rest = rest
 	clients[baseURL] = cli
 	return cli
 }
@@ -68,11 +72,6 @@ func getBaseUrl(cli *Client) string {
 		baseURL = fmt.Sprintf("http://%s:%d", cli.Ip, cli.Port)
 	}
 	return baseURL
-}
-
-func (inst *Client) SetTokenHeader(token string) *Client {
-	inst.Rest.Header.Set("Authorization", composeToken(token))
-	return inst
 }
 
 func composeToken(token string) string {
