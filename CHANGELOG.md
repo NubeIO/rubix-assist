@@ -1,7 +1,13 @@
 # CHANGELOG
+
+## [v0.6.0](https://github.com/NubeIO/rubix-assist/tree/v0.6.0) (2022-11-13)
+
+- Add BIOS implementation for rubix-edge installation
+- Add token implementations
+
 ## [v0.5.5](https://github.com/NubeIO/rubix-assist/tree/v0.5.5) (2022-10-26)
 
-- added edge proxy
+- Added edge proxy
 
 ## [v0.5.4](https://github.com/NubeIO/rubix-assist/tree/v0.5.4) (2022-10-24)
 
