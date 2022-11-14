@@ -1,8 +1,13 @@
 # CHANGELOG
+
+## [v0.6.2](https://github.com/NubeIO/rubix-assist/tree/v0.6.2) (2022-11-14)
+
+- Remove assist, ffclient, wires CLI from here & add it on rubix-ui
+
 ## [v0.6.1](https://github.com/NubeIO/rubix-assist/tree/v0.6.1) (2022-11-13)
 
 - CLI creation on creating of host
-  - otherwise, old host details can take place
+    - otherwise, old host details can take place
 - Fix: NewForce CLI port issue for bios
 
 ## [v0.6.0](https://github.com/NubeIO/rubix-assist/tree/v0.6.0) (2022-11-13)
