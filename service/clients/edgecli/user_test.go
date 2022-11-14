@@ -37,7 +37,6 @@ func TestClient_GenerateToken(t *testing.T) {
 }
 func TestClient_GetTokens(t *testing.T) {
 	cli := New(&Client{})
-	cli.SetTokenHeader(token)
 	login, err := cli.GetTokens()
 	fmt.Println(err)
 	pprint.PrintJSON(login)
@@ -48,7 +47,6 @@ func TestClient_GetTokens(t *testing.T) {
 
 func TestClient_GetUser(t *testing.T) {
 	cli := New(&Client{})
-	cli.SetTokenHeader(token)
 	login, err := cli.GetUser()
 	pprint.PrintJSON(login)
 	if err != nil {
