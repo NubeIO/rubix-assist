@@ -16,15 +16,12 @@ import (
 	"github.com/melbahja/goph"
 )
 
-const root = 0755
-
-var filePerm = root
-
 type Controller struct {
-	SSH   *goph.Client
-	DB    *dbase.DB
-	Rest  *rest.Service
-	Store *appstore.Store
+	SSH      *goph.Client
+	DB       *dbase.DB
+	Rest     *rest.Service
+	Store    *appstore.Store
+	FileMode int
 }
 
 func (inst *Controller) resolveHost(c *gin.Context) (*model.Host, error) {

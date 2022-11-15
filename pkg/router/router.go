@@ -47,7 +47,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	}
 	global.App = installer.New(&installer.App{})
 	makeStore, _ := appstore.New(&appstore.Store{DB: appDB})
-	api := controller.Controller{DB: appDB, Store: makeStore}
+	api := controller.Controller{DB: appDB, Store: makeStore, FileMode: global.App.FileMode}
 
 	r.POST("/api/users/login", api.Login)
 	publicSystemApi := r.Group("/api/system")
@@ -207,11 +207,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 	// tools := apiRoutes.Group("/tools")
 	// //tools.Use(authMiddleware.MiddlewareFunc())
 	// {
-	//
 	//	tools.GET("/edgeapi/ip/schema", api.EdgeIPSchema)
 	//	tools.POST("/edgeapi/ip", api.EdgeSetIP)
 	//	tools.POST("/edgeapi/ip/dhcp", api.EdgeSetIP)
-	//
 	// }
 
 	wires := apiRoutes.Group("/wires")
@@ -234,22 +232,25 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	files := apiRoutes.Group("/files")
 	{
-		files.GET("/walk", api.WalkFile)
-		files.GET("/list", api.ListFiles) // /api/files/list?file=/data
-		files.POST("/rename", api.RenameFile)
-		files.POST("/copy", api.CopyFile)
-		files.POST("/move", api.MoveFile)
-		files.POST("/upload", api.UploadFile)
-		files.POST("/download", api.DownloadFile)
-		files.DELETE("/delete", api.DeleteFile)
-		files.DELETE("/delete/all", api.DeleteAllFiles)
+		files.GET("/exists", api.FileExists)            // needs to be a file
+		files.GET("/walk", api.WalkFile)                // similar as find in linux command
+		files.GET("/list", api.ListFiles)               // list all files and folders
+		files.POST("/create", api.CreateFile)           // create file only
+		files.POST("/copy", api.CopyFile)               // copy either file or folder
+		files.POST("/rename", api.RenameFile)           // rename either file or folder
+		files.POST("/move", api.MoveFile)               // move file only
+		files.POST("/upload", api.UploadFile)           // upload single file
+		files.POST("/download", api.DownloadFile)       // download single file
+		files.GET("/read", api.ReadFile)                // read single file
+		files.PUT("/write", api.WriteFile)              // write single file
+		files.DELETE("/delete", api.DeleteFile)         // delete single file
+		files.DELETE("/delete-all", api.DeleteAllFiles) // deletes file or folder
 	}
 
 	dirs := apiRoutes.Group("/dirs")
 	{
-		dirs.POST("/create", api.CreateDir)
-		dirs.POST("/copy", api.CopyDir)
-		dirs.DELETE("/delete", api.DeleteDir)
+		dirs.GET("/exists", api.DirExists)  // needs to be a folder
+		dirs.POST("/create", api.CreateDir) // create folder
 	}
 
 	zip := apiRoutes.Group("/zip")

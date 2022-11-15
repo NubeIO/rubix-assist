@@ -65,7 +65,7 @@ require (
 require (
 	github.com/NubeIO/lib-date v0.0.6
 	github.com/NubeIO/lib-dhcpd v0.0.2
-	github.com/NubeIO/lib-files v0.1.1
+	github.com/NubeIO/lib-files v0.2.0
 	github.com/NubeIO/lib-networking v0.0.7
 	github.com/NubeIO/lib-rubix-installer v0.3.0
 	github.com/NubeIO/lib-schema v0.1.4
