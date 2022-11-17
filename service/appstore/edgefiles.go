@@ -98,6 +98,10 @@ func (inst *Store) EdgeUploadLocalFile(hostUUID, hostName, file, destination str
 	if err != nil {
 		return nil, err
 	}
+	_, err = client.CreateDir(destination)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := client.UploadLocalFile(file, destination)
 	if err != nil {
 		return nil, err

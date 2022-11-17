@@ -1,6 +1,8 @@
 package appstore
 
 import (
+	"fmt"
+	"github.com/NubeIO/rubix-assist/pkg/constants"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"path"
 )
@@ -33,4 +35,9 @@ func (inst *Store) getPluginsStorePath() string {
 func (inst *Store) getPluginsStoreWithFile(fileName string) string {
 	p := path.Join(inst.getPluginsStorePath(), fileName)
 	return p
+}
+
+func getPluginInstallationPath() string {
+	flowPath := global.App.GetAppDataPath(constants.FlowFramework)
+	return fmt.Sprintf("%s/data/plugins", flowPath)
 }

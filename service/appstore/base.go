@@ -7,8 +7,6 @@ import (
 	"os"
 )
 
-const flowFramework = "flow-framework"
-
 type Store struct {
 	DB *base.DB
 }
