@@ -115,21 +115,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgeConfig.POST("/", api.EdgeWriteConfig)
 	}
 
-	edgeFiles := apiRoutes.Group("/edge/files")
-	{
-		edgeFiles.GET("/exists", api.EdgeFileExists)
-		edgeFiles.GET("/read", api.EdgeReadFile)
-		edgeFiles.POST("/create", api.EdgeCreateFile)
-		edgeFiles.POST("/write/string", api.EdgeWriteString)
-		edgeFiles.POST("/write/json", api.EdgeWriteFileJson)
-		edgeFiles.POST("/write/yml", api.EdgeWriteFileYml)
-	}
-
-	edgeDirs := apiRoutes.Group("/edge/dirs")
-	{
-		edgeDirs.GET("/exists", api.EdgeDirExists)
-	}
-
 	edgePlugins := apiRoutes.Group("/edge/plugins")
 	{
 		edgePlugins.GET("/", api.EdgeListPlugins)
@@ -204,14 +189,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		messages.DELETE("/:uuid", api.DeleteTransaction)
 		messages.DELETE("/drop", api.DropTransactions)
 	}
-
-	// tools := apiRoutes.Group("/tools")
-	// //tools.Use(authMiddleware.MiddlewareFunc())
-	// {
-	//	tools.GET("/edgeapi/ip/schema", api.EdgeIPSchema)
-	//	tools.POST("/edgeapi/ip", api.EdgeSetIP)
-	//	tools.POST("/edgeapi/ip/dhcp", api.EdgeSetIP)
-	// }
 
 	wires := apiRoutes.Group("/wires")
 	{

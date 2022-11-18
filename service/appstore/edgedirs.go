@@ -19,11 +19,3 @@ func (inst *Store) EdgeCreateDir(hostUUID, hostName, path string) (*model.Messag
 	}
 	return client.CreateDir(path)
 }
-
-func (inst *Store) EdgeDeleteFolder(hostUUID, hostName, path string, recursively bool) (*model.Message, error) {
-	client, err := inst.getClient(hostUUID, hostName)
-	if err != nil {
-		return nil, err
-	}
-	return client.DeleteDir(path, recursively)
-}
