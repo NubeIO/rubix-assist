@@ -1,7 +1,7 @@
 package controller
 
 import (
-	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 )
 

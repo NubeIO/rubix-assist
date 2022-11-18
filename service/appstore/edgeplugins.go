@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/rubix-assist/model"
-	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"os"
 	"path"
 )
 
-func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (*assistmodel.EdgeUploadResponse, error) {
+func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (*model.EdgeUploadResponse, error) {
 	pluginsStorePluginFile, err := inst.GetPluginsStorePluginFile(plugin)
 	if err != nil {
 		return nil, err

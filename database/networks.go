@@ -3,7 +3,7 @@ package base
 import (
 	"errors"
 	"github.com/NubeIO/lib-uuid/uuid"
-	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/model"
 )
 
 const networkName = "network"

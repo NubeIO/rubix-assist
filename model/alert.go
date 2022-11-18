@@ -1,4 +1,4 @@
-package assistmodel
+package model
 
 import (
 	"gorm.io/datatypes"

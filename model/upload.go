@@ -1,4 +1,4 @@
-package assistmodel
+package model
 
 type EdgeUploadResponse struct {
 	Destination string `json:"destination"`

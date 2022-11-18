@@ -2,7 +2,7 @@ package base
 
 import (
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/uuid"
-	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 )
 

@@ -3,7 +3,7 @@ package appstore
 import (
 	"errors"
 	"fmt"
-	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 )
 

@@ -10,7 +10,6 @@ import (
 	"net/http"
 
 	dbase "github.com/NubeIO/rubix-assist/database"
-	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"github.com/melbahja/goph"
@@ -24,7 +23,7 @@ type Controller struct {
 	FileMode int
 }
 
-func (inst *Controller) resolveHost(c *gin.Context) (*model.Host, error) {
+func (inst *Controller) resolveHost(c *gin.Context) (*model2.Host, error) {
 	uuid := matchHostUUID(c)
 	name := matchHostName(c)
 	if uuid == "" && name == "" {
@@ -113,7 +112,7 @@ func responseHandler(body interface{}, err error, c *gin.Context, statusCode ...
 }
 
 // hostCopy copy same types from this host to the host needed for ssh.Host
-func (inst *Controller) hostCopy(host *model.Host) (ssh.Host, error) {
+func (inst *Controller) hostCopy(host *model2.Host) (ssh.Host, error) {
 	h := new(ssh.Host)
 	err := copier.Copy(&h, &host)
 	if err != nil {

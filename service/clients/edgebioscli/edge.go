@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/rubix-assist/model"
-	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli/ebmodel"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
@@ -18,7 +17,7 @@ import (
 
 const rubixEdgeName = "rubix-edge"
 
-func (inst *BiosClient) RubixEdgeUpload(body *assistmodel.FileUpload) (*model.Message, error) {
+func (inst *BiosClient) RubixEdgeUpload(body *model.FileUpload) (*model.Message, error) {
 	downloadLocation := fmt.Sprintf("/data/rubix-service/apps/download/%s/%s", rubixEdgeName, body.Version)
 	url := fmt.Sprintf("/api/dirs/create?path=%s", downloadLocation)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().

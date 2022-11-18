@@ -1,4 +1,4 @@
-package assistmodel
+package model
 
 type WriteFile struct {
 	FilePath     string      `json:"path"`

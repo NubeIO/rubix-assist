@@ -2,9 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
-
 	dbase "github.com/NubeIO/rubix-assist/database"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/database"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"

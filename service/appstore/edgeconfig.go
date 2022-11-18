@@ -3,13 +3,12 @@ package appstore
 import (
 	"errors"
 	"github.com/NubeIO/rubix-assist/model"
-	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	log "github.com/sirupsen/logrus"
 	"path"
 )
 
-func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.EdgeConfig) (*model.Message, error) {
+func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *model.EdgeConfig) (*model.Message, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -35,7 +34,7 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.
 	}
 	absoluteAppDataConfigName := path.Join(appDataConfigPath, configName)
 
-	writeFile := &assistmodel.WriteFile{
+	writeFile := &model.WriteFile{
 		FilePath:     absoluteAppDataConfigName,
 		Body:         body.Body,
 		BodyAsString: body.BodyAsString,
@@ -51,7 +50,7 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *assistmodel.
 	return nil, errors.New("no valid config_name, config.yml or .env or config.json")
 }
 
-func (inst *Store) EdgeReadConfig(hostUUID, hostName, appName, configName string) (*assistmodel.EdgeConfigResponse, error) {
+func (inst *Store) EdgeReadConfig(hostUUID, hostName, appName, configName string) (*model.EdgeConfigResponse, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -62,7 +61,7 @@ func (inst *Store) EdgeReadConfig(hostUUID, hostName, appName, configName string
 	if err != nil {
 		return nil, err
 	}
-	return &assistmodel.EdgeConfigResponse{
+	return &model.EdgeConfigResponse{
 		Data:     file,
 		FilePath: absoluteAppDataConfigName,
 	}, nil

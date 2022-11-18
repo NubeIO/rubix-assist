@@ -1,4 +1,4 @@
-package assistmodel
+package model
 
 type EdgeDownloadResponse struct {
 	FileName    string `json:"file,omitempty"`

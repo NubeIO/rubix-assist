@@ -1,4 +1,4 @@
-package assistmodel
+package model
 
 type User struct {
 	UUID      string `json:"uuid" gorm:"primary_key" get:"true" delete:"true"`
