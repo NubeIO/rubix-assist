@@ -115,7 +115,7 @@ func (inst *Controller) MoveFile(c *gin.Context) {
 		responseHandler(nil, errors.New("from and to names are same"), c)
 		return
 	}
-	err := fileutils.MoveFile(from, to)
+	err := os.Rename(from, to)
 	responseHandler(model.Message{Message: "moved successfully"}, err, c)
 }
 

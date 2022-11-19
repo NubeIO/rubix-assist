@@ -2,9 +2,9 @@ package router
 
 import (
 	"fmt"
-	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/rubix-assist/controller"
 	dbase "github.com/NubeIO/rubix-assist/database"
+	"github.com/NubeIO/rubix-assist/installer"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/global"
@@ -45,9 +45,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 	appDB := &dbase.DB{
 		DB: db,
 	}
-	global.App = installer.New(&installer.App{})
+	global.Installer = installer.New(&installer.Installer{})
 	makeStore, _ := appstore.New(&appstore.Store{DB: appDB})
-	api := controller.Controller{DB: appDB, Store: makeStore, FileMode: global.App.FileMode}
+	api := controller.Controller{DB: appDB, Store: makeStore, FileMode: global.Installer.FileMode}
 
 	r.POST("/api/users/login", api.Login)
 	publicSystemApi := r.Group("/api/system")
@@ -95,10 +95,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		edgeApps.GET("/", api.EdgeListApps)
 		edgeApps.GET("/status", api.EdgeListAppsStatus)
-		edgeApps.POST("/upload", api.EdgeUploadApp)
 		edgeApps.POST("/service/upload", api.GenerateServiceFileAndEdgeUpload)
 		edgeApps.POST("/service/install", api.EdgeInstallService)
-		edgeApps.DELETE("/", api.EdgeUninstallApp)
 	}
 
 	edgeAppsControl := apiRoutes.Group("/edge/control")

@@ -2,22 +2,21 @@ package edgecli
 
 import (
 	"fmt"
-	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 	"github.com/NubeIO/rubix-registry-go/rubixregistry"
 )
 
 // EdgeProductInfo get edge product info
-func (inst *Client) EdgeProductInfo() (*installer.Product, error) {
+func (inst *Client) EdgeProductInfo() (*model.Product, error) {
 	url := fmt.Sprintf("/api/system/product")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&installer.Product{}).
+		SetResult(&model.Product{}).
 		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*installer.Product), nil
+	return resp.Result().(*model.Product), nil
 }
 
 // EdgeGetDeviceInfo get edge device info

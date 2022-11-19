@@ -9,7 +9,7 @@ import (
 
 // getAppsStorePath => /data/store/apps
 func (inst *Store) getAppsStorePath() string {
-	p := path.Join(global.App.StoreDir, "apps")
+	p := path.Join(global.Installer.StoreDir, "apps")
 	return p
 }
 
@@ -27,7 +27,7 @@ func (inst *Store) GetAppsStoreAppWithArchVersionPath(appName, arch, version str
 
 // getPluginsStorePath => /data/store/plugins
 func (inst *Store) getPluginsStorePath() string {
-	p := path.Join(global.App.StoreDir, "plugins")
+	p := path.Join(global.Installer.StoreDir, "plugins")
 	return p
 }
 
@@ -38,6 +38,6 @@ func (inst *Store) getPluginsStoreWithFile(fileName string) string {
 }
 
 func getPluginInstallationPath() string {
-	flowPath := global.App.GetAppDataPath(constants.FlowFramework)
+	flowPath := global.Installer.GetAppDataPath(constants.FlowFramework)
 	return fmt.Sprintf("%s/data/plugins", flowPath)
 }

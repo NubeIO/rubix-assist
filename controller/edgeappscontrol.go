@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +12,7 @@ func (inst *Controller) EdgeSystemCtlAction(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *installer.SystemCtlBody
+	var m *model.SystemCtlBody
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)
@@ -29,7 +29,7 @@ func (inst *Controller) EdgeSystemCtlStatus(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *installer.SystemCtlBody
+	var m *model.SystemCtlBody
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)
@@ -46,7 +46,7 @@ func (inst *Controller) EdgeServiceMassAction(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *installer.SystemCtlBody
+	var m *model.SystemCtlBody
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)
@@ -63,7 +63,7 @@ func (inst *Controller) EdgeServiceMassStatus(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *installer.SystemCtlBody
+	var m *model.SystemCtlBody
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)

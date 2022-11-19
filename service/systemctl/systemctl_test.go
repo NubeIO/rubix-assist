@@ -2,7 +2,7 @@ package systemctl
 
 import (
 	"fmt"
-	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/rubix-assist/installer"
 	"testing"
 )
 
@@ -12,7 +12,7 @@ func TestStore_generateServiceFile(t *testing.T) {
 		Version:                     "v0.6.0",
 		ExecStart:                   "app -p 1661 -r /data -a rubix-edge -d data -c config --prod server",
 		AttachWorkingDirOnExecStart: true,
-	}, installer.New(&installer.App{}))
+	}, installer.New(&installer.Installer{}))
 	fmt.Println(tmpDir, absoluteServiceFileName, err)
 	if err != nil {
 		return

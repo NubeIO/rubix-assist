@@ -12,7 +12,11 @@ import (
 
 func TestClient_ListFiles(t *testing.T) {
 	cli := New(&Client{})
-	apps, err := cli.ListFiles("/data")
+	// apps, err := cli.ListFiles("/Users/raibnod/rubix/store/apps/rubix-wires/amd64/v2.7.4/NubeIO-wires-builds-5082d47")
+	// apps, err := cli.ListFilesDetails("/Users/raibnod/rubix/store/apps/rubix-wires/amd64/v2.7.4/NubeIO-wires-builds-5082d47")
+	apps, err := cli.MoveFile(
+		"/Users/raibnod/rubix/store/apps/rubix-wires/amd64/v2.7.4/NubeIO-wires-builds-5082d47/rubix-wires",
+		"/data/tmp/test")
 	if err != nil {
 		fmt.Println(err)
 		return

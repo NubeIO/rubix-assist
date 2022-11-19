@@ -18,18 +18,18 @@ import (
 const rubixEdgeName = "rubix-edge"
 
 func (inst *BiosClient) RubixEdgeUpload(body *model.FileUpload) (*model.Message, error) {
-	downloadLocation := fmt.Sprintf("/data/rubix-service/apps/download/%s/%s", rubixEdgeName, body.Version)
-	url := fmt.Sprintf("/api/dirs/create?path=%s", downloadLocation)
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+	uploadLocation := fmt.Sprintf("/data/rubix-service/apps/download/%s/%s", rubixEdgeName, body.Version)
+	url := fmt.Sprintf("/api/dirs/create?path=%s", uploadLocation)
+	_, _ = nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&model.Message{}).
 		Post(url))
 
-	url = fmt.Sprintf("/api/files/upload?destination=%s", downloadLocation)
+	url = fmt.Sprintf("/api/files/upload?destination=%s", uploadLocation)
 	reader, err := os.Open(body.File)
 	if err != nil {
 		return nil, err
 	}
-	resp, err = nresty.FormatRestyResponse(inst.Rest.R().
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&ebmodel.UploadResponse{}).
 		SetFileReader("file", filepath.Base(body.File), reader).
 		Post(url))
@@ -38,7 +38,7 @@ func (inst *BiosClient) RubixEdgeUpload(body *model.FileUpload) (*model.Message,
 	}
 	upload := resp.Result().(*ebmodel.UploadResponse)
 
-	url = fmt.Sprintf("/api/zip/unzip?source=%s&destination=%s", upload.Destination, downloadLocation)
+	url = fmt.Sprintf("/api/zip/unzip?source=%s&destination=%s", upload.Destination, uploadLocation)
 	resp, err = nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&[]string{}).
 		Post(url))
@@ -56,8 +56,8 @@ func (inst *BiosClient) RubixEdgeUpload(body *model.FileUpload) (*model.Message,
 	}
 
 	for _, f := range *unzippedFiles {
-		from := path.Join(downloadLocation, f)
-		to := path.Join(downloadLocation, "app")
+		from := path.Join(uploadLocation, f)
+		to := path.Join(uploadLocation, "app")
 		url = fmt.Sprintf("/api/files/move?from=%s&to=%s", from, to)
 		resp, err = nresty.FormatRestyResponse(inst.Rest.R().
 			SetResult(&model.Message{}).
@@ -107,13 +107,13 @@ func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error)
 		Version:                     version,
 		ExecStart:                   "app -p 1661 -r /data -a rubix-edge -d data -c config --prod server",
 		AttachWorkingDirOnExecStart: true,
-	}, global.App)
+	}, global.Installer)
 	if err != nil {
 		return nil, err
 	}
 	log.Info("created service file locally")
 
-	serviceFileName := global.App.GetServiceNameFromAppName(rubixEdgeName)
+	serviceFileName := global.Installer.GetServiceNameFromAppName(rubixEdgeName)
 	if err != nil {
 		return nil, err
 	}

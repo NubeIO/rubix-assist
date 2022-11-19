@@ -20,7 +20,7 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *model.EdgeCo
 	if configName == "" {
 		configName = "config.yml"
 	}
-	appDataConfigPath := global.App.GetAppDataConfigPath(body.AppName)
+	appDataConfigPath := global.Installer.GetAppDataConfigPath(body.AppName)
 	exists, err := inst.EdgeDirExists(hostUUID, hostName, appDataConfigPath)
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (inst *Store) EdgeReadConfig(hostUUID, hostName, appName, configName string
 	if err != nil {
 		return nil, err
 	}
-	appDataConfigPath := global.App.GetAppDataConfigPath(appName)
+	appDataConfigPath := global.Installer.GetAppDataConfigPath(appName)
 	absoluteAppDataConfigName := path.Join(appDataConfigPath, configName)
 	file, err := client.ReadFile(absoluteAppDataConfigName)
 	if err != nil {

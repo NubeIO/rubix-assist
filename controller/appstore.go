@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/rubix-assist/helpers"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
@@ -21,7 +21,7 @@ func (inst *Controller) UploadAddOnAppStore(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	m := &installer.Upload{
+	m := &model.Upload{
 		Name:    c.Query("name"),
 		Version: c.Query("version"),
 		Arch:    c.Query("arch"),
@@ -46,7 +46,7 @@ func (inst *Controller) checkAppExistence(name, arch, version string) error {
 	if name == "" {
 		return errors.New("name can not be empty")
 	}
-	if err := installer.CheckVersion(version); err != nil {
+	if err := helpers.CheckVersion(version); err != nil {
 		return err
 	}
 	if arch == "" {

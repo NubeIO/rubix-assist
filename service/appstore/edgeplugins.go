@@ -15,11 +15,11 @@ func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (
 	if err != nil {
 		return nil, err
 	}
-	tmpDir, err := global.App.MakeTmpDirUpload()
+	tmpDir, err := global.Installer.MakeTmpDirUpload()
 	if err != nil {
 		return nil, err
 	}
-	zip, err := fileutils.UnZip(pluginsStorePluginFile, tmpDir, os.FileMode(global.App.FileMode))
+	zip, err := fileutils.Unzip(pluginsStorePluginFile, tmpDir, os.FileMode(global.Installer.FileMode))
 	if err != nil {
 		return nil, err
 	}
@@ -27,12 +27,12 @@ func (inst *Store) EdgeUploadPlugin(hostUUID, hostName string, plugin *Plugin) (
 		return nil, errors.New("the plugin folder contents multiple files")
 	}
 	binaryName := zip[0]
-	err = inst.ValidateBinaryPlugin(binaryName)
+	err = inst.ValidateBinaryPlugin(binaryName.Name)
 	if err != nil {
 		return nil, err
 	}
 	pluginInstallationPath := getPluginInstallationPath()
-	file := path.Join(tmpDir, binaryName)
+	file := path.Join(tmpDir, binaryName.Name)
 	uploadResp, err := inst.EdgeUploadLocalFile(hostUUID, hostName, file, pluginInstallationPath)
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func (inst *Store) EdgeListPlugins(hostUUID, hostName string) ([]Plugin, error) 
 	}
 	var pluginDetails []Plugin
 	for _, file := range files {
-		pluginDetails = append(pluginDetails, *inst.GetPluginDetails(file))
+		pluginDetails = append(pluginDetails, *inst.GetPluginDetails(file.Name))
 	}
 	return pluginDetails, nil
 }

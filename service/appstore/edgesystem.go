@@ -1,7 +1,6 @@
 package appstore
 
 import (
-	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-registry-go/rubixregistry"
 )
@@ -23,7 +22,7 @@ func (inst *Store) EdgeGetDeviceInfo(hostUUID, hostName string) (*rubixregistry.
 	return client.EdgeGetDeviceInfo()
 }
 
-func (inst *Store) EdgeProductInfo(hostUUID, hostName string) (*installer.Product, error) {
+func (inst *Store) EdgeProductInfo(hostUUID, hostName string) (*model.Product, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err

@@ -1,11 +1,11 @@
 package appstore
 
 import (
-	"github.com/NubeIO/lib-rubix-installer/installer"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
+	"github.com/NubeIO/rubix-assist/model"
 )
 
-func (inst *Store) EdgeSystemCtlAction(hostUUID, hostName string, body *installer.SystemCtlBody) (*installer.SystemResponse, error) {
+func (inst *Store) EdgeSystemCtlAction(hostUUID, hostName string, body *model.SystemCtlBody) (*model.SystemResponse, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -13,7 +13,7 @@ func (inst *Store) EdgeSystemCtlAction(hostUUID, hostName string, body *installe
 	return client.EdgeSystemCtlAction(body)
 }
 
-func (inst *Store) EdgeSystemCtlStatus(hostUUID, hostName string, body *installer.SystemCtlBody) (*systemctl.SystemState, error) {
+func (inst *Store) EdgeSystemCtlStatus(hostUUID, hostName string, body *model.SystemCtlBody) (*systemctl.SystemState, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -21,7 +21,7 @@ func (inst *Store) EdgeSystemCtlStatus(hostUUID, hostName string, body *installe
 	return client.EdgeSystemCtlStatus(body)
 }
 
-func (inst *Store) EdgeServiceMassAction(hostUUID, hostName string, body *installer.SystemCtlBody) ([]installer.MassSystemResponse, error) {
+func (inst *Store) EdgeServiceMassAction(hostUUID, hostName string, body *model.SystemCtlBody) ([]model.MassSystemResponse, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (inst *Store) EdgeServiceMassAction(hostUUID, hostName string, body *instal
 	return client.EdgeServiceMassAction(body)
 }
 
-func (inst *Store) EdgeServiceMassStatus(hostUUID, hostName string, body *installer.SystemCtlBody) ([]systemctl.SystemState, error) {
+func (inst *Store) EdgeServiceMassStatus(hostUUID, hostName string, body *model.SystemCtlBody) ([]systemctl.SystemState, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err

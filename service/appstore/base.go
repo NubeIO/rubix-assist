@@ -23,10 +23,10 @@ func New(store *Store) (*Store, error) {
 }
 
 func (inst *Store) initMakeAllDirs() error {
-	if err := os.MkdirAll(inst.getAppsStorePath(), os.FileMode(global.App.FileMode)); err != nil {
+	if err := os.MkdirAll(inst.getAppsStorePath(), os.FileMode(global.Installer.FileMode)); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(inst.getPluginsStorePath(), os.FileMode(global.App.FileMode)); err != nil {
+	if err := os.MkdirAll(inst.getPluginsStorePath(), os.FileMode(global.Installer.FileMode)); err != nil {
 		return err
 	}
 	return nil

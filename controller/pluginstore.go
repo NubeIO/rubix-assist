@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +18,7 @@ func (inst *Controller) UploadPluginStorePlugin(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	m := &installer.Upload{
+	m := &model.Upload{
 		File: file,
 	}
 	data, err := inst.Store.UploadPluginStorePlugin(m)

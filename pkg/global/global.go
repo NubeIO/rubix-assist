@@ -1,5 +1,7 @@
 package global
 
-import "github.com/NubeIO/lib-rubix-installer/installer"
+import (
+	"github.com/NubeIO/rubix-assist/installer"
+)
 
-var App *installer.App
+var Installer *installer.Installer

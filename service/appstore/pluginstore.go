@@ -4,9 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/rubix-assist/installer"
+	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"io/ioutil"
+	"os"
 )
 
 func (inst *Store) GetPluginsStorePlugins() ([]installer.BuildDetails, error) {
@@ -17,15 +19,15 @@ func (inst *Store) GetPluginsStorePlugins() ([]installer.BuildDetails, error) {
 	}
 	plugins := make([]installer.BuildDetails, 0)
 	for _, file := range files {
-		plugins = append(plugins, *global.App.GetZipBuildDetails(file.Name()))
+		plugins = append(plugins, *global.Installer.GetZipBuildDetails(file.Name()))
 	}
 	return plugins, err
 }
 
-func (inst *Store) UploadPluginStorePlugin(app *installer.Upload) (*UploadResponse, error) {
+func (inst *Store) UploadPluginStorePlugin(app *model.Upload) (*UploadResponse, error) {
 	var file = app.File
 	uploadResponse := &UploadResponse{}
-	resp, err := global.App.Upload(file)
+	resp, err := global.Installer.Upload(file)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("upload plugin: %s", err.Error()))
 	}
@@ -38,7 +40,7 @@ func (inst *Store) UploadPluginStorePlugin(app *installer.Upload) (*UploadRespon
 		return nil, errors.New(fmt.Sprintf("upload file tmp dir not found: %s", source))
 	}
 	uploadResponse.UploadedFile = destination
-	err = fileutils.MoveFile(source, destination)
+	err = os.Rename(source, destination)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("move plugin error: %s", err.Error()))
 	}

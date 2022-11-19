@@ -3,6 +3,7 @@ package edgecli
 import (
 	"errors"
 	"fmt"
+	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 	"os"
@@ -25,15 +26,15 @@ func (inst *Client) FileExists(path string) (bool, error) {
 }
 
 // ListFiles list all files/dirs in a dir
-func (inst *Client) ListFiles(path string) ([]string, error) {
+func (inst *Client) ListFiles(path string) ([]fileutils.FileDetails, error) {
 	url := fmt.Sprintf("/api/files/list?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&[]string{}).
+		SetResult(&[]fileutils.FileDetails{}).
 		Get(url))
 	if err != nil {
 		return nil, err
 	}
-	return *resp.Result().(*[]string), nil
+	return *resp.Result().(*[]fileutils.FileDetails), nil
 }
 
 // Walk list all files/dirs in a dir
