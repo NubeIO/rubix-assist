@@ -21,12 +21,12 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *model.EdgeCo
 		configName = "config.yml"
 	}
 	appDataConfigPath := global.Installer.GetAppDataConfigPath(body.AppName)
-	exists, err := inst.EdgeDirExists(hostUUID, hostName, appDataConfigPath)
+	dirExistence, err := client.DirExists(appDataConfigPath)
 	if err != nil {
 		return nil, err
 	}
-	if !exists {
-		dir, err := inst.EdgeCreateDir(hostUUID, hostName, appDataConfigPath)
+	if !dirExistence.Exists {
+		dir, err := client.CreateDir(appDataConfigPath)
 		if err != nil {
 			return nil, err
 		}

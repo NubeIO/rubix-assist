@@ -77,11 +77,16 @@ func Setup(db *gorm.DB) *gin.Engine {
 		storePlugins.POST("/", api.UploadPluginStorePlugin)
 	}
 
-	edgeBiosApps := apiRoutes.Group("/eb")
+	edgeBiosApps := apiRoutes.Group("/eb/re")
 	{
-		edgeBiosApps.POST("/re/upload", api.EdgeBiosRubixEdgeUpload)
-		edgeBiosApps.POST("/re/install", api.EdgeBiosRubixEdgeInstall)
-		edgeBiosApps.GET("/re/version", api.EdgeBiosGetRubixEdgeVersion)
+		edgeBiosApps.POST("/upload", api.EdgeBiosRubixEdgeUpload)
+		edgeBiosApps.POST("/install", api.EdgeBiosRubixEdgeInstall)
+		edgeBiosApps.GET("/version", api.EdgeBiosGetRubixEdgeVersion)
+	}
+
+	edgeApps := apiRoutes.Group("/edge/apps")
+	{
+		edgeApps.POST("/upload", api.EdgeAppUpload)
 	}
 
 	edge := apiRoutes.Group("/edge/system")
@@ -91,13 +96,13 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edge.GET("/product", api.EdgeProductInfo)
 	}
 
-	edgeApps := apiRoutes.Group("/edge/apps")
-	{
-		edgeApps.GET("/", api.EdgeListApps)
-		edgeApps.GET("/status", api.EdgeListAppsStatus)
-		edgeApps.POST("/service/upload", api.GenerateServiceFileAndEdgeUpload)
-		edgeApps.POST("/service/install", api.EdgeInstallService)
-	}
+	// edgeApps := apiRoutes.Group("/edge/apps")
+	// {
+	// 	edgeApps.GET("/", api.EdgeListApps)
+	// 	edgeApps.GET("/status", api.EdgeListAppsStatus)
+	// 	edgeApps.POST("/service/upload", api.GenerateServiceFileAndEdgeUpload)
+	// 	edgeApps.POST("/service/install", api.EdgeInstallService)
+	// }
 
 	edgeAppsControl := apiRoutes.Group("/edge/control")
 	{

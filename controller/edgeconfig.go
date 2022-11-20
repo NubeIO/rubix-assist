@@ -33,6 +33,9 @@ func (inst *Controller) EdgeWriteConfig(c *gin.Context) {
 	}
 	var m *model.EdgeConfig
 	err = c.ShouldBindJSON(&m)
+	if err != nil {
+		responseHandler(nil, err, c)
+	}
 	data, err := inst.Store.EdgeWriteConfig(host.UUID, host.Name, m)
 	responseHandler(data, err, c)
 }

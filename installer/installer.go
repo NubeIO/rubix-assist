@@ -36,10 +36,10 @@ func New(app *Installer) *Installer {
 		app.StoreDir = path.Join(app.DataDir, "store")
 	}
 	if app.TmpDir == "" {
-		app.StoreDir = path.Join(app.DataDir, "tmp")
+		app.TmpDir = path.Join(app.DataDir, "tmp")
 	}
 	if app.AppsDownloadDir == "" {
-		app.AppsInstallDir = path.Join(app.DataDir, "rubix-service/apps/download")
+		app.AppsDownloadDir = path.Join(app.DataDir, "rubix-service/apps/download")
 	}
 	if app.AppsInstallDir == "" {
 		app.AppsInstallDir = path.Join(app.DataDir, "rubix-service/apps/install")

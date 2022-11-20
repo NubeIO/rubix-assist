@@ -17,9 +17,6 @@ type UploadResponse struct {
 
 // Upload upload a build
 func (inst *Installer) Upload(zip *multipart.FileHeader) (*UploadResponse, error) {
-	if err := inst.MakeTmpDir(); err != nil {
-		return nil, err
-	}
 	tmpDir, err := inst.MakeTmpDirUpload()
 	if err != nil {
 		return nil, err

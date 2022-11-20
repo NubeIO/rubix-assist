@@ -47,7 +47,6 @@ func (inst *Installer) GetEmptyNewTmpFolder() string {
 
 func (inst *Installer) MakeTmpDir() error {
 	return os.MkdirAll(inst.TmpDir, os.FileMode(inst.FileMode)) // /data/tmp
-
 }
 
 func (inst *Installer) MakeTmpDirUpload() (string, error) {

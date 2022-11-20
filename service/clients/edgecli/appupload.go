@@ -3,6 +3,7 @@ package edgecli
 import (
 	"errors"
 	"fmt"
+	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli/ebmodel"
@@ -14,18 +15,14 @@ import (
 )
 
 func (inst *Client) AppUpload(body *model.AppUpload) (*model.Message, error) {
-	uploadLocation := global.Installer.GetAppDownloadPath(body.AppName)
-	url := fmt.Sprintf("/api/dirs/delete-all?path=%s", uploadLocation)
-	_, _ = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
-		Post(url))
+	url := fmt.Sprintf("/api/files/delete-all?path=%s", global.Installer.GetAppDownloadPath(body.Name))
+	_, _ = nresty.FormatRestyResponse(inst.Rest.R().Delete(url))
 
+	uploadLocation := global.Installer.GetAppDownloadPathWithVersion(body.Name, body.Version)
 	url = fmt.Sprintf("/api/dirs/create?path=%s", uploadLocation)
-	_, _ = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
-		Post(url))
+	_, _ = nresty.FormatRestyResponse(inst.Rest.R().Post(url))
 
-	appStoreFile, err := findAppOnAppStoreFile(body.AppName, body.Arch, body.Version)
+	appStoreFile, err := findAppOnAppStoreFile(body.Name, body.Arch, body.Version)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +33,7 @@ func (inst *Client) AppUpload(body *model.AppUpload) (*model.Message, error) {
 	}
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&ebmodel.UploadResponse{}).
-		SetFileReader("file", filepath.Base(body.File), reader).
+		SetFileReader("file", filepath.Base(*appStoreFile), reader).
 		Post(url))
 	if err != nil {
 		return nil, err
@@ -45,23 +42,21 @@ func (inst *Client) AppUpload(body *model.AppUpload) (*model.Message, error) {
 
 	url = fmt.Sprintf("/api/zip/unzip?source=%s&destination=%s", upload.Destination, uploadLocation)
 	resp, err = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&[]string{}).
+		SetResult(&[]fileutils.FileDetails{}).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	unzippedFiles := resp.Result().(*[]string)
+	unzippedFiles := resp.Result().(*[]fileutils.FileDetails)
 	url = fmt.Sprintf("/api/files/delete?file=%s", upload.Destination)
-	resp, err = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
-		Delete(url))
+	_, err = nresty.FormatRestyResponse(inst.Rest.R().Delete(url))
 	if err != nil {
 		return nil, err
 	}
 
 	if body.MoveExtractedFileToNameApp {
 		for _, f := range *unzippedFiles {
-			from := path.Join(uploadLocation, f)
+			from := path.Join(uploadLocation, f.Name)
 			to := path.Join(uploadLocation, "app")
 			url = fmt.Sprintf("/api/files/move?from=%s&to=%s", from, to)
 			resp, err = nresty.FormatRestyResponse(inst.Rest.R().
@@ -70,11 +65,46 @@ func (inst *Client) AppUpload(body *model.AppUpload) (*model.Message, error) {
 			if err != nil {
 				return nil, err
 			}
+			return &model.Message{Message: "uploaded successfully"}, nil
 		}
 	}
 	if body.MoveOneLevelInsideFileToOutside {
-		url = fmt.Sprintf("/api/files/list-details?path=%s", upload.Destination)
+		tmpFolder := global.Installer.GetEmptyNewTmpFolder()
+		if unzippedFiles != nil && len(*unzippedFiles) > 0 {
+			extractedFile := path.Join(uploadLocation, (*unzippedFiles)[0].Name)
+			url = fmt.Sprintf("/api/files/list?path=%s", extractedFile)
+			resp, err = nresty.FormatRestyResponse(inst.Rest.R().
+				SetResult(&[]fileutils.FileDetails{}).
+				Get(url))
+			if err != nil {
+				return nil, err
+			}
+			files := resp.Result().(*[]fileutils.FileDetails)
+			for _, file := range *files {
+				if file.IsDir {
+					from := path.Join(extractedFile, file.Name)
+					url = fmt.Sprintf("/api/files/move?from=%s&to=%s", from, tmpFolder)
+					resp, err = nresty.FormatRestyResponse(inst.Rest.R().Post(url))
+					if err != nil {
+						return nil, err
+					}
 
+					to := global.Installer.GetAppDownloadPathWithVersion(body.Name, body.Version)
+					url = fmt.Sprintf("/api/files/delete-all?path=%s", to)
+					_, err = nresty.FormatRestyResponse(inst.Rest.R().Delete(url))
+					if err != nil {
+						return nil, err
+					}
+
+					url = fmt.Sprintf("/api/files/move?from=%s&to=%s", tmpFolder, to)
+					_, err = nresty.FormatRestyResponse(inst.Rest.R().Post(url))
+					if err != nil {
+						return nil, err
+					}
+					return &model.Message{Message: "uploaded successfully"}, nil
+				}
+			}
+		}
 	}
 	return nil, nil
 }

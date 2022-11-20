@@ -16,12 +16,12 @@ type FileUpload struct {
 }
 
 type AppUpload struct {
-	AppName                         string `json:"app_name" binding:"required"`
+	Name                            string `json:"name" binding:"required"`
 	Arch                            string `json:"arch" binding:"required"`
 	Version                         string `json:"version" binding:"required"`
 	File                            string `json:"file"`
-	MoveExtractedFileToNameApp      bool   `json:"move_extracted_file_to_name_app"`
-	MoveOneLevelInsideFileToOutside bool   `json:"move_one_level_inside_file_to_outside"`
+	MoveExtractedFileToNameApp      bool   `json:"move_extracted_file_to_name_app" binding:"required"`
+	MoveOneLevelInsideFileToOutside bool   `json:"move_one_level_inside_file_to_outside" binding:"required"`
 }
 
 type Upload struct {

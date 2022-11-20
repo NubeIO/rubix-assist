@@ -9,15 +9,10 @@ import (
 	"os"
 )
 
-type DirExistence struct {
-	Path   string `json:"path"`
-	Exists bool   `json:"exists"`
-}
-
 func (inst *Controller) DirExists(c *gin.Context) {
 	path := c.Query("path")
 	exists := fileutils.DirExists(path)
-	dirExistence := DirExistence{Path: path, Exists: exists}
+	dirExistence := model.DirExistence{Path: path, Exists: exists}
 	responseHandler(dirExistence, nil, c)
 }
 

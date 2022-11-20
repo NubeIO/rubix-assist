@@ -1,10 +1,24 @@
 package controller
 
 import (
+	"github.com/NubeIO/rubix-assist/helpers"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/service/systemctl"
 	"github.com/gin-gonic/gin"
 )
+
+func (inst *Controller) EdgeAppUpload(c *gin.Context) {
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
+	cli := helpers.GetEdgeClient(host)
+	var m *model.AppUpload
+	err = c.ShouldBindJSON(&m)
+	data, err := cli.AppUpload(m)
+	responseHandler(data, err, c)
+}
 
 // EdgeListApps apps by listed in the installation (/data/rubix-service/apps/install)
 func (inst *Controller) EdgeListApps(c *gin.Context) {
