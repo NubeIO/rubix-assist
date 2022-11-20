@@ -54,3 +54,12 @@ func (inst *Installer) MakeTmpDirUpload() (string, error) {
 	err := os.MkdirAll(tmpDir, os.FileMode(inst.FileMode)) // /data/tmp/tmp_45EA34EB
 	return tmpDir, err
 }
+
+func (inst *Installer) GetAppPluginDownloadPath(appName string) string {
+	repoName := inst.GetRepoNameFromAppName(appName)
+	return path.Join(inst.AppsDownloadDir, repoName, "plugins") // /data/rubix-service/apps/download/flow-framework/plugins
+}
+
+func (inst *Installer) GetAppPluginInstallPath(appName string) string {
+	return path.Join(inst.GetAppDataDataPath(appName), "plugins") // /data/flow-framework/data/plugins
+}

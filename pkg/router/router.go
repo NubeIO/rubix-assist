@@ -89,6 +89,15 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgeApps.POST("/upload", api.EdgeAppUpload)
 	}
 
+	edgePlugins := apiRoutes.Group("/edge/plugins")
+	{
+		edgePlugins.POST("/upload", api.EdgeUploadPlugin)
+		// edgePlugins.GET("/", api.EdgeListPlugins)
+		// edgePlugins.POST("/", api.EdgeUploadPlugin)
+		// edgePlugins.DELETE("/", api.EdgeDeletePlugin)
+		// edgePlugins.DELETE("/all", api.EdgeDeleteAllPlugins)
+	}
+
 	edge := apiRoutes.Group("/edge/system")
 	{
 		edge.GET("/ping", api.EdgePing)
@@ -116,14 +125,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		edgeConfig.GET("/", api.EdgeReadConfig)
 		edgeConfig.POST("/", api.EdgeWriteConfig)
-	}
-
-	edgePlugins := apiRoutes.Group("/edge/plugins")
-	{
-		edgePlugins.GET("/", api.EdgeListPlugins)
-		edgePlugins.POST("/", api.EdgeUploadPlugin)
-		edgePlugins.DELETE("/", api.EdgeDeletePlugin)
-		edgePlugins.DELETE("/all", api.EdgeDeleteAllPlugins)
 	}
 
 	locations := apiRoutes.Group("/locations")

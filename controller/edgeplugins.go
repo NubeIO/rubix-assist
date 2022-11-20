@@ -1,12 +1,28 @@
 package controller
 
 import (
+	"github.com/NubeIO/rubix-assist/helpers"
+	"github.com/NubeIO/rubix-assist/installer"
 	"github.com/NubeIO/rubix-assist/service/appstore"
 	"github.com/gin-gonic/gin"
 )
 
 // EdgeUploadPlugin upload a plugin to the edge dev
 func (inst *Controller) EdgeUploadPlugin(c *gin.Context) {
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
+	cli := helpers.GetEdgeClient(host)
+	var m *installer.Plugin
+	err = c.ShouldBindJSON(&m)
+	data, err := cli.PluginUpload(m)
+	responseHandler(data, err, c)
+}
+
+// EdgeUploadPluginOld upload a plugin to the edge dev
+func (inst *Controller) EdgeUploadPluginOld(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {
 		responseHandler(nil, err, c)
