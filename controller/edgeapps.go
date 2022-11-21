@@ -20,6 +20,19 @@ func (inst *Controller) EdgeAppUpload(c *gin.Context) {
 	responseHandler(data, err, c)
 }
 
+func (inst *Controller) EdgeAppInstall(c *gin.Context) {
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
+	cli := helpers.GetEdgeClient(host)
+	var m *systemctl.ServiceFile
+	err = c.ShouldBindJSON(&m)
+	data, err := cli.AppInstall(m)
+	responseHandler(data, err, c)
+}
+
 // EdgeListApps apps by listed in the installation (/data/rubix-service/apps/install)
 func (inst *Controller) EdgeListApps(c *gin.Context) {
 	host, err := inst.resolveHost(c)

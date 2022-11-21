@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/pkg/constants"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli/ebmodel"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
@@ -113,15 +114,23 @@ func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error)
 	}
 	log.Info("created service file locally")
 
-	serviceFileName := global.Installer.GetServiceNameFromAppName(rubixEdgeName)
+	message, err := inst.installServiceFile(rubixEdgeName, absoluteServiceFileName)
 	if err != nil {
-		return nil, err
+		return message, err
 	}
-	const serviceDir = "/lib/systemd/system"
-	const serviceDirSoftLink = "/etc/systemd/system/multi-user.target.wants"
-	serviceFile := path.Join(serviceDir, serviceFileName)
-	symlinkServiceFile := path.Join(serviceDirSoftLink, serviceFileName)
-	url = fmt.Sprintf("/api/files/upload?destination=%s", serviceDir)
+	err = fileutils.RmRF(tmpDir)
+	if err != nil {
+		log.Errorf("delete tmp generated service file %s", absoluteServiceFileName)
+	}
+	log.Infof("deleted tmp generated local service file %s", absoluteServiceFileName)
+	return &model.Message{Message: "successfully installed the rubix-edge in edge device"}, nil
+}
+
+func (inst *BiosClient) installServiceFile(appName, absoluteServiceFileName string) (*model.Message, error) {
+	serviceFileName := global.Installer.GetServiceNameFromAppName(appName)
+	serviceFile := path.Join(constants.ServiceDir, serviceFileName)
+	symlinkServiceFile := path.Join(constants.ServiceDirSoftLink, serviceFileName)
+	url := fmt.Sprintf("/api/files/upload?destination=%s", constants.ServiceDir)
 	reader, err := os.Open(absoluteServiceFileName)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("error open service file: %s err: %s", absoluteServiceFileName, err.Error()))
@@ -163,12 +172,5 @@ func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error)
 		log.Error(err)
 	}
 	log.Infof("started service %s", serviceFileName)
-
-	err = fileutils.RmRF(tmpDir)
-	if err != nil {
-		log.Errorf("delete tmp generated service file %s", absoluteServiceFileName)
-	}
-	log.Infof("deleted tmp generated local service file %s", absoluteServiceFileName)
-
-	return &model.Message{Message: "successfully installed the rubix-edge in edge device"}, nil
+	return nil, nil
 }
