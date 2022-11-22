@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/namings"
 	"github.com/NubeIO/rubix-assist/pkg/constants"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli/ebmodel"
@@ -90,7 +91,7 @@ func (inst *Client) transferDataFromDownloadToInstallDir(app *systemctl.ServiceF
 }
 
 func (inst *Client) installServiceFile(appName, absoluteServiceFileName string) (*model.Message, error) {
-	serviceFileName := global.Installer.GetServiceNameFromAppName(appName)
+	serviceFileName := namings.GetServiceNameFromAppName(appName)
 	serviceFile := path.Join(constants.ServiceDir, serviceFileName)
 	symlinkServiceFile := path.Join(constants.ServiceDirSoftLink, serviceFileName)
 	url := fmt.Sprintf("/api/files/upload?destination=%s", constants.ServiceDir)

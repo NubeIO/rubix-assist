@@ -115,14 +115,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	// 	edgeApps.POST("/service/install", api.EdgeInstallService)
 	// }
 
-	edgeAppsControl := apiRoutes.Group("/edge/control")
-	{
-		edgeAppsControl.POST("/action", api.EdgeSystemCtlAction)
-		edgeAppsControl.POST("/status", api.EdgeSystemCtlStatus)
-		edgeAppsControl.POST("/action/mass", api.EdgeServiceMassAction)
-		edgeAppsControl.POST("/status/mass", api.EdgeServiceMassStatus)
-	}
-
 	edgeConfig := apiRoutes.Group("/edge/config")
 	{
 		edgeConfig.GET("/", api.EdgeReadConfig)

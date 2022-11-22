@@ -6,6 +6,7 @@ import (
 	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/lib-systemctl-go/systemd"
 	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/namings"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/systemctl"
 	log "github.com/sirupsen/logrus"
@@ -25,7 +26,7 @@ func (inst *Store) GenerateServiceFileAndEdgeUpload(hostUUID, hostName string, a
 	if err != nil {
 		return nil, err
 	}
-	serviceName := global.Installer.GetServiceNameFromAppName(app.Name)
+	serviceName := namings.GetServiceNameFromAppName(app.Name)
 	reader, err := os.Open(absoluteServiceFileName)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("error open service_file: %s err: %s", absoluteServiceFileName, err.Error()))

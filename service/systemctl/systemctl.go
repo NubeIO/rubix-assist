@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/rubix-assist/installer"
+	"github.com/NubeIO/rubix-assist/namings"
 	"github.com/sergeymakinen/go-systemdconf/v2"
 	"github.com/sergeymakinen/go-systemdconf/v2/unit"
 	log "github.com/sirupsen/logrus"
@@ -60,7 +61,7 @@ func GenerateServiceFile(app *ServiceFile, installer *installer.Installer) (tmpD
 		execCmd = strings.ReplaceAll(execCmd, "<data_dir>", installer.GetAppDataPath(app.Name))
 	}
 	if strings.Contains(execCmd, "<data_dir_name>") {
-		execCmd = strings.ReplaceAll(execCmd, "<data_dir_name>", installer.GetDataDirNameFromAppName(app.Name))
+		execCmd = strings.ReplaceAll(execCmd, "<data_dir_name>", namings.GetDataDirNameFromAppName(app.Name))
 	}
 	log.Infof("generate service exec_cmd: %s", execCmd)
 	description := app.ServiceDescription
@@ -98,7 +99,7 @@ func GenerateServiceFile(app *ServiceFile, installer *installer.Installer) (tmpD
 		},
 	}
 	b, _ := systemdconf.Marshal(service)
-	serviceName := installer.GetServiceNameFromAppName(app.Name)
+	serviceName := namings.GetServiceNameFromAppName(app.Name)
 	absoluteServiceFileName = fmt.Sprintf("%s/%s", tmpFilePath, serviceName)
 	err = fileutils.WriteFile(absoluteServiceFileName, string(b), os.FileMode(installer.FileMode))
 	if err != nil {

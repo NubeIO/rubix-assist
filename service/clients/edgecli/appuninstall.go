@@ -3,6 +3,7 @@ package edgecli
 import (
 	"fmt"
 	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/namings"
 	"github.com/NubeIO/rubix-assist/pkg/constants"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
@@ -21,7 +22,7 @@ func (inst *Client) AppUninstall(appName string) (*model.Message, error) {
 }
 
 func (inst *Client) uninstallServiceFile(appName string) (*model.Message, error) {
-	serviceFileName := global.Installer.GetServiceNameFromAppName(appName)
+	serviceFileName := namings.GetServiceNameFromAppName(appName)
 	serviceFile := path.Join(constants.ServiceDir, serviceFileName)
 	symlinkServiceFile := path.Join(constants.ServiceDirSoftLink, serviceFileName)
 

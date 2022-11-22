@@ -1,9 +1,9 @@
-package installer
+package namings
 
 import "fmt"
 
 // This is for to support older deployments too...
-// Otherwise we will use appName in new deployments
+// Otherwise, we will use appName in new deployments
 var appNameToServiceNameMap = map[string]string{
 	"rubix-wires":                      "nubeio-rubix-wires.service",
 	"rubix-plat":                       "nubeio-wires-plat.service",
@@ -53,14 +53,14 @@ var appNameToDataDirNameMap = map[string]string{
 	"bacnet-server-driver":             "bacnet-server-c",
 }
 
-func (inst *Installer) GetServiceNameFromAppName(appName string) string {
+func GetServiceNameFromAppName(appName string) string {
 	if value, found := appNameToServiceNameMap[appName]; found {
 		return value
 	}
 	return fmt.Sprintf("nubeio-%s.service", appName)
 }
 
-func (inst *Installer) GetAppNameFromRepoName(repoName string) string {
+func GetAppNameFromRepoName(repoName string) string {
 	for k := range appNameToRepoNameMap {
 		if appNameToRepoNameMap[k] == repoName {
 			return k
@@ -69,14 +69,14 @@ func (inst *Installer) GetAppNameFromRepoName(repoName string) string {
 	return repoName
 }
 
-func (inst *Installer) GetRepoNameFromAppName(appName string) string {
+func GetRepoNameFromAppName(appName string) string {
 	if value, found := appNameToRepoNameMap[appName]; found {
 		return value
 	}
 	return appName
 }
 
-func (inst *Installer) GetDataDirNameFromAppName(appName string) string {
+func GetDataDirNameFromAppName(appName string) string {
 	if value, found := appNameToDataDirNameMap[appName]; found {
 		return value
 	}

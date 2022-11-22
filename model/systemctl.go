@@ -2,12 +2,19 @@ package model
 
 import "github.com/NubeIO/lib-systemctl-go/systemctl"
 
+type Action string
+
+const (
+	Enable  Action = "enable"
+	Disable Action = "disable"
+	Start   Action = "start"
+	Stop    Action = "stop"
+	Restart Action = "restart"
+)
+
 type SystemCtlBody struct {
-	AppName      string   `json:"app_name"`      // "flow-framework"
-	ServiceName  string   `json:"service_name"`  // "nubeio-flow-framework.service"
-	Action       string   `json:"action"`        // start, stop, restart, enable, disable
-	AppNames     []string `json:"app_names"`     // ["nubeio-rubix-edge.service", "nubeio-flow-framework.service"]
-	ServiceNames []string `json:"service_names"` // ["rubix-edge", "flow-framework"]
+	AppName string `json:"app_name"` // "flow-framework"
+	Action  Action `json:"action"`   // start, stop, restart, enable, disable
 }
 
 type SystemResponse struct {
