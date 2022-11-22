@@ -88,6 +88,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		edgeApps.POST("/upload", api.EdgeAppUpload)
 		edgeApps.POST("/install", api.EdgeAppInstall)
+		edgeApps.POST("/uninstall", api.EdgeAppUninstall)
 		edgeApps.GET("/status", api.EdgeListAppsStatus)
 	}
 

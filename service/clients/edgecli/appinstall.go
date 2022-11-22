@@ -30,7 +30,7 @@ func (inst *Client) AppInstall(app *systemctl.ServiceFile) (*model.Message, erro
 		log.Errorf("delete tmp generated service file %s", absoluteServiceFileName)
 	}
 	log.Infof("deleted tmp generated local service file %s", absoluteServiceFileName)
-	return &model.Message{Message: "successfully installed the plugin"}, nil
+	return &model.Message{Message: "successfully installed the app"}, nil
 }
 
 func (inst *Client) transferDataFromDownloadToInstallDir(app *systemctl.ServiceFile) (*model.Message, error) {

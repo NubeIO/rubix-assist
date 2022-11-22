@@ -23,6 +23,11 @@ type AppUpload struct {
 	MoveOneLevelInsideFileToOutside bool   `json:"move_one_level_inside_file_to_outside" binding:"required"`
 }
 
+type AppUninstall struct {
+	Name    string `json:"name" binding:"required"`
+	Version string `json:"version" binding:"required"`
+}
+
 type Upload struct {
 	Name                            string                `json:"name"`
 	Version                         string                `json:"version"`
