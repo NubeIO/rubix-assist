@@ -3,22 +3,15 @@ package installer
 import (
 	"errors"
 	"fmt"
+	"github.com/NubeIO/rubix-assist/model"
 	"io/ioutil"
 	"strings"
 )
 
-type Plugin struct {
-	Name                 string `json:"name"`
-	Arch                 string `json:"arch"`
-	Version              string `json:"version,omitempty"`
-	Extension            string `json:"extension"`
-	ClearBeforeUploading bool   `json:"clear_before_uploading"`
-}
-
 // GetPluginDetails takes in the name (influx-amd64.so) and returns the info
-func (inst *Installer) GetPluginDetails(pluginName string) *Plugin {
+func (inst *Installer) GetPluginDetails(pluginName string) *model.Plugin {
 	parts := strings.Split(pluginName, "-")
-	plugin := Plugin{}
+	plugin := model.Plugin{}
 	for _, part := range parts {
 		plugin.Name = parts[0]
 		if strings.Contains(part, "amd64") {
@@ -49,10 +42,7 @@ func (inst *Installer) ValidateBinaryPlugin(pluginName string) error {
 	return nil
 }
 
-func (inst *Installer) GetPluginsStorePluginFile(plugin *Plugin) (pluginsPath string, err error) {
-	if plugin == nil {
-		return "", errors.New("plugin is nil, can not be empty")
-	}
+func (inst *Installer) GetPluginsStorePluginFile(plugin model.Plugin) (pluginsPath string, err error) {
 	plugins, err := inst.GetPluginsStorePlugins()
 	if err != nil {
 		return "", err

@@ -2,6 +2,7 @@ package installer
 
 import (
 	"fmt"
+	"github.com/NubeIO/rubix-assist/model"
 	log "github.com/sirupsen/logrus"
 	"io"
 	"mime/multipart"
@@ -9,14 +10,8 @@ import (
 	"path"
 )
 
-type UploadResponse struct {
-	FileName     string `json:"file_name,omitempty"`
-	TmpFile      string `json:"tmp_file,omitempty"`
-	UploadedFile string `json:"uploaded_file,omitempty"`
-}
-
 // Upload upload a build
-func (inst *Installer) Upload(zip *multipart.FileHeader) (*UploadResponse, error) {
+func (inst *Installer) Upload(zip *multipart.FileHeader) (*model.UploadResponse, error) {
 	tmpDir, err := inst.MakeTmpDirUpload()
 	if err != nil {
 		return nil, err
@@ -26,7 +21,7 @@ func (inst *Installer) Upload(zip *multipart.FileHeader) (*UploadResponse, error
 	if err != nil {
 		return nil, err
 	}
-	return &UploadResponse{
+	return &model.UploadResponse{
 		FileName:     zip.Filename,
 		TmpFile:      tmpDir,
 		UploadedFile: zipSource,

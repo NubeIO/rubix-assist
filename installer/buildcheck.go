@@ -12,12 +12,6 @@ type BuildDetails struct {
 	ZipName string `json:"zip_name,omitempty"`
 }
 
-type FileDetails struct {
-	Name      string `json:"name"`
-	Extension string `json:"extension"`
-	IsDir     bool   `json:"is_dir"`
-}
-
 func (inst *Installer) GetZipBuildDetails(zipName string) *BuildDetails {
 	parts := strings.Split(zipName, "-")
 	if len(parts) > 2 {

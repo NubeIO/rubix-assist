@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/rubix-assist/installer"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/constants"
 	"github.com/NubeIO/rubix-assist/pkg/global"
@@ -14,7 +13,7 @@ import (
 	"path/filepath"
 )
 
-func (inst *Client) PluginUpload(body *installer.Plugin) (*model.Message, error) {
+func (inst *Client) PluginUpload(body *model.PluginUpload) (*model.Message, error) {
 	uploadLocation := global.Installer.GetAppPluginDownloadPath(constants.FlowFramework)
 	if body.ClearBeforeUploading {
 		url := fmt.Sprintf("/api/files/delete-all?path=%s", uploadLocation)
@@ -24,7 +23,7 @@ func (inst *Client) PluginUpload(body *installer.Plugin) (*model.Message, error)
 	url := fmt.Sprintf("/api/dirs/create?path=%s", uploadLocation)
 	_, _ = nresty.FormatRestyResponse(inst.Rest.R().Post(url))
 
-	pluginFile, err := global.Installer.GetPluginsStorePluginFile(&installer.Plugin{
+	pluginFile, err := global.Installer.GetPluginsStorePluginFile(model.Plugin{
 		Name:      body.Name,
 		Arch:      body.Arch,
 		Version:   body.Version,
@@ -60,4 +59,17 @@ func (inst *Client) PluginUpload(body *installer.Plugin) (*model.Message, error)
 		return nil, err
 	}
 	return &model.Message{Message: "successfully uploaded the plugin"}, nil
+}
+
+func (inst *Client) ListPlugins() ([]model.Plugin, error) {
+	p := global.Installer.GetPluginInstallationPath(constants.FlowFramework)
+	files, err := inst.ListFiles(p)
+	if err != nil {
+		return nil, err
+	}
+	var plugins []model.Plugin
+	for _, file := range files {
+		plugins = append(plugins, *global.Installer.GetPluginDetails(file.Name))
+	}
+	return plugins, nil
 }

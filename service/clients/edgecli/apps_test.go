@@ -21,16 +21,6 @@ func Test_EdgeProductInfo(*testing.T) {
 	pprint.PrintJSON(apps)
 }
 
-func Test_ListApps(*testing.T) {
-	cli := New(&Client{})
-	apps, err := cli.ListApps()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	pprint.PrintJSON(apps)
-}
-
 func Test_ListAppsAndService(*testing.T) {
 	cli := New(&Client{})
 	apps, err := cli.ListAppsStatus()

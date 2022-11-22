@@ -25,7 +25,6 @@ func (inst *Client) FileExists(path string) (bool, error) {
 	return found, nil
 }
 
-// ListFiles list all files/dirs in a dir
 func (inst *Client) ListFiles(path string) ([]fileutils.FileDetails, error) {
 	url := fmt.Sprintf("/api/files/list?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -138,30 +137,6 @@ func (inst *Client) MoveFile(from, to string) (*model.Message, error) {
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&model.Message{}).
 		Post(url))
-	if err != nil {
-		return nil, err
-	}
-	return resp.Result().(*model.Message), nil
-}
-
-// DeleteFile delete a file - use the full name of file and path
-func (inst *Client) DeleteFile(path string) (*model.Message, error) {
-	url := fmt.Sprintf("/api/files/delete?path=%s", path)
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
-		Delete(url))
-	if err != nil {
-		return nil, err
-	}
-	return resp.Result().(*model.Message), nil
-}
-
-// DeleteAllFiles delete all file's in a dir - use the full name of file and path
-func (inst *Client) DeleteAllFiles(path string) (*model.Message, error) {
-	url := fmt.Sprintf("/api/files/delete/all?path=%s", path)
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
-		Delete(url))
 	if err != nil {
 		return nil, err
 	}
