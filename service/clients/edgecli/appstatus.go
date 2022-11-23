@@ -3,11 +3,11 @@ package edgecli
 import (
 	"fmt"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
+	"github.com/NubeIO/rubix-assist/helpers"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/namings"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
-	"github.com/NubeIO/rubix-assist/utils"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -73,7 +73,7 @@ func (inst *Client) getAppVersion(appName string) *string {
 	}
 	for _, f := range files {
 		if f.IsDir {
-			if utils.CheckVersionBool(f.Name) {
+			if helpers.CheckVersionBool(f.Name) {
 				return &f.Name
 			}
 		}

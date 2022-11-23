@@ -2,7 +2,7 @@ package controller
 
 import (
 	"errors"
-	"github.com/NubeIO/rubix-assist/helpers"
+	"github.com/NubeIO/rubix-assist/cligetter"
 	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
@@ -26,7 +26,7 @@ func (inst *Controller) EdgeBiosRubixEdgeUpload(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	cli := helpers.GetEdgeBiosClient(host)
+	cli := cligetter.GetEdgeBiosClient(host)
 	data, err := cli.RubixEdgeUpload(m)
 	responseHandler(data, err, c)
 }
@@ -43,7 +43,7 @@ func (inst *Controller) EdgeBiosRubixEdgeInstall(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	cli := helpers.GetEdgeBiosClient(host)
+	cli := cligetter.GetEdgeBiosClient(host)
 	data, err := cli.RubixEdgeInstall(m.Version)
 	responseHandler(data, err, c)
 }
@@ -54,7 +54,7 @@ func (inst *Controller) EdgeBiosGetRubixEdgeVersion(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	cli := helpers.GetEdgeBiosClient(host)
+	cli := cligetter.GetEdgeBiosClient(host)
 	data, err := cli.GetRubixEdgeVersion()
 	responseHandler(data, err, c)
 }

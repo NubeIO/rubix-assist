@@ -1,4 +1,4 @@
-package helpers
+package cligetter
 
 import (
 	"github.com/NubeIO/rubix-assist/model"
