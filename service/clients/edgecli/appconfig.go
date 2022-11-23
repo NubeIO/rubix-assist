@@ -1,4 +1,4 @@
-package appstore
+package edgecli
 
 import (
 	"errors"
@@ -8,11 +8,20 @@ import (
 	"path"
 )
 
-func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *amodel.EdgeConfig) (*amodel.Message, error) {
-	client, err := inst.getClient(hostUUID, hostName)
+func (inst *Client) EdgeReadConfig(appName, configName string) (*amodel.EdgeConfigResponse, error) {
+	appDataConfigPath := global.Installer.GetAppDataConfigPath(appName)
+	absoluteAppDataConfigName := path.Join(appDataConfigPath, configName)
+	file, err := inst.ReadFile(absoluteAppDataConfigName)
 	if err != nil {
 		return nil, err
 	}
+	return &amodel.EdgeConfigResponse{
+		Data:     file,
+		FilePath: absoluteAppDataConfigName,
+	}, nil
+}
+
+func (inst *Client) EdgeWriteConfig(body *amodel.EdgeConfig) (*amodel.Message, error) {
 	if body.AppName == "" {
 		return nil, errors.New("app_name can not be empty")
 	}
@@ -21,12 +30,12 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *amodel.EdgeC
 		configName = "config.yml"
 	}
 	appDataConfigPath := global.Installer.GetAppDataConfigPath(body.AppName)
-	dirExistence, err := client.DirExists(appDataConfigPath)
+	dirExistence, err := inst.DirExists(appDataConfigPath)
 	if err != nil {
 		return nil, err
 	}
 	if !dirExistence.Exists {
-		dir, err := client.CreateDir(appDataConfigPath)
+		dir, err := inst.CreateDir(appDataConfigPath)
 		if err != nil {
 			return nil, err
 		}
@@ -40,29 +49,12 @@ func (inst *Store) EdgeWriteConfig(hostUUID, hostName string, body *amodel.EdgeC
 		BodyAsString: body.BodyAsString,
 	}
 	if configName == "config.yml" {
-		return client.WriteFileYml(writeFile)
+		return inst.WriteFileYml(writeFile)
 	} else if configName == ".env" {
-		return client.WriteString(writeFile)
+		return inst.WriteString(writeFile)
 	} else if configName == "config.json" {
-		return client.WriteFileJson(writeFile)
+		return inst.WriteFileJson(writeFile)
 	}
 
 	return nil, errors.New("no valid config_name, config.yml or .env or config.json")
-}
-
-func (inst *Store) EdgeReadConfig(hostUUID, hostName, appName, configName string) (*amodel.EdgeConfigResponse, error) {
-	client, err := inst.getClient(hostUUID, hostName)
-	if err != nil {
-		return nil, err
-	}
-	appDataConfigPath := global.Installer.GetAppDataConfigPath(appName)
-	absoluteAppDataConfigName := path.Join(appDataConfigPath, configName)
-	file, err := client.ReadFile(absoluteAppDataConfigName)
-	if err != nil {
-		return nil, err
-	}
-	return &amodel.EdgeConfigResponse{
-		Data:     file,
-		FilePath: absoluteAppDataConfigName,
-	}, nil
 }

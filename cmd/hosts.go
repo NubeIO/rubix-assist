@@ -12,7 +12,6 @@ import (
 )
 
 var (
-	// amodel.Host
 	hostsGet       bool
 	hostAdd        bool
 	hostsDrop      bool

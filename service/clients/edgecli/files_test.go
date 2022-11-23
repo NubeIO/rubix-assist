@@ -36,12 +36,6 @@ func TestClient_ReadFileToYml(t *testing.T) {
 	pprint.PrintJSON(data)
 }
 
-type testJson struct {
-	ImageVersion string `json:"image_version"`
-	Arch         string `json:"arch"`
-	Product      string `json:"product"`
-}
-
 func TestClient_WriteFileYml(t *testing.T) {
 	data := testYml{
 		Auth: false,

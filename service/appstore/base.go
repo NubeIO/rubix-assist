@@ -2,7 +2,7 @@ package appstore
 
 import (
 	"errors"
-	base "github.com/NubeIO/rubix-assist/database"
+	"github.com/NubeIO/rubix-assist/database"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"os"
 )
