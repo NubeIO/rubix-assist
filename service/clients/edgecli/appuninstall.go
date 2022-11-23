@@ -2,7 +2,7 @@ package edgecli
 
 import (
 	"fmt"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/namings"
 	"github.com/NubeIO/rubix-assist/pkg/constants"
 	"github.com/NubeIO/rubix-assist/pkg/global"
@@ -11,17 +11,17 @@ import (
 	"path"
 )
 
-func (inst *Client) AppUninstall(appName string) (*model.Message, error) {
+func (inst *Client) AppUninstall(appName string) (*amodel.Message, error) {
 	installLocation := global.Installer.GetAppInstallPath(appName)
 	url := fmt.Sprintf("/api/files/delete-all?path=%s", installLocation)
 	if _, err := nresty.FormatRestyResponse(inst.Rest.R().Delete(url)); err != nil {
 		log.Error(err)
 	}
 	_, _ = inst.uninstallServiceFile(appName)
-	return &model.Message{Message: "successfully uninstalled the app"}, nil
+	return &amodel.Message{Message: "successfully uninstalled the app"}, nil
 }
 
-func (inst *Client) uninstallServiceFile(appName string) (*model.Message, error) {
+func (inst *Client) uninstallServiceFile(appName string) (*amodel.Message, error) {
 	serviceFileName := namings.GetServiceNameFromAppName(appName)
 	serviceFile := path.Join(constants.ServiceDir, serviceFileName)
 	symlinkServiceFile := path.Join(constants.ServiceDirSoftLink, serviceFileName)

@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	model2 "github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	pprint "github.com/NubeIO/rubix-assist/pkg/helpers/print"
 	"github.com/spf13/cobra"
 )
@@ -15,7 +15,7 @@ var appsCmd = &cobra.Command{
 
 func runApps(cmd *cobra.Command, args []string) {
 	db := initDB()
-	loc := &model2.Location{
+	loc := &amodel.Location{
 		Name: flgLocation.name,
 	}
 
@@ -24,7 +24,7 @@ func runApps(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	network := &model2.Network{
+	network := &amodel.Network{
 		Name:         "",
 		LocationUUID: location.UUID,
 	}
@@ -32,7 +32,7 @@ func runApps(cmd *cobra.Command, args []string) {
 	if err != nil {
 		return
 	}
-	host := &model2.Host{
+	host := &amodel.Host{
 		Name:        "",
 		NetworkUUID: network.UUID,
 	}

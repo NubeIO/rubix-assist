@@ -1,8 +1,8 @@
 package controller
 
 import (
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/cligetter"
-	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +13,7 @@ func (inst *Controller) EdgeUploadPlugin(c *gin.Context) {
 		return
 	}
 	cli := cligetter.GetEdgeClient(host)
-	var m *model.Plugin
+	var m *amodel.Plugin
 	err = c.ShouldBindJSON(&m)
 	data, err := cli.PluginUpload(m)
 	responseHandler(data, err, c)

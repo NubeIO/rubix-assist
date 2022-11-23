@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/helpers"
-	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 )
@@ -21,7 +21,7 @@ func (inst *Controller) UploadAddOnAppStore(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	m := &model.Upload{
+	m := &amodel.Upload{
 		Name:    c.Query("name"),
 		Version: c.Query("version"),
 		Arch:    c.Query("arch"),
@@ -39,7 +39,7 @@ func (inst *Controller) CheckAppExistence(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	responseHandler(model.FoundMessage{Found: true}, nil, c)
+	responseHandler(amodel.FoundMessage{Found: true}, nil, c)
 }
 
 func (inst *Controller) checkAppExistence(name, arch, version string) error {

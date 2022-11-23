@@ -1,4 +1,4 @@
-package model
+package amodel
 
 type Install struct {
 	Name                            string `json:"name"`

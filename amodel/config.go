@@ -1,4 +1,4 @@
-package model
+package amodel
 
 type EdgeConfig struct {
 	AppName      string      `json:"app_name,omitempty"`

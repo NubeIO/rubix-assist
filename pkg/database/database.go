@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/nubeio-rubix-lib-auth-go/user"
-	model2 "github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/spf13/viper"
 	"gorm.io/driver/sqlite"
@@ -53,14 +53,14 @@ func Setup() error {
 
 	// Auto migrate project models
 	err = db.AutoMigrate(
-		&model2.Location{},
-		&model2.Network{},
-		&model2.Host{},
-		&model2.Token{},
-		&model2.User{},
-		&model2.Team{},
-		&model2.Task{},
-		&model2.Transaction{})
+		&amodel.Location{},
+		&amodel.Network{},
+		&amodel.Host{},
+		&amodel.Token{},
+		&amodel.User{},
+		&amodel.Team{},
+		&amodel.Task{},
+		&amodel.Transaction{})
 	if err != nil {
 		return err
 	}

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/installer"
-	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"io/ioutil"
 	"os"
@@ -24,7 +24,7 @@ func (inst *Store) GetPluginsStorePlugins() ([]installer.BuildDetails, error) {
 	return plugins, err
 }
 
-func (inst *Store) UploadPluginStorePlugin(app *model.Upload) (*UploadResponse, error) {
+func (inst *Store) UploadPluginStorePlugin(app *amodel.Upload) (*UploadResponse, error) {
 	var file = app.File
 	uploadResponse := &UploadResponse{}
 	resp, err := global.Installer.Upload(file)

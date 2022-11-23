@@ -2,7 +2,7 @@ package installer
 
 import (
 	"fmt"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	log "github.com/sirupsen/logrus"
 	"io"
 	"mime/multipart"
@@ -11,7 +11,7 @@ import (
 )
 
 // Upload upload a build
-func (inst *Installer) Upload(zip *multipart.FileHeader) (*model.UploadResponse, error) {
+func (inst *Installer) Upload(zip *multipart.FileHeader) (*amodel.UploadResponse, error) {
 	tmpDir, err := inst.MakeTmpDirUpload()
 	if err != nil {
 		return nil, err
@@ -21,7 +21,7 @@ func (inst *Installer) Upload(zip *multipart.FileHeader) (*model.UploadResponse,
 	if err != nil {
 		return nil, err
 	}
-	return &model.UploadResponse{
+	return &amodel.UploadResponse{
 		FileName:     zip.Filename,
 		TmpFile:      tmpDir,
 		UploadedFile: zipSource,

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/gin-gonic/gin"
 	"os"
 	"path/filepath"
@@ -57,5 +57,5 @@ func (inst *Controller) ZipDir(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	responseHandler(model.Message{Message: fmt.Sprintf("zip file is created on: %s", destination)}, nil, c)
+	responseHandler(amodel.Message{Message: fmt.Sprintf("zip file is created on: %s", destination)}, nil, c)
 }

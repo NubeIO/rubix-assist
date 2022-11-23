@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 	"os"
 	"strconv"
@@ -59,97 +59,97 @@ func (inst *Client) ReadFile(path string) ([]byte, error) {
 	return resp.Body(), nil
 }
 
-func (inst *Client) CreateFile(body *model.WriteFile) (*model.Message, error) {
+func (inst *Client) CreateFile(body *amodel.WriteFile) (*amodel.Message, error) {
 	url := fmt.Sprintf("/api/files/create")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*model.Message), nil
+	return resp.Result().(*amodel.Message), nil
 }
 
-func (inst *Client) WriteString(body *model.WriteFile) (*model.Message, error) {
+func (inst *Client) WriteString(body *amodel.WriteFile) (*amodel.Message, error) {
 	url := fmt.Sprintf("/api/files/write/string")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*model.Message), nil
+	return resp.Result().(*amodel.Message), nil
 }
 
-func (inst *Client) WriteFileJson(body *model.WriteFile) (*model.Message, error) {
+func (inst *Client) WriteFileJson(body *amodel.WriteFile) (*amodel.Message, error) {
 	url := fmt.Sprintf("/api/files/write/json")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*model.Message), nil
+	return resp.Result().(*amodel.Message), nil
 }
 
-func (inst *Client) WriteFileYml(body *model.WriteFile) (*model.Message, error) {
+func (inst *Client) WriteFileYml(body *amodel.WriteFile) (*amodel.Message, error) {
 	url := fmt.Sprintf("/api/files/write/yml")
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		SetBody(body).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*model.Message), nil
+	return resp.Result().(*amodel.Message), nil
 }
 
 // RenameFile rename a file - use the full name of file and path
-func (inst *Client) RenameFile(oldNameAndPath, newNameAndPath string) (*model.Message, error) {
+func (inst *Client) RenameFile(oldNameAndPath, newNameAndPath string) (*amodel.Message, error) {
 	url := fmt.Sprintf("/api/files/rename?old=%s&new=%s", oldNameAndPath, newNameAndPath)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*model.Message), nil
+	return resp.Result().(*amodel.Message), nil
 }
 
 // CopyFile copy a file - use the full name of file and path
-func (inst *Client) CopyFile(from, to string) (*model.Message, error) {
+func (inst *Client) CopyFile(from, to string) (*amodel.Message, error) {
 	url := fmt.Sprintf("/api/files/copy?from=%s&to=%s", from, to)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*model.Message), nil
+	return resp.Result().(*amodel.Message), nil
 }
 
 // MoveFile move a file - use the full name of file and path
-func (inst *Client) MoveFile(from, to string) (*model.Message, error) {
+func (inst *Client) MoveFile(from, to string) (*amodel.Message, error) {
 	url := fmt.Sprintf("/api/files/move?from=%s&to=%s", from, to)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	return resp.Result().(*model.Message), nil
+	return resp.Result().(*amodel.Message), nil
 }
 
-func (inst *Client) UploadLocalFile(file, destination string) (*model.EdgeUploadResponse, error) {
+func (inst *Client) UploadLocalFile(file, destination string) (*amodel.EdgeUploadResponse, error) {
 	reader, err := os.Open(file)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("error open file: %s err: %s", file, err.Error()))
 	}
 	resp, err := inst.Rest.R().
-		SetResult(&model.EdgeUploadResponse{}).
+		SetResult(&amodel.EdgeUploadResponse{}).
 		SetFileReader("file", file, reader).
 		Post(fmt.Sprintf("/api/files/upload?destination=%s", destination))
 	if err != nil {
@@ -158,11 +158,11 @@ func (inst *Client) UploadLocalFile(file, destination string) (*model.EdgeUpload
 	if resp.StatusCode() > 299 {
 		return nil, errors.New(resp.String())
 	}
-	return resp.Result().(*model.EdgeUploadResponse), nil
+	return resp.Result().(*amodel.EdgeUploadResponse), nil
 }
 
 // DownloadFile download a file
-func (inst *Client) DownloadFile(path, file, destination string) (*model.EdgeDownloadResponse, error) {
+func (inst *Client) DownloadFile(path, file, destination string) (*amodel.EdgeDownloadResponse, error) {
 	url := fmt.Sprintf("/api/files/download?path=%s&file=%s", path, file)
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetOutput(destination).
@@ -170,5 +170,5 @@ func (inst *Client) DownloadFile(path, file, destination string) (*model.EdgeDow
 	if err != nil {
 		return nil, err
 	}
-	return &model.EdgeDownloadResponse{FileName: file, Path: path, Destination: destination}, nil
+	return &amodel.EdgeDownloadResponse{FileName: file, Path: path, Destination: destination}, nil
 }

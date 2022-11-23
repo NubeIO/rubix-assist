@@ -1,10 +1,10 @@
 package appstore
 
 import (
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 )
 
-func (inst *Store) EdgeUploadLocalFile(hostUUID, hostName, file, destination string) (*model.EdgeUploadResponse, error) {
+func (inst *Store) EdgeUploadLocalFile(hostUUID, hostName, file, destination string) (*amodel.EdgeUploadResponse, error) {
 	client, err := inst.getClient(hostUUID, hostName)
 	if err != nil {
 		return nil, err
@@ -17,7 +17,7 @@ func (inst *Store) EdgeUploadLocalFile(hostUUID, hostName, file, destination str
 	if err != nil {
 		return nil, err
 	}
-	return &model.EdgeUploadResponse{
+	return &amodel.EdgeUploadResponse{
 		Destination: resp.Destination,
 		File:        resp.File,
 		Size:        resp.Size,

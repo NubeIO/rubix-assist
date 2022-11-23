@@ -1,12 +1,12 @@
 package cligetter
 
 import (
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli"
 	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 )
 
-func GetEdgeClient(host *model.Host) *edgecli.Client {
+func GetEdgeClient(host *amodel.Host) *edgecli.Client {
 	cli := edgecli.New(&edgecli.Client{
 		Rest:          nil,
 		Ip:            host.IP,
@@ -17,7 +17,7 @@ func GetEdgeClient(host *model.Host) *edgecli.Client {
 	return cli
 }
 
-func GetEdgeBiosClient(host *model.Host) *edgebioscli.BiosClient {
+func GetEdgeBiosClient(host *amodel.Host) *edgebioscli.BiosClient {
 	cli := edgebioscli.New(&edgebioscli.BiosClient{
 		Rest:          nil,
 		Ip:            host.IP,

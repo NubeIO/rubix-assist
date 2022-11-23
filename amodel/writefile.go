@@ -1,4 +1,4 @@
-package model
+package amodel
 
 type WriteFile struct {
 	FilePath     string      `json:"path"`

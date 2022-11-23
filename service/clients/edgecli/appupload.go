@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli/ebmodel"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
@@ -14,7 +14,7 @@ import (
 	"path/filepath"
 )
 
-func (inst *Client) AppUpload(body *model.AppUpload) (*model.Message, error) {
+func (inst *Client) AppUpload(body *amodel.AppUpload) (*amodel.Message, error) {
 	url := fmt.Sprintf("/api/files/delete-all?path=%s", global.Installer.GetAppDownloadPath(body.Name))
 	_, _ = nresty.FormatRestyResponse(inst.Rest.R().Delete(url))
 
@@ -60,12 +60,12 @@ func (inst *Client) AppUpload(body *model.AppUpload) (*model.Message, error) {
 			to := path.Join(uploadLocation, "app")
 			url = fmt.Sprintf("/api/files/move?from=%s&to=%s", from, to)
 			resp, err = nresty.FormatRestyResponse(inst.Rest.R().
-				SetResult(&model.Message{}).
+				SetResult(&amodel.Message{}).
 				Post(url))
 			if err != nil {
 				return nil, err
 			}
-			return &model.Message{Message: "uploaded successfully"}, nil
+			return &amodel.Message{Message: "uploaded successfully"}, nil
 		}
 	}
 	if body.MoveOneLevelInsideFileToOutside {
@@ -101,7 +101,7 @@ func (inst *Client) AppUpload(body *model.AppUpload) (*model.Message, error) {
 					if err != nil {
 						return nil, err
 					}
-					return &model.Message{Message: "uploaded successfully"}, nil
+					return &amodel.Message{Message: "uploaded successfully"}, nil
 				}
 			}
 		}

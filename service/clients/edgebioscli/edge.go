@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/namings"
 	"github.com/NubeIO/rubix-assist/pkg/constants"
 	"github.com/NubeIO/rubix-assist/pkg/global"
@@ -19,11 +19,11 @@ import (
 
 const rubixEdgeName = "rubix-edge"
 
-func (inst *BiosClient) RubixEdgeUpload(body *model.FileUpload) (*model.Message, error) {
+func (inst *BiosClient) RubixEdgeUpload(body *amodel.FileUpload) (*amodel.Message, error) {
 	uploadLocation := fmt.Sprintf("/data/rubix-service/apps/download/%s/%s", rubixEdgeName, body.Version)
 	url := fmt.Sprintf("/api/dirs/create?path=%s", uploadLocation)
 	_, _ = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		Post(url))
 
 	url = fmt.Sprintf("/api/files/upload?destination=%s", uploadLocation)
@@ -51,7 +51,7 @@ func (inst *BiosClient) RubixEdgeUpload(body *model.FileUpload) (*model.Message,
 
 	url = fmt.Sprintf("/api/files/delete?file=%s", upload.Destination)
 	resp, err = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		Delete(url))
 	if err != nil {
 		return nil, err
@@ -62,21 +62,21 @@ func (inst *BiosClient) RubixEdgeUpload(body *model.FileUpload) (*model.Message,
 		to := path.Join(uploadLocation, "app")
 		url = fmt.Sprintf("/api/files/move?from=%s&to=%s", from, to)
 		resp, err = nresty.FormatRestyResponse(inst.Rest.R().
-			SetResult(&model.Message{}).
+			SetResult(&amodel.Message{}).
 			Post(url))
 		if err != nil {
 			return nil, err
 		}
 	}
-	return &model.Message{Message: "successfully uploaded the rubix-edge in edge device"}, nil
+	return &amodel.Message{Message: "successfully uploaded the rubix-edge in edge device"}, nil
 }
 
-func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error) {
+func (inst *BiosClient) RubixEdgeInstall(version string) (*amodel.Message, error) {
 	// delete installed files
 	installationDirectory := fmt.Sprintf("/data/rubix-service/apps/install/%s", rubixEdgeName)
 	url := fmt.Sprintf("/api/files/delete-all?path=%s", installationDirectory)
 	_, _ = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		Delete(url))
 	log.Println("deleted installed files, if any")
 
@@ -87,7 +87,7 @@ func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error)
 	installationDirectoryWithVersion := filepath.Dir(installationFile)
 	url = fmt.Sprintf("/api/dirs/create?path=%s", installationDirectoryWithVersion)
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		Post(url))
 	if err != nil {
 		return nil, err
@@ -97,7 +97,7 @@ func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error)
 	// move downloaded file to installation directory
 	url = fmt.Sprintf("/api/files/move?from=%s&to=%s", downloadedFile, installationFile)
 	_, err = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		Post(url))
 	if err != nil {
 		return nil, err
@@ -124,10 +124,10 @@ func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error)
 		log.Errorf("delete tmp generated service file %s", absoluteServiceFileName)
 	}
 	log.Infof("deleted tmp generated local service file %s", absoluteServiceFileName)
-	return &model.Message{Message: "successfully installed the rubix-edge in edge device"}, nil
+	return &amodel.Message{Message: "successfully installed the rubix-edge in edge device"}, nil
 }
 
-func (inst *BiosClient) installServiceFile(appName, absoluteServiceFileName string) (*model.Message, error) {
+func (inst *BiosClient) installServiceFile(appName, absoluteServiceFileName string) (*amodel.Message, error) {
 	serviceFileName := namings.GetServiceNameFromAppName(appName)
 	serviceFile := path.Join(constants.ServiceDir, serviceFileName)
 	symlinkServiceFile := path.Join(constants.ServiceDirSoftLink, serviceFileName)

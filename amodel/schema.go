@@ -1,3 +1,3 @@
-package model
+package amodel
 
 type Help string

@@ -3,21 +3,21 @@ package base
 import (
 	"errors"
 	"github.com/NubeIO/lib-uuid/uuid"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/pkg/helpers/ttime"
 	"github.com/NubeIO/rubix-assist/service/tasks"
 )
 
-func (inst *DB) GetTransaction(uuid string) (*model.Transaction, error) {
-	m := new(model.Transaction)
+func (inst *DB) GetTransaction(uuid string) (*amodel.Transaction, error) {
+	m := new(amodel.Transaction)
 	if err := inst.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
 		return nil, err
 	}
 	return m, nil
 }
 
-func (inst *DB) GetTransactions() ([]*model.Transaction, error) {
-	var m []*model.Transaction
+func (inst *DB) GetTransactions() ([]*amodel.Transaction, error) {
+	var m []*amodel.Transaction
 	if err := inst.DB.Find(&m).Error; err != nil {
 		return nil, err
 	} else {
@@ -25,7 +25,7 @@ func (inst *DB) GetTransactions() ([]*model.Transaction, error) {
 	}
 }
 
-func (inst *DB) CreateTransaction(transaction *model.Transaction) (*model.Transaction, error) {
+func (inst *DB) CreateTransaction(transaction *amodel.Transaction) (*amodel.Transaction, error) {
 	Task, err := inst.GetTask(transaction.TaskUUID)
 	if err != nil {
 		return nil, errors.New("no task uuid was found, a translation needs to be added to an existing task")
@@ -45,8 +45,8 @@ func (inst *DB) CreateTransaction(transaction *model.Transaction) (*model.Transa
 	}
 }
 
-func (inst *DB) UpdateTransaction(uuid string, message *model.Transaction) (*model.Transaction, error) {
-	m := new(model.Transaction)
+func (inst *DB) UpdateTransaction(uuid string, message *amodel.Transaction) (*amodel.Transaction, error) {
+	m := new(amodel.Transaction)
 	query := inst.DB.Where("uuid = ?", uuid).Find(&m).Updates(message)
 	if query.Error != nil {
 		return nil, query.Error
@@ -56,13 +56,13 @@ func (inst *DB) UpdateTransaction(uuid string, message *model.Transaction) (*mod
 }
 
 func (inst *DB) DeleteTransaction(uuid string) (*DeleteMessage, error) {
-	m := new(model.Transaction)
+	m := new(amodel.Transaction)
 	query := inst.DB.Where("uuid = ? ", uuid).Delete(&m)
 	return deleteResponse(query)
 }
 
 func (inst *DB) DropTransactions() (*DeleteMessage, error) {
-	var m *model.Transaction
+	var m *amodel.Transaction
 	query := inst.DB.Where("1 = 1")
 	query.Delete(&m)
 	return deleteResponse(query)

@@ -1,19 +1,19 @@
 package controller
 
 import (
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli"
 	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 	"github.com/gin-gonic/gin"
 )
 
-func getHostBody(ctx *gin.Context) (dto *model.Host, err error) {
+func getHostBody(ctx *gin.Context) (dto *amodel.Host, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
 }
 
 func (inst *Controller) GetHostSchema(ctx *gin.Context) {
-	mod := model.GetHostSchema()
+	mod := amodel.GetHostSchema()
 	responseHandler(mod, nil, ctx)
 }
 
@@ -36,7 +36,7 @@ func (inst *Controller) GetHosts(c *gin.Context) {
 }
 
 func (inst *Controller) CreateHost(c *gin.Context) {
-	m := new(model.Host)
+	m := new(amodel.Host)
 	err := c.ShouldBindJSON(&m)
 	host, err := inst.DB.CreateHost(m)
 	if err != nil {
@@ -76,7 +76,7 @@ func (inst *Controller) DropHosts(c *gin.Context) {
 	responseHandler(host, err, c)
 }
 
-func (inst *Controller) updateCLIs(host *model.Host) {
+func (inst *Controller) updateCLIs(host *amodel.Host) {
 	edgecli.NewForce(&edgecli.Client{
 		Ip:            host.IP,
 		Port:          host.Port,

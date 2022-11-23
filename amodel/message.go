@@ -1,4 +1,4 @@
-package model
+package amodel
 
 type Message struct {
 	Message interface{} `json:"message"`

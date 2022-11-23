@@ -1,4 +1,4 @@
-package model
+package amodel
 
 import (
 	"gorm.io/datatypes"

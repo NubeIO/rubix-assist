@@ -2,8 +2,8 @@ package controller
 
 import (
 	"errors"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/cligetter"
-	"github.com/NubeIO/rubix-assist/model"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"path"
@@ -15,7 +15,7 @@ func (inst *Controller) EdgeBiosRubixEdgeUpload(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *model.FileUpload
+	var m *amodel.FileUpload
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)
@@ -37,7 +37,7 @@ func (inst *Controller) EdgeBiosRubixEdgeInstall(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *model.FileUpload
+	var m *amodel.FileUpload
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)
@@ -59,7 +59,7 @@ func (inst *Controller) EdgeBiosGetRubixEdgeVersion(c *gin.Context) {
 	responseHandler(data, err, c)
 }
 
-func (inst *Controller) attachFileOnModel(m *model.FileUpload) error {
+func (inst *Controller) attachFileOnModel(m *amodel.FileUpload) error {
 	storePath := inst.Store.GetAppsStoreAppWithArchVersionPath("rubix-edge", m.Arch, m.Version)
 	files, err := ioutil.ReadDir(storePath)
 	if err != nil {

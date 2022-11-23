@@ -3,15 +3,15 @@ package installer
 import (
 	"errors"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"io/ioutil"
 	"strings"
 )
 
 // GetPluginDetails takes in the name (influx-amd64.so) and returns the info
-func (inst *Installer) GetPluginDetails(pluginName string) *model.Plugin {
+func (inst *Installer) GetPluginDetails(pluginName string) *amodel.Plugin {
 	parts := strings.Split(pluginName, "-")
-	plugin := model.Plugin{}
+	plugin := amodel.Plugin{}
 	for _, part := range parts {
 		plugin.Name = parts[0]
 		if strings.Contains(part, "amd64") {
@@ -42,7 +42,7 @@ func (inst *Installer) ValidateBinaryPlugin(pluginName string) error {
 	return nil
 }
 
-func (inst *Installer) GetPluginsStorePluginFile(plugin model.Plugin) (pluginsPath string, err error) {
+func (inst *Installer) GetPluginsStorePluginFile(plugin amodel.Plugin) (pluginsPath string, err error) {
 	plugins, err := inst.GetPluginsStorePlugins()
 	if err != nil {
 		return "", err

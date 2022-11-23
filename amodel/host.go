@@ -1,4 +1,4 @@
-package model
+package amodel
 
 import (
 	"github.com/NubeIO/lib-schema/schema"

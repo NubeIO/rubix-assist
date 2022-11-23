@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"os"
 	"path"
@@ -18,7 +18,7 @@ type UploadResponse struct {
 	UploadedFile string `json:"uploaded_file,omitempty"`
 }
 
-func (inst *Store) UploadAddOnAppStore(app *model.Upload) (*UploadResponse, error) {
+func (inst *Store) UploadAddOnAppStore(app *amodel.Upload) (*UploadResponse, error) {
 	if app.Name == "" {
 		return nil, errors.New("app_name can not be empty")
 	}

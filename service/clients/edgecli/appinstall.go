@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/namings"
 	"github.com/NubeIO/rubix-assist/pkg/constants"
 	"github.com/NubeIO/rubix-assist/pkg/global"
@@ -16,7 +16,7 @@ import (
 	"path"
 )
 
-func (inst *Client) AppInstall(app *systemctl.ServiceFile) (*model.Message, error) {
+func (inst *Client) AppInstall(app *systemctl.ServiceFile) (*amodel.Message, error) {
 	message, err := inst.transferDataFromDownloadToInstallDir(app)
 	if err != nil {
 		return message, err
@@ -31,10 +31,10 @@ func (inst *Client) AppInstall(app *systemctl.ServiceFile) (*model.Message, erro
 		log.Errorf("delete tmp generated service file %s", absoluteServiceFileName)
 	}
 	log.Infof("deleted tmp generated local service file %s", absoluteServiceFileName)
-	return &model.Message{Message: "successfully installed the app"}, nil
+	return &amodel.Message{Message: "successfully installed the app"}, nil
 }
 
-func (inst *Client) transferDataFromDownloadToInstallDir(app *systemctl.ServiceFile) (*model.Message, error) {
+func (inst *Client) transferDataFromDownloadToInstallDir(app *systemctl.ServiceFile) (*amodel.Message, error) {
 	from := global.Installer.GetAppDownloadPathWithVersion(app.Name, app.Version)
 	to := global.Installer.GetAppInstallPathWithVersion(app.Name, app.Version)
 	url := fmt.Sprintf("/api/files/delete-all?path=%s", to)
@@ -90,7 +90,7 @@ func (inst *Client) transferDataFromDownloadToInstallDir(app *systemctl.ServiceF
 	return nil, nil
 }
 
-func (inst *Client) installServiceFile(appName, absoluteServiceFileName string) (*model.Message, error) {
+func (inst *Client) installServiceFile(appName, absoluteServiceFileName string) (*amodel.Message, error) {
 	serviceFileName := namings.GetServiceNameFromAppName(appName)
 	serviceFile := path.Join(constants.ServiceDir, serviceFileName)
 	symlinkServiceFile := path.Join(constants.ServiceDirSoftLink, serviceFileName)

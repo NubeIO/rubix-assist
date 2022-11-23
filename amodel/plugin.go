@@ -1,4 +1,4 @@
-package model
+package amodel
 
 type Plugin struct {
 	Name                 string `json:"name"`

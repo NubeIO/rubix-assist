@@ -2,7 +2,7 @@ package controller
 
 import (
 	"fmt"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/pkg/helpers/ip"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -33,7 +33,7 @@ func (inst *Controller) Proxy(c *gin.Context) {
 		proxyPath = path.Join(proxyPathParts[1:]...)
 		remote, err = ip.Builder(host.HTTPS, host.IP, host.Port)
 	} else {
-		c.JSON(http.StatusNotFound, model.Message{Message: "not found"})
+		c.JSON(http.StatusNotFound, amodel.Message{Message: "not found"})
 		return
 	}
 	proxyPath = fmt.Sprintf("/%s", proxyPath)

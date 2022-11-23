@@ -3,7 +3,7 @@ package appstore
 import (
 	"errors"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
 )
 
@@ -15,7 +15,7 @@ func (inst *Store) getClient(hostUUID, hostName string) (*edgecli.Client, error)
 	return inst.newClient(host)
 }
 
-func (inst *Store) newClient(host *model.Host) (*edgecli.Client, error) {
+func (inst *Store) newClient(host *amodel.Host) (*edgecli.Client, error) {
 	cli := edgecli.New(&edgecli.Client{
 		Rest:          nil,
 		Ip:            host.IP,
@@ -35,8 +35,8 @@ func matchUUID(uuid string) bool {
 	return false
 }
 
-func (inst *Store) getHost(hostUUID, hostName string) (*model.Host, error) {
-	var host *model.Host
+func (inst *Store) getHost(hostUUID, hostName string) (*amodel.Host, error) {
+	var host *amodel.Host
 	var err error
 	if matchUUID(hostUUID) {
 		host, err = inst.DB.GetHost(hostUUID)

@@ -1,17 +1,17 @@
 package controller
 
 import (
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/gin-gonic/gin"
 )
 
-func getNetworkBody(ctx *gin.Context) (dto *model.Network, err error) {
+func getNetworkBody(ctx *gin.Context) (dto *amodel.Network, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
 }
 
 func (inst *Controller) GetNetworkSchema(ctx *gin.Context) {
-	mod := model.GetNetworkSchema()
+	mod := amodel.GetNetworkSchema()
 	responseHandler(mod, nil, ctx)
 }
 
@@ -34,7 +34,7 @@ func (inst *Controller) GetHostNetworks(c *gin.Context) {
 }
 
 func (inst *Controller) CreateHostNetwork(c *gin.Context) {
-	m := new(model.Network)
+	m := new(amodel.Network)
 	err := c.ShouldBindJSON(&m)
 	host, err := inst.DB.CreateHostNetwork(m)
 	if err != nil {

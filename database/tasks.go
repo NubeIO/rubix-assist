@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-uuid/uuid"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/pkg/helpers/ttime"
 	"github.com/NubeIO/rubix-assist/pkg/logger"
 	"github.com/NubeIO/rubix-assist/service/tasks"
@@ -12,8 +12,8 @@ import (
 
 const taskName = "task"
 
-func (inst *DB) GetTask(uuid string) (*model.Task, error) {
-	m := new(model.Task)
+func (inst *DB) GetTask(uuid string) (*amodel.Task, error) {
+	m := new(amodel.Task)
 	if err := inst.DB.Where("uuid = ? ", uuid).Preload("Transactions").First(&m).Error; err != nil {
 		logger.Errorf("GetTask error: %v", err)
 		return nil, err
@@ -21,8 +21,8 @@ func (inst *DB) GetTask(uuid string) (*model.Task, error) {
 	return m, nil
 }
 
-func (inst *DB) GetTasks() ([]*model.Task, error) {
-	var m []*model.Task
+func (inst *DB) GetTasks() ([]*amodel.Task, error) {
+	var m []*amodel.Task
 	if err := inst.DB.Preload("Transactions").Find(&m).Error; err != nil {
 		return nil, err
 	} else {
@@ -31,8 +31,8 @@ func (inst *DB) GetTasks() ([]*model.Task, error) {
 }
 
 // GetTaskByField returns the object for the given field ie name or nil.
-func (inst *DB) GetTaskByField(field string, value string) (*model.Task, error) {
-	var m *model.Task
+func (inst *DB) GetTaskByField(field string, value string) (*amodel.Task, error) {
+	var m *amodel.Task
 	f := fmt.Sprintf("%s = ? ", field)
 	query := inst.DB.Where(f, value).First(&m)
 	if query.Error != nil {
@@ -42,8 +42,8 @@ func (inst *DB) GetTaskByField(field string, value string) (*model.Task, error) 
 }
 
 // GetTaskByType get a Task by type and its uuid
-func (inst *DB) GetTaskByType(uuid string, TaskType string) (*model.Task, error) {
-	var m *model.Task
+func (inst *DB) GetTaskByType(uuid string, TaskType string) (*amodel.Task, error) {
+	var m *amodel.Task
 	f := "host_uuid = ? AND task_type = ?"
 	query := inst.DB.Where(f, uuid, TaskType).First(&m)
 	if query.Error != nil {
@@ -52,7 +52,7 @@ func (inst *DB) GetTaskByType(uuid string, TaskType string) (*model.Task, error)
 	return m, nil
 }
 
-func (inst *DB) CreateTask(task *model.Task) (*model.Task, error) {
+func (inst *DB) CreateTask(task *amodel.Task) (*amodel.Task, error) {
 	host, err := inst.GetHost(task.HostUUID)
 	if err != nil {
 		return nil, errors.New("no valid host found")
@@ -83,19 +83,19 @@ func (inst *DB) CreateTask(task *model.Task) (*model.Task, error) {
 	}
 }
 
-func (inst *DB) GetTaskByPipelineUUID(uuid string) (*model.Task, error) {
-	m := new(model.Task)
+func (inst *DB) GetTaskByPipelineUUID(uuid string) (*amodel.Task, error) {
+	m := new(amodel.Task)
 	if err := inst.DB.Where("pipeline_uuid = ? ", uuid).First(&m).Error; err != nil {
 		return nil, err
 	}
 	return m, nil
 }
 
-func (inst *DB) TaskEntry(task *model.Task) (*model.Task, error) {
+func (inst *DB) TaskEntry(task *amodel.Task) (*amodel.Task, error) {
 	if task.IsPipeline {
 		existing, _ := inst.GetTaskByPipelineUUID(task.PipelineUUID)
 		if existing != nil { // add entry
-			transaction := &model.Transaction{}
+			transaction := &amodel.Transaction{}
 			transaction, err := inst.CreateTransaction(transaction)
 			if err != nil {
 				return nil, err
@@ -117,7 +117,7 @@ func (inst *DB) TaskEntry(task *model.Task) (*model.Task, error) {
 	}
 }
 
-func (inst *DB) CreateTaskPipeline(task *model.Task) (*model.Task, error) {
+func (inst *DB) CreateTaskPipeline(task *amodel.Task) (*amodel.Task, error) {
 	if task.PipelineUUID == "" {
 		return nil, errors.New("pipeline uuid cant not be empty")
 	}
@@ -127,8 +127,8 @@ func (inst *DB) CreateTaskPipeline(task *model.Task) (*model.Task, error) {
 	return task, err
 }
 
-func (inst *DB) UpdateTask(uuid string, Task *model.Task) (*model.Task, error) {
-	m := new(model.Task)
+func (inst *DB) UpdateTask(uuid string, Task *amodel.Task) (*amodel.Task, error) {
+	m := new(amodel.Task)
 	query := inst.DB.Where("uuid = ?", uuid).Find(&m).Updates(Task)
 	if query.Error != nil {
 		return nil, handelNotFound(taskName)
@@ -138,13 +138,13 @@ func (inst *DB) UpdateTask(uuid string, Task *model.Task) (*model.Task, error) {
 }
 
 func (inst *DB) DeleteTask(uuid string) (*DeleteMessage, error) {
-	m := new(model.Task)
+	m := new(amodel.Task)
 	query := inst.DB.Where("uuid = ? ", uuid).Delete(&m)
 	return deleteResponse(query)
 }
 
 func (inst *DB) DropTasks() (*DeleteMessage, error) {
-	var m *model.Task
+	var m *amodel.Task
 	query := inst.DB.Where("1 = 1")
 	query.Delete(&m)
 	return deleteResponse(query)

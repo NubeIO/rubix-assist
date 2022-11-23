@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/gin-gonic/gin"
 )
 
-func getTransactionBody(ctx *gin.Context) (dto *model.Transaction, err error) {
+func getTransactionBody(ctx *gin.Context) (dto *amodel.Transaction, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
 }
@@ -33,7 +33,7 @@ func (inst *Controller) GetTransactions(c *gin.Context) {
 }
 
 func (inst *Controller) CreateTransaction(c *gin.Context) {
-	m := new(model.Transaction)
+	m := new(amodel.Transaction)
 	err := c.ShouldBindJSON(&m)
 	team, err := inst.DB.CreateTransaction(m)
 	if err != nil {

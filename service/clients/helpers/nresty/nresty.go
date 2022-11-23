@@ -3,7 +3,7 @@ package nresty
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/go-resty/resty/v2"
 )
 
@@ -30,7 +30,7 @@ func FormatRestyResponse(resp *resty.Response, err error) (*resty.Response, erro
 
 // composeErrorMsg it helps to create a clean output error message; we used to have JSON message with nested key
 func composeErrorMsg(resp *resty.Response) error {
-	message := model.Message{}
+	message := amodel.Message{}
 	rawMessage := resp.String()
 	_ = json.Unmarshal([]byte(rawMessage), &message)
 

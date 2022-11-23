@@ -2,7 +2,7 @@ package controller
 
 import (
 	"errors"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,7 +31,7 @@ func (inst *Controller) EdgeWriteConfig(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *model.EdgeConfig
+	var m *amodel.EdgeConfig
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)

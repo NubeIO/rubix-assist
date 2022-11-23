@@ -1,4 +1,4 @@
-package model
+package amodel
 
 type DirExistence struct {
 	Path   string `json:"path"`

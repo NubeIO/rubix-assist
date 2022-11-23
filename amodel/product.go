@@ -1,4 +1,4 @@
-package model
+package amodel
 
 type OS struct {
 	Type    string `json:"type,omitempty"`

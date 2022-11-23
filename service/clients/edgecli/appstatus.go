@@ -3,28 +3,28 @@ package edgecli
 import (
 	"fmt"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/helpers"
-	"github.com/NubeIO/rubix-assist/model"
 	"github.com/NubeIO/rubix-assist/namings"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
 	log "github.com/sirupsen/logrus"
 )
 
-func (inst *Client) AppsStatus() (*[]model.AppsStatus, error) {
+func (inst *Client) AppsStatus() (*[]amodel.AppsStatus, error) {
 	files, err := inst.ListFiles(global.Installer.AppsInstallDir)
 	if err != nil {
 		return nil, err
 	}
-	ch := make(chan *model.AppsStatus)
+	ch := make(chan *amodel.AppsStatus)
 	for _, file := range files {
 		go inst.getAppStatus(file.Name, ch)
 	}
-	appsStatus := make([]*model.AppsStatus, len(files))
+	appsStatus := make([]*amodel.AppsStatus, len(files))
 	for i := range appsStatus {
 		appsStatus[i] = <-ch
 	}
-	notNullAppsStatus := make([]model.AppsStatus, 0)
+	notNullAppsStatus := make([]amodel.AppsStatus, 0)
 	for _, appStatus := range appsStatus {
 		if appStatus != nil {
 			notNullAppsStatus = append(notNullAppsStatus, *appStatus)
@@ -33,7 +33,7 @@ func (inst *Client) AppsStatus() (*[]model.AppsStatus, error) {
 	return &notNullAppsStatus, nil
 }
 
-func (inst *Client) getAppStatus(fileName string, ch chan<- *model.AppsStatus) {
+func (inst *Client) getAppStatus(fileName string, ch chan<- *amodel.AppsStatus) {
 	appName := namings.GetAppNameFromRepoName(fileName)
 	version := inst.getAppVersion(appName)
 	if version == nil {
@@ -44,7 +44,7 @@ func (inst *Client) getAppStatus(fileName string, ch chan<- *model.AppsStatus) {
 	if err != nil {
 		ch <- nil
 	}
-	appStatus := model.AppsStatus{
+	appStatus := amodel.AppsStatus{
 		Name:        appName,
 		Version:     *version,
 		ServiceName: serviceName,

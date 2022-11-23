@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/gin-gonic/gin"
 	"io/fs"
 	"io/ioutil"
@@ -79,7 +79,7 @@ func (inst *Controller) CreateFile(c *gin.Context) {
 		return
 	}
 	_, err := fileutils.CreateFile(file, os.FileMode(inst.FileMode))
-	responseHandler(model.Message{Message: fmt.Sprintf("created file: %s", file)}, err, c)
+	responseHandler(amodel.Message{Message: fmt.Sprintf("created file: %s", file)}, err, c)
 }
 
 func (inst *Controller) CopyFile(c *gin.Context) {
@@ -90,7 +90,7 @@ func (inst *Controller) CopyFile(c *gin.Context) {
 		return
 	}
 	err := fileutils.Copy(from, to)
-	responseHandler(model.Message{Message: "copied successfully"}, err, c)
+	responseHandler(amodel.Message{Message: "copied successfully"}, err, c)
 }
 
 func (inst *Controller) RenameFile(c *gin.Context) {
@@ -101,7 +101,7 @@ func (inst *Controller) RenameFile(c *gin.Context) {
 		return
 	}
 	err := os.Rename(oldPath, newPath)
-	responseHandler(model.Message{Message: "renamed successfully"}, err, c)
+	responseHandler(amodel.Message{Message: "renamed successfully"}, err, c)
 }
 
 func (inst *Controller) MoveFile(c *gin.Context) {
@@ -116,7 +116,7 @@ func (inst *Controller) MoveFile(c *gin.Context) {
 		return
 	}
 	err := os.Rename(from, to)
-	responseHandler(model.Message{Message: "moved successfully"}, err, c)
+	responseHandler(amodel.Message{Message: "moved successfully"}, err, c)
 }
 
 func (inst *Controller) DownloadFile(c *gin.Context) {
@@ -194,7 +194,7 @@ func (inst *Controller) WriteFile(c *gin.Context) {
 		return
 	}
 	err = fileutils.WriteFile(file, m.Data, fs.FileMode(inst.FileMode))
-	responseHandler(model.Message{Message: fmt.Sprintf("wrote the file: %s", file)}, err, c)
+	responseHandler(amodel.Message{Message: fmt.Sprintf("wrote the file: %s", file)}, err, c)
 }
 
 func (inst *Controller) DeleteFile(c *gin.Context) {
@@ -204,7 +204,7 @@ func (inst *Controller) DeleteFile(c *gin.Context) {
 		return
 	}
 	err := fileutils.Rm(file)
-	responseHandler(model.Message{Message: fmt.Sprintf("deleted file: %s", file)}, err, c)
+	responseHandler(amodel.Message{Message: fmt.Sprintf("deleted file: %s", file)}, err, c)
 }
 
 func (inst *Controller) DeleteAllFiles(c *gin.Context) {
@@ -214,7 +214,7 @@ func (inst *Controller) DeleteAllFiles(c *gin.Context) {
 		return
 	}
 	err := fileutils.RemoveAllFiles(filePath)
-	responseHandler(model.Message{Message: fmt.Sprintf("deleted path: %s", filePath)}, err, c)
+	responseHandler(amodel.Message{Message: fmt.Sprintf("deleted path: %s", filePath)}, err, c)
 }
 
 func TimeTrack(start time.Time) (out string) {
