@@ -1,6 +1,7 @@
 package edgecli
 
 import (
+	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-systemctl-go/systemctl"
 	"github.com/NubeIO/rubix-assist/amodel"
@@ -18,7 +19,8 @@ func (inst *Client) AppsStatus() (*[]amodel.AppsStatus, error) {
 	}
 	ch := make(chan *amodel.AppsStatus)
 	for _, file := range files {
-		go inst.getAppStatus(file.Name, ch)
+		appName := namings.GetAppNameFromRepoName(file.Name)
+		go inst.appStatusChannel(appName, ch)
 	}
 	appsStatus := make([]*amodel.AppsStatus, len(files))
 	for i := range appsStatus {
@@ -33,16 +35,20 @@ func (inst *Client) AppsStatus() (*[]amodel.AppsStatus, error) {
 	return &notNullAppsStatus, nil
 }
 
-func (inst *Client) getAppStatus(fileName string, ch chan<- *amodel.AppsStatus) {
-	appName := namings.GetAppNameFromRepoName(fileName)
+func (inst *Client) appStatusChannel(appName string, ch chan<- *amodel.AppsStatus) {
+	appStatus, _ := inst.GetAppStatus(appName)
+	ch <- appStatus
+}
+
+func (inst *Client) GetAppStatus(appName string) (*amodel.AppsStatus, error) {
 	version := inst.getAppVersion(appName)
 	if version == nil {
-		ch <- nil
+		return nil, errors.New("version can't be nil")
 	}
 	serviceName := namings.GetServiceNameFromAppName(appName)
 	state, err := inst.appState(serviceName)
 	if err != nil {
-		ch <- nil
+		return nil, errors.New("error on getting app state")
 	}
 	appStatus := amodel.AppsStatus{
 		Name:        appName,
@@ -50,7 +56,7 @@ func (inst *Client) getAppStatus(fileName string, ch chan<- *amodel.AppsStatus) 
 		ServiceName: serviceName,
 		State:       state,
 	}
-	ch <- &appStatus
+	return &appStatus, nil
 }
 
 func (inst *Client) appState(unit string) (*systemctl.SystemState, error) {
