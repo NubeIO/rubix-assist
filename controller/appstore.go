@@ -6,14 +6,10 @@ import (
 	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/helpers"
+	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 )
-
-func (inst *Controller) ListAppsWithVersions(c *gin.Context) {
-	data, err := inst.Store.ListAppsWithVersions()
-	responseHandler(data, err, c)
-}
 
 func (inst *Controller) UploadAddOnAppStore(c *gin.Context) {
 	file, err := c.FormFile("file")
@@ -52,7 +48,7 @@ func (inst *Controller) checkAppExistence(name, arch, version string) error {
 	if arch == "" {
 		return errors.New("arch can not be empty")
 	}
-	p := inst.Store.GetAppsStoreAppWithArchVersionPath(name, arch, version)
+	p := global.Installer.GetAppsStoreAppPathWithArchVersion(name, arch, version)
 	found := fileutils.DirExists(p)
 	if !found {
 		return errors.New(fmt.Sprintf("failed to find app: %s with arch: %s & version: %s with  in app store", name, arch, version))

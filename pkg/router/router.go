@@ -66,7 +66,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	appStore := apiRoutes.Group("/store/apps")
 	{
-		appStore.GET("/", api.ListAppsWithVersions)
 		appStore.POST("/", api.UploadAddOnAppStore)
 		appStore.GET("/exists", api.CheckAppExistence)
 	}

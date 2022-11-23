@@ -1,29 +1,11 @@
 package edgecli
 
 import (
-	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
-	"os"
-	"strconv"
 )
-
-// FileExists check if file exists
-func (inst *Client) FileExists(path string) (bool, error) {
-	url := fmt.Sprintf("/api/files/exists?path=%s", path)
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		Get(url))
-	if err != nil {
-		return false, err
-	}
-	found, err := strconv.ParseBool(resp.String())
-	if err != nil {
-		return false, err
-	}
-	return found, nil
-}
 
 func (inst *Client) ListFiles(path string) ([]fileutils.FileDetails, error) {
 	url := fmt.Sprintf("/api/files/list?path=%s", path)
@@ -36,19 +18,6 @@ func (inst *Client) ListFiles(path string) ([]fileutils.FileDetails, error) {
 	return *resp.Result().(*[]fileutils.FileDetails), nil
 }
 
-// Walk list all files/dirs in a dir
-func (inst *Client) Walk(path string) ([]string, error) {
-	url := fmt.Sprintf("/api/files/walk?path=%s", path)
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&[]string{}).
-		Get(url))
-	if err != nil {
-		return nil, err
-	}
-	return *resp.Result().(*[]string), nil
-}
-
-// ReadFile read a files content
 func (inst *Client) ReadFile(path string) ([]byte, error) {
 	url := fmt.Sprintf("/api/files/read?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
@@ -57,18 +26,6 @@ func (inst *Client) ReadFile(path string) ([]byte, error) {
 		return nil, err
 	}
 	return resp.Body(), nil
-}
-
-func (inst *Client) CreateFile(body *amodel.WriteFile) (*amodel.Message, error) {
-	url := fmt.Sprintf("/api/files/create")
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&amodel.Message{}).
-		SetBody(body).
-		Post(url))
-	if err != nil {
-		return nil, err
-	}
-	return resp.Result().(*amodel.Message), nil
 }
 
 func (inst *Client) WriteString(body *amodel.WriteFile) (*amodel.Message, error) {
@@ -105,70 +62,4 @@ func (inst *Client) WriteFileYml(body *amodel.WriteFile) (*amodel.Message, error
 		return nil, err
 	}
 	return resp.Result().(*amodel.Message), nil
-}
-
-// RenameFile rename a file - use the full name of file and path
-func (inst *Client) RenameFile(oldNameAndPath, newNameAndPath string) (*amodel.Message, error) {
-	url := fmt.Sprintf("/api/files/rename?old=%s&new=%s", oldNameAndPath, newNameAndPath)
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&amodel.Message{}).
-		Post(url))
-	if err != nil {
-		return nil, err
-	}
-	return resp.Result().(*amodel.Message), nil
-}
-
-// CopyFile copy a file - use the full name of file and path
-func (inst *Client) CopyFile(from, to string) (*amodel.Message, error) {
-	url := fmt.Sprintf("/api/files/copy?from=%s&to=%s", from, to)
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&amodel.Message{}).
-		Post(url))
-	if err != nil {
-		return nil, err
-	}
-	return resp.Result().(*amodel.Message), nil
-}
-
-// MoveFile move a file - use the full name of file and path
-func (inst *Client) MoveFile(from, to string) (*amodel.Message, error) {
-	url := fmt.Sprintf("/api/files/move?from=%s&to=%s", from, to)
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&amodel.Message{}).
-		Post(url))
-	if err != nil {
-		return nil, err
-	}
-	return resp.Result().(*amodel.Message), nil
-}
-
-func (inst *Client) UploadLocalFile(file, destination string) (*amodel.EdgeUploadResponse, error) {
-	reader, err := os.Open(file)
-	if err != nil {
-		return nil, errors.New(fmt.Sprintf("error open file: %s err: %s", file, err.Error()))
-	}
-	resp, err := inst.Rest.R().
-		SetResult(&amodel.EdgeUploadResponse{}).
-		SetFileReader("file", file, reader).
-		Post(fmt.Sprintf("/api/files/upload?destination=%s", destination))
-	if err != nil {
-		return nil, err
-	}
-	if resp.StatusCode() > 299 {
-		return nil, errors.New(resp.String())
-	}
-	return resp.Result().(*amodel.EdgeUploadResponse), nil
-}
-
-// DownloadFile download a file
-func (inst *Client) DownloadFile(path, file, destination string) (*amodel.EdgeDownloadResponse, error) {
-	url := fmt.Sprintf("/api/files/download?path=%s&file=%s", path, file)
-	_, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetOutput(destination).
-		Post(url))
-	if err != nil {
-		return nil, err
-	}
-	return &amodel.EdgeDownloadResponse{FileName: file, Path: path, Destination: destination}, nil
 }

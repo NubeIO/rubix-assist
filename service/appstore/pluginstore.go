@@ -12,7 +12,7 @@ import (
 )
 
 func (inst *Store) GetPluginsStorePlugins() ([]installer.BuildDetails, error) {
-	pluginStore := inst.getPluginsStorePath()
+	pluginStore := global.Installer.GetPluginsStorePath()
 	files, err := ioutil.ReadDir(pluginStore)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (inst *Store) UploadPluginStorePlugin(app *amodel.Upload) (*UploadResponse,
 	uploadResponse.TmpFile = resp.TmpFile
 	source := resp.UploadedFile
 
-	destination := inst.getPluginsStoreWithFile(resp.FileName)
+	destination := global.Installer.GetPluginsStoreWithFile(resp.FileName)
 	check := fileutils.FileExists(source)
 	if !check {
 		return nil, errors.New(fmt.Sprintf("upload file tmp dir not found: %s", source))

@@ -13,7 +13,7 @@ type Store struct {
 
 func New(store *Store) (*Store, error) {
 	if store == nil {
-		return nil, errors.New("appstore can not be empty")
+		return nil, errors.New("app store can not be empty")
 	}
 	err := store.initMakeAllDirs()
 	if err != nil {
@@ -23,10 +23,10 @@ func New(store *Store) (*Store, error) {
 }
 
 func (inst *Store) initMakeAllDirs() error {
-	if err := os.MkdirAll(inst.getAppsStorePath(), os.FileMode(global.Installer.FileMode)); err != nil {
+	if err := os.MkdirAll(global.Installer.GetAppsStorePath(), os.FileMode(global.Installer.FileMode)); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(inst.getPluginsStorePath(), os.FileMode(global.Installer.FileMode)); err != nil {
+	if err := os.MkdirAll(global.Installer.GetPluginsStorePath(), os.FileMode(global.Installer.FileMode)); err != nil {
 		return err
 	}
 	return nil

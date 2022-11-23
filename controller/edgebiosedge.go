@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/cligetter"
+	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"path"
@@ -60,7 +61,7 @@ func (inst *Controller) EdgeBiosGetRubixEdgeVersion(c *gin.Context) {
 }
 
 func (inst *Controller) attachFileOnModel(m *amodel.FileUpload) error {
-	storePath := inst.Store.GetAppsStoreAppWithArchVersionPath("rubix-edge", m.Arch, m.Version)
+	storePath := global.Installer.GetAppsStoreAppPathWithArchVersion("rubix-edge", m.Arch, m.Version)
 	files, err := ioutil.ReadDir(storePath)
 	if err != nil {
 		return err
