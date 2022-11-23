@@ -56,6 +56,7 @@ func (inst *Controller) EdgeListAppsStatus(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	data, err := inst.Store.EdgeListAppsStatus(host.UUID, host.Name)
+	cli := helpers.GetEdgeClient(host)
+	data, err := cli.AppsStatus()
 	responseHandler(data, err, c)
 }

@@ -13,7 +13,7 @@ func (inst *Controller) EdgeUploadPlugin(c *gin.Context) {
 		return
 	}
 	cli := helpers.GetEdgeClient(host)
-	var m *model.PluginUpload
+	var m *model.Plugin
 	err = c.ShouldBindJSON(&m)
 	data, err := cli.PluginUpload(m)
 	responseHandler(data, err, c)

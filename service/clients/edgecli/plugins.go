@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 )
 
-func (inst *Client) PluginUpload(body *model.PluginUpload) (*model.Message, error) {
+func (inst *Client) PluginUpload(body *model.Plugin) (*model.Message, error) {
 	uploadLocation := global.Installer.GetAppPluginDownloadPath(constants.FlowFramework)
 	if body.ClearBeforeUploading {
 		url := fmt.Sprintf("/api/files/delete-all?path=%s", uploadLocation)
