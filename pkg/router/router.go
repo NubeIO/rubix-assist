@@ -90,7 +90,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgeApps.POST("/install", api.EdgeAppInstall)
 		edgeApps.POST("/uninstall", api.EdgeAppUninstall)
 		edgeApps.GET("/status", api.EdgeListAppsStatus)
-		edgeApps.GET("/status/:app_name", api.EdgeGetInstallVersion)
+		edgeApps.GET("/status/:app_name", api.EdgeGetAppStatus)
 	}
 
 	edgePlugins := apiRoutes.Group("/edge/plugins")

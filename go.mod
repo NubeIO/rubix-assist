@@ -65,9 +65,8 @@ require (
 require (
 	github.com/NubeIO/lib-date v0.0.6
 	github.com/NubeIO/lib-dhcpd v0.0.2
-	github.com/NubeIO/lib-files v0.2.0
+	github.com/NubeIO/lib-files v1.0.0
 	github.com/NubeIO/lib-networking v0.0.7
-	github.com/NubeIO/lib-rubix-installer v0.3.0
 	github.com/NubeIO/lib-schema v0.1.4
 	github.com/NubeIO/lib-systemctl-go v0.2.0
 	github.com/NubeIO/lib-ufw v0.0.3
@@ -75,7 +74,6 @@ require (
 	github.com/NubeIO/nubeio-rubix-lib-auth-go v1.1.0
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.4
 	github.com/NubeIO/rubix-edge v0.3.0
-	github.com/NubeIO/rubix-registry-go v0.0.1
 	github.com/google/uuid v1.1.2
 	github.com/sergeymakinen/go-systemdconf/v2 v2.0.2
 	gorm.io/datatypes v1.0.6

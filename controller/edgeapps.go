@@ -61,13 +61,13 @@ func (inst *Controller) EdgeListAppsStatus(c *gin.Context) {
 	responseHandler(data, err, c)
 }
 
-func (inst *Controller) EdgeGetInstallVersion(c *gin.Context) {
+func (inst *Controller) EdgeGetAppStatus(c *gin.Context) {
 	host, err := inst.resolveHost(c)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
 	cli := cligetter.GetEdgeClient(host)
-	appStatus, err := cli.GetAppStatus(c.Query("app_name"))
+	appStatus, err := cli.GetAppStatus(c.Param("app_name"))
 	responseHandler(appStatus, err, c)
 }
