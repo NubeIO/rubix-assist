@@ -42,12 +42,12 @@ func (inst *BiosClient) RubixEdgeUpload(body *amodel.FileUpload) (*amodel.Messag
 
 	url = fmt.Sprintf("/api/zip/unzip?source=%s&destination=%s", upload.Destination, uploadLocation)
 	resp, err = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&[]string{}).
+		SetResult(&[]fileutils.FileDetails{}).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	unzippedFiles := resp.Result().(*[]string)
+	unzippedFiles := resp.Result().(*[]fileutils.FileDetails)
 
 	url = fmt.Sprintf("/api/files/delete?file=%s", upload.Destination)
 	resp, err = nresty.FormatRestyResponse(inst.Rest.R().
@@ -58,7 +58,7 @@ func (inst *BiosClient) RubixEdgeUpload(body *amodel.FileUpload) (*amodel.Messag
 	}
 
 	for _, f := range *unzippedFiles {
-		from := path.Join(uploadLocation, f)
+		from := path.Join(uploadLocation, f.Name)
 		to := path.Join(uploadLocation, "app")
 		url = fmt.Sprintf("/api/files/move?from=%s&to=%s", from, to)
 		resp, err = nresty.FormatRestyResponse(inst.Rest.R().
