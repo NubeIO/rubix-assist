@@ -1,11 +1,11 @@
 package controller
 
 import (
-	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/gin-gonic/gin"
 )
 
-func getTaskBody(ctx *gin.Context) (dto *model.Task, err error) {
+func getTaskBody(ctx *gin.Context) (dto *amodel.Task, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
 }
@@ -32,7 +32,7 @@ func (inst *Controller) GetTasks(c *gin.Context) {
 }
 
 func (inst *Controller) CreateTask(c *gin.Context) {
-	m := new(model.Task)
+	m := new(amodel.Task)
 	err := c.ShouldBindJSON(&m)
 	res, err := inst.DB.CreateTask(m)
 	if err != nil {

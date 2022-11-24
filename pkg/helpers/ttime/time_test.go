@@ -10,8 +10,5 @@ func TestRealTime_Now(t *testing.T) {
 	time := rt.Now()
 	fmt.Println(time)
 	fmt.Println(rt.Timestamp())
-	fmt.Println(rt.Pretty(true))
-
-	time = rt.Now(true)
 	fmt.Println(time)
 }

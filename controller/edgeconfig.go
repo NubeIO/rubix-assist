@@ -2,7 +2,8 @@ package controller
 
 import (
 	"errors"
-	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/amodel"
+	"github.com/NubeIO/rubix-assist/cligetter"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,7 +22,8 @@ func (inst *Controller) EdgeReadConfig(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	data, err := inst.Store.EdgeReadConfig(host.UUID, host.Name, appName, configName)
+	cli := cligetter.GetEdgeClient(host)
+	data, err := cli.EdgeReadConfig(appName, configName)
 	responseHandler(data, err, c)
 }
 
@@ -31,8 +33,12 @@ func (inst *Controller) EdgeWriteConfig(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *assistmodel.EdgeConfig
+	var m *amodel.EdgeConfig
 	err = c.ShouldBindJSON(&m)
-	data, err := inst.Store.EdgeWriteConfig(host.UUID, host.Name, m)
+	if err != nil {
+		responseHandler(nil, err, c)
+	}
+	cli := cligetter.GetEdgeClient(host)
+	data, err := cli.EdgeWriteConfig(m)
 	responseHandler(data, err, c)
 }

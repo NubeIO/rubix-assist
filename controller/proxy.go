@@ -26,8 +26,11 @@ func (inst *Controller) Proxy(c *gin.Context) {
 	proxyPathParts := strings.Split(proxyPath, "/")
 	var remote *url.URL = nil
 	if len(proxyPathParts) > 0 && proxyPathParts[0] == "eb" {
-		remote, err = ip.Builder(host.HTTPS, host.IP, host.BiosPort)
 		proxyPath = path.Join(proxyPathParts[1:]...)
+		remote, err = ip.Builder(host.HTTPS, host.IP, host.BiosPort)
+	} else if len(proxyPathParts) > 0 && proxyPathParts[0] == "edge" {
+		proxyPath = path.Join(proxyPathParts[1:]...)
+		remote, err = ip.Builder(host.HTTPS, host.IP, host.Port)
 	} else {
 		remote, err = ip.Builder(host.HTTPS, host.IP, host.Port)
 	}

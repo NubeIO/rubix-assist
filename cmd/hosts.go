@@ -2,8 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
-
+	"github.com/NubeIO/rubix-assist/amodel"
 	dbase "github.com/NubeIO/rubix-assist/database"
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/database"
@@ -13,7 +12,6 @@ import (
 )
 
 var (
-	// model.Host
 	hostsGet       bool
 	hostAdd        bool
 	hostsDrop      bool
@@ -53,7 +51,7 @@ func getHosts(appDB *dbase.DB) {
 }
 
 func addHost(appDB *dbase.DB) {
-	h := &model.Host{
+	h := &amodel.Host{
 		Name: hostName,
 		IP:   hostIP,
 		Port: hostPort,
@@ -67,14 +65,14 @@ func addHost(appDB *dbase.DB) {
 }
 
 func updateHost(appDB *dbase.DB) {
-	h := &model.Host{}
+	h := &amodel.Host{}
 	if hostUpdateIp {
-		h = &model.Host{
+		h = &amodel.Host{
 			IP: hostIP,
 		}
 	}
 	if hostUpdatePort {
-		h = &model.Host{
+		h = &amodel.Host{
 			Port: hostPort,
 		}
 	}

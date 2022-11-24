@@ -2,8 +2,9 @@ package controller
 
 import (
 	"errors"
-	"github.com/NubeIO/rubix-assist/helpers"
-	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/amodel"
+	"github.com/NubeIO/rubix-assist/cligetter"
+	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"path"
@@ -15,7 +16,7 @@ func (inst *Controller) EdgeBiosRubixEdgeUpload(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *assistmodel.FileUpload
+	var m *amodel.FileUpload
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)
@@ -26,7 +27,7 @@ func (inst *Controller) EdgeBiosRubixEdgeUpload(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	cli := helpers.GetEdgeBiosClient(host)
+	cli := cligetter.GetEdgeBiosClient(host)
 	data, err := cli.RubixEdgeUpload(m)
 	responseHandler(data, err, c)
 }
@@ -37,13 +38,13 @@ func (inst *Controller) EdgeBiosRubixEdgeInstall(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	var m *assistmodel.FileUpload
+	var m *amodel.FileUpload
 	err = c.ShouldBindJSON(&m)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	cli := helpers.GetEdgeBiosClient(host)
+	cli := cligetter.GetEdgeBiosClient(host)
 	data, err := cli.RubixEdgeInstall(m.Version)
 	responseHandler(data, err, c)
 }
@@ -54,13 +55,13 @@ func (inst *Controller) EdgeBiosGetRubixEdgeVersion(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	cli := helpers.GetEdgeBiosClient(host)
+	cli := cligetter.GetEdgeBiosClient(host)
 	data, err := cli.GetRubixEdgeVersion()
 	responseHandler(data, err, c)
 }
 
-func (inst *Controller) attachFileOnModel(m *assistmodel.FileUpload) error {
-	storePath := inst.Store.GetAppsStoreAppWithArchVersionPath("rubix-edge", m.Arch, m.Version)
+func (inst *Controller) attachFileOnModel(m *amodel.FileUpload) error {
+	storePath := global.Installer.GetAppsStoreAppPathWithArchVersion("rubix-edge", m.Arch, m.Version)
 	files, err := ioutil.ReadDir(storePath)
 	if err != nil {
 		return err

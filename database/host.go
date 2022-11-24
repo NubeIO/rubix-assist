@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
-	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/amodel"
 )
 
 const hostName = "host"
 
-func (inst *DB) GetHostByLocationName(hostName, networkName, locationName string) (*model.Host, error) {
+func (inst *DB) GetHostByLocationName(hostName, networkName, locationName string) (*amodel.Host, error) {
 	location, err := inst.GetLocationsByName(locationName, false)
 	if err != nil {
 		return nil, err
@@ -27,8 +27,8 @@ func (inst *DB) GetHostByLocationName(hostName, networkName, locationName string
 	return nil, errors.New("no host was found")
 }
 
-func (inst *DB) getHost(uuid string) (*model.Host, error) {
-	m := new(model.Host)
+func (inst *DB) getHost(uuid string) (*amodel.Host, error) {
+	m := new(amodel.Host)
 	if err := inst.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
 		return nil, errors.New(fmt.Sprintf("no host was found with uuid: %s", uuid))
 	}
@@ -44,9 +44,9 @@ func matchUUID(uuid string) bool {
 	return false
 }
 
-func (inst *DB) GetHost(uuid string) (*model.Host, error) {
+func (inst *DB) GetHost(uuid string) (*amodel.Host, error) {
 	match := matchUUID(uuid)
-	var host *model.Host
+	var host *amodel.Host
 	if match {
 		host, _ = inst.getHost(uuid)
 		if host != nil {
@@ -61,23 +61,23 @@ func (inst *DB) GetHost(uuid string) (*model.Host, error) {
 	return host, nil
 }
 
-func (inst *DB) GetHostByName(name string) (*model.Host, error) {
-	m := new(model.Host)
+func (inst *DB) GetHostByName(name string) (*amodel.Host, error) {
+	m := new(amodel.Host)
 	if err := inst.DB.Where("name = ? ", name).First(&m).Error; err != nil {
 		return nil, errors.New(fmt.Sprintf("no host was found with name: %s", name))
 	}
 	return m, nil
 }
 
-func (inst *DB) GetHosts() ([]*model.Host, error) {
-	var m []*model.Host
+func (inst *DB) GetHosts() ([]*amodel.Host, error) {
+	var m []*amodel.Host
 	if err := inst.DB.Find(&m).Error; err != nil {
 		return nil, err
 	}
 	return m, nil
 }
 
-func (inst *DB) CreateHost(host *model.Host) (*model.Host, error) {
+func (inst *DB) CreateHost(host *amodel.Host) (*amodel.Host, error) {
 	if host.Name == "" {
 		host.Name = "rc"
 	}
@@ -107,8 +107,8 @@ func (inst *DB) CreateHost(host *model.Host) (*model.Host, error) {
 	return host, nil
 }
 
-func (inst *DB) UpdateHostByName(name string, host *model.Host) (*model.Host, error) {
-	m := new(model.Host)
+func (inst *DB) UpdateHostByName(name string, host *amodel.Host) (*amodel.Host, error) {
+	m := new(amodel.Host)
 	query := inst.DB.Where("name = ?", name).Find(&m).Updates(host)
 	if query.Error != nil {
 		return nil, handelNotFound(hostName)
@@ -116,8 +116,8 @@ func (inst *DB) UpdateHostByName(name string, host *model.Host) (*model.Host, er
 	return m, nil
 }
 
-func (inst *DB) UpdateHost(uuid string, host *model.Host) (*model.Host, error) {
-	m := new(model.Host)
+func (inst *DB) UpdateHost(uuid string, host *amodel.Host) (*amodel.Host, error) {
+	m := new(amodel.Host)
 	query := inst.DB.Where("uuid = ?", uuid).Find(&m).Updates(host)
 	if query.Error != nil {
 		return nil, handelNotFound(hostName)
@@ -126,13 +126,13 @@ func (inst *DB) UpdateHost(uuid string, host *model.Host) (*model.Host, error) {
 }
 
 func (inst *DB) DeleteHost(uuid string) (*DeleteMessage, error) {
-	var m *model.Host
+	var m *amodel.Host
 	query := inst.DB.Where("uuid = ? ", uuid).Delete(&m)
 	return deleteResponse(query)
 }
 
 func (inst *DB) DropHosts() (*DeleteMessage, error) {
-	var m *model.Host
+	var m *amodel.Host
 	query := inst.DB.Where("1 = 1")
 	query.Delete(&m)
 	return deleteResponse(query)

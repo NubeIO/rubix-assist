@@ -2,10 +2,10 @@ package router
 
 import (
 	"fmt"
-	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/controller"
 	dbase "github.com/NubeIO/rubix-assist/database"
-	"github.com/NubeIO/rubix-assist/model"
+	"github.com/NubeIO/rubix-assist/installer"
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/appstore"
@@ -19,7 +19,7 @@ import (
 func NotFound() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		message := fmt.Sprintf("%s %s [%d]: %s", ctx.Request.Method, ctx.Request.URL, 404, "rubix-assist: api not found")
-		ctx.JSON(http.StatusNotFound, model.Message{Message: message})
+		ctx.JSON(http.StatusNotFound, amodel.Message{Message: message})
 	}
 }
 
@@ -45,9 +45,9 @@ func Setup(db *gorm.DB) *gin.Engine {
 	appDB := &dbase.DB{
 		DB: db,
 	}
-	global.App = installer.New(&installer.App{})
+	global.Installer = installer.New(&installer.Installer{})
 	makeStore, _ := appstore.New(&appstore.Store{DB: appDB})
-	api := controller.Controller{DB: appDB, Store: makeStore}
+	api := controller.Controller{DB: appDB, Store: makeStore, FileMode: global.Installer.FileMode}
 
 	r.POST("/api/users/login", api.Login)
 	publicSystemApi := r.Group("/api/system")
@@ -66,8 +66,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	appStore := apiRoutes.Group("/store/apps")
 	{
-		appStore.GET("/", api.ListAppsWithVersions)
 		appStore.POST("/", api.UploadAddOnAppStore)
+		appStore.GET("/exists", api.CheckAppExistence)
 	}
 
 	storePlugins := apiRoutes.Group("/store/plugins")
@@ -76,65 +76,32 @@ func Setup(db *gorm.DB) *gin.Engine {
 		storePlugins.POST("/", api.UploadPluginStorePlugin)
 	}
 
-	edgeBiosApps := apiRoutes.Group("/eb")
+	edgeBiosApps := apiRoutes.Group("/eb/re")
 	{
-		edgeBiosApps.POST("/re/upload", api.EdgeBiosRubixEdgeUpload)
-		edgeBiosApps.POST("/re/install", api.EdgeBiosRubixEdgeInstall)
-		edgeBiosApps.GET("/re/version", api.EdgeBiosGetRubixEdgeVersion)
-	}
-
-	edge := apiRoutes.Group("/edge/system")
-	{
-		edge.GET("/ping", api.EdgePing)
-		edge.GET("/device", api.EdgeGetDeviceInfo)
-		edge.GET("/product", api.EdgeProductInfo)
+		edgeBiosApps.POST("/upload", api.EdgeBiosRubixEdgeUpload)
+		edgeBiosApps.POST("/install", api.EdgeBiosRubixEdgeInstall)
+		edgeBiosApps.GET("/version", api.EdgeBiosGetRubixEdgeVersion)
 	}
 
 	edgeApps := apiRoutes.Group("/edge/apps")
 	{
-		edgeApps.GET("/", api.EdgeListApps)
+		edgeApps.POST("/upload", api.EdgeAppUpload)
+		edgeApps.POST("/install", api.EdgeAppInstall)
+		edgeApps.POST("/uninstall", api.EdgeAppUninstall)
 		edgeApps.GET("/status", api.EdgeListAppsStatus)
-		edgeApps.POST("/upload", api.EdgeUploadApp)
-		edgeApps.POST("/service/upload", api.GenerateServiceFileAndEdgeUpload)
-		edgeApps.POST("/service/install", api.EdgeInstallService)
-		edgeApps.DELETE("/", api.EdgeUninstallApp)
+		edgeApps.GET("/status/:app_name", api.EdgeGetAppStatus)
 	}
 
-	edgeAppsControl := apiRoutes.Group("/edge/control")
+	edgePlugins := apiRoutes.Group("/edge/plugins")
 	{
-		edgeAppsControl.POST("/action", api.EdgeSystemCtlAction)
-		edgeAppsControl.POST("/status", api.EdgeSystemCtlStatus)
-		edgeAppsControl.POST("/action/mass", api.EdgeServiceMassAction)
-		edgeAppsControl.POST("/status/mass", api.EdgeServiceMassStatus)
+		edgePlugins.POST("/upload", api.EdgeUploadPlugin)
+		edgePlugins.GET("/", api.EdgeListPlugins)
 	}
 
 	edgeConfig := apiRoutes.Group("/edge/config")
 	{
 		edgeConfig.GET("/", api.EdgeReadConfig)
 		edgeConfig.POST("/", api.EdgeWriteConfig)
-	}
-
-	edgeFiles := apiRoutes.Group("/edge/files")
-	{
-		edgeFiles.GET("/exists", api.EdgeFileExists)
-		edgeFiles.GET("/read", api.EdgeReadFile)
-		edgeFiles.POST("/create", api.EdgeCreateFile)
-		edgeFiles.POST("/write/string", api.EdgeWriteString)
-		edgeFiles.POST("/write/json", api.EdgeWriteFileJson)
-		edgeFiles.POST("/write/yml", api.EdgeWriteFileYml)
-	}
-
-	edgeDirs := apiRoutes.Group("/edge/dirs")
-	{
-		edgeDirs.GET("/exists", api.EdgeDirExists)
-	}
-
-	edgePlugins := apiRoutes.Group("/edge/plugins")
-	{
-		edgePlugins.GET("/", api.EdgeListPlugins)
-		edgePlugins.POST("/", api.EdgeUploadPlugin)
-		edgePlugins.DELETE("/", api.EdgeDeletePlugin)
-		edgePlugins.DELETE("/all", api.EdgeDeleteAllPlugins)
 	}
 
 	locations := apiRoutes.Group("/locations")
@@ -204,16 +171,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		messages.DELETE("/drop", api.DropTransactions)
 	}
 
-	// tools := apiRoutes.Group("/tools")
-	// //tools.Use(authMiddleware.MiddlewareFunc())
-	// {
-	//
-	//	tools.GET("/edgeapi/ip/schema", api.EdgeIPSchema)
-	//	tools.POST("/edgeapi/ip", api.EdgeSetIP)
-	//	tools.POST("/edgeapi/ip/dhcp", api.EdgeSetIP)
-	//
-	// }
-
 	wires := apiRoutes.Group("/wires")
 	{
 		wires.POST("/upload", api.WiresUpload)
@@ -234,22 +191,25 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	files := apiRoutes.Group("/files")
 	{
-		files.GET("/walk", api.WalkFile)
-		files.GET("/list", api.ListFiles) // /api/files/list?file=/data
-		files.POST("/rename", api.RenameFile)
-		files.POST("/copy", api.CopyFile)
-		files.POST("/move", api.MoveFile)
-		files.POST("/upload", api.UploadFile)
-		files.POST("/download", api.DownloadFile)
-		files.DELETE("/delete", api.DeleteFile)
-		files.DELETE("/delete/all", api.DeleteAllFiles)
+		files.GET("/exists", api.FileExists)            // needs to be a file
+		files.GET("/walk", api.WalkFile)                // similar as find in linux command
+		files.GET("/list", api.ListFiles)               // list all files and folders
+		files.POST("/create", api.CreateFile)           // create file only
+		files.POST("/copy", api.CopyFile)               // copy either file or folder
+		files.POST("/rename", api.RenameFile)           // rename either file or folder
+		files.POST("/move", api.MoveFile)               // move file only
+		files.POST("/upload", api.UploadFile)           // upload single file
+		files.POST("/download", api.DownloadFile)       // download single file
+		files.GET("/read", api.ReadFile)                // read single file
+		files.PUT("/write", api.WriteFile)              // write single file
+		files.DELETE("/delete", api.DeleteFile)         // delete single file
+		files.DELETE("/delete-all", api.DeleteAllFiles) // deletes file or folder
 	}
 
 	dirs := apiRoutes.Group("/dirs")
 	{
-		dirs.POST("/create", api.CreateDir)
-		dirs.POST("/copy", api.CopyDir)
-		dirs.DELETE("/delete", api.DeleteDir)
+		dirs.GET("/exists", api.DirExists)  // needs to be a folder
+		dirs.POST("/create", api.CreateDir) // create folder
 	}
 
 	zip := apiRoutes.Group("/zip")

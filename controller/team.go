@@ -1,11 +1,11 @@
 package controller
 
 import (
-	model "github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/gin-gonic/gin"
 )
 
-func getTeamBody(ctx *gin.Context) (dto *model.Team, err error) {
+func getTeamBody(ctx *gin.Context) (dto *amodel.Team, err error) {
 	err = ctx.ShouldBindJSON(&dto)
 	return dto, err
 }
@@ -32,7 +32,7 @@ func (inst *Controller) GetTeams(c *gin.Context) {
 }
 
 func (inst *Controller) CreateTeam(c *gin.Context) {
-	m := new(model.Team)
+	m := new(amodel.Team)
 	err := c.ShouldBindJSON(&m)
 	team, err := inst.DB.CreateTeam(m)
 	if err != nil {

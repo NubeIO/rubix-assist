@@ -4,7 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/lib-rubix-installer/installer"
+	"github.com/NubeIO/rubix-assist/installer"
+	"github.com/NubeIO/rubix-assist/namings"
 	"github.com/sergeymakinen/go-systemdconf/v2"
 	"github.com/sergeymakinen/go-systemdconf/v2/unit"
 	log "github.com/sirupsen/logrus"
@@ -24,8 +25,8 @@ type ServiceFile struct {
 	EnvironmentVars             []string `json:"environment_vars"`                 // Environment="g=/data/bacnet-server-c"
 }
 
-func GenerateServiceFile(app *ServiceFile, installerApp *installer.App) (tmpDir, absoluteServiceFileName string, err error) {
-	tmpFilePath, err := installerApp.MakeTmpDirUpload()
+func GenerateServiceFile(app *ServiceFile, installer *installer.Installer) (tmpDir, absoluteServiceFileName string, err error) {
+	tmpFilePath, err := installer.MakeTmpDirUpload()
 	if err != nil {
 		return "", "", err
 	}
@@ -40,7 +41,7 @@ func GenerateServiceFile(app *ServiceFile, installerApp *installer.App) (tmpDir,
 	}
 	workingDirectory := app.ServiceWorkingDirectory
 	if workingDirectory == "" {
-		workingDirectory = installerApp.GetAppInstallPathWithVersionPath(app.Name, app.Version)
+		workingDirectory = installer.GetAppInstallPathWithVersion(app.Name, app.Version)
 	}
 	log.Infof("generate service working dir: %s", workingDirectory)
 	user := app.RunAsUser
@@ -49,18 +50,18 @@ func GenerateServiceFile(app *ServiceFile, installerApp *installer.App) (tmpDir,
 	}
 	execCmd := app.ExecStart
 	if app.AttachWorkingDirOnExecStart {
-		workingDir := installerApp.GetAppInstallPathWithVersionPath(app.Name, app.Version)
+		workingDir := installer.GetAppInstallPathWithVersion(app.Name, app.Version)
 		execCmd = path.Join(workingDir, execCmd)
-		if !strings.Contains(execCmd, installerApp.GetAppInstallPathWithVersionPath(app.Name, app.Version)) {
+		if !strings.Contains(execCmd, installer.GetAppInstallPathWithVersion(app.Name, app.Version)) {
 			return "", "", errors.New(fmt.Sprintf(
 				"ExecStart command is not matching app_name: %s & app_version: %s", app.Name, app.Version))
 		}
 	}
 	if strings.Contains(execCmd, "<data_dir>") {
-		execCmd = strings.ReplaceAll(execCmd, "<data_dir>", installerApp.GetAppDataPath(app.Name))
+		execCmd = strings.ReplaceAll(execCmd, "<data_dir>", installer.GetAppDataPath(app.Name))
 	}
 	if strings.Contains(execCmd, "<data_dir_name>") {
-		execCmd = strings.ReplaceAll(execCmd, "<data_dir_name>", installerApp.GetDataDirNameFromAppName(app.Name))
+		execCmd = strings.ReplaceAll(execCmd, "<data_dir_name>", namings.GetDataDirNameFromAppName(app.Name))
 	}
 	log.Infof("generate service exec_cmd: %s", execCmd)
 	description := app.ServiceDescription
@@ -98,9 +99,9 @@ func GenerateServiceFile(app *ServiceFile, installerApp *installer.App) (tmpDir,
 		},
 	}
 	b, _ := systemdconf.Marshal(service)
-	serviceName := installerApp.GetServiceNameFromAppName(app.Name)
+	serviceName := namings.GetServiceNameFromAppName(app.Name)
 	absoluteServiceFileName = fmt.Sprintf("%s/%s", tmpFilePath, serviceName)
-	err = fileutils.WriteFile(absoluteServiceFileName, string(b), os.FileMode(installerApp.FileMode))
+	err = fileutils.WriteFile(absoluteServiceFileName, string(b), os.FileMode(installer.FileMode))
 	if err != nil {
 		log.Errorf("write service file error %s", err.Error())
 	}

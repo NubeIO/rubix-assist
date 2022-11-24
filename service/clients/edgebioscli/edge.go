@@ -4,8 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-files/fileutils"
-	"github.com/NubeIO/rubix-assist/model"
-	"github.com/NubeIO/rubix-assist/pkg/assistmodel"
+	"github.com/NubeIO/rubix-assist/amodel"
+	"github.com/NubeIO/rubix-assist/namings"
+	"github.com/NubeIO/rubix-assist/pkg/constants"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli/ebmodel"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
@@ -18,19 +19,19 @@ import (
 
 const rubixEdgeName = "rubix-edge"
 
-func (inst *BiosClient) RubixEdgeUpload(body *assistmodel.FileUpload) (*model.Message, error) {
-	downloadLocation := fmt.Sprintf("/data/rubix-service/apps/download/%s/%s", rubixEdgeName, body.Version)
-	url := fmt.Sprintf("/api/dirs/create?path=%s", downloadLocation)
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+func (inst *BiosClient) RubixEdgeUpload(body *amodel.FileUpload) (*amodel.Message, error) {
+	uploadLocation := fmt.Sprintf("/data/rubix-service/apps/download/%s/%s", rubixEdgeName, body.Version)
+	url := fmt.Sprintf("/api/dirs/create?path=%s", uploadLocation)
+	_, _ = nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&amodel.Message{}).
 		Post(url))
 
-	url = fmt.Sprintf("/api/files/upload?destination=%s", downloadLocation)
+	url = fmt.Sprintf("/api/files/upload?destination=%s", uploadLocation)
 	reader, err := os.Open(body.File)
 	if err != nil {
 		return nil, err
 	}
-	resp, err = nresty.FormatRestyResponse(inst.Rest.R().
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		SetResult(&ebmodel.UploadResponse{}).
 		SetFileReader("file", filepath.Base(body.File), reader).
 		Post(url))
@@ -39,43 +40,43 @@ func (inst *BiosClient) RubixEdgeUpload(body *assistmodel.FileUpload) (*model.Me
 	}
 	upload := resp.Result().(*ebmodel.UploadResponse)
 
-	url = fmt.Sprintf("/api/zip/unzip?source=%s&destination=%s", upload.Destination, downloadLocation)
+	url = fmt.Sprintf("/api/zip/unzip?source=%s&destination=%s", upload.Destination, uploadLocation)
 	resp, err = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&[]string{}).
+		SetResult(&[]fileutils.FileDetails{}).
 		Post(url))
 	if err != nil {
 		return nil, err
 	}
-	unzippedFiles := resp.Result().(*[]string)
+	unzippedFiles := resp.Result().(*[]fileutils.FileDetails)
 
 	url = fmt.Sprintf("/api/files/delete?file=%s", upload.Destination)
 	resp, err = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		Delete(url))
 	if err != nil {
 		return nil, err
 	}
 
 	for _, f := range *unzippedFiles {
-		from := path.Join(downloadLocation, f)
-		to := path.Join(downloadLocation, "app")
+		from := path.Join(uploadLocation, f.Name)
+		to := path.Join(uploadLocation, "app")
 		url = fmt.Sprintf("/api/files/move?from=%s&to=%s", from, to)
 		resp, err = nresty.FormatRestyResponse(inst.Rest.R().
-			SetResult(&model.Message{}).
+			SetResult(&amodel.Message{}).
 			Post(url))
 		if err != nil {
 			return nil, err
 		}
 	}
-	return &model.Message{Message: "successfully uploaded the rubix-edge in edge device"}, nil
+	return &amodel.Message{Message: "successfully uploaded the rubix-edge in edge device"}, nil
 }
 
-func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error) {
+func (inst *BiosClient) RubixEdgeInstall(version string) (*amodel.Message, error) {
 	// delete installed files
 	installationDirectory := fmt.Sprintf("/data/rubix-service/apps/install/%s", rubixEdgeName)
 	url := fmt.Sprintf("/api/files/delete-all?path=%s", installationDirectory)
 	_, _ = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		Delete(url))
 	log.Println("deleted installed files, if any")
 
@@ -86,7 +87,7 @@ func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error)
 	installationDirectoryWithVersion := filepath.Dir(installationFile)
 	url = fmt.Sprintf("/api/dirs/create?path=%s", installationDirectoryWithVersion)
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		Post(url))
 	if err != nil {
 		return nil, err
@@ -96,7 +97,7 @@ func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error)
 	// move downloaded file to installation directory
 	url = fmt.Sprintf("/api/files/move?from=%s&to=%s", downloadedFile, installationFile)
 	_, err = nresty.FormatRestyResponse(inst.Rest.R().
-		SetResult(&model.Message{}).
+		SetResult(&amodel.Message{}).
 		Post(url))
 	if err != nil {
 		return nil, err
@@ -108,21 +109,29 @@ func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error)
 		Version:                     version,
 		ExecStart:                   "app -p 1661 -r /data -a rubix-edge -d data -c config --prod server",
 		AttachWorkingDirOnExecStart: true,
-	}, global.App)
+	}, global.Installer)
 	if err != nil {
 		return nil, err
 	}
 	log.Info("created service file locally")
 
-	serviceFileName := global.App.GetServiceNameFromAppName(rubixEdgeName)
+	message, err := inst.installServiceFile(rubixEdgeName, absoluteServiceFileName)
 	if err != nil {
-		return nil, err
+		return message, err
 	}
-	const serviceDir = "/lib/systemd/system"
-	const serviceDirSoftLink = "/etc/systemd/system/multi-user.target.wants"
-	serviceFile := path.Join(serviceDir, serviceFileName)
-	symlinkServiceFile := path.Join(serviceDirSoftLink, serviceFileName)
-	url = fmt.Sprintf("/api/files/upload?destination=%s", serviceDir)
+	err = fileutils.RmRF(tmpDir)
+	if err != nil {
+		log.Errorf("delete tmp generated service file %s", absoluteServiceFileName)
+	}
+	log.Infof("deleted tmp generated local service file %s", absoluteServiceFileName)
+	return &amodel.Message{Message: "successfully installed the rubix-edge in edge device"}, nil
+}
+
+func (inst *BiosClient) installServiceFile(appName, absoluteServiceFileName string) (*amodel.Message, error) {
+	serviceFileName := namings.GetServiceNameFromAppName(appName)
+	serviceFile := path.Join(constants.ServiceDir, serviceFileName)
+	symlinkServiceFile := path.Join(constants.ServiceDirSoftLink, serviceFileName)
+	url := fmt.Sprintf("/api/files/upload?destination=%s", constants.ServiceDir)
 	reader, err := os.Open(absoluteServiceFileName)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("error open service file: %s err: %s", absoluteServiceFileName, err.Error()))
@@ -164,12 +173,5 @@ func (inst *BiosClient) RubixEdgeInstall(version string) (*model.Message, error)
 		log.Error(err)
 	}
 	log.Infof("started service %s", serviceFileName)
-
-	err = fileutils.RmRF(tmpDir)
-	if err != nil {
-		log.Errorf("delete tmp generated service file %s", absoluteServiceFileName)
-	}
-	log.Infof("deleted tmp generated local service file %s", absoluteServiceFileName)
-
-	return &model.Message{Message: "successfully installed the rubix-edge in edge device"}, nil
+	return nil, nil
 }
