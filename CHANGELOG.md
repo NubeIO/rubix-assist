@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [v0.7.0](https://github.com/NubeIO/rubix-assist/tree/v0.7.0) (2022-11-24)
+
+- Misc changes to decouple rubix-edge from rubix-assist
+- Improvement on plugin/app installation
+
 ## [v0.6.2](https://github.com/NubeIO/rubix-assist/tree/v0.6.2) (2022-11-14)
 
 - Remove assist, ffclient, wires CLI from here & add it on rubix-ui
