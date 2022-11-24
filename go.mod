@@ -2,10 +2,8 @@ module github.com/NubeIO/rubix-assist
 
 go 1.17
 
-//replace github.com/NubeIO/lib-rubix-installer => /Users/raibnod/Enviro/lib-rubix-installer
 //replace github.com/NubeIO/lib-systemctl-go => /Users/raibnod/Enviro/lib-systemctl-go
 //replace github.com/NubeIO/lib-schema => /home/aidan/code/go/nube/lib/lib-schema
-//replace github.com/NubeIO/rubix-edge => /Users/raibnod/Enviro/rubix-edge
 
 require (
 	github.com/NubeIO/nubeio-rubix-lib-helpers-go v0.2.7
@@ -64,16 +62,13 @@ require (
 
 require (
 	github.com/NubeIO/lib-date v0.0.6
-	github.com/NubeIO/lib-dhcpd v0.0.2
 	github.com/NubeIO/lib-files v1.0.0
 	github.com/NubeIO/lib-networking v0.0.7
 	github.com/NubeIO/lib-schema v0.1.4
 	github.com/NubeIO/lib-systemctl-go v0.2.0
-	github.com/NubeIO/lib-ufw v0.0.3
 	github.com/NubeIO/lib-uuid v0.0.3
 	github.com/NubeIO/nubeio-rubix-lib-auth-go v1.1.0
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.4
-	github.com/NubeIO/rubix-edge v0.3.0
 	github.com/google/uuid v1.1.2
 	github.com/sergeymakinen/go-systemdconf/v2 v2.0.2
 	gorm.io/datatypes v1.0.6
