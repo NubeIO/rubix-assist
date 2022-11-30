@@ -68,6 +68,10 @@ func (inst *Controller) EdgeGetAppStatus(c *gin.Context) {
 		return
 	}
 	cli := cligetter.GetEdgeClient(host)
-	appStatus, err := cli.GetAppStatus(c.Param("app_name"))
-	responseHandler(appStatus, err, c)
+	appStatus, connectionErr, requestErr := cli.GetAppStatus(c.Param("app_name"))
+	if connectionErr != nil {
+		c.JSON(408, amodel.Message{Message: connectionErr.Error()})
+		return
+	}
+	responseHandler(appStatus, requestErr, c)
 }
