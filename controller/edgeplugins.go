@@ -26,6 +26,10 @@ func (inst *Controller) EdgeListPlugins(c *gin.Context) {
 		return
 	}
 	cli := cligetter.GetEdgeClient(host)
-	plugins, err := cli.ListPlugins()
-	responseHandler(plugins, err, c)
+	plugins, connectionErr, requestErr := cli.ListPlugins()
+	if connectionErr != nil {
+		c.JSON(408, amodel.Message{Message: connectionErr.Error()})
+		return
+	}
+	responseHandler(plugins, requestErr, c)
 }
