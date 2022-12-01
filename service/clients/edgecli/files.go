@@ -18,6 +18,17 @@ func (inst *Client) ListFiles(path string) ([]fileutils.FileDetails, error) {
 	return *resp.Result().(*[]fileutils.FileDetails), nil
 }
 
+func (inst *Client) ListFilesV2(path string) ([]fileutils.FileDetails, error, error) {
+	url := fmt.Sprintf("/api/files/list?path=%s", path)
+	resp, connectionErr, requestErr := nresty.FormatRestyV2Response(inst.Rest.R().
+		SetResult(&[]fileutils.FileDetails{}).
+		Get(url))
+	if connectionErr != nil || requestErr != nil {
+		return nil, connectionErr, requestErr
+	}
+	return *resp.Result().(*[]fileutils.FileDetails), nil, nil
+}
+
 func (inst *Client) ReadFile(path string) ([]byte, error) {
 	url := fmt.Sprintf("/api/files/read?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().

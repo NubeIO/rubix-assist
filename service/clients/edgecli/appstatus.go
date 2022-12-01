@@ -9,7 +9,6 @@ import (
 	"github.com/NubeIO/rubix-assist/namings"
 	"github.com/NubeIO/rubix-assist/pkg/global"
 	"github.com/NubeIO/rubix-assist/service/clients/helpers/nresty"
-	log "github.com/sirupsen/logrus"
 )
 
 func (inst *Client) AppsStatus() (*[]amodel.AppsStatus, error) {
@@ -36,53 +35,52 @@ func (inst *Client) AppsStatus() (*[]amodel.AppsStatus, error) {
 }
 
 func (inst *Client) appStatusChannel(appName string, ch chan<- *amodel.AppsStatus) {
-	appStatus, _ := inst.GetAppStatus(appName)
+	appStatus, _, _ := inst.GetAppStatus(appName)
 	ch <- appStatus
 }
 
-func (inst *Client) GetAppStatus(appName string) (*amodel.AppsStatus, error) {
-	version := inst.getAppVersion(appName)
-	if version == nil {
-		return nil, errors.New("version can't be nil")
+func (inst *Client) GetAppStatus(appName string) (*amodel.AppsStatus, error, error) {
+	version, connectionErr, requestErr := inst.getAppVersion(appName)
+	if connectionErr != nil || requestErr != nil {
+		return nil, connectionErr, requestErr
 	}
 	serviceName := namings.GetServiceNameFromAppName(appName)
-	state, err := inst.appState(serviceName)
-	if err != nil {
-		return nil, errors.New("error on getting app state")
+	state, connectionErr, requestErr := inst.appState(serviceName)
+	if connectionErr != nil || requestErr != nil {
+		return nil, connectionErr, requestErr
 	}
 	appStatus := amodel.AppsStatus{
 		Name:        appName,
-		Version:     *version,
+		Version:     version,
 		ServiceName: serviceName,
 		State:       state,
 	}
-	return &appStatus, nil
+	return &appStatus, nil, nil
 }
 
-func (inst *Client) appState(unit string) (*systemctl.SystemState, error) {
+func (inst *Client) appState(unit string) (*systemctl.SystemState, error, error) {
 	url := fmt.Sprintf("/api/systemctl/state?unit=%s", unit)
-	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+	res, connectionErr, requestErr := nresty.FormatRestyV2Response(inst.Rest.R().
 		SetResult(&systemctl.SystemState{}).
 		Get(url))
-	if err != nil {
-		log.Error(err)
-		return nil, err
+	if connectionErr != nil || requestErr != nil {
+		return nil, connectionErr, requestErr
 	}
-	return resp.Result().(*systemctl.SystemState), nil
+	return res.Result().(*systemctl.SystemState), nil, nil
 }
 
-func (inst *Client) getAppVersion(appName string) *string {
+func (inst *Client) getAppVersion(appName string) (string, error, error) {
 	file := global.Installer.GetAppInstallPath(appName)
-	files, err := inst.ListFiles(file)
-	if err != nil {
-		return nil
+	files, connectionErr, requestErr := inst.ListFilesV2(file)
+	if connectionErr != nil || requestErr != nil {
+		return "", connectionErr, requestErr
 	}
 	for _, f := range files {
 		if f.IsDir {
 			if helpers.CheckVersionBool(f.Name) {
-				return &f.Name
+				return f.Name, nil, nil
 			}
 		}
 	}
-	return nil
+	return "", nil, errors.New("version can't be nil")
 }

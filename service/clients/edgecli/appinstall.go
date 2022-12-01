@@ -17,10 +17,15 @@ import (
 )
 
 func (inst *Client) AppInstall(app *systemctl.ServiceFile) (*amodel.Message, error) {
+	installPath := global.Installer.GetAppInstallPath(app.Name)
+	url := fmt.Sprintf("/api/files/delete-all?path=%s", installPath)
+	_, _ = nresty.FormatRestyResponse(inst.Rest.R().Delete(url))
+
 	message, err := inst.transferDataFromDownloadToInstallDir(app)
 	if err != nil {
 		return message, err
 	}
+
 	tmpDir, absoluteServiceFileName, err := systemctl.GenerateServiceFile(app, global.Installer)
 	_, err = inst.installServiceFile(app.Name, absoluteServiceFileName)
 	if err != nil {
@@ -62,6 +67,11 @@ func (inst *Client) transferDataFromDownloadToInstallDir(app *systemctl.ServiceF
 	} else {
 		from = global.Installer.GetAppPluginDownloadPath(constants.FlowFramework)
 		to = global.Installer.GetAppPluginInstallPath(constants.FlowFramework)
+		url = fmt.Sprintf("/api/dirs/create?path=%s", from)
+		_, err = nresty.FormatRestyResponse(inst.Rest.R().Post(url))
+		if err != nil {
+			return nil, err
+		}
 		url = fmt.Sprintf("/api/dirs/create?path=%s", to)
 		_, err = nresty.FormatRestyResponse(inst.Rest.R().Post(url))
 		if err != nil {

@@ -61,15 +61,15 @@ func (inst *Client) PluginUpload(body *amodel.Plugin) (*amodel.Message, error) {
 	return &amodel.Message{Message: "successfully uploaded the plugin"}, nil
 }
 
-func (inst *Client) ListPlugins() ([]amodel.Plugin, error) {
+func (inst *Client) ListPlugins() ([]amodel.Plugin, error, error) {
 	p := global.Installer.GetPluginInstallationPath(constants.FlowFramework)
-	files, err := inst.ListFiles(p)
-	if err != nil {
-		return nil, err
+	files, connectionErr, requestErr := inst.ListFilesV2(p)
+	if connectionErr != nil || requestErr != nil {
+		return nil, connectionErr, requestErr
 	}
 	var plugins []amodel.Plugin
 	for _, file := range files {
 		plugins = append(plugins, *global.Installer.GetPluginDetails(file.Name))
 	}
-	return plugins, nil
+	return plugins, nil, nil
 }

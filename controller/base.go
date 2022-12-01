@@ -107,7 +107,6 @@ func responseHandler(body interface{}, err error, c *gin.Context, statusCode ...
 			code = http.StatusOK
 		}
 		c.JSON(code, body)
-
 	}
 }
 
