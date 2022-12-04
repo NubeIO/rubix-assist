@@ -14,11 +14,7 @@ import (
 )
 
 func (inst *Client) PluginUpload(body *amodel.Plugin) (*amodel.Message, error) {
-	uploadLocation := global.Installer.GetAppPluginDownloadPath(constants.FlowFramework)
-	if body.ClearBeforeUploading {
-		url := fmt.Sprintf("/api/files/delete-all?path=%s", uploadLocation)
-		_, _ = nresty.FormatRestyResponse(inst.Rest.R().Delete(url))
-	}
+	uploadLocation := global.Installer.GetAppPluginDownloadPath()
 
 	url := fmt.Sprintf("/api/dirs/create?path=%s", uploadLocation)
 	_, _ = nresty.FormatRestyResponse(inst.Rest.R().Post(url))

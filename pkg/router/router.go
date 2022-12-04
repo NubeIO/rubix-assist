@@ -94,8 +94,11 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	edgePlugins := apiRoutes.Group("/edge/plugins")
 	{
-		edgePlugins.POST("/upload", api.EdgeUploadPlugin)
 		edgePlugins.GET("/", api.EdgeListPlugins)
+		edgePlugins.POST("/upload", api.EdgeUploadPlugin)
+		edgePlugins.POST("/move-from-download-to-install", api.EdgeMoveFromDownloadToInstallPlugins)
+		edgePlugins.DELETE("/name/:plugin_name", api.EdgeDeletePlugin)
+		edgePlugins.DELETE("/download-plugins", api.EdgeDeleteDownloadPlugins)
 	}
 
 	edgeConfig := apiRoutes.Group("/edge/config")
