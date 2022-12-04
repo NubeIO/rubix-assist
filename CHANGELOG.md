@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [v0.8.0](https://github.com/NubeIO/rubix-assist/tree/v0.8.0) (2022-12-04)
+
+- Improvement on GetAppStatus
+    - Differentiate whether it'd valid request or not
+- Upgrade list plugins API
+- Fix: delete older installation & listing plugin failure
+- Add APIs for plugins
+
 ## [v0.7.0](https://github.com/NubeIO/rubix-assist/tree/v0.7.0) (2022-11-24)
 
 - Misc changes to decouple rubix-edge from rubix-assist
