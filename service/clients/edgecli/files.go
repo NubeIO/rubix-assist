@@ -29,6 +29,17 @@ func (inst *Client) ListFilesV2(path string) ([]fileutils.FileDetails, error, er
 	return *resp.Result().(*[]fileutils.FileDetails), nil, nil
 }
 
+func (inst *Client) DeleteFiles(path string) (*amodel.Message, error, error) {
+	url := fmt.Sprintf("/api/files/delete-all?path=%s", path)
+	resp, connectionErr, requestErr := nresty.FormatRestyV2Response(inst.Rest.R().
+		SetResult(&amodel.Message{}).
+		Delete(url))
+	if connectionErr != nil || requestErr != nil {
+		return nil, connectionErr, requestErr
+	}
+	return resp.Result().(*amodel.Message), nil, nil
+}
+
 func (inst *Client) ReadFile(path string) ([]byte, error) {
 	url := fmt.Sprintf("/api/files/read?path=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().

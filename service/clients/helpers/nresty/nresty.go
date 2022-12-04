@@ -53,15 +53,6 @@ func composeErrorMsg(resp *resty.Response) error {
 	return e
 }
 
-// composeErrorMsg it helps to create a clean output error message; we used to have JSON message with nested key
-func composeConnectionErrorMsg(resp *resty.Response) error {
-	message := amodel.Message{}
-	rawMessage := resp.String()
-	_ = json.Unmarshal([]byte(rawMessage), &message)
-	e := fmt.Errorf("%v", message.Message)
-	return e
-}
-
 func FormatRestyV2Response(resp *resty.Response, err error) (res *resty.Response, connectionError error, requestError error) {
 	// it catches errors:
 	// => when we don't have host server (i/o timeout)
@@ -72,7 +63,7 @@ func FormatRestyV2Response(resp *resty.Response, err error) (res *resty.Response
 		return resp, err, nil
 	}
 	if resp.IsError() && resp.StatusCode() != 404 {
-		return nil, composeConnectionErrorMsg(resp), nil
+		return nil, composeErrorMsg(resp), nil
 	}
 	if resp.IsError() {
 		return nil, nil, composeErrorMsg(resp)

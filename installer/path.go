@@ -1,8 +1,10 @@
 package installer
 
 import (
+	"fmt"
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/rubix-assist/namings"
+	"github.com/NubeIO/rubix-assist/pkg/constants"
 	"os"
 	"path"
 )
@@ -56,11 +58,15 @@ func (inst *Installer) MakeTmpDirUpload() (string, error) {
 	return tmpDir, err
 }
 
-func (inst *Installer) GetAppPluginDownloadPath(appName string) string {
-	repoName := namings.GetRepoNameFromAppName(appName)
+func (inst *Installer) GetAppPluginDownloadPath() string {
+	repoName := namings.GetRepoNameFromAppName(constants.FlowFramework)
 	return path.Join(inst.AppsDownloadDir, repoName, "plugins") // /data/rubix-service/apps/download/flow-framework/plugins
 }
 
-func (inst *Installer) GetAppPluginInstallPath(appName string) string {
-	return path.Join(inst.GetAppDataDataPath(appName), "plugins") // /data/flow-framework/data/plugins
+func (inst *Installer) GetAppPluginInstallPath() string {
+	return path.Join(inst.GetAppDataDataPath(constants.FlowFramework), "plugins") // /data/flow-framework/data/plugins
+}
+
+func (inst *Installer) GetAppPluginInstallFilePath(pluginName, arch string) string {
+	return path.Join(inst.GetAppPluginInstallPath(), fmt.Sprintf("%s-%s.so", pluginName, arch)) // /data/flow-framework/data/plugins/system-amd64.so
 }
