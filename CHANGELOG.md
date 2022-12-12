@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [v0.8.1](https://github.com/NubeIO/rubix-assist/tree/v0.8.1) (2022-12-12)
+
+- Add root-dir on systemctl service file creation
+- Set ubuntu-18.04 as the runner OS & update packages
+
 ## [v0.8.0](https://github.com/NubeIO/rubix-assist/tree/v0.8.0) (2022-12-04)
 
 - Improvement on GetAppStatus
