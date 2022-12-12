@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [v0.8.2](https://github.com/NubeIO/rubix-assist/tree/v0.8.2) (2022-12-12)
+
+- Remove suffix slash (/) from APIs for to support reverse proxy
+
 ## [v0.8.1](https://github.com/NubeIO/rubix-assist/tree/v0.8.1) (2022-12-12)
 
 - Add root-dir on systemctl service file creation

@@ -66,14 +66,14 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	appStore := apiRoutes.Group("/store/apps")
 	{
-		appStore.POST("/", api.UploadAddOnAppStore)
+		appStore.POST("", api.UploadAddOnAppStore)
 		appStore.GET("/exists", api.CheckAppExistence)
 	}
 
 	storePlugins := apiRoutes.Group("/store/plugins")
 	{
-		storePlugins.GET("/", api.GetPluginsStorePlugins)
-		storePlugins.POST("/", api.UploadPluginStorePlugin)
+		storePlugins.GET("", api.GetPluginsStorePlugins)
+		storePlugins.POST("", api.UploadPluginStorePlugin)
 	}
 
 	edgeBiosApps := apiRoutes.Group("/eb/re")
@@ -94,7 +94,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	edgePlugins := apiRoutes.Group("/edge/plugins")
 	{
-		edgePlugins.GET("/", api.EdgeListPlugins)
+		edgePlugins.GET("", api.EdgeListPlugins)
 		edgePlugins.POST("/upload", api.EdgeUploadPlugin)
 		edgePlugins.POST("/move-from-download-to-install", api.EdgeMoveFromDownloadToInstallPlugins)
 		edgePlugins.DELETE("/name/:plugin_name", api.EdgeDeletePlugin)
@@ -103,16 +103,16 @@ func Setup(db *gorm.DB) *gin.Engine {
 
 	edgeConfig := apiRoutes.Group("/edge/config")
 	{
-		edgeConfig.GET("/", api.EdgeReadConfig)
-		edgeConfig.POST("/", api.EdgeWriteConfig)
+		edgeConfig.GET("", api.EdgeReadConfig)
+		edgeConfig.POST("", api.EdgeWriteConfig)
 	}
 
 	locations := apiRoutes.Group("/locations")
 	{
 		locations.GET("/schema", api.GetLocationSchema)
-		locations.GET("/", api.GetLocations)
+		locations.GET("", api.GetLocations)
 		locations.POST("/wizard", api.CreateLocationWizard)
-		locations.POST("/", api.CreateLocation)
+		locations.POST("", api.CreateLocation)
 		locations.GET("/:uuid", api.GetLocation)
 		locations.PATCH("/:uuid", api.UpdateLocation)
 		locations.DELETE("/:uuid", api.DeleteLocation)
@@ -122,8 +122,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 	hostNetworks := apiRoutes.Group("/networks")
 	{
 		hostNetworks.GET("/schema", api.GetNetworkSchema)
-		hostNetworks.GET("/", api.GetHostNetworks)
-		hostNetworks.POST("/", api.CreateHostNetwork)
+		hostNetworks.GET("", api.GetHostNetworks)
+		hostNetworks.POST("", api.CreateHostNetwork)
 		hostNetworks.GET("/:uuid", api.GetHostNetwork)
 		hostNetworks.PATCH("/:uuid", api.UpdateHostNetwork)
 		hostNetworks.DELETE("/:uuid", api.DeleteHostNetwork)
@@ -133,8 +133,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 	hosts := apiRoutes.Group("/hosts")
 	{
 		hosts.GET("/schema", api.GetHostSchema)
-		hosts.GET("/", api.GetHosts)
-		hosts.POST("/", api.CreateHost)
+		hosts.GET("", api.GetHosts)
+		hosts.POST("", api.CreateHost)
 		hosts.GET("/:uuid", api.GetHost)
 		hosts.PATCH("/:uuid", api.UpdateHost)
 		hosts.DELETE("/:uuid", api.DeleteHost)
@@ -144,8 +144,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 	teams := apiRoutes.Group("/teams")
 	{
 		teams.GET("/schema", api.TeamsSchema)
-		teams.GET("/", api.GetTeams)
-		teams.POST("/", api.CreateTeam)
+		teams.GET("", api.GetTeams)
+		teams.POST("", api.CreateTeam)
 		teams.GET("/:uuid", api.GetTeam)
 		teams.PATCH("/:uuid", api.UpdateTeam)
 		teams.DELETE("/:uuid", api.DeleteTeam)
@@ -155,8 +155,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 	Tasks := apiRoutes.Group("/tasks")
 	{
 		Tasks.GET("/schema", api.TasksSchema)
-		Tasks.GET("/", api.GetTasks)
-		Tasks.POST("/", api.CreateTask)
+		Tasks.GET("", api.GetTasks)
+		Tasks.POST("", api.CreateTask)
 		Tasks.GET("/:uuid", api.GetTask)
 		Tasks.PATCH("/:uuid", api.UpdateTask)
 		Tasks.DELETE("/:uuid", api.DeleteTask)
@@ -166,8 +166,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 	messages := apiRoutes.Group("/transactions")
 	{
 		messages.GET("/schema", api.TransactionsSchema)
-		messages.GET("/", api.GetTransactions)
-		messages.POST("/", api.CreateTransaction)
+		messages.GET("", api.GetTransactions)
+		messages.POST("", api.CreateTransaction)
 		messages.GET("/:uuid", api.GetTransaction)
 		messages.PATCH("/:uuid", api.UpdateTransaction)
 		messages.DELETE("/:uuid", api.DeleteTransaction)
