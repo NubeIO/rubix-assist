@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [v0.8.1](https://github.com/NubeIO/rubix-assist/tree/v0.8.1) (2022-12-12)
+
+- Add root-dir on systemctl service file creation
+
 ## [v0.8.0](https://github.com/NubeIO/rubix-assist/tree/v0.8.0) (2022-12-04)
 
 - Improvement on GetAppStatus
