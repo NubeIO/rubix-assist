@@ -57,6 +57,9 @@ func GenerateServiceFile(app *ServiceFile, installer *installer.Installer) (tmpD
 				"ExecStart command is not matching app_name: %s & app_version: %s", app.Name, app.Version))
 		}
 	}
+	if strings.Contains(execCmd, "<root_dir>") {
+		execCmd = strings.ReplaceAll(execCmd, "<root_dir>", installer.RootDir)
+	}
 	if strings.Contains(execCmd, "<data_dir>") {
 		execCmd = strings.ReplaceAll(execCmd, "<data_dir>", installer.GetAppDataPath(app.Name))
 	}
