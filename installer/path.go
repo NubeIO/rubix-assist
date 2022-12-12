@@ -11,17 +11,17 @@ import (
 
 func (inst *Installer) GetAppDataPath(appName string) string {
 	dataDirName := namings.GetDataDirNameFromAppName(appName)
-	return path.Join(inst.DataDir, dataDirName) // /data/rubix-wires
+	return path.Join(inst.RootDir, dataDirName) // /data/rubix-wires
 }
 
 func (inst *Installer) GetAppDataDataPath(appName string) string {
 	dataDirName := namings.GetDataDirNameFromAppName(appName)
-	return path.Join(inst.DataDir, dataDirName, "data") // /data/rubix-wires/data
+	return path.Join(inst.RootDir, dataDirName, "data") // /data/rubix-wires/data
 }
 
 func (inst *Installer) GetAppDataConfigPath(appName string) string {
 	dataDirName := namings.GetDataDirNameFromAppName(appName)
-	return path.Join(inst.DataDir, dataDirName, "config") // /data/rubix-wires/config
+	return path.Join(inst.RootDir, dataDirName, "config") // /data/rubix-wires/config
 }
 
 func (inst *Installer) GetAppInstallPath(appName string) string {
