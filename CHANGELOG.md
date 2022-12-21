@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [v0.8.3](https://github.com/NubeIO/rubix-assist/tree/v0.8.3) (2022-12-21)
+
+- Fix: read file API params
+
 ## [v0.8.2](https://github.com/NubeIO/rubix-assist/tree/v0.8.2) (2022-12-12)
 
 - Remove suffix slash (/) from APIs for to support reverse proxy
