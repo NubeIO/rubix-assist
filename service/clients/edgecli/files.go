@@ -41,7 +41,7 @@ func (inst *Client) DeleteFiles(path string) (*amodel.Message, error, error) {
 }
 
 func (inst *Client) ReadFile(path string) ([]byte, error) {
-	url := fmt.Sprintf("/api/files/read?path=%s", path)
+	url := fmt.Sprintf("/api/files/read?file=%s", path)
 	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
 		Get(url))
 	if err != nil {
