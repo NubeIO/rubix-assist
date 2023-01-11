@@ -27,7 +27,7 @@ func (inst *Controller) resolveHost(c *gin.Context) (*amodel.Host, error) {
 	uuid := matchHostUUID(c)
 	name := matchHostName(c)
 	if uuid == "" && name == "" {
-		return nil, errors.New("host-uuid, and host-name can bot not be empty")
+		return nil, errors.New("host-uuid and host-name both can not be empty")
 	}
 	if uuid != "" {
 		host, _ := inst.DB.GetHost(uuid)
@@ -81,11 +81,11 @@ func matchHostName(ctx *gin.Context) string {
 }
 
 func resolveHeaderHostID(ctx *gin.Context) string {
-	return ctx.GetHeader("host_uuid")
+	return ctx.GetHeader("host-uuid")
 }
 
 func resolveHeaderHostName(ctx *gin.Context) string {
-	return ctx.GetHeader("host_name")
+	return ctx.GetHeader("host-name")
 }
 
 func responseHandler(body interface{}, err error, c *gin.Context, statusCode ...int) {

@@ -46,7 +46,7 @@ func (inst *Controller) Proxy(c *gin.Context) {
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
 		req.URL.Path = proxyPath
-		authorization := c.GetHeader("jwt_token")
+		authorization := c.GetHeader("jwt-token")
 		if authorization == "" {
 			req.Header.Set("Authorization", composeExternalToken(host.ExternalToken))
 		} else {

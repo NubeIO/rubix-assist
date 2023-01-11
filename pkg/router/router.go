@@ -34,7 +34,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		AllowMethods: []string{"GET", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"},
 		AllowHeaders: []string{
 			"X-FLOW-Key", "Authorization", "Content-Type", "Upgrade", "Origin",
-			"Connection", "Accept-Encoding", "Accept-Language", "Host",
+			"Connection", "Accept-Encoding", "Accept-Language", "Host", "host-uuid", "host-name",
 		},
 		ExposeHeaders:          []string{"Content-Length"},
 		AllowCredentials:       true,
