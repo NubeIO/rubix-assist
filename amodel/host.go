@@ -5,20 +5,18 @@ import (
 )
 
 type Host struct {
-	UUID          string  `json:"uuid" gorm:"primaryKey" `
+	UUID          string  `json:"uuid" gorm:"primaryKey"`
+	GlobalUUID    string  `json:"global_uuid"`
 	NetworkUUID   string  `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null"`
-	Name          string  `json:"name"  gorm:"type:varchar(255);not null"  `
+	Name          string  `json:"name"  gorm:"type:varchar(255);not null"`
 	Enable        *bool   `json:"enable"`
 	Description   *string `json:"description"`
 	IP            string  `json:"ip"`
 	BiosPort      int     `json:"bios_port"`
 	Port          int     `json:"port"`
 	HTTPS         *bool   `json:"https"`
-	PingEnable    *bool   `json:"ping_enable"`
-	PingFrequency int     `json:"ping_frequency"`
-	IsOffline     bool    `json:"is_offline"`
-	OfflineCount  uint    `json:"offline_count"`
-	Message       *string `json:"message"`
+	IsOnline      *bool   `json:"is_online"`
+	IsValidToken  *bool   `json:"is_valid_token"`
 	ExternalToken string  `json:"external_token"`
 }
 

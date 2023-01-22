@@ -4,8 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-uuid/uuid"
+	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/bools"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
 	"github.com/NubeIO/rubix-assist/amodel"
+	"github.com/NubeIO/rubix-assist/cligetter"
 )
 
 const hostName = "host"
@@ -89,9 +91,6 @@ func (inst *DB) CreateHost(host *amodel.Host) (*amodel.Host, error) {
 		return nil, errors.New("an existing host with this name exists")
 	}
 	host.UUID = uuid.ShortUUID("hos")
-	if host.PingEnable == nil {
-		host.PingEnable = nils.NewTrue()
-	}
 	if host.HTTPS == nil {
 		host.HTTPS = nils.NewFalse()
 	}
@@ -136,4 +135,28 @@ func (inst *DB) DropHosts() (*DeleteMessage, error) {
 	query := inst.DB.Where("1 = 1")
 	query.Delete(&m)
 	return deleteResponse(query)
+}
+
+func (inst *DB) UpdateStatus() ([]*amodel.Host, error) {
+	var hosts []*amodel.Host
+	if err := inst.DB.Find(&hosts).Error; err != nil {
+		return nil, err
+	}
+	for _, host := range hosts {
+		tx := inst.DB.Begin()
+		host.HTTPS = bools.NewFalse()
+		cli := cligetter.GetEdgeClient(host)
+		globalUUID, pingable, isValidToken := cli.Ping()
+		if globalUUID != nil {
+			host.GlobalUUID = *globalUUID
+		}
+		host.IsOnline = &pingable
+		host.IsValidToken = &isValidToken
+		if err := tx.Where("uuid = ?", host.UUID).Updates(&host).Error; err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+		tx.Commit()
+	}
+	return hosts, nil
 }

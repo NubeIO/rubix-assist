@@ -19,19 +19,11 @@ func (inst *Controller) GetHostSchema(ctx *gin.Context) {
 
 func (inst *Controller) GetHost(c *gin.Context) {
 	host, err := inst.DB.GetHost(c.Params.ByName("uuid"))
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
 	responseHandler(host, err, c)
 }
 
 func (inst *Controller) GetHosts(c *gin.Context) {
 	hosts, err := inst.DB.GetHosts()
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
 	responseHandler(hosts, err, c)
 }
 
@@ -60,20 +52,17 @@ func (inst *Controller) UpdateHost(c *gin.Context) {
 
 func (inst *Controller) DeleteHost(c *gin.Context) {
 	q, err := inst.DB.DeleteHost(c.Params.ByName("uuid"))
-	if err != nil {
-		responseHandler(nil, err, c)
-	} else {
-		responseHandler(q, err, c)
-	}
+	responseHandler(q, err, c)
 }
 
 func (inst *Controller) DropHosts(c *gin.Context) {
 	host, err := inst.DB.DropHosts()
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
 	responseHandler(host, err, c)
+}
+
+func (inst *Controller) UpdateStatus(c *gin.Context) {
+	hosts, err := inst.DB.UpdateStatus()
+	responseHandler(hosts, err, c)
 }
 
 func (inst *Controller) updateCLIs(host *amodel.Host) {
