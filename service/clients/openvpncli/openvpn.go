@@ -7,6 +7,17 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+func (inst *OpenVPNClient) GetClients() (*map[string]amodel.OpenVPNClient, error) {
+	url := "/api/clients"
+	resp, err := nresty.FormatRestyResponse(inst.Rest.R().
+		SetResult(&map[string]amodel.OpenVPNClient{}).
+		Get(url))
+	if err != nil {
+		return nil, err
+	}
+	return resp.Result().(*map[string]amodel.OpenVPNClient), nil
+}
+
 func (inst *OpenVPNClient) GetOpenVPNConfig(name string) (*amodel.OpenVPNConfig, error) {
 	getURL := fmt.Sprintf("/api/openvpn/%s", name)
 	resp, connectionErr, responseErr := nresty.FormatRestyV2Response(inst.Rest.R().

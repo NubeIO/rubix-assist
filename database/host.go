@@ -44,12 +44,47 @@ func (inst *DB) GetHostByName(name string) (*amodel.Host, error) {
 	return &host, nil
 }
 
-func (inst *DB) GetHosts() ([]*amodel.Host, error) {
-	var m []*amodel.Host
-	if err := inst.DB.Find(&m).Error; err != nil {
+func (inst *DB) GetHosts(withOpenVPN bool) ([]*amodel.Host, error) {
+	resetHostClient := func(host *amodel.Host) {
+		host.VirtualIP = ""
+		host.ReceivedBytes = 0
+		host.SentBytes = 0
+		host.ConnectedSince = ""
+	}
+
+	resetHostsClient := func(hosts []*amodel.Host) {
+		for _, host := range hosts {
+			resetHostClient(host)
+		}
+	}
+
+	var hosts []*amodel.Host
+	if err := inst.DB.Find(&hosts).Error; err != nil {
 		return nil, err
 	}
-	return m, nil
+	if withOpenVPN {
+		oCli, _ := cligetter.GetOpenVPNClient()
+		if oCli != nil {
+			clients, _ := oCli.GetClients()
+			if clients != nil {
+				for _, host := range hosts {
+					if client, found := (*clients)[host.GlobalUUID]; found {
+						host.VirtualIP = client.VirtualIP
+						host.ReceivedBytes = client.ReceivedBytes
+						host.SentBytes = client.SentBytes
+						host.ConnectedSince = client.ConnectedSince
+					} else {
+						resetHostClient(host)
+					}
+				}
+			} else {
+				resetHostsClient(hosts)
+			}
+		} else {
+			resetHostsClient(hosts)
+		}
+	}
+	return hosts, nil
 }
 
 func (inst *DB) CreateHost(host *amodel.Host) (*amodel.Host, error) {

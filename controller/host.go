@@ -23,7 +23,7 @@ func (inst *Controller) GetHost(c *gin.Context) {
 }
 
 func (inst *Controller) GetHosts(c *gin.Context) {
-	hosts, err := inst.DB.GetHosts()
+	hosts, err := inst.DB.GetHosts(true)
 	responseHandler(hosts, err, c)
 }
 

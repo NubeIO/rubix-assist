@@ -5,19 +5,23 @@ import (
 )
 
 type Host struct {
-	UUID          string  `json:"uuid" gorm:"primaryKey"`
-	GlobalUUID    string  `json:"global_uuid"`
-	NetworkUUID   string  `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null"`
-	Name          string  `json:"name"  gorm:"type:varchar(255);not null"`
-	Enable        *bool   `json:"enable"`
-	Description   *string `json:"description"`
-	IP            string  `json:"ip"`
-	BiosPort      int     `json:"bios_port"`
-	Port          int     `json:"port"`
-	HTTPS         *bool   `json:"https"`
-	IsOnline      *bool   `json:"is_online"`
-	IsValidToken  *bool   `json:"is_valid_token"`
-	ExternalToken string  `json:"external_token"`
+	UUID           string  `json:"uuid" gorm:"primaryKey"`
+	GlobalUUID     string  `json:"global_uuid"`
+	NetworkUUID    string  `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null"`
+	Name           string  `json:"name"  gorm:"type:varchar(255);not null"`
+	Enable         *bool   `json:"enable"`
+	Description    *string `json:"description"`
+	IP             string  `json:"ip"`
+	BiosPort       int     `json:"bios_port"`
+	Port           int     `json:"port"`
+	HTTPS          *bool   `json:"https"`
+	IsOnline       *bool   `json:"is_online"`
+	IsValidToken   *bool   `json:"is_valid_token"`
+	ExternalToken  string  `json:"external_token"`
+	VirtualIP      string  `json:"virtual_ip"`
+	ReceivedBytes  int     `json:"received_bytes"`
+	SentBytes      int     `json:"sent_bytes"`
+	ConnectedSince string  `json:"connected_since"`
 }
 
 type NetworkUUID struct {
