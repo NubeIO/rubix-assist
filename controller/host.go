@@ -65,6 +65,11 @@ func (inst *Controller) UpdateStatus(c *gin.Context) {
 	responseHandler(hosts, err, c)
 }
 
+func (inst *Controller) ConfigureOpenVPN(c *gin.Context) {
+	hosts, err := inst.DB.ConfigureOpenVPN(c.Params.ByName("uuid"))
+	responseHandler(hosts, err, c)
+}
+
 func (inst *Controller) updateCLIs(host *amodel.Host) {
 	edgecli.NewForce(&edgecli.Client{
 		Ip:            host.IP,

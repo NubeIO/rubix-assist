@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NubeIO/lib-uuid/uuid"
-	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/bools"
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/cligetter"
@@ -29,46 +28,20 @@ func (inst *DB) GetHostByLocationName(hostName, networkName, locationName string
 	return nil, errors.New("no host was found")
 }
 
-func (inst *DB) getHost(uuid string) (*amodel.Host, error) {
-	m := new(amodel.Host)
-	if err := inst.DB.Where("uuid = ? ", uuid).First(&m).Error; err != nil {
+func (inst *DB) GetHost(uuid string) (*amodel.Host, error) {
+	host := amodel.Host{}
+	if err := inst.DB.Where("uuid = ? ", uuid).First(&host).Error; err != nil {
 		return nil, errors.New(fmt.Sprintf("no host was found with uuid: %s", uuid))
 	}
-	return m, nil
-}
-
-func matchUUID(uuid string) bool {
-	if len(uuid) == 16 {
-		if uuid[0:4] == "hos_" {
-			return true
-		}
-	}
-	return false
-}
-
-func (inst *DB) GetHost(uuid string) (*amodel.Host, error) {
-	match := matchUUID(uuid)
-	var host *amodel.Host
-	if match {
-		host, _ = inst.getHost(uuid)
-		if host != nil {
-			return host, nil
-		}
-	} else {
-		host, _ = inst.GetHostByName(uuid)
-		if host != nil {
-			return host, nil
-		}
-	}
-	return host, nil
+	return &host, nil
 }
 
 func (inst *DB) GetHostByName(name string) (*amodel.Host, error) {
-	m := new(amodel.Host)
-	if err := inst.DB.Where("name = ? ", name).First(&m).Error; err != nil {
+	host := amodel.Host{}
+	if err := inst.DB.Where("name = ? ", name).First(&host).Error; err != nil {
 		return nil, errors.New(fmt.Sprintf("no host was found with name: %s", name))
 	}
-	return m, nil
+	return &host, nil
 }
 
 func (inst *DB) GetHosts() ([]*amodel.Host, error) {
@@ -142,9 +115,8 @@ func (inst *DB) UpdateStatus() ([]*amodel.Host, error) {
 	if err := inst.DB.Find(&hosts).Error; err != nil {
 		return nil, err
 	}
+	tx := inst.DB.Begin()
 	for _, host := range hosts {
-		tx := inst.DB.Begin()
-		host.HTTPS = bools.NewFalse()
 		cli := cligetter.GetEdgeClient(host)
 		globalUUID, pingable, isValidToken := cli.Ping()
 		if globalUUID != nil {
@@ -156,7 +128,43 @@ func (inst *DB) UpdateStatus() ([]*amodel.Host, error) {
 			tx.Rollback()
 			return nil, err
 		}
-		tx.Commit()
 	}
+	tx.Commit()
 	return hosts, nil
+}
+
+func (inst *DB) ConfigureOpenVPN(uuid string) (*amodel.Message, error) {
+	host := amodel.Host{}
+	if err := inst.DB.Where("uuid = ? ", uuid).First(&host).Error; err != nil {
+		return nil, errors.New(fmt.Sprintf("no host was found with uuid: %s", uuid))
+	}
+	cli := cligetter.GetEdgeClient(&host)
+	globalUUID, pingable, isValidToken := cli.Ping()
+	if globalUUID != nil {
+		host.GlobalUUID = *globalUUID
+		oCli, err := cligetter.GetOpenVPNClient()
+		if err != nil {
+			return nil, err
+		}
+		openVPNConfig, err := oCli.GetOpenVPNConfig(host.GlobalUUID)
+		if err != nil {
+			return nil, err
+		}
+		_, err = cli.ConfigureOpenVPN(openVPNConfig)
+		if err != nil {
+			return nil, err
+		}
+	}
+	host.IsOnline = &pingable
+	host.IsValidToken = &isValidToken
+	if err := inst.DB.Where("uuid = ?", host.UUID).Updates(&host).Error; err != nil {
+		return nil, err
+	}
+	if pingable == false {
+		return &amodel.Message{Message: "Make it accessible at first!"}, nil
+	}
+	if isValidToken == false || globalUUID == nil {
+		return &amodel.Message{Message: "Configure valid token at first!"}, nil
+	}
+	return &amodel.Message{Message: "OpenVPN is configured!"}, nil
 }

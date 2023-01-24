@@ -4,6 +4,7 @@ import (
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/service/clients/edgebioscli"
 	"github.com/NubeIO/rubix-assist/service/clients/edgecli"
+	"github.com/NubeIO/rubix-assist/service/clients/openvpncli"
 )
 
 func GetEdgeClient(host *amodel.Host) *edgecli.Client {
@@ -26,4 +27,8 @@ func GetEdgeBiosClient(host *amodel.Host) *edgebioscli.BiosClient {
 		ExternalToken: host.ExternalToken,
 	})
 	return cli
+}
+
+func GetOpenVPNClient() (*openvpncli.OpenVPNClient, error) {
+	return openvpncli.Get()
 }
