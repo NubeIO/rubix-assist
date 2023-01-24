@@ -7,6 +7,7 @@ import (
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/cligetter"
+	"sync"
 )
 
 const hostName = "host"
@@ -150,15 +151,23 @@ func (inst *DB) UpdateStatus() ([]*amodel.Host, error) {
 	if err := inst.DB.Find(&hosts).Error; err != nil {
 		return nil, err
 	}
+	var wg sync.WaitGroup
+	for _, host := range hosts {
+		wg.Add(1)
+		cli := cligetter.GetEdgeClient(host)
+		go func(h *amodel.Host) {
+			defer wg.Done()
+			globalUUID, pingable, isValidToken := cli.Ping()
+			if globalUUID != nil {
+				h.GlobalUUID = *globalUUID
+			}
+			h.IsOnline = &pingable
+			h.IsValidToken = &isValidToken
+		}(host)
+	}
+	wg.Wait()
 	tx := inst.DB.Begin()
 	for _, host := range hosts {
-		cli := cligetter.GetEdgeClient(host)
-		globalUUID, pingable, isValidToken := cli.Ping()
-		if globalUUID != nil {
-			host.GlobalUUID = *globalUUID
-		}
-		host.IsOnline = &pingable
-		host.IsValidToken = &isValidToken
 		if err := tx.Where("uuid = ?", host.UUID).Updates(&host).Error; err != nil {
 			tx.Rollback()
 			return nil, err
@@ -196,10 +205,10 @@ func (inst *DB) ConfigureOpenVPN(uuid string) (*amodel.Message, error) {
 		return nil, err
 	}
 	if pingable == false {
-		return &amodel.Message{Message: "Make it accessible at first!"}, nil
+		return nil, errors.New("make it accessible at first")
 	}
 	if isValidToken == false || globalUUID == nil {
-		return &amodel.Message{Message: "Configure valid token at first!"}, nil
+		return nil, errors.New("configure valid token at first")
 	}
 	return &amodel.Message{Message: "OpenVPN is configured!"}, nil
 }
