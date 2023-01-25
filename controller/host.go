@@ -77,6 +77,12 @@ func (inst *Controller) updateCLIs(host *amodel.Host) {
 		HTTPS:         host.HTTPS,
 		ExternalToken: host.ExternalToken,
 	})
+	edgecli.NewFastTimeoutForce(&edgecli.Client{
+		Ip:            host.IP,
+		Port:          host.Port,
+		HTTPS:         host.HTTPS,
+		ExternalToken: host.ExternalToken,
+	})
 	edgebioscli.NewForce(&edgebioscli.BiosClient{
 		Ip:            host.IP,
 		Port:          host.BiosPort,

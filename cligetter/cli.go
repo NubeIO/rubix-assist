@@ -18,6 +18,17 @@ func GetEdgeClient(host *amodel.Host) *edgecli.Client {
 	return cli
 }
 
+func GetEdgeClientFastTimeout(host *amodel.Host) *edgecli.Client {
+	cli := edgecli.NewFastTimeout(&edgecli.Client{
+		Rest:          nil,
+		Ip:            host.IP,
+		Port:          host.Port,
+		HTTPS:         host.HTTPS,
+		ExternalToken: host.ExternalToken,
+	})
+	return cli
+}
+
 func GetEdgeBiosClient(host *amodel.Host) *edgebioscli.BiosClient {
 	cli := edgebioscli.New(&edgebioscli.BiosClient{
 		Rest:          nil,

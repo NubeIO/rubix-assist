@@ -154,7 +154,7 @@ func (inst *DB) UpdateStatus() ([]*amodel.Host, error) {
 	var wg sync.WaitGroup
 	for _, host := range hosts {
 		wg.Add(1)
-		cli := cligetter.GetEdgeClient(host)
+		cli := cligetter.GetEdgeClientFastTimeout(host)
 		go func(h *amodel.Host) {
 			defer wg.Done()
 			globalUUID, pingable, isValidToken := cli.Ping()
@@ -184,31 +184,29 @@ func (inst *DB) ConfigureOpenVPN(uuid string) (*amodel.Message, error) {
 	}
 	cli := cligetter.GetEdgeClient(&host)
 	globalUUID, pingable, isValidToken := cli.Ping()
-	if globalUUID != nil {
-		host.GlobalUUID = *globalUUID
-		oCli, err := cligetter.GetOpenVPNClient()
-		if err != nil {
-			return nil, err
-		}
-		openVPNConfig, err := oCli.GetOpenVPNConfig(host.GlobalUUID)
-		if err != nil {
-			return nil, err
-		}
-		_, err = cli.ConfigureOpenVPN(openVPNConfig)
-		if err != nil {
-			return nil, err
-		}
-	}
-	host.IsOnline = &pingable
-	host.IsValidToken = &isValidToken
-	if err := inst.DB.Where("uuid = ?", host.UUID).Updates(&host).Error; err != nil {
-		return nil, err
-	}
 	if pingable == false {
 		return nil, errors.New("make it accessible at first")
 	}
 	if isValidToken == false || globalUUID == nil {
 		return nil, errors.New("configure valid token at first")
+	}
+	host.GlobalUUID = *globalUUID
+	oCli, err := cligetter.GetOpenVPNClient()
+	if err != nil {
+		return nil, err
+	}
+	openVPNConfig, err := oCli.GetOpenVPNConfig(host.GlobalUUID)
+	if err != nil {
+		return nil, err
+	}
+	_, err = cli.ConfigureOpenVPN(openVPNConfig)
+	if err != nil {
+		return nil, err
+	}
+	host.IsOnline = &pingable
+	host.IsValidToken = &isValidToken
+	if err := inst.DB.Where("uuid = ?", host.UUID).Updates(&host).Error; err != nil {
+		return nil, err
 	}
 	return &amodel.Message{Message: "OpenVPN is configured!"}, nil
 }
