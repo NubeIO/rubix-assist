@@ -42,7 +42,7 @@ func initDB() *dbase.DB {
 }
 
 func getHosts(appDB *dbase.DB) {
-	hosts, err := appDB.GetHosts()
+	hosts, err := appDB.GetHosts(false)
 	if err == nil {
 		pprint.PrintJSON(hosts)
 	} else {

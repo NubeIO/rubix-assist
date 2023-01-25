@@ -44,7 +44,7 @@ func (inst *Controller) resolveHost(c *gin.Context) (*amodel.Host, error) {
 	var hostNames []string
 	var hostUUIDs []string
 	var count int
-	hosts, err := inst.DB.GetHosts()
+	hosts, err := inst.DB.GetHosts(false)
 	if err != nil {
 		return nil, err
 	}
