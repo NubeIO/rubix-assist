@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [v0.8.5](https://github.com/NubeIO/rubix-assist/tree/v0.8.5) (2023-01-28)
+
+- Remove the existing mappings for old deployment support
+
 ## [v0.8.5](https://github.com/NubeIO/rubix-assist/tree/v0.8.5) (2023-01-25)
 
 - Add OpenVPN feature
