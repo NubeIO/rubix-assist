@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## [v0.8.5](https://github.com/NubeIO/rubix-assist/tree/v0.8.5) (2023-01-28)
+## [v0.9.0](https://github.com/NubeIO/rubix-assist/tree/v0.9.0) (2023-01-30)
+
+- Misc improvements for location > network > host
+
+## [v0.8.6](https://github.com/NubeIO/rubix-assist/tree/v0.8.6) (2023-01-28)
 
 - Remove the existing mappings for old deployment support
 
