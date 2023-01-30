@@ -1,7 +1,6 @@
 package base
 
 import (
-	"errors"
 	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/rubix-assist/amodel"
 )
@@ -17,22 +16,12 @@ func (inst *DB) GetHostNetworks() ([]*amodel.Network, error) {
 	}
 }
 
-func (inst *DB) GetHostNetworkByName(name string, isUUID bool) (*amodel.Network, error) {
-	m := new(amodel.Network)
-	switch isUUID {
-	case true:
-		if err := inst.DB.Where("uuid = ? ", name).Preload("Hosts").First(&m).Error; err != nil {
-			return nil, handelNotFound(networkName)
-		}
-		return m, nil
-	case false:
-		if err := inst.DB.Where("name = ? ", name).Preload("Hosts").First(&m).Error; err != nil {
-			return nil, handelNotFound(networkName)
-		}
-		return m, nil
-	default:
-		return nil, errors.New("ERROR no valid uuid or name was provided in the request")
+func (inst *DB) GetHostNetwork(uuid string) (*amodel.Network, error) {
+	m := amodel.Network{}
+	if err := inst.DB.Where("uuid = ? ", uuid).Preload("Hosts").First(&m).Error; err != nil {
+		return nil, handelNotFound(networkName)
 	}
+	return &m, nil
 }
 
 func (inst *DB) CreateHostNetwork(body *amodel.Network) (*amodel.Network, error) {
@@ -44,23 +33,13 @@ func (inst *DB) CreateHostNetwork(body *amodel.Network) (*amodel.Network, error)
 	}
 }
 
-func (inst *DB) UpdateHostNetworkByName(name string, host *amodel.Network) (*amodel.Network, error) {
-	m := new(amodel.Network)
-	query := inst.DB.Where("name = ?", name).Find(&m).Updates(host)
-	if query.Error != nil {
-		return nil, handelNotFound(networkName)
-	} else {
-		return m, nil
-	}
-}
-
 func (inst *DB) UpdateHostNetwork(uuid string, host *amodel.Network) (*amodel.Network, error) {
 	m := new(amodel.Network)
 	query := inst.DB.Where("uuid = ?", uuid).Find(&m).Updates(host)
 	if query.Error != nil {
 		return nil, handelNotFound(networkName)
 	} else {
-		return host, query.Error
+		return host, nil
 	}
 }
 
