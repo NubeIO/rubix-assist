@@ -5,23 +5,23 @@ import (
 )
 
 type Host struct {
-	UUID           string  `json:"uuid" gorm:"primaryKey"`
-	GlobalUUID     string  `json:"global_uuid"`
-	NetworkUUID    string  `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null"`
-	Name           string  `json:"name"  gorm:"type:varchar(255);not null"`
-	Enable         *bool   `json:"enable"`
-	Description    *string `json:"description"`
-	IP             string  `json:"ip"`
-	BiosPort       int     `json:"bios_port"`
-	Port           int     `json:"port"`
-	HTTPS          *bool   `json:"https"`
-	IsOnline       *bool   `json:"is_online"`
-	IsValidToken   *bool   `json:"is_valid_token"`
-	ExternalToken  string  `json:"external_token"`
-	VirtualIP      string  `json:"virtual_ip"`
-	ReceivedBytes  int     `json:"received_bytes"`
-	SentBytes      int     `json:"sent_bytes"`
-	ConnectedSince string  `json:"connected_since"`
+	UUID           string `json:"uuid" gorm:"primaryKey"`
+	GlobalUUID     string `json:"global_uuid"`
+	NetworkUUID    string `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null"`
+	Name           string `json:"name"  gorm:"type:varchar(255);not null"`
+	Enable         *bool  `json:"enable"`
+	Description    string `json:"description"`
+	IP             string `json:"ip"`
+	BiosPort       int    `json:"bios_port"`
+	Port           int    `json:"port"`
+	HTTPS          *bool  `json:"https"`
+	IsOnline       *bool  `json:"is_online"`
+	IsValidToken   *bool  `json:"is_valid_token"`
+	ExternalToken  string `json:"external_token"`
+	VirtualIP      string `json:"virtual_ip"`
+	ReceivedBytes  int    `json:"received_bytes"`
+	SentBytes      int    `json:"sent_bytes"`
+	ConnectedSince string `json:"connected_since"`
 }
 
 type NetworkUUID struct {
@@ -53,8 +53,11 @@ type SSHPort struct {
 }
 
 type HostSchema struct {
-	UUID          schema.UUID        `json:"uuid"`
-	NetworkUUID   NetworkUUID        `json:"network_uuid"`
+	Required   []string        `json:"required"`
+	Properties *HostProperties `json:"properties"`
+}
+
+type HostProperties struct {
 	Name          schema.Name        `json:"name"`
 	Enable        schema.Enable      `json:"enable"`
 	Description   schema.Description `json:"description"`
@@ -63,21 +66,25 @@ type HostSchema struct {
 	Port          schema.Port        `json:"port"`
 	HTTPS         schema.HTTPS       `json:"https"`
 	ExternalToken schema.Token       `json:"external_token"`
-	Required      []string           `json:"required"`
 }
 
-func GetHostSchema() *HostSchema {
-	m := &HostSchema{
-		Required: []string{"ip", "port"},
-	}
+func GetHostProperties() *HostProperties {
+	m := &HostProperties{}
 	m.IP.Default = "0.0.0.0"
 	m.BiosPort.Title = "bios port"
 	m.BiosPort.Default = 1659
 	m.BiosPort.ReadOnly = true
 	m.Port.Default = 1661
 	m.Port.ReadOnly = true
-	m.NetworkUUID.Title = "network uuid"
 	m.ExternalToken.Title = "external token"
 	schema.Set(m)
+	return m
+}
+
+func GetHostSchema() *HostSchema {
+	m := &HostSchema{
+		Required:   []string{"name", "ip", "bios_port", "port"},
+		Properties: GetHostProperties(),
+	}
 	return m
 }
