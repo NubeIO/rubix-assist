@@ -111,7 +111,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 	{
 		locations.GET("/schema", api.GetLocationSchema)
 		locations.GET("", api.GetLocations)
-		locations.POST("/wizard", api.CreateLocationWizard)
 		locations.POST("", api.CreateLocation)
 		locations.GET("/:uuid", api.GetLocation)
 		locations.PATCH("/:uuid", api.UpdateLocation)
