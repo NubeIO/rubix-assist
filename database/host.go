@@ -12,23 +12,6 @@ import (
 
 const hostName = "host"
 
-func (inst *DB) GetHostByLocationName(hostName, networkName, locationName string) (*amodel.Host, error) {
-	location, err := inst.GetLocationsByName(locationName, false)
-	if err != nil {
-		return nil, err
-	}
-	for _, network := range location.Networks {
-		if network.Name == networkName {
-			for _, host := range network.Hosts {
-				if host.Name == hostName {
-					return host, err
-				}
-			}
-		}
-	}
-	return nil, errors.New("no host was found")
-}
-
 func (inst *DB) GetHost(uuid string) (*amodel.Host, error) {
 	host := amodel.Host{}
 	if err := inst.DB.Where("uuid = ? ", uuid).First(&host).Error; err != nil {
@@ -89,25 +72,9 @@ func (inst *DB) GetHosts(withOpenVPN bool) ([]*amodel.Host, error) {
 }
 
 func (inst *DB) CreateHost(host *amodel.Host) (*amodel.Host, error) {
-	if host.Name == "" {
-		host.Name = "rc"
-	}
-	if len(host.Name) < 1 {
-		return nil, errors.New("host name length must be grater then two")
-	}
-	existingHost, _ := inst.GetHostByName(host.Name)
-	if existingHost != nil {
-		return nil, errors.New("an existing host with this name exists")
-	}
 	host.UUID = uuid.ShortUUID("hos")
 	if host.HTTPS == nil {
 		host.HTTPS = nils.NewFalse()
-	}
-	if host.IP == "" {
-		host.IP = "0.0.0.0"
-	}
-	if host.Port == 0 {
-		host.Port = 1661
 	}
 	if err := inst.DB.Create(&host).Error; err != nil {
 		return nil, err

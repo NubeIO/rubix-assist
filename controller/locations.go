@@ -15,70 +15,39 @@ func getLocationBody(ctx *gin.Context) (dto *amodel.Location, err error) {
 	return dto, err
 }
 
-func (inst *Controller) GetLocation(c *gin.Context) {
-	host, err := inst.DB.GetLocationsByName(c.Params.ByName("uuid"), true)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(host, err, c)
-}
-
 func (inst *Controller) GetLocations(c *gin.Context) {
-	hosts, err := inst.DB.GetLocations()
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(hosts, err, c)
+	locations, err := inst.DB.GetLocations()
+	responseHandler(locations, err, c)
 }
 
-func (inst *Controller) CreateLocationWizard(c *gin.Context) {
-	m := new(amodel.Location)
-	err := c.ShouldBindJSON(&m)
-	host, err := inst.DB.CreateLocationWizard(m)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(host, err, c)
+func (inst *Controller) GetLocation(c *gin.Context) {
+	location, err := inst.DB.GetLocation(c.Params.ByName("uuid"))
+	responseHandler(location, err, c)
 }
 
 func (inst *Controller) CreateLocation(c *gin.Context) {
 	m := new(amodel.Location)
 	err := c.ShouldBindJSON(&m)
-	host, err := inst.DB.CreateLocation(m)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(host, err, c)
+	location, err := inst.DB.CreateLocation(m)
+	responseHandler(location, err, c)
 }
 
 func (inst *Controller) UpdateLocation(c *gin.Context) {
-	body, _ := getLocationBody(c)
-	host, err := inst.DB.UpdateLocation(c.Params.ByName("uuid"), body)
+	body, err := getLocationBody(c)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	responseHandler(host, err, c)
+	location, err := inst.DB.UpdateLocation(c.Params.ByName("uuid"), body)
+	responseHandler(location, err, c)
 }
 
 func (inst *Controller) DeleteLocation(c *gin.Context) {
 	q, err := inst.DB.DeleteLocation(c.Params.ByName("uuid"))
-	if err != nil {
-		responseHandler(nil, err, c)
-	} else {
-		responseHandler(q, err, c)
-	}
+	responseHandler(q, err, c)
 }
 
 func (inst *Controller) DropLocations(c *gin.Context) {
-	host, err := inst.DB.DropLocations()
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
-	responseHandler(host, err, c)
+	location, err := inst.DB.DropLocations()
+	responseHandler(location, err, c)
 }
