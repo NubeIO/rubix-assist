@@ -4,8 +4,8 @@ import "github.com/NubeIO/lib-schema/schema"
 
 type Network struct {
 	UUID         string  `json:"uuid" gorm:"primary_key"`
-	Name         string  `json:"name"  gorm:"type:varchar(255);not null"`
-	LocationUUID string  `json:"location_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES locations;not null;default:null"`
+	Name         string  `json:"name"  gorm:"type:varchar(255);not null;uniqueIndex:idx_networks_name_location_uuid"`
+	LocationUUID string  `json:"location_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES locations;not null;default:null;uniqueIndex:idx_networks_name_location_uuid"`
 	Hosts        []*Host `json:"hosts" gorm:"constraint:OnDelete:CASCADE"`
 }
 
