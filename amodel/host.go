@@ -52,11 +52,6 @@ type SSHPort struct {
 	Help    string `json:"help" default:"ip port, eg port 8080 192.168.15.10:8080"`
 }
 
-type HostSchema struct {
-	Required   []string        `json:"required"`
-	Properties *HostProperties `json:"properties"`
-}
-
 type HostProperties struct {
 	Name          schema.Name        `json:"name"`
 	Enable        schema.Enable      `json:"enable"`
@@ -79,6 +74,11 @@ func GetHostProperties() *HostProperties {
 	m.ExternalToken.Title = "external token"
 	schema.Set(m)
 	return m
+}
+
+type HostSchema struct {
+	Required   []string        `json:"required"`
+	Properties *HostProperties `json:"properties"`
 }
 
 func GetHostSchema() *HostSchema {

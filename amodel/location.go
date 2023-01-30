@@ -9,14 +9,26 @@ type Location struct {
 	Networks    []*Network `json:"networks" gorm:"constraint:OnDelete:CASCADE"`
 }
 
-type LocationSchema struct {
-	UUID        schema.UUID        `json:"uuid"`
+type LocationProperties struct {
 	Name        schema.Name        `json:"name"`
 	Description schema.Description `json:"description"`
 }
 
-func GetLocationSchema() *LocationSchema {
-	m := &LocationSchema{}
+func GetLocationProperties() *LocationProperties {
+	m := &LocationProperties{}
 	schema.Set(m)
+	return m
+}
+
+type LocationSchema struct {
+	Required   []string            `json:"required"`
+	Properties *LocationProperties `json:"properties"`
+}
+
+func GetLocationSchema() *LocationSchema {
+	m := &LocationSchema{
+		Required:   []string{"name"},
+		Properties: GetLocationProperties(),
+	}
 	return m
 }
