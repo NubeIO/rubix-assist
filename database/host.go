@@ -89,25 +89,9 @@ func (inst *DB) GetHosts(withOpenVPN bool) ([]*amodel.Host, error) {
 }
 
 func (inst *DB) CreateHost(host *amodel.Host) (*amodel.Host, error) {
-	if host.Name == "" {
-		host.Name = "rc"
-	}
-	if len(host.Name) < 1 {
-		return nil, errors.New("host name length must be grater then two")
-	}
-	existingHost, _ := inst.GetHostByName(host.Name)
-	if existingHost != nil {
-		return nil, errors.New("an existing host with this name exists")
-	}
 	host.UUID = uuid.ShortUUID("hos")
 	if host.HTTPS == nil {
 		host.HTTPS = nils.NewFalse()
-	}
-	if host.IP == "" {
-		host.IP = "0.0.0.0"
-	}
-	if host.Port == 0 {
-		host.Port = 1661
 	}
 	if err := inst.DB.Create(&host).Error; err != nil {
 		return nil, err
