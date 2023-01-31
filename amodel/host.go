@@ -65,6 +65,7 @@ type HostProperties struct {
 
 func GetHostProperties() *HostProperties {
 	m := &HostProperties{}
+	m.Name.Min = 0
 	m.IP.Default = "0.0.0.0"
 	m.BiosPort.Title = "bios port"
 	m.BiosPort.Default = 1659
@@ -83,7 +84,7 @@ type HostSchema struct {
 
 func GetHostSchema() *HostSchema {
 	m := &HostSchema{
-		Required:   []string{"name", "ip", "bios_port", "port"},
+		Required:   []string{"ip", "bios_port", "port"},
 		Properties: GetHostProperties(),
 	}
 	return m

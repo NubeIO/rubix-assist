@@ -17,6 +17,7 @@ type NetworkProperties struct {
 
 func GetNetworkProperties() *NetworkProperties {
 	m := &NetworkProperties{}
+	m.Name.Min = 0
 	schema.Set(m)
 	return m
 }
@@ -28,7 +29,7 @@ type NetworkSchema struct {
 
 func GetNetworkSchema() *NetworkSchema {
 	m := &NetworkSchema{
-		Required:   []string{"name"},
+		Required:   []string{},
 		Properties: GetNetworkProperties(),
 	}
 	return m
