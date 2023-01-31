@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [v0.9.1](https://github.com/NubeIO/rubix-assist/tree/v0.9.1) (2023-01-30)
+
+- Remove name validation in location > network > host
+
 ## [v0.9.0](https://github.com/NubeIO/rubix-assist/tree/v0.9.0) (2023-01-30)
 
 - Misc improvements for location > network > host
