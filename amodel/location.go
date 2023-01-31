@@ -16,6 +16,7 @@ type LocationProperties struct {
 
 func GetLocationProperties() *LocationProperties {
 	m := &LocationProperties{}
+	m.Name.Min = 0
 	schema.Set(m)
 	return m
 }
@@ -27,7 +28,7 @@ type LocationSchema struct {
 
 func GetLocationSchema() *LocationSchema {
 	m := &LocationSchema{
-		Required:   []string{"name"},
+		Required:   []string{},
 		Properties: GetLocationProperties(),
 	}
 	return m
