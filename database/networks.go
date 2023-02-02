@@ -21,6 +21,7 @@ func (inst *DB) GetHostNetwork(uuid string) (*amodel.Network, error) {
 	if err := inst.DB.Where("uuid = ? ", uuid).Preload("Hosts").First(&m).Error; err != nil {
 		return nil, handelNotFound(networkName)
 	}
+	inst.attachOpenVPN(m.Hosts)
 	return &m, nil
 }
 
