@@ -47,11 +47,12 @@ func New(cli *Client) *Client {
 	}
 	baseURL := getBaseUrl(cli)
 	if client, found := clients[baseURL]; found {
+		client.Rest.SetHeader("Authorization", composeToken(cli.ExternalToken))
 		return client
 	}
 	rest := resty.New()
 	rest.SetBaseURL(baseURL)
-	rest.Header.Set("Authorization", composeToken(cli.ExternalToken))
+	rest.SetHeader("Authorization", composeToken(cli.ExternalToken))
 	cli.Rest = rest
 	clients[baseURL] = cli
 	return cli
@@ -66,46 +67,13 @@ func NewFastTimeout(cli *Client) *Client {
 	}
 	baseURL := getBaseUrl(cli)
 	if client, found := clientsFastTimeout[baseURL]; found {
+		client.Rest.SetHeader("Authorization", composeToken(cli.ExternalToken))
 		return client
 	}
 	rest := resty.New()
 	rest.SetBaseURL(baseURL)
 	rest.Header.Set("Authorization", composeToken(cli.ExternalToken))
 	rest.SetTransport(&transport)
-	cli.Rest = rest
-	clientsFastTimeout[baseURL] = cli
-	return cli
-}
-
-func NewForce(cli *Client) *Client {
-	mutex.Lock()
-	defer mutex.Unlock()
-
-	if cli == nil {
-		log.Fatal("edge client cli can not be empty")
-		return nil
-	}
-	baseURL := getBaseUrl(cli)
-	rest := resty.New()
-	rest.SetBaseURL(baseURL)
-	rest.Header.Set("Authorization", composeToken(cli.ExternalToken))
-	cli.Rest = rest
-	clients[baseURL] = cli
-	return cli
-}
-
-func NewFastTimeoutForce(cli *Client) *Client {
-	mutex.Lock()
-	defer mutex.Unlock()
-
-	if cli == nil {
-		log.Fatal("edge client cli can not be empty")
-		return nil
-	}
-	baseURL := getBaseUrl(cli)
-	rest := resty.New()
-	rest.SetBaseURL(baseURL)
-	rest.Header.Set("Authorization", composeToken(cli.ExternalToken))
 	cli.Rest = rest
 	clientsFastTimeout[baseURL] = cli
 	return cli
