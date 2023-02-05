@@ -68,11 +68,12 @@ func NewFastTimeout(cli *Client) *Client {
 	baseURL := getBaseUrl(cli)
 	if client, found := clientsFastTimeout[baseURL]; found {
 		client.Rest.SetHeader("Authorization", composeToken(cli.ExternalToken))
+		client.Rest.SetTransport(&transport)
 		return client
 	}
 	rest := resty.New()
 	rest.SetBaseURL(baseURL)
-	rest.Header.Set("Authorization", composeToken(cli.ExternalToken))
+	rest.SetHeader("Authorization", composeToken(cli.ExternalToken))
 	rest.SetTransport(&transport)
 	cli.Rest = rest
 	clientsFastTimeout[baseURL] = cli

@@ -53,9 +53,9 @@ func (inst *DB) UpdateHostsStatus(uuid string) (*amodel.Network, error) {
 	var wg sync.WaitGroup
 	for _, host := range m.Hosts {
 		wg.Add(1)
-		cli := cligetter.GetEdgeClientFastTimeout(host)
 		go func(h *amodel.Host) {
 			defer wg.Done()
+			cli := cligetter.GetEdgeClientFastTimeout(h)
 			globalUUID, pingable, isValidToken := cli.Ping()
 			if globalUUID != nil {
 				h.GlobalUUID = *globalUUID
