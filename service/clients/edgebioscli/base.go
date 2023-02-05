@@ -30,28 +30,12 @@ func New(cli *BiosClient) *BiosClient {
 	}
 	baseURL := getBaseUrl(cli)
 	if client, found := clients[baseURL]; found {
+		client.Rest.SetHeader("Authorization", composeToken(cli.ExternalToken))
 		return client
 	}
 	rest := resty.New()
 	rest.SetBaseURL(baseURL)
-	rest.Header.Set("Authorization", composeToken(cli.ExternalToken))
-	cli.Rest = rest
-	clients[baseURL] = cli
-	return cli
-}
-
-func NewForce(cli *BiosClient) *BiosClient {
-	mutex.Lock()
-	defer mutex.Unlock()
-
-	if cli == nil {
-		log.Fatal("edge bios client cli can not be empty")
-		return nil
-	}
-	baseURL := getBaseUrl(cli)
-	rest := resty.New()
-	rest.SetBaseURL(baseURL)
-	rest.Header.Set("Authorization", composeToken(cli.ExternalToken))
+	rest.SetHeader("Authorization", composeToken(cli.ExternalToken))
 	cli.Rest = rest
 	clients[baseURL] = cli
 	return cli
@@ -72,11 +56,6 @@ func getBaseUrl(cli *BiosClient) string {
 		baseURL = fmt.Sprintf("http://%s:%d", cli.Ip, cli.Port)
 	}
 	return baseURL
-}
-
-func (inst *BiosClient) SetJwtTokenHeader(token string) *BiosClient {
-	inst.Rest.Header.Set("Authorization", token)
-	return inst
 }
 
 func composeToken(token string) string {

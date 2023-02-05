@@ -38,6 +38,11 @@ func (inst *Controller) UpdateHostNetwork(c *gin.Context) {
 	responseHandler(host, err, c)
 }
 
+func (inst *Controller) UpdateHostsStatus(c *gin.Context) {
+	hosts, err := inst.DB.UpdateHostsStatus(c.Params.ByName("uuid"))
+	responseHandler(hosts, err, c)
+}
+
 func (inst *Controller) DeleteHostNetwork(c *gin.Context) {
 	q, err := inst.DB.DeleteHostNetwork(c.Params.ByName("uuid"))
 	responseHandler(q, err, c)

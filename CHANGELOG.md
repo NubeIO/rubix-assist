@@ -1,9 +1,13 @@
 # CHANGELOG
 
+## [v0.9.3](https://github.com/NubeIO/rubix-assist/tree/v0.9.3) (2023-02-05)
+
+- Improvements on CLIs
+- Improvements on host network update hosts status
+
 ## [v0.9.2](https://github.com/NubeIO/rubix-assist/tree/v0.9.2) (2023-02-02)
 
 - Attach OpenVPN on networks/:uuid API as well
-
 
 ## [v0.9.1](https://github.com/NubeIO/rubix-assist/tree/v0.9.1) (2023-01-30)
 
