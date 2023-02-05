@@ -127,6 +127,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hostNetworks.PATCH("/:uuid", api.UpdateHostNetwork)
 		hostNetworks.DELETE("/:uuid", api.DeleteHostNetwork)
 		hostNetworks.DELETE("/drop", api.DropHostNetworks)
+		hostNetworks.GET("/:uuid/update-hosts-status", api.UpdateHostsStatus)
 	}
 
 	hosts := apiRoutes.Group("/hosts")
@@ -138,7 +139,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hosts.PATCH("/:uuid", api.UpdateHost)
 		hosts.DELETE("/:uuid", api.DeleteHost)
 		hosts.DELETE("/drop", api.DropHosts)
-		hosts.GET("update-status", api.UpdateStatus)
 		hosts.GET("/:uuid/configure-openvpn", api.ConfigureOpenVPN)
 	}
 

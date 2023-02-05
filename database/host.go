@@ -7,7 +7,6 @@ import (
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/cligetter"
-	"sync"
 )
 
 const hostName = "host"
@@ -115,37 +114,6 @@ func (inst *DB) DropHosts() (*DeleteMessage, error) {
 	query := inst.DB.Where("1 = 1")
 	query.Delete(&m)
 	return deleteResponse(query)
-}
-
-func (inst *DB) UpdateStatus() ([]*amodel.Host, error) {
-	var hosts []*amodel.Host
-	if err := inst.DB.Find(&hosts).Error; err != nil {
-		return nil, err
-	}
-	var wg sync.WaitGroup
-	for _, host := range hosts {
-		wg.Add(1)
-		cli := cligetter.GetEdgeClientFastTimeout(host)
-		go func(h *amodel.Host) {
-			defer wg.Done()
-			globalUUID, pingable, isValidToken := cli.Ping()
-			if globalUUID != nil {
-				h.GlobalUUID = *globalUUID
-			}
-			h.IsOnline = &pingable
-			h.IsValidToken = &isValidToken
-		}(host)
-	}
-	wg.Wait()
-	tx := inst.DB.Begin()
-	for _, host := range hosts {
-		if err := tx.Where("uuid = ?", host.UUID).Updates(&host).Error; err != nil {
-			tx.Rollback()
-			return nil, err
-		}
-	}
-	tx.Commit()
-	return hosts, nil
 }
 
 func (inst *DB) ConfigureOpenVPN(uuid string) (*amodel.Message, error) {

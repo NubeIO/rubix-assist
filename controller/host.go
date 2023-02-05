@@ -56,11 +56,6 @@ func (inst *Controller) DropHosts(c *gin.Context) {
 	responseHandler(host, err, c)
 }
 
-func (inst *Controller) UpdateStatus(c *gin.Context) {
-	hosts, err := inst.DB.UpdateStatus()
-	responseHandler(hosts, err, c)
-}
-
 func (inst *Controller) ConfigureOpenVPN(c *gin.Context) {
 	hosts, err := inst.DB.ConfigureOpenVPN(c.Params.ByName("uuid"))
 	responseHandler(hosts, err, c)
