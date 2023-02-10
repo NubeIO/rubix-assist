@@ -164,6 +164,17 @@ func Setup(db *gorm.DB) *gin.Engine {
 		Tasks.DELETE("/drop", api.DropTasks)
 	}
 
+	Alerts := apiRoutes.Group("/alerts")
+	{
+		Alerts.GET("/schema", api.AlertsSchema)
+		Alerts.GET("", api.GetAlerts)
+		Alerts.POST("", api.CreateAlert)
+		Alerts.GET("/:uuid", api.GetAlert)
+		Alerts.PATCH("/:uuid/status", api.UpdateAlertStatus)
+		Alerts.DELETE("/:uuid", api.DeleteAlert)
+		Alerts.DELETE("/drop", api.DropAlerts)
+	}
+
 	messages := apiRoutes.Group("/transactions")
 	{
 		messages.GET("/schema", api.TransactionsSchema)

@@ -3,15 +3,16 @@ package database
 import (
 	"errors"
 	"fmt"
+	"io"
+	"os"
+	"path"
+
 	"github.com/NubeIO/nubeio-rubix-lib-auth-go/user"
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/spf13/viper"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"io"
-	"os"
-	"path"
 )
 
 const (
@@ -59,6 +60,7 @@ func Setup() error {
 		&amodel.Token{},
 		&amodel.User{},
 		&amodel.Team{},
+		&amodel.Alert{},
 		&amodel.Task{},
 		&amodel.Transaction{})
 	if err != nil {
