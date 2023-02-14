@@ -43,6 +43,10 @@ func (conf *Configuration) GetAbsDataDir() string {
 	return path.Join(conf.getGlobalDir(), conf.getDataDir())
 }
 
+func (conf *Configuration) GetAbsSnapShotDir() string {
+	return path.Join(conf.getGlobalDir(), conf.getDataDir(), "snapshots")
+}
+
 func (conf *Configuration) GetAbsConfigDir() string {
 	return path.Join(conf.getGlobalDir(), conf.getConfigDir())
 }

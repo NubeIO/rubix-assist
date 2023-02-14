@@ -238,5 +238,14 @@ func Setup(db *gorm.DB) *gin.Engine {
 		token.DELETE("/:uuid", api.DeleteToken)
 	}
 
+	edgeSnapshots := apiRoutes.Group("/edge/snapshots")
+	{
+		edgeSnapshots.GET("", api.GetSnapshots)
+		edgeSnapshots.DELETE("", api.DeleteSnapshot)
+		edgeSnapshots.POST("/create", api.CreateSnapshot)
+		edgeSnapshots.POST("/restore", api.RestoreSnapshot)
+		edgeSnapshots.GET("/status", api.GetSnapshotsStatus)
+	}
+
 	return r
 }
