@@ -9,16 +9,49 @@ import (
 	"github.com/NubeIO/rubix-assist/pkg/config"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
+	"io/ioutil"
 	"os"
 	"path"
+	"time"
 )
 
-var createSnapshots []*amodel.CreateSnapshotStatus
-var restoreSnapshots []*amodel.RestoreSnapshotStatus
+var createSnapshots = make([]*amodel.CreateSnapshotStatus, 0)
+var restoreSnapshots = make([]*amodel.RestoreSnapshotStatus, 0)
+
+type Snapshots struct {
+	Name      string `json:"name"`
+	Size      int64  `json:"size"`
+	CreatedAt string `json:"create_at"`
+}
 
 func (inst *Controller) GetSnapshots(c *gin.Context) {
-	snapshots, err := inst.listFiles(config.Config.GetAbsSnapShotDir())
+	snapshots, err := inst.getSnapshots()
 	responseHandler(snapshots, err, c)
+}
+
+func (inst *Controller) getSnapshots() ([]Snapshots, error) {
+	_path := config.Config.GetAbsSnapShotDir()
+	fileInfo, err := os.Stat(_path)
+	dirContent := make([]Snapshots, 0)
+	if err != nil {
+		return nil, err
+	}
+	if fileInfo.IsDir() {
+		files, err := ioutil.ReadDir(_path)
+		if err != nil {
+			return nil, err
+		}
+		for _, file := range files {
+			dirContent = append(dirContent, Snapshots{
+				Name:      file.Name(),
+				Size:      file.Size(),
+				CreatedAt: file.ModTime().UTC().Format(time.RFC3339),
+			})
+		}
+	} else {
+		return nil, errors.New("it needs to be a directory, found a file")
+	}
+	return dirContent, nil
 }
 
 func (inst *Controller) DeleteSnapshot(c *gin.Context) {
@@ -58,7 +91,7 @@ func (inst *Controller) CreateSnapshot(c *gin.Context) {
 		}
 		deleteCreateSnapshots(uuid_)
 	}()
-	responseHandler(amodel.Message{Message: "create snapshot started"}, nil, c)
+	responseHandler(amodel.Message{Message: "create snapshot process is submitted"}, nil, c)
 }
 
 func (inst *Controller) RestoreSnapshot(c *gin.Context) {
@@ -90,7 +123,7 @@ func (inst *Controller) RestoreSnapshot(c *gin.Context) {
 		}
 		deleteRestoreSnapshots(uuid_)
 	}()
-	responseHandler(amodel.Message{Message: "restore snapshot started"}, nil, c)
+	responseHandler(amodel.Message{Message: "restore snapshot process is submitted"}, nil, c)
 }
 
 func (inst *Controller) GetSnapshotsStatus(c *gin.Context) {
