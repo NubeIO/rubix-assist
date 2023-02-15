@@ -6,7 +6,6 @@ import (
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/cligetter"
 	"github.com/NubeIO/rubix-assist/pkg/config"
-	"github.com/NubeIO/rubix-assist/pkg/helpers/ttime"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"os"
@@ -15,9 +14,9 @@ import (
 )
 
 type Snapshots struct {
-	Name      string `json:"name"`
-	Size      int64  `json:"size"`
-	CreatedAt string `json:"create_at"`
+	Name      string    `json:"name"`
+	Size      int64     `json:"size"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func (inst *Controller) GetSnapshots(c *gin.Context) {
@@ -41,7 +40,7 @@ func (inst *Controller) getSnapshots() ([]Snapshots, error) {
 			dirContent = append(dirContent, Snapshots{
 				Name:      file.Name(),
 				Size:      file.Size(),
-				CreatedAt: file.ModTime().UTC().Format(time.RFC3339),
+				CreatedAt: file.ModTime(),
 			})
 		}
 	} else {
@@ -71,7 +70,7 @@ func (inst *Controller) CreateSnapshot(c *gin.Context) {
 		return
 	}
 	createLog, err := inst.DB.CreateSnapshotCreateLog(&amodel.SnapshotCreateLog{UUID: "", HostUUID: host.UUID, Msg: "",
-		Status: amodel.Creating, CreatedAt: ttime.Now()})
+		Status: amodel.Creating, CreatedAt: time.Now()})
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
@@ -91,7 +90,7 @@ func (inst *Controller) CreateSnapshot(c *gin.Context) {
 		}
 		_, _ = inst.DB.UpdateSnapshotCreateLog(createLog.UUID, createLog)
 	}()
-	responseHandler(amodel.Message{Message: "create snapshot process is submitted"}, nil, c)
+	responseHandler(amodel.Message{Message: "create snapshot process has submitted"}, nil, c)
 }
 
 func (inst *Controller) RestoreSnapshot(c *gin.Context) {
@@ -107,7 +106,7 @@ func (inst *Controller) RestoreSnapshot(c *gin.Context) {
 		return
 	}
 	restoreLog, err := inst.DB.CreateSnapshotRestoreLog(&amodel.SnapshotRestoreLog{UUID: "", HostUUID: host.UUID,
-		Msg: "", Status: amodel.Restoring, CreatedAt: ttime.Now()})
+		Msg: "", Status: amodel.Restoring, CreatedAt: time.Now()})
 	go func() {
 		cli := cligetter.GetEdgeClient(host)
 		reader, err := os.Open(path.Join(config.Config.GetAbsSnapShotDir(), file))
@@ -122,5 +121,5 @@ func (inst *Controller) RestoreSnapshot(c *gin.Context) {
 		}
 		_, _ = inst.DB.UpdateSnapshotRestoreLog(restoreLog.UUID, restoreLog)
 	}()
-	responseHandler(amodel.Message{Message: "restore snapshot process is submitted"}, nil, c)
+	responseHandler(amodel.Message{Message: "restore snapshot process has submitted"}, nil, c)
 }
