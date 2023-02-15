@@ -3,18 +3,47 @@ package controller
 import (
 	"errors"
 	"fmt"
+	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/cligetter"
 	"github.com/NubeIO/rubix-assist/pkg/config"
-	"github.com/NubeIO/rubix-assist/pkg/helpers/ttime"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"os"
 	"path"
 )
 
+var createSnapshots []*amodel.CreateSnapshotStatus
+var restoreSnapshots []*amodel.RestoreSnapshotStatus
+
 func (inst *Controller) GetSnapshots(c *gin.Context) {
-	snapshots, err := inst.listFiles(config.Config.GetAbsSnapShotDir())
+	snapshots, err := inst.getSnapshots()
 	responseHandler(snapshots, err, c)
+}
+
+func (inst *Controller) getSnapshots() ([]Snapshots, error) {
+	_path := config.Config.GetAbsSnapShotDir()
+	fileInfo, err := os.Stat(_path)
+	dirContent := make([]Snapshots, 0)
+	if err != nil {
+		return nil, err
+	}
+	if fileInfo.IsDir() {
+		files, err := ioutil.ReadDir(_path)
+		if err != nil {
+			return nil, err
+		}
+		for _, file := range files {
+			dirContent = append(dirContent, Snapshots{
+				Name:      file.Name(),
+				Size:      file.Size(),
+				CreatedAt: file.ModTime().UTC().Format(time.RFC3339),
+			})
+		}
+	} else {
+		return nil, errors.New("it needs to be a directory, found a file")
+	}
+	return dirContent, nil
 }
 
 func (inst *Controller) DeleteSnapshot(c *gin.Context) {
@@ -58,7 +87,7 @@ func (inst *Controller) CreateSnapshot(c *gin.Context) {
 		}
 		_, _ = inst.DB.UpdateSnapshotCreateLog(createLog.UUID, createLog)
 	}()
-	responseHandler(amodel.Message{Message: "create snapshot started"}, nil, c)
+	responseHandler(amodel.Message{Message: "create snapshot process is submitted"}, nil, c)
 }
 
 func (inst *Controller) RestoreSnapshot(c *gin.Context) {
@@ -89,5 +118,5 @@ func (inst *Controller) RestoreSnapshot(c *gin.Context) {
 		}
 		_, _ = inst.DB.UpdateSnapshotRestoreLog(restoreLog.UUID, restoreLog)
 	}()
-	responseHandler(amodel.Message{Message: "restore snapshot started"}, nil, c)
+	responseHandler(amodel.Message{Message: "restore snapshot process is submitted"}, nil, c)
 }
