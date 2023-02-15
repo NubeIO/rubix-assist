@@ -3,18 +3,14 @@ package controller
 import (
 	"errors"
 	"fmt"
-	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/cligetter"
 	"github.com/NubeIO/rubix-assist/pkg/config"
+	"github.com/NubeIO/rubix-assist/pkg/helpers/ttime"
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 	"os"
 	"path"
 )
-
-var createSnapshots []*amodel.CreateSnapshotStatus
-var restoreSnapshots []*amodel.RestoreSnapshotStatus
 
 func (inst *Controller) GetSnapshots(c *gin.Context) {
 	snapshots, err := inst.listFiles(config.Config.GetAbsSnapShotDir())
@@ -41,22 +37,26 @@ func (inst *Controller) CreateSnapshot(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	uuid_ := uuid.ShortUUID()
-	createSnapshots = append(createSnapshots, &amodel.CreateSnapshotStatus{UUID: uuid_, HostUUID: host.UUID,
-		Status: amodel.Creating})
+	createLog, err := inst.DB.CreateSnapshotCreateLog(&amodel.SnapshotCreateLog{UUID: "", HostUUID: host.UUID, Msg: "",
+		Status: amodel.Creating, CreatedAt: ttime.Now()})
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
 	go func() {
 		cli := cligetter.GetEdgeClient(host)
 		snapshot, filename, err := cli.CreateSnapshot()
-		if err != nil {
-			deleteCreateSnapshots(uuid_)
-			log.Errorf("err: %s", err.Error())
-			return
+		if err == nil {
+			err = os.WriteFile(path.Join(config.Config.GetAbsSnapShotDir(), filename), snapshot,
+				os.FileMode(inst.FileMode))
 		}
-		err = os.WriteFile(path.Join(config.Config.GetAbsSnapShotDir(), filename), snapshot, os.FileMode(inst.FileMode))
+		createLog.Status = amodel.Created
+		createLog.Msg = filename
 		if err != nil {
-			log.Errorf("err: %s", err.Error())
+			createLog.Status = amodel.CreateFailed
+			createLog.Msg = err.Error()
 		}
-		deleteCreateSnapshots(uuid_)
+		_, _ = inst.DB.UpdateSnapshotCreateLog(createLog.UUID, createLog)
 	}()
 	responseHandler(amodel.Message{Message: "create snapshot started"}, nil, c)
 }
@@ -73,42 +73,21 @@ func (inst *Controller) RestoreSnapshot(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	uuid_ := uuid.ShortUUID()
-	restoreSnapshots = append(restoreSnapshots, &amodel.RestoreSnapshotStatus{UUID: uuid_, HostUUID: host.UUID,
-		Status: amodel.Restoring})
+	restoreLog, err := inst.DB.CreateSnapshotRestoreLog(&amodel.SnapshotRestoreLog{UUID: "", HostUUID: host.UUID,
+		Msg: "", Status: amodel.Restoring, CreatedAt: ttime.Now()})
 	go func() {
 		cli := cligetter.GetEdgeClient(host)
 		reader, err := os.Open(path.Join(config.Config.GetAbsSnapShotDir(), file))
-		if err != nil {
-			deleteRestoreSnapshots(uuid_)
-			log.Errorf("err: %s", err.Error())
-			return
+		if err == nil {
+			err = cli.RestoreSnapshot(file, reader, useGlobalUUID)
 		}
-		err = cli.RestoreSnapshot(file, reader, useGlobalUUID)
+		restoreLog.Status = amodel.Restored
+		restoreLog.Msg = file
 		if err != nil {
-			log.Errorf("err: %s", err.Error())
+			restoreLog.Status = amodel.RestoreFailed
+			restoreLog.Msg = err.Error()
 		}
-		deleteRestoreSnapshots(uuid_)
+		_, _ = inst.DB.UpdateSnapshotRestoreLog(restoreLog.UUID, restoreLog)
 	}()
 	responseHandler(amodel.Message{Message: "restore snapshot started"}, nil, c)
-}
-
-func (inst *Controller) GetSnapshotsStatus(c *gin.Context) {
-	responseHandler(amodel.SnapshotStatus{CreateStatus: createSnapshots, RestoreStatus: restoreSnapshots}, nil, c)
-}
-
-func deleteCreateSnapshots(uuid string) {
-	for i, createSnapshot := range createSnapshots {
-		if createSnapshot.UUID == uuid {
-			createSnapshots = append(createSnapshots[:i], createSnapshots[i+1:]...)
-		}
-	}
-}
-
-func deleteRestoreSnapshots(uuid string) {
-	for i, restoreSnapshot := range restoreSnapshots {
-		if restoreSnapshot.UUID == uuid {
-			restoreSnapshots = append(restoreSnapshots[:i], restoreSnapshots[i+1:]...)
-		}
-	}
 }

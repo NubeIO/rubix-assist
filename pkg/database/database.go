@@ -60,7 +60,9 @@ func Setup() error {
 		&amodel.User{},
 		&amodel.Team{},
 		&amodel.Task{},
-		&amodel.Transaction{})
+		&amodel.Transaction{},
+		&amodel.SnapshotCreateLog{},
+		&amodel.SnapshotRestoreLog{})
 	if err != nil {
 		return err
 	}
