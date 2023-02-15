@@ -44,6 +44,9 @@ func setup() {
 	if err := os.MkdirAll(config.Config.GetAbsDataDir(), 0755); err != nil {
 		panic(err)
 	}
+	if err := os.MkdirAll(config.Config.GetAbsSnapShotDir(), 0755); err != nil {
+		panic(err)
+	}
 	if err := database.Setup(); err != nil {
 		logger.Fatalf("database.Setup() error: %s", err)
 	}
