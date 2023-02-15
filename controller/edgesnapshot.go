@@ -3,18 +3,22 @@ package controller
 import (
 	"errors"
 	"fmt"
-	"github.com/NubeIO/lib-uuid/uuid"
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/cligetter"
 	"github.com/NubeIO/rubix-assist/pkg/config"
+	"github.com/NubeIO/rubix-assist/pkg/helpers/ttime"
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
+	"io/ioutil"
 	"os"
 	"path"
+	"time"
 )
 
-var createSnapshots []*amodel.CreateSnapshotStatus
-var restoreSnapshots []*amodel.RestoreSnapshotStatus
+type Snapshots struct {
+	Name      string `json:"name"`
+	Size      int64  `json:"size"`
+	CreatedAt string `json:"create_at"`
+}
 
 func (inst *Controller) GetSnapshots(c *gin.Context) {
 	snapshots, err := inst.getSnapshots()
