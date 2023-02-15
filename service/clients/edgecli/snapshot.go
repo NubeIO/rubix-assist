@@ -21,10 +21,9 @@ func (inst *Client) CreateSnapshot() ([]byte, string, error) {
 	return resp.Body(), param["filename"], nil
 }
 
-func (inst *Client) RestoreSnapshot(filename string, reader *os.File, useGlobalUUID string) error {
+func (inst *Client) RestoreSnapshot(filename string, reader *os.File) error {
 	url := fmt.Sprintf("/api/snapshots/restore")
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().
-		SetQueryParam("use_global_uuid", useGlobalUUID).
 		SetFileReader("file", filename, reader).
 		Post(url))
 	return err

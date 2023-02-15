@@ -99,7 +99,6 @@ func (inst *Controller) RestoreSnapshot(c *gin.Context) {
 		responseHandler(nil, errors.New("file can not be empty"), c)
 		return
 	}
-	useGlobalUUID := c.Query("use_global_uuid")
 	host, err := inst.resolveHost(c)
 	if err != nil {
 		responseHandler(nil, err, c)
@@ -111,7 +110,7 @@ func (inst *Controller) RestoreSnapshot(c *gin.Context) {
 		cli := cligetter.GetEdgeClient(host)
 		reader, err := os.Open(path.Join(config.Config.GetAbsSnapShotDir(), file))
 		if err == nil {
-			err = cli.RestoreSnapshot(file, reader, useGlobalUUID)
+			err = cli.RestoreSnapshot(file, reader)
 		}
 		restoreLog.Status = amodel.Restored
 		restoreLog.Msg = file
