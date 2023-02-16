@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strings"
 	"time"
 )
 
@@ -20,11 +21,22 @@ type Snapshots struct {
 }
 
 func (inst *Controller) GetSnapshots(c *gin.Context) {
-	snapshots, err := inst.getSnapshots()
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
+	cli := cligetter.GetEdgeBiosClient(host)
+	arch, err := cli.GetArch()
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
+	snapshots, err := inst.getSnapshots(arch.Arch)
 	responseHandler(snapshots, err, c)
 }
 
-func (inst *Controller) getSnapshots() ([]Snapshots, error) {
+func (inst *Controller) getSnapshots(arch string) ([]Snapshots, error) {
 	_path := config.Config.GetAbsSnapShotDir()
 	fileInfo, err := os.Stat(_path)
 	dirContent := make([]Snapshots, 0)
@@ -37,11 +49,16 @@ func (inst *Controller) getSnapshots() ([]Snapshots, error) {
 			return nil, err
 		}
 		for _, file := range files {
-			dirContent = append(dirContent, Snapshots{
-				Name:      file.Name(),
-				Size:      file.Size(),
-				CreatedAt: file.ModTime(),
-			})
+			fileParts := strings.Split(file.Name(), "_")
+			archParts := fileParts[len(fileParts)-1]
+			archFromSnapshot := strings.Split(archParts, ".")[0]
+			if archFromSnapshot == arch {
+				dirContent = append(dirContent, Snapshots{
+					Name:      file.Name(),
+					Size:      file.Size(),
+					CreatedAt: file.ModTime(),
+				})
+			}
 		}
 	} else {
 		return nil, errors.New("it needs to be a directory, found a file")
