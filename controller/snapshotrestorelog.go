@@ -3,7 +3,12 @@ package controller
 import "github.com/gin-gonic/gin"
 
 func (inst *Controller) GetSnapshotRestoreLogs(c *gin.Context) {
-	restoreLogs, err := inst.DB.GetSnapshotRestoreLogs()
+	host, err := inst.resolveHost(c)
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
+	restoreLogs, err := inst.DB.GetSnapshotRestoreLogs(host.UUID)
 	responseHandler(restoreLogs, err, c)
 }
 

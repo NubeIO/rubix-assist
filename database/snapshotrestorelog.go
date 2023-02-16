@@ -5,9 +5,9 @@ import (
 	"github.com/NubeIO/rubix-assist/amodel"
 )
 
-func (inst *DB) GetSnapshotRestoreLogs() ([]*amodel.SnapshotRestoreLog, error) {
+func (inst *DB) GetSnapshotRestoreLogs(hostUUID string) ([]*amodel.SnapshotRestoreLog, error) {
 	var m []*amodel.SnapshotRestoreLog
-	if err := inst.DB.Find(&m).Error; err != nil {
+	if err := inst.DB.Where("host_uuid = ?", hostUUID).Find(&m).Error; err != nil {
 		return nil, err
 	} else {
 		return m, nil

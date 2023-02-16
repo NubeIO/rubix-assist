@@ -5,9 +5,9 @@ import (
 	"github.com/NubeIO/rubix-assist/amodel"
 )
 
-func (inst *DB) GetSnapshotCreateLogs() ([]*amodel.SnapshotCreateLog, error) {
+func (inst *DB) GetSnapshotCreateLogs(hostUUID string) ([]*amodel.SnapshotCreateLog, error) {
 	var m []*amodel.SnapshotCreateLog
-	if err := inst.DB.Find(&m).Error; err != nil {
+	if err := inst.DB.Where("host_uuid = ?", hostUUID).Find(&m).Error; err != nil {
 		return nil, err
 	}
 	return m, nil
