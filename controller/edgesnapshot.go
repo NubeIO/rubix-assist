@@ -6,6 +6,7 @@ import (
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/cligetter"
 	"github.com/NubeIO/rubix-assist/pkg/config"
+	"github.com/NubeIO/rubix-assist/pkg/interfaces"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"os"
@@ -18,6 +19,16 @@ type Snapshots struct {
 	Name      string    `json:"name"`
 	Size      int64     `json:"size"`
 	CreatedAt time.Time `json:"created_at"`
+}
+
+func getBodyCreateSnapshot(c *gin.Context) (dto *interfaces.CreateSnapshot, err error) {
+	err = c.ShouldBindJSON(&dto)
+	return dto, err
+}
+
+func getBodyRestoreSnapshot(c *gin.Context) (dto *interfaces.RestoreSnapshot, err error) {
+	err = c.ShouldBindJSON(&dto)
+	return dto, err
 }
 
 func (inst *Controller) GetSnapshots(c *gin.Context) {
@@ -86,8 +97,9 @@ func (inst *Controller) CreateSnapshot(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
+	body, _ := getBodyCreateSnapshot(c)
 	createLog, err := inst.DB.CreateSnapshotCreateLog(&amodel.SnapshotCreateLog{UUID: "", HostUUID: host.UUID, Msg: "",
-		Status: amodel.Creating, CreatedAt: time.Now()})
+		Status: amodel.Creating, Description: body.Description, CreatedAt: time.Now()})
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
@@ -111,8 +123,8 @@ func (inst *Controller) CreateSnapshot(c *gin.Context) {
 }
 
 func (inst *Controller) RestoreSnapshot(c *gin.Context) {
-	file := c.Query("file")
-	if file == "" {
+	body, _ := getBodyRestoreSnapshot(c)
+	if body.File == "" {
 		responseHandler(nil, errors.New("file can not be empty"), c)
 		return
 	}
@@ -122,15 +134,15 @@ func (inst *Controller) RestoreSnapshot(c *gin.Context) {
 		return
 	}
 	restoreLog, err := inst.DB.CreateSnapshotRestoreLog(&amodel.SnapshotRestoreLog{UUID: "", HostUUID: host.UUID,
-		Msg: "", Status: amodel.Restoring, CreatedAt: time.Now()})
+		Msg: "", Status: amodel.Restoring, Description: body.Description, CreatedAt: time.Now()})
 	go func() {
 		cli := cligetter.GetEdgeClient(host)
-		reader, err := os.Open(path.Join(config.Config.GetAbsSnapShotDir(), file))
+		reader, err := os.Open(path.Join(config.Config.GetAbsSnapShotDir(), body.File))
 		if err == nil {
-			err = cli.RestoreSnapshot(file, reader)
+			err = cli.RestoreSnapshot(body.File, reader)
 		}
 		restoreLog.Status = amodel.Restored
-		restoreLog.Msg = file
+		restoreLog.Msg = body.File
 		if err != nil {
 			restoreLog.Status = amodel.RestoreFailed
 			restoreLog.Msg = err.Error()
