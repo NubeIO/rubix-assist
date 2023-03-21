@@ -19,6 +19,7 @@ const (
 	Network AlertEntityType = "network"
 	Device  AlertEntityType = "device"
 	Point   AlertEntityType = "point"
+	Service AlertEntityType = "service"
 )
 
 const (
@@ -53,6 +54,8 @@ func CheckEntityType(s string) error {
 	case Device:
 		return nil
 	case Point:
+		return nil
+	case Service:
 		return nil
 	}
 	return errors.New("invalid alert entity type")
