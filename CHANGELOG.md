@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [v0.10.1](https://github.com/NubeIO/rubix-assist/tree/v0.10.1) (2023-02-16)
+
+- Limit snapshots logs on the host filter
+- Returns only valid arch snapshots for the host
+
+## [v0.10.0](https://github.com/NubeIO/rubix-assist/tree/v0.10.0) (2023-02-15)
+
+- Add snapshots APIs for edge devices
+
 ## [v0.9.3](https://github.com/NubeIO/rubix-assist/tree/v0.9.3) (2023-02-05)
 
 - Improvements on CLIs
