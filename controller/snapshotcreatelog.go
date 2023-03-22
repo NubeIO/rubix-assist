@@ -26,7 +26,11 @@ func (inst *Controller) DeleteSnapshotCreateLog(c *gin.Context) {
 }
 
 func (inst *Controller) UpdateSnapshotCreateLog(c *gin.Context) {
-	body, _ := getSnapshotCreateLogBody(c)
+	body, err := getSnapshotCreateLogBody(c)
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
 	createLog, err := inst.DB.UpdateSnapshotCreateLog(c.Params.ByName("uuid"), body)
 	if err != nil {
 		responseHandler(nil, err, c)

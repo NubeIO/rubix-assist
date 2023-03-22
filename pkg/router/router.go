@@ -241,6 +241,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 	edgeSnapshots := apiRoutes.Group("/edge/snapshots")
 	{
 		edgeSnapshots.GET("", api.GetSnapshots)
+		edgeSnapshots.PATCH("/:file", api.UpdateSnapshot)
 		edgeSnapshots.DELETE("", api.DeleteSnapshot)
 		edgeSnapshots.POST("/create", api.CreateSnapshot)
 		edgeSnapshots.POST("/restore", api.RestoreSnapshot)
