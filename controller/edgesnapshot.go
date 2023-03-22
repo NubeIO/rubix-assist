@@ -97,7 +97,11 @@ func (inst *Controller) CreateSnapshot(c *gin.Context) {
 		responseHandler(nil, err, c)
 		return
 	}
-	body, _ := getBodyCreateSnapshot(c)
+	body, err := getBodyCreateSnapshot(c)
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
 	createLog, err := inst.DB.CreateSnapshotCreateLog(&amodel.SnapshotCreateLog{UUID: "", HostUUID: host.UUID, Msg: "",
 		Status: amodel.Creating, Description: body.Description, CreatedAt: time.Now()})
 	if err != nil {
@@ -123,7 +127,11 @@ func (inst *Controller) CreateSnapshot(c *gin.Context) {
 }
 
 func (inst *Controller) RestoreSnapshot(c *gin.Context) {
-	body, _ := getBodyRestoreSnapshot(c)
+	body, err := getBodyRestoreSnapshot(c)
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
 	if body.File == "" {
 		responseHandler(nil, errors.New("file can not be empty"), c)
 		return

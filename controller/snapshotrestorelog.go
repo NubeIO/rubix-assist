@@ -26,7 +26,11 @@ func (inst *Controller) DeleteSnapshotRestoreLog(c *gin.Context) {
 }
 
 func (inst *Controller) UpdateSnapshotRestoreLog(c *gin.Context) {
-	body, _ := getSnapshotRestoreLogBody(c)
+	body, err := getSnapshotRestoreLogBody(c)
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
 	restoreLog, err := inst.DB.UpdateSnapshotRestoreLog(c.Params.ByName("uuid"), body)
 	if err != nil {
 		responseHandler(nil, err, c)
