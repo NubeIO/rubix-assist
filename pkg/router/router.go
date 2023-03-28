@@ -140,6 +140,17 @@ func Setup(db *gorm.DB) *gin.Engine {
 		hosts.DELETE("/:uuid", api.DeleteHost)
 		hosts.DELETE("/drop", api.DropHosts)
 		hosts.GET("/:uuid/configure-openvpn", api.ConfigureOpenVPN)
+
+		hostTags := hosts.Group("/tags")
+		{
+			hostTags.PUT("/host_uuid/:host_uuid", api.UpdateHostTags)
+		}
+		hostComments := hosts.Group("/comments")
+		{
+			hostComments.POST("", api.CreateHostComment)
+			hostComments.PATCH("/:uuid", api.UpdateHostComment)
+			hostComments.DELETE("/:uuid", api.DeleteHostComment)
+		}
 	}
 
 	teams := apiRoutes.Group("/teams")
