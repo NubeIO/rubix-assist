@@ -7,6 +7,7 @@ import (
 	"github.com/NubeIO/rubix-assist/pkg/constants"
 	"os"
 	"path"
+	"time"
 )
 
 func (inst *Installer) GetAppDataPath(appName string) string {
@@ -69,4 +70,9 @@ func (inst *Installer) GetAppPluginInstallPath() string {
 
 func (inst *Installer) GetAppPluginInstallFilePath(pluginName, arch string) string {
 	return path.Join(inst.GetAppPluginInstallPath(), fmt.Sprintf("%s-%s.so", pluginName, arch)) // /data/flow-framework/data/plugins/system-amd64.so
+}
+
+func (inst *Installer) GetAppBackupPath(appName, version string) string {
+	return path.Join(inst.BackupDir, appName,
+		fmt.Sprintf("%s_%s", time.Now().UTC().Format("20060102150405"), version)) // /data/rubix-wires/<time_value>_v0.0.1
 }

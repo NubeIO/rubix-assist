@@ -25,9 +25,8 @@ func (inst *Client) AppInstall(app *systemctl.ServiceFile) (*amodel.Message, err
 	if err != nil {
 		return message, err
 	}
-
 	tmpDir, absoluteServiceFileName, err := systemctl.GenerateServiceFile(app, global.Installer)
-	_, err = inst.installServiceFile(app.Name, absoluteServiceFileName)
+	_, err = inst.installServiceFile(app.Name, app.Version, absoluteServiceFileName)
 	if err != nil {
 		return message, err
 	}
@@ -107,7 +106,8 @@ func (inst *Client) MovePluginsFromDownloadToInstallDir() (*amodel.Message, erro
 	return &amodel.Message{Message: "transferred plugins from download to install location"}, nil
 }
 
-func (inst *Client) installServiceFile(appName, absoluteServiceFileName string) (*amodel.Message, error) {
+func (inst *Client) installServiceFile(appName, appVersion, absoluteServiceFileName string) (*amodel.Message, error) {
+	inst.backupBeforeInstall(appName, appVersion)
 	serviceFileName := namings.GetServiceNameFromAppName(appName)
 	serviceFile := path.Join(constants.ServiceDir, serviceFileName)
 	symlinkServiceFile := path.Join(constants.ServiceDirSoftLink, serviceFileName)
@@ -154,4 +154,11 @@ func (inst *Client) installServiceFile(appName, absoluteServiceFileName string) 
 	}
 	log.Infof("started service %s", serviceFileName)
 	return nil, nil
+}
+
+func (inst *Client) backupBeforeInstall(appName string, appVersion string) {
+	from := global.Installer.GetAppDataDataPath(appName)
+	to := global.Installer.GetAppBackupPath(appName, appVersion)
+	url := fmt.Sprintf("/api/files/copy?from=%s&to=%s", from, to)
+	_, _ = nresty.FormatRestyResponse(inst.Rest.R().Post(url))
 }
