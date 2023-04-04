@@ -1,7 +1,6 @@
 package base
 
 import (
-	"fmt"
 	"github.com/NubeIO/rubix-assist/amodel"
 )
 
@@ -14,12 +13,9 @@ func (inst *DB) GetSnapshotLog() ([]*amodel.SnapshotLog, error) {
 }
 
 func (inst *DB) CreateSnapshotLog(body *amodel.SnapshotLog) (*amodel.SnapshotLog, error) {
-	fmt.Println("creating...", body)
 	if err := inst.DB.Create(&body).Error; err != nil {
-		fmt.Println("failed...", body)
 		return nil, err
 	}
-	fmt.Println("created...", body)
 	return body, nil
 }
 
