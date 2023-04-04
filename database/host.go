@@ -7,13 +7,18 @@ import (
 	"github.com/NubeIO/nubeio-rubix-lib-helpers-go/pkg/nils"
 	"github.com/NubeIO/rubix-assist/amodel"
 	"github.com/NubeIO/rubix-assist/cligetter"
+	"gorm.io/gorm"
 )
 
 const hostName = "host"
 
+func (inst *DB) buildHostQuery() *gorm.DB {
+	return inst.DB.Preload("Comments").Preload("Tags")
+}
+
 func (inst *DB) GetHost(uuid string) (*amodel.Host, error) {
 	host := amodel.Host{}
-	if err := inst.DB.Where("uuid = ? ", uuid).First(&host).Error; err != nil {
+	if err := inst.buildHostQuery().Where("uuid = ? ", uuid).First(&host).Error; err != nil {
 		return nil, errors.New(fmt.Sprintf("no host was found with uuid: %s", uuid))
 	}
 	return &host, nil
@@ -21,7 +26,7 @@ func (inst *DB) GetHost(uuid string) (*amodel.Host, error) {
 
 func (inst *DB) GetHostByName(name string) (*amodel.Host, error) {
 	host := amodel.Host{}
-	if err := inst.DB.Where("name = ? ", name).First(&host).Error; err != nil {
+	if err := inst.buildHostQuery().Where("name = ? ", name).First(&host).Error; err != nil {
 		return nil, errors.New(fmt.Sprintf("no host was found with name: %s", name))
 	}
 	return &host, nil
@@ -29,7 +34,7 @@ func (inst *DB) GetHostByName(name string) (*amodel.Host, error) {
 
 func (inst *DB) GetHosts(withOpenVPN bool) ([]*amodel.Host, error) {
 	var hosts []*amodel.Host
-	if err := inst.DB.Find(&hosts).Error; err != nil {
+	if err := inst.buildHostQuery().Find(&hosts).Error; err != nil {
 		return nil, err
 	}
 	if withOpenVPN {

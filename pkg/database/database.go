@@ -63,7 +63,9 @@ func Setup() error {
 		&amodel.Transaction{},
 		&amodel.SnapshotLog{},
 		&amodel.SnapshotCreateLog{},
-		&amodel.SnapshotRestoreLog{})
+		&amodel.SnapshotRestoreLog{},
+		&amodel.HostTag{},
+		&amodel.HostComment{})
 	if err != nil {
 		return err
 	}
