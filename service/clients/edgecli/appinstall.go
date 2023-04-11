@@ -17,19 +17,24 @@ import (
 )
 
 func (inst *Client) AppInstall(app *systemctl.ServiceFile) (*amodel.Message, error) {
+	err := inst.backupAppDataDir(app.Name)
+	if err != nil {
+		return nil, err
+	}
+
 	installPath := global.Installer.GetAppInstallPath(app.Name)
 	url := fmt.Sprintf("/api/files/delete-all?path=%s", installPath)
 	_, _ = nresty.FormatRestyResponse(inst.Rest.R().Delete(url))
 
-	message, err := inst.moveAppAndPluginsFromDownloadToInstallDir(app)
+	err = inst.moveAppAndPluginsFromDownloadToInstallDir(app)
 	if err != nil {
-		return message, err
+		return nil, err
 	}
 
 	tmpDir, absoluteServiceFileName, err := systemctl.GenerateServiceFile(app, global.Installer)
 	_, err = inst.installServiceFile(app.Name, absoluteServiceFileName)
 	if err != nil {
-		return message, err
+		return nil, err
 	}
 	err = fileutils.RmRF(tmpDir)
 	if err != nil {
@@ -39,7 +44,7 @@ func (inst *Client) AppInstall(app *systemctl.ServiceFile) (*amodel.Message, err
 	return &amodel.Message{Message: "successfully installed the app"}, nil
 }
 
-func (inst *Client) moveAppAndPluginsFromDownloadToInstallDir(app *systemctl.ServiceFile) (*amodel.Message, error) {
+func (inst *Client) moveAppAndPluginsFromDownloadToInstallDir(app *systemctl.ServiceFile) error {
 	from := global.Installer.GetAppDownloadPathWithVersion(app.Name, app.Version)
 	to := global.Installer.GetAppInstallPathWithVersion(app.Name, app.Version)
 	url := fmt.Sprintf("/api/files/delete-all?path=%s", to)
@@ -49,7 +54,7 @@ func (inst *Client) moveAppAndPluginsFromDownloadToInstallDir(app *systemctl.Ser
 	url = fmt.Sprintf("/api/files/move?from=%s&to=%s", from, to)
 	_, err := nresty.FormatRestyResponse(inst.Rest.R().Post(url))
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if app.Name == constants.FlowFramework {
@@ -60,16 +65,16 @@ func (inst *Client) moveAppAndPluginsFromDownloadToInstallDir(app *systemctl.Ser
 		url = fmt.Sprintf("/api/dirs/create?path=%s", path.Dir(to))
 		_, err = nresty.FormatRestyResponse(inst.Rest.R().Post(url))
 		if err != nil {
-			return nil, err
+			return err
 		}
 		url = fmt.Sprintf("/api/files/move?from=%s&to=%s", from, to)
 		_, _ = nresty.FormatRestyResponse(inst.Rest.R().Post(url)) // ignore error: sometimes from folder will be empty
 	} else {
 		if _, err = inst.MovePluginsFromDownloadToInstallDir(); err != nil {
-			return nil, err
+			return err
 		}
 	}
-	return nil, nil
+	return nil
 }
 
 func (inst *Client) MovePluginsFromDownloadToInstallDir() (*amodel.Message, error) {
@@ -154,4 +159,32 @@ func (inst *Client) installServiceFile(appName, absoluteServiceFileName string) 
 	}
 	log.Infof("started service %s", serviceFileName)
 	return nil, nil
+}
+
+func (inst *Client) backupAppDataDir(appName string) error {
+	appVersion, connectionErr, requestErr := inst.getAppVersion(appName)
+	if requestErr != nil {
+		log.Warnf("we haven't found %s installed version (%s), so skipping backup process", appName, requestErr)
+		return nil
+	} else if connectionErr != nil {
+		return connectionErr
+	}
+
+	from := global.Installer.GetAppDataDataPath(appName)
+	to := global.Installer.GetAppBackupPath(appName, appVersion)
+	if appName == constants.FlowFramework { // otherwise, plugins & images folders also gets copied which will be large
+		from = path.Join(from, "data.db")
+		to = path.Join(to, "data.db")
+	}
+	url := fmt.Sprintf("/api/files/copy?from=%s&to=%s", from, to)
+	log.Infof("backing up from %s to %s", from, to)
+	_, connectionErr, requestErr = nresty.FormatRestyV2Response(inst.Rest.R().Post(url))
+	if requestErr != nil {
+		log.Warnf("backup process from %s to %s got failed (%s)", from, to, requestErr)
+	} else if connectionErr != nil {
+		return connectionErr
+	} else {
+		log.Infof("backup process has been completed from %s to %s", from, to)
+	}
+	return nil
 }
