@@ -127,7 +127,7 @@ func (inst *DB) ConfigureOpenVPN(uuid string) (*amodel.Message, error) {
 		return nil, errors.New(fmt.Sprintf("no host was found with uuid: %s", uuid))
 	}
 	cli := cligetter.GetEdgeClient(&host)
-	globalUUID, pingable, isValidToken := cli.Ping()
+	globalUUID, _, pingable, isValidToken := cli.Ping()
 	if pingable == false {
 		return nil, errors.New("make it accessible at first")
 	}

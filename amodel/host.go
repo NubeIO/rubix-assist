@@ -8,6 +8,7 @@ import (
 type Host struct {
 	UUID           string         `json:"uuid" gorm:"primaryKey"`
 	GlobalUUID     string         `json:"global_uuid"`
+	DeviceType     string         `json:"device_type"`
 	Name           string         `json:"name"  gorm:"type:varchar(255);not null;uniqueIndex:idx_hosts_name_network_uuid"`
 	NetworkUUID    string         `json:"network_uuid,omitempty" gorm:"TYPE:varchar(255) REFERENCES networks;not null;default:null;uniqueIndex:idx_hosts_name_network_uuid"`
 	Enable         *bool          `json:"enable"`

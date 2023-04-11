@@ -145,6 +145,7 @@ func Setup(db *gorm.DB) *gin.Engine {
 		{
 			hostTags.PUT("/host_uuid/:host_uuid", api.UpdateHostTags)
 		}
+
 		hostComments := hosts.Group("/comments")
 		{
 			hostComments.POST("", api.CreateHostComment)
