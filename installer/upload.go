@@ -1,7 +1,6 @@
 package installer
 
 import (
-	"fmt"
 	"github.com/NubeIO/rubix-assist/amodel"
 	log "github.com/sirupsen/logrus"
 	"io"
@@ -33,7 +32,6 @@ func (inst *Installer) Upload(zip *multipart.FileHeader) (*amodel.UploadResponse
 // returns the filename and path as a string and any error
 func (inst *Installer) SaveUploadedFile(file *multipart.FileHeader, destination string) (uploadedFile string, err error) {
 	uploadedFile = path.Join(destination, file.Filename)
-	fmt.Println("SaveUploadedFile destination", uploadedFile)
 	src, err := file.Open()
 	if err != nil {
 		return uploadedFile, err
