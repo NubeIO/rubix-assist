@@ -56,9 +56,12 @@ func (inst *DB) UpdateHostsStatus(uuid string) (*amodel.Network, error) {
 		cli := cligetter.GetEdgeClientFastTimeout(host)
 		go func(h *amodel.Host) {
 			defer wg.Done()
-			globalUUID, pingable, isValidToken := cli.Ping()
+			globalUUID, deviceType, pingable, isValidToken := cli.Ping()
 			if globalUUID != nil {
 				h.GlobalUUID = *globalUUID
+			}
+			if deviceType != nil {
+				h.DeviceType = *deviceType
 			}
 			h.IsOnline = &pingable
 			h.IsValidToken = &isValidToken
