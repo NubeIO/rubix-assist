@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [v0.10.2](https://github.com/NubeIO/rubix-assist/tree/v0.10.2) (2023-04-11)
+
+- Add description on snapshot
+- Add tags and comments for host
+- Backup before upgrading the app
+
 ## [v0.10.1](https://github.com/NubeIO/rubix-assist/tree/v0.10.1) (2023-02-16)
 
 - Limit snapshots logs on the host filter
