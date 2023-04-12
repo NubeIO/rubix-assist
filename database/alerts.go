@@ -87,6 +87,9 @@ func (inst *DB) CreateAlert(alert *amodel.Alert) (*amodel.Alert, error) {
 	if err = alerts.CheckEntityType(alert.EntityType); err != nil {
 		return nil, err
 	}
+	if alert.Message == "" {
+		alert.Message = alerts.AlertTypeMessage(alert.Message)
+	}
 	alert.UUID = uuid.ShortUUID("alr")
 	t := ttime.Now()
 	alert.CreatedAt = &t

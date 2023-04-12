@@ -96,3 +96,17 @@ func CheckAlertType(s string) error {
 	}
 	return errors.New("invalid alert type, try ping, threshold, fault")
 }
+
+func AlertTypeMessage(s string) string {
+	switch AlertType(s) {
+	case Ping:
+		return "failed to ping the device"
+	case Fault:
+		return ""
+	case Threshold:
+		return "out of range threshold"
+	case FlatLine:
+		return ""
+	}
+	return ""
+}
