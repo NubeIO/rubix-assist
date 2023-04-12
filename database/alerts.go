@@ -90,6 +90,7 @@ func (inst *DB) CreateAlert(alert *amodel.Alert) (*amodel.Alert, error) {
 	alert.UUID = uuid.ShortUUID("alr")
 	t := ttime.Now()
 	alert.CreatedAt = &t
+	alert.LastUpdated = &t
 	if err := inst.DB.Create(&alert).Error; err != nil {
 		return nil, err
 	}
@@ -141,6 +142,8 @@ func (inst *DB) UpdateAlertStatus(uuid string, status string) (alert *amodel.Ale
 			}
 		}
 	}
+	t := ttime.Now()
+	alert.LastUpdated = &t
 	return alert, query.Error
 }
 
