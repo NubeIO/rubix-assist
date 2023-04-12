@@ -7,6 +7,7 @@ import (
 type AlertStatus string
 type AlertEntityType string
 type AlertType string
+type AlertSeverity string
 
 const (
 	Active       AlertStatus = "active"
@@ -26,7 +27,14 @@ const (
 	Ping      AlertType = "ping"
 	Fault     AlertType = "fault"
 	Threshold AlertType = "threshold"
-	Flatline  AlertType = "flatline"
+	FlatLine  AlertType = "flat-line"
+)
+
+const (
+	Crucial AlertSeverity = "crucial"
+	Minor   AlertSeverity = "minor"
+	Info    AlertSeverity = "info"
+	Warning AlertSeverity = "warning"
 )
 
 func CheckStatus(s string) error {
@@ -38,7 +46,21 @@ func CheckStatus(s string) error {
 	case Closed:
 		return nil
 	}
-	return errors.New("invalid alert status")
+	return errors.New("invalid alert status, try active, acknowledged, closed")
+}
+
+func CheckSeverity(s string) error {
+	switch AlertSeverity(s) {
+	case Crucial:
+		return nil
+	case Minor:
+		return nil
+	case Info:
+		return nil
+	case Warning:
+		return nil
+	}
+	return errors.New("invalid alert status, try crucial, info, warning")
 }
 
 func CheckStatusClosed(s string) bool {
@@ -58,7 +80,7 @@ func CheckEntityType(s string) error {
 	case Service:
 		return nil
 	}
-	return errors.New("invalid alert entity type")
+	return errors.New("invalid alert entity type, try gateway, network")
 }
 
 func CheckAlertType(s string) error {
@@ -69,8 +91,22 @@ func CheckAlertType(s string) error {
 		return nil
 	case Threshold:
 		return nil
-	case Flatline:
+	case FlatLine:
 		return nil
 	}
-	return errors.New("invalid alert type")
+	return errors.New("invalid alert type, try ping, threshold, fault")
+}
+
+func AlertTypeMessage(s string) string {
+	switch AlertType(s) {
+	case Ping:
+		return "failed to ping the device"
+	case Fault:
+		return ""
+	case Threshold:
+		return "out of range threshold"
+	case FlatLine:
+		return ""
+	}
+	return ""
 }

@@ -24,26 +24,39 @@ func (inst *Controller) AlertsSchema(ctx *gin.Context) {
 }
 
 func (inst *Controller) GetAlert(c *gin.Context) {
-	team, err := inst.DB.GetAlert(c.Params.ByName("uuid"))
+	resp, err := inst.DB.GetAlert(c.Params.ByName("uuid"))
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	responseHandler(team, err, c)
+	responseHandler(resp, err, c)
 }
 
 func (inst *Controller) GetAlerts(c *gin.Context) {
-	teams, err := inst.DB.GetAlerts()
+	resp, err := inst.DB.GetAlerts()
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	responseHandler(teams, err, c)
+	responseHandler(resp, err, c)
+}
+
+func (inst *Controller) GetAlertsByHost(c *gin.Context) {
+	resp, err := inst.DB.GetAlertsByHost(c.Params.ByName("uuid"))
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
+	responseHandler(resp, err, c)
 }
 
 func (inst *Controller) CreateAlert(c *gin.Context) {
 	m := new(amodel.Alert)
-	c.ShouldBindJSON(&m)
+	err := c.ShouldBindJSON(&m)
+	if err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
 	res, err := inst.DB.CreateAlert(m)
 	if err != nil {
 		responseHandler(nil, err, c)
@@ -54,12 +67,12 @@ func (inst *Controller) CreateAlert(c *gin.Context) {
 
 func (inst *Controller) UpdateAlertStatus(c *gin.Context) {
 	status, _ := getAlertStatus(c)
-	team, err := inst.DB.UpdateAlertStatus(c.Params.ByName("uuid"), status)
+	resp, err := inst.DB.UpdateAlertStatus(c.Params.ByName("uuid"), status)
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	responseHandler(team, err, c)
+	responseHandler(resp, err, c)
 }
 
 func (inst *Controller) DeleteAlert(c *gin.Context) {
@@ -72,10 +85,10 @@ func (inst *Controller) DeleteAlert(c *gin.Context) {
 }
 
 func (inst *Controller) DropAlerts(c *gin.Context) {
-	team, err := inst.DB.DropAlerts()
+	resp, err := inst.DB.DropAlerts()
 	if err != nil {
 		responseHandler(nil, err, c)
 		return
 	}
-	responseHandler(team, err, c)
+	responseHandler(resp, err, c)
 }
