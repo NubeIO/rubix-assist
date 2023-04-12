@@ -32,6 +32,17 @@ func (inst *DB) GetAlerts() ([]*amodel.Alert, error) {
 	}
 }
 
+func (inst *DB) GetAlertsByHost(hostUUID string) ([]*amodel.Alert, error) {
+	var m []*amodel.Alert
+	alert, err := inst.GetAlerts()
+	for _, a := range alert {
+		if a.HostUUID == hostUUID {
+			m = append(m, a)
+		}
+	}
+	return m, err
+}
+
 // GetAlertByField returns the object for the given field ie name or nil.
 func (inst *DB) GetAlertByField(field string, value string) (*amodel.Alert, error) {
 	var m *amodel.Alert
@@ -45,6 +56,21 @@ func (inst *DB) GetAlertByField(field string, value string) (*amodel.Alert, erro
 
 func (inst *DB) CreateAlert(alert *amodel.Alert) (*amodel.Alert, error) {
 	var err error
+	hostUUID := alert.HostUUID
+	if hostUUID == "" {
+		host, err := inst.GetFirstHost()
+		if err != nil {
+			return nil, err
+		}
+		if host != nil {
+			return nil, errors.New(fmt.Sprintf("no host uuid was provided, try uuid: %s, name: %s", host.UUID, host.Name))
+		}
+		return nil, errors.New(" no host has been added, please add one")
+	}
+	host, err := inst.GetHost(hostUUID)
+	if host == nil {
+		return nil, errors.New(fmt.Sprintf("host with uuid:%s was not found", hostUUID))
+	}
 	if alert.Status == "" {
 		alert.Status = string(alerts.Active)
 	} else {
@@ -53,6 +79,9 @@ func (inst *DB) CreateAlert(alert *amodel.Alert) (*amodel.Alert, error) {
 		}
 	}
 	if err = alerts.CheckAlertType(alert.Type); err != nil {
+		return nil, err
+	}
+	if err = alerts.CheckSeverity(alert.Severity); err != nil {
 		return nil, err
 	}
 	if err = alerts.CheckEntityType(alert.EntityType); err != nil {

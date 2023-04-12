@@ -43,6 +43,17 @@ func (inst *DB) GetHosts(withOpenVPN bool) ([]*amodel.Host, error) {
 	return hosts, nil
 }
 
+func (inst *DB) GetFirstHost() (*amodel.Host, error) {
+	hosts, err := inst.GetHosts(false)
+	if err != nil {
+		return nil, err
+	}
+	if len(hosts) > 0 {
+		return hosts[0], err
+	}
+	return nil, err
+}
+
 func (inst *DB) attachOpenVPN(hosts []*amodel.Host) {
 	resetHostClient := func(host *amodel.Host) {
 		host.VirtualIP = ""
