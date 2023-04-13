@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [v0.10.4](https://github.com/NubeIO/rubix-assist/tree/v0.10.4) (2023-04-13)
+
+- Added alerts api
+
 ## [v0.10.3](https://github.com/NubeIO/rubix-assist/tree/v0.10.3) (2023-04-11)
 
 - Add device_type in host

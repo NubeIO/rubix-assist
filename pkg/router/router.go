@@ -165,26 +165,27 @@ func Setup(db *gorm.DB) *gin.Engine {
 		teams.DELETE("/drop", api.DropTeams)
 	}
 
-	Tasks := apiRoutes.Group("/tasks")
+	tasks := apiRoutes.Group("/tasks")
 	{
-		Tasks.GET("/schema", api.TasksSchema)
-		Tasks.GET("", api.GetTasks)
-		Tasks.POST("", api.CreateTask)
-		Tasks.GET("/:uuid", api.GetTask)
-		Tasks.PATCH("/:uuid", api.UpdateTask)
-		Tasks.DELETE("/:uuid", api.DeleteTask)
-		Tasks.DELETE("/drop", api.DropTasks)
+		tasks.GET("/schema", api.TasksSchema)
+		tasks.GET("", api.GetTasks)
+		tasks.POST("", api.CreateTask)
+		tasks.GET("/:uuid", api.GetTask)
+		tasks.PATCH("/:uuid", api.UpdateTask)
+		tasks.DELETE("/:uuid", api.DeleteTask)
+		tasks.DELETE("/drop", api.DropTasks)
 	}
 
-	Alerts := apiRoutes.Group("/alerts")
+	alerts := apiRoutes.Group("/alerts")
 	{
-		Alerts.GET("/schema", api.AlertsSchema)
-		Alerts.GET("", api.GetAlerts)
-		Alerts.POST("", api.CreateAlert)
-		Alerts.GET("/:uuid", api.GetAlert)
-		Alerts.PATCH("/:uuid/status", api.UpdateAlertStatus)
-		Alerts.DELETE("/:uuid", api.DeleteAlert)
-		Alerts.DELETE("/drop", api.DropAlerts)
+		alerts.GET("/schema", api.AlertsSchema)
+		alerts.GET("", api.GetAlerts)
+		alerts.POST("", api.CreateAlert)
+		alerts.GET("/:uuid", api.GetAlert)
+		alerts.GET("/host/:uuid", api.GetAlertsByHost)
+		alerts.PATCH("/:uuid/status", api.UpdateAlertStatus)
+		alerts.DELETE("/:uuid", api.DeleteAlert)
+		alerts.DELETE("/drop", api.DropAlerts)
 	}
 
 	messages := apiRoutes.Group("/transactions")

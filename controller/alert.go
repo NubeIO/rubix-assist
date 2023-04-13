@@ -9,6 +9,11 @@ type AlertStatus struct {
 	Status string `json:"status"`
 }
 
+func getAlertBody(ctx *gin.Context) (dto *amodel.Alert, err error) {
+	err = ctx.ShouldBindJSON(&dto)
+	return dto, err
+}
+
 func getAlertStatus(ctx *gin.Context) (status string, err error) {
 	statusStruct := AlertStatus{}
 	err = ctx.ShouldBindJSON(&statusStruct)
@@ -38,11 +43,7 @@ func (inst *Controller) GetAlerts(c *gin.Context) {
 
 func (inst *Controller) CreateAlert(c *gin.Context) {
 	m := new(amodel.Alert)
-	err := c.ShouldBindJSON(&m)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
+	c.ShouldBindJSON(&m)
 	res, err := inst.DB.CreateAlert(m)
 	if err != nil {
 		responseHandler(nil, err, c)
@@ -52,11 +53,7 @@ func (inst *Controller) CreateAlert(c *gin.Context) {
 }
 
 func (inst *Controller) UpdateAlertStatus(c *gin.Context) {
-	status, err := getAlertStatus(c)
-	if err != nil {
-		responseHandler(nil, err, c)
-		return
-	}
+	status, _ := getAlertStatus(c)
 	team, err := inst.DB.UpdateAlertStatus(c.Params.ByName("uuid"), status)
 	if err != nil {
 		responseHandler(nil, err, c)
