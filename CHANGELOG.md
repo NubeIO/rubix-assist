@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [v0.10.5](https://github.com/NubeIO/rubix-assist/tree/v0.10.5) (2023-04-17)
+
+- Updates to alerts errors
+- Upgrade lib-systemctl-go to v0.3.0 for the monotonic timestamps
+
 ## [v0.10.4](https://github.com/NubeIO/rubix-assist/tree/v0.10.4) (2023-04-13)
 
 - Added alerts api
