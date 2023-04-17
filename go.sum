@@ -69,8 +69,8 @@ github.com/NubeIO/lib-networking v0.0.7 h1:8aN4gLs2SORtFanr0NuQ0n22HEY3KbGiMuAWV
 github.com/NubeIO/lib-networking v0.0.7/go.mod h1:wO04Ul6Wdr5w/7s8UMZzV1/HMXuVSVFzqq7h5A3Vl6k=
 github.com/NubeIO/lib-schema v0.2.4 h1:O0/3zOKElhQJ61Hmcnrr9ssqjoZspmKny946WmL/j68=
 github.com/NubeIO/lib-schema v0.2.4/go.mod h1:TGKDA6IIWHDwr5Aabawj6FF7NXUWXqu4ozWfph/hIjw=
-github.com/NubeIO/lib-systemctl-go v0.2.0 h1:Ch4UmA8LH+YoNVM02tfmb3olCyjmo+qKc7wCtxbq/aM=
-github.com/NubeIO/lib-systemctl-go v0.2.0/go.mod h1:P/Ij5pgTtjNnp/TQhsvwipk8sv+5cbZdtuvHiPAYXCE=
+github.com/NubeIO/lib-systemctl-go v0.3.0 h1:x6q9Dus5rltgSf4MpBXOJSh3dGJMaLV4matoRn328SI=
+github.com/NubeIO/lib-systemctl-go v0.3.0/go.mod h1:P/Ij5pgTtjNnp/TQhsvwipk8sv+5cbZdtuvHiPAYXCE=
 github.com/NubeIO/lib-uuid v0.0.3 h1:OkjJWXLOLmEZozBYESsqXZUy9JJ3YKAfxpb2v9rDg6k=
 github.com/NubeIO/lib-uuid v0.0.3/go.mod h1:lLx2E+mqNntnVsgnA44rEVQXoXzKTcZDYTQdNacJLDg=
 github.com/NubeIO/nubeio-rubix-lib-auth-go v1.1.0 h1:SuHk1GTTYMuJea20Tky6Nt6CczZYej06GmjaTsbkFCA=
