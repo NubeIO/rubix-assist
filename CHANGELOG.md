@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [v0.10.6](https://github.com/NubeIO/rubix-assist/tree/v0.10.6) (2023-04-18)
+
+- Upgrade lib-systemctl-go to v0.3.1 for the OS wise stats
+
 ## [v0.10.5](https://github.com/NubeIO/rubix-assist/tree/v0.10.5) (2023-04-17)
 
 - Updates to alerts errors
