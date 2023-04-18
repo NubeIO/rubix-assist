@@ -65,7 +65,7 @@ require (
 	github.com/NubeIO/lib-files v1.0.0
 	github.com/NubeIO/lib-networking v0.0.7
 	github.com/NubeIO/lib-schema v0.2.4
-	github.com/NubeIO/lib-systemctl-go v0.3.0
+	github.com/NubeIO/lib-systemctl-go v0.3.1
 	github.com/NubeIO/lib-uuid v0.0.3
 	github.com/NubeIO/nubeio-rubix-lib-auth-go v1.1.0
 	github.com/NubeIO/nubeio-rubix-lib-models-go v1.3.4
