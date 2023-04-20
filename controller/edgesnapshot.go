@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -174,6 +175,46 @@ func (inst *Controller) RestoreSnapshot(c *gin.Context) {
 		_, _ = inst.DB.UpdateSnapshotRestoreLog(restoreLog.UUID, restoreLog)
 	}()
 	responseHandler(amodel.Message{Message: "restore snapshot process has submitted"}, nil, c)
+}
+
+func (inst *Controller) DownloadSnapshot(c *gin.Context) {
+	file := c.Query("file")
+	c.FileAttachment(path.Join(config.Config.GetAbsSnapShotDir(), file), file)
+}
+
+func (inst *Controller) UploadSnapshot(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil || file == nil {
+		responseHandler(nil, err, c)
+		return
+	}
+	description := c.Query("description")
+
+	toFileLocation := path.Join(config.Config.GetAbsSnapShotDir(), filepath.Base(file.Filename))
+	if err := c.SaveUploadedFile(file, toFileLocation); err != nil {
+		responseHandler(nil, err, c)
+		return
+	}
+
+	snapshotLog := amodel.SnapshotLog{
+		File:        file.Filename,
+		Description: description,
+	}
+	_, err = inst.DB.UpdateSnapshotLog(file.Filename, &snapshotLog)
+	if err != nil {
+		log.Error(err)
+	}
+	files, err := inst.getSnapshotsFiles()
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	_, err = inst.DB.DeleteSnapshotLogs(files)
+	if err != nil {
+		log.Error(err)
+	}
+
+	responseHandler(amodel.Message{Message: "snapshot uploaded successfully"}, nil, c)
 }
 
 func (inst *Controller) getSnapshots(arch string) ([]Snapshots, error) {

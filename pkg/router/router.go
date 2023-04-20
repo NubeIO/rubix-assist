@@ -269,6 +269,8 @@ func Setup(db *gorm.DB) *gin.Engine {
 		edgeSnapshots.DELETE("", api.DeleteSnapshot)
 		edgeSnapshots.POST("/create", api.CreateSnapshot)
 		edgeSnapshots.POST("/restore", api.RestoreSnapshot)
+		edgeSnapshots.POST("/download", api.DownloadSnapshot)
+		edgeSnapshots.POST("/upload", api.UploadSnapshot)
 		edgeSnapshots.GET("/create-logs", api.GetSnapshotCreateLogs)
 		edgeSnapshots.PATCH("/create-logs/:uuid", api.UpdateSnapshotCreateLog)
 		edgeSnapshots.DELETE("/create-logs/:uuid", api.DeleteSnapshotCreateLog)
