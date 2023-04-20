@@ -189,8 +189,12 @@ func (inst *Controller) UploadSnapshot(c *gin.Context) {
 		return
 	}
 	description := c.Query("description")
-
-	toFileLocation := path.Join(config.Config.GetAbsSnapShotDir(), filepath.Base(file.Filename))
+	fileName := strings.ReplaceAll(file.Filename, " ", "")
+	if path.Ext(fileName) != ".zip" {
+		responseHandler(nil, errors.New("file is not a valid zip file"), c)
+		return
+	}
+	toFileLocation := path.Join(config.Config.GetAbsSnapShotDir(), filepath.Base(fileName))
 	if err := c.SaveUploadedFile(file, toFileLocation); err != nil {
 		responseHandler(nil, err, c)
 		return
