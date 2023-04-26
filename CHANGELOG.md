@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [v0.10.7](https://github.com/NubeIO/rubix-assist/tree/v0.10.7) (2023-04-26)
+
+- Add api endpoints to download and upload snapshot
+- Remove unused OpenVPN proxy
+
 ## [v0.10.6](https://github.com/NubeIO/rubix-assist/tree/v0.10.6) (2023-04-18)
 
 - Upgrade lib-systemctl-go to v0.3.1 for the OS wise stats
