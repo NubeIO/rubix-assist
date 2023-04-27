@@ -61,8 +61,6 @@ func Setup() error {
 		&amodel.User{},
 		&amodel.Team{},
 		&amodel.Alert{},
-		&amodel.Task{},
-		&amodel.Transaction{},
 		&amodel.SnapshotLog{},
 		&amodel.SnapshotCreateLog{},
 		&amodel.SnapshotRestoreLog{},

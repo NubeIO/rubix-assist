@@ -165,17 +165,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		teams.DELETE("/drop", api.DropTeams)
 	}
 
-	tasks := apiRoutes.Group("/tasks")
-	{
-		tasks.GET("/schema", api.TasksSchema)
-		tasks.GET("", api.GetTasks)
-		tasks.POST("", api.CreateTask)
-		tasks.GET("/:uuid", api.GetTask)
-		tasks.PATCH("/:uuid", api.UpdateTask)
-		tasks.DELETE("/:uuid", api.DeleteTask)
-		tasks.DELETE("/drop", api.DropTasks)
-	}
-
 	alerts := apiRoutes.Group("/alerts")
 	{
 		alerts.GET("/schema", api.AlertsSchema)
@@ -186,17 +175,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		alerts.PATCH("/:uuid/status", api.UpdateAlertStatus)
 		alerts.DELETE("/:uuid", api.DeleteAlert)
 		alerts.DELETE("/drop", api.DropAlerts)
-	}
-
-	messages := apiRoutes.Group("/transactions")
-	{
-		messages.GET("/schema", api.TransactionsSchema)
-		messages.GET("", api.GetTransactions)
-		messages.POST("", api.CreateTransaction)
-		messages.GET("/:uuid", api.GetTransaction)
-		messages.PATCH("/:uuid", api.UpdateTransaction)
-		messages.DELETE("/:uuid", api.DeleteTransaction)
-		messages.DELETE("/drop", api.DropTransactions)
 	}
 
 	wires := apiRoutes.Group("/wires")
