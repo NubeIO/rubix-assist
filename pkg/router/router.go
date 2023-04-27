@@ -177,12 +177,6 @@ func Setup(db *gorm.DB) *gin.Engine {
 		alerts.DELETE("/drop", api.DropAlerts)
 	}
 
-	wires := apiRoutes.Group("/wires")
-	{
-		wires.POST("/upload", api.WiresUpload)
-		wires.GET("/backup", api.WiresBackup)
-	}
-
 	system := apiRoutes.Group("/system")
 	{
 		system.GET("/time", api.HostTime)
