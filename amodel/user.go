@@ -1,13 +1,13 @@
 package amodel
 
 type User struct {
-	UUID      string `json:"uuid" gorm:"primary_key" get:"true" delete:"true"`
-	Username  string `json:"username" get:"true" post:"true" patch:"true"`
-	IsAdmin   bool   `json:"is_admin" get:"true" post:"true" patch:"true"`
-	UserGroup bool   `json:"user_group" get:"true" post:"true" patch:"true"`
-	Email     string `json:"email" get:"true" post:"true" patch:"true"`
-	Password  string `json:"password" get:"false" post:"true" patch:"true"`
-	TeamID    string `json:"team" get:"true" post:"true" patch:"true" gorm:"TYPE:string REFERENCES teams;"`
+	UUID      string `json:"uuid" gorm:"primary_key"`
+	Username  string `json:"username"`
+	IsAdmin   bool   `json:"is_admin"`
+	UserGroup bool   `json:"user_group"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	TeamID    string `json:"team"  gorm:"TYPE:string REFERENCES teams;"`
 	Hash      string `json:"-"`
 	UID       string `json:"-"`
 	Role      string `json:"-"`
@@ -25,6 +25,6 @@ type LoginUser struct {
 }
 
 type Team struct {
-	UUID  string  `json:"uuid" gorm:"primary_key" get:"true" delete:"true"`
+	UUID  string  `json:"uuid" gorm:"primary_key"`
 	Users []*User `json:"users" gorm:"constraint"`
 }
